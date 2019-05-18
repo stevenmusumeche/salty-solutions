@@ -2,10 +2,13 @@ import Koa from "koa";
 import { ApolloServer, gql } from "apollo-server-koa";
 import * as tideService from "./services/tide";
 import * as locationService from "./services/location";
+import * as sunMoonService from "./services/sun-and-moon";
+import * as weatherService from "./services/weather";
 
 const typeDefs = gql`
   type Query {
     locations: [Location!]!
+    location(id: ID!): Location
   }
 
   type Location {
@@ -15,6 +18,10 @@ const typeDefs = gql`
     lat: Float!
     long: Float!
     marineZoneId: String!
+    sun(start: String!, end: String!): [SunDetail!]!
+    moon(start: String!, end: String!): [MoonDetail!]!
+    weatherForecast: [WeatherForecast!]!
+    hourlyWeatherForecast: [WeatherForecast!]!
   }
 
   type TidePreditionStation {
@@ -31,12 +38,45 @@ const typeDefs = gql`
     height: Float!
     type: String!
   }
+
+  type SunDetail {
+    date: String!
+    sunrise: String!
+    sunset: String!
+    dawn: String!
+    dusk: String!
+    nauticalDawn: String!
+    nauticalDusk: String!
+  }
+
+  type MoonDetail {
+    date: String!
+    phase: String!
+    illumination: Int!
+  }
+
+  type WeatherForecast {
+    name: String!
+    startTime: String!
+    endTime: String!
+    isDaytime: Boolean!
+    temperature: Int!
+    temperatureUnit: String!
+    windSpeed: String!
+    windDirection: String!
+    icon: String!
+    shortForecast: String!
+    detailedForecast: String!
+  }
 `;
 
 const resolvers = {
   Query: {
     locations: (_: any, __: any, { services }: any) => {
       return services.location.getAll();
+    },
+    location: (_: any, args: any, { services }: any) => {
+      return services.location.getById(args.id);
     }
   },
   Location: {
@@ -44,6 +84,32 @@ const resolvers = {
       return location.tideStationIds.map((id: string) =>
         services.tide.getStationById(id)
       );
+    },
+    sun: async (location: any, args: any, { services }: any) => {
+      return services.sunMoon.getSunInfo(
+        new Date(args.start),
+        new Date(args.end),
+        location.lat,
+        location.long
+      );
+    },
+    moon: async (location: any, args: any, { services }: any) => {
+      return services.sunMoon.getMoonInfo(
+        new Date(args.start),
+        new Date(args.end),
+        location.lat,
+        location.long
+      );
+    },
+    weatherForecast: async (location: any, args: any, { services }: any) => {
+      return services.weather.getForecast(location);
+    },
+    hourlyWeatherForecast: async (
+      location: any,
+      args: any,
+      { services }: any
+    ) => {
+      return services.weather.getHourlyForecast(location);
     }
   },
   TidePreditionStation: {
@@ -63,7 +129,12 @@ const resolvers = {
 };
 
 const context = {
-  services: { tide: tideService, location: locationService }
+  services: {
+    tide: tideService,
+    location: locationService,
+    sunMoon: sunMoonService,
+    weather: weatherService
+  }
 };
 const server = new ApolloServer({ typeDefs, resolvers, context });
 

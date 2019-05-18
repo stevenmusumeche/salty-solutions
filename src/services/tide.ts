@@ -34,8 +34,8 @@ export async function getTidePredictions(
   stationId: string
 ) {
   const [hiLoData, allData] = await Promise.all([
-    fetchTideData(start, end, stationId, "hilo"),
-    fetchTideData(start, end, stationId, "h")
+    fetchTideData(start, end, stationId, true),
+    fetchTideData(start, end, stationId, false)
   ]);
 
   const data = allData.concat(hiLoData);
@@ -66,13 +66,14 @@ interface Prediction {
   type?: "L" | "H";
 }
 
-// h:	Hourly Met data and predictions data will be returned
-// hilo:	High/Low tide predictions for subordinate stations.
+/**
+ * API docs: https://tidesandcurrents.noaa.gov/api/
+ */
 async function fetchTideData(
   start: Date,
   end: Date,
   stationId: string,
-  type: "hilo" | "h"
+  onlyHighLow: boolean
 ): Promise<Prediction[]> {
   const params = {
     product: "predictions",
@@ -83,7 +84,7 @@ async function fetchTideData(
     station: stationId,
     time_zone: "gmt",
     units: "english",
-    interval: type,
+    interval: onlyHighLow ? "hilo" : undefined, // only High/Low tide predictions vs 6-minute intervals
     format: "json"
   };
   const url =

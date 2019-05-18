@@ -1,12 +1,14 @@
 {
   "dependencies": {
+    "@types/suncalc": "^1.8.0",
     "apollo-server-koa": "^2.5.0",
     "axios": "^0.18.0",
     "date-fns": "^1.30.1",
     "graphql": "^14.3.0",
     "koa": "^2.7.0",
     "koa-router": "^7.4.0",
-    "querystring": "^0.2.0"
+    "querystring": "^0.2.0",
+    "suncalc": "^1.8.0"
   },
   "name": "fishing-app-server",
   "version": "1.0.0",
