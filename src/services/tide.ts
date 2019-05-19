@@ -21,6 +21,36 @@ const tideStations: TideStation[] = [
     name: "Weeks Bay, LA",
     lat: 29.837,
     long: -91.837
+  },
+  {
+    id: "8768094",
+    name: "Calcasieu Pass",
+    lat: 29.7683,
+    long: -93.3433
+  },
+  {
+    id: "8767961",
+    name: "Bulk Terminal",
+    lat: 30.19,
+    long: -93.3
+  },
+  {
+    id: "8767816",
+    name: "Lake Charles",
+    lat: 30.223333,
+    long: -93.221667
+  },
+  {
+    id: "8765251",
+    name: "Cypremort Point",
+    lat: 29.7133,
+    long: -91.88
+  },
+  {
+    id: "8764931",
+    name: "Cote Blanche Island",
+    lat: 29.735,
+    long: -91.7133
   }
 ];
 

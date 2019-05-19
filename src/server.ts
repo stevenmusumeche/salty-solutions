@@ -4,6 +4,8 @@ import * as tideService from "./services/tide";
 import * as locationService from "./services/location";
 import * as sunMoonService from "./services/sun-and-moon";
 import * as weatherService from "./services/weather";
+import * as marineService from "./services/marine";
+import * as usgsService from "./services/usgs";
 
 const typeDefs = gql`
   type Query {
@@ -17,11 +19,15 @@ const typeDefs = gql`
     tidePreditionStations: [TidePreditionStation!]!
     lat: Float!
     long: Float!
-    marineZoneId: String!
-    sun(start: String!, end: String!): [SunDetail!]!
-    moon(start: String!, end: String!): [MoonDetail!]!
-    weatherForecast: [WeatherForecast!]!
-    hourlyWeatherForecast: [WeatherForecast!]!
+    sun(start: String!, end: String!): [SunDetail!]
+    moon(start: String!, end: String!): [MoonDetail!]
+    weatherForecast: [WeatherForecast!]
+    hourlyWeatherForecast: [WeatherForecast!]
+    marineForecast: [MarineForecast!]
+    waterHeight(numDays: Int = 3): [WaterHeight!]
+    waterTemperature(numDays: Int = 3): [WaterTemperature!]
+    wind(numDays: Int = 3): [Wind!]
+    salinity(numDays: Int = 3): [Salinity!]
   }
 
   type TidePreditionStation {
@@ -30,7 +36,7 @@ const typeDefs = gql`
     url: String!
     lat: Float!
     long: Float!
-    tides(start: String!, end: String!): [TideDetail!]!
+    tides(start: String!, end: String!): [TideDetail!]
   }
 
   type TideDetail {
@@ -67,6 +73,37 @@ const typeDefs = gql`
     icon: String!
     shortForecast: String!
     detailedForecast: String!
+  }
+
+  type MarineForecast {
+    timePeriod: String!
+    forecast: String!
+  }
+
+  type WaterHeight {
+    timestamp: String!
+    "measured in feet"
+    height: Float!
+  }
+
+  type WaterTemperature {
+    timestamp: String!
+    "fahrenheit"
+    temperature: Float!
+  }
+
+  type Wind {
+    timestamp: String!
+    "miles per hour"
+    speed: Float!
+    direction: String!
+    directionDegrees: Float!
+  }
+
+  type Salinity {
+    timestamp: String!
+    "parts per thousand"
+    salinity: Float!
   }
 `;
 
@@ -110,6 +147,21 @@ const resolvers = {
       { services }: any
     ) => {
       return services.weather.getHourlyForecast(location);
+    },
+    marineForecast: async (location: any, args: any, { services }: any) => {
+      return services.marine.getForecast(location);
+    },
+    waterHeight: async (location: any, args: any, { services }: any) => {
+      return services.usgs.getWaterHeight(location, args.numDays);
+    },
+    waterTemperature: async (location: any, args: any, { services }: any) => {
+      return services.usgs.getWaterTemperature(location, args.numDays);
+    },
+    wind: async (location: any, args: any, { services }: any) => {
+      return services.usgs.getWind(location, args.numDays);
+    },
+    salinity: async (location: any, args: any, { services }: any) => {
+      return services.usgs.getSalinity(location, args.numDays);
     }
   },
   TidePreditionStation: {
@@ -133,7 +185,9 @@ const context = {
     tide: tideService,
     location: locationService,
     sunMoon: sunMoonService,
-    weather: weatherService
+    weather: weatherService,
+    marine: marineService,
+    usgs: usgsService
   }
 };
 const server = new ApolloServer({ typeDefs, resolvers, context });
