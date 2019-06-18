@@ -52,7 +52,7 @@ const getWindDirection = async (location: any, numDays: number) => {
   }));
 };
 
-export const getSalinity = async (location: any, numDays: number) => {
+export const getSalinity = (location: any, numDays: number) => {
   return fetchAndMap(location.usgsSiteId, "00480", numDays, (v: any) => ({
     timestamp: new Date(v.dateTime).toISOString(),
     salinity: v.value

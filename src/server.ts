@@ -27,7 +27,7 @@ const typeDefs = gql`
     waterHeight(numDays: Int = 3): [WaterHeight!]
     waterTemperature(numDays: Int = 3): [WaterTemperature!]
     wind(numDays: Int = 3): [Wind!]
-    salinity(numDays: Int = 3): [Salinity!]
+    salinity(numDays: Int = 3): Salinity!
   }
 
   type TidePreditionStation {
@@ -101,6 +101,18 @@ const typeDefs = gql`
   }
 
   type Salinity {
+    summary: SalinitySummary!
+    detail: [SalinityDetail!]
+  }
+
+  type SalinitySummary {
+    "parts per thousand"
+    averageValue: Float!
+    startTimestamp: String!
+    endTimestamp: String!
+  }
+
+  type SalinityDetail {
     timestamp: String!
     "parts per thousand"
     salinity: Float!
@@ -161,7 +173,20 @@ const resolvers = {
       return services.usgs.getWind(location, args.numDays);
     },
     salinity: async (location: any, args: any, { services }: any) => {
-      return services.usgs.getSalinity(location, args.numDays);
+      const detail = await services.usgs.getSalinity(location, args.numDays);
+      const sum = detail.reduce((acc: number, cur: any) => {
+        return (acc += Number.parseFloat(cur.salinity));
+      }, 0);
+      const averageValue = (sum / detail.length).toFixed(1);
+
+      return {
+        detail,
+        summary: {
+          averageValue,
+          startTimestamp: detail[0].timestamp,
+          endTimestamp: detail[detail.length - 1].timestamp
+        }
+      };
     }
   },
   TidePreditionStation: {
