@@ -1,4 +1,15 @@
-const locations = [
+export interface LocationEntity {
+  id: string;
+  name: string;
+  tideStationIds: string[];
+  marineZoneId: string;
+  lat: number;
+  long: number;
+  usgsSiteId: string;
+  weatherApiBase: string;
+}
+
+const locations: LocationEntity[] = [
   {
     id: "1",
     name: "Cypremore Point",
@@ -21,8 +32,8 @@ const locations = [
   }
 ];
 
-export const getAll = () => locations;
+export const getAll = (): LocationEntity[] => locations;
 
-export const getById = (id: string) => {
+export const getById = (id: string): LocationEntity | undefined => {
   return locations.find(location => location.id === id);
 };

@@ -1,211 +1,26 @@
 import Koa from "koa";
-import { ApolloServer, gql } from "apollo-server-koa";
+import { ApolloServer } from "apollo-server-koa";
 import * as tideService from "./services/tide";
 import * as locationService from "./services/location";
 import * as sunMoonService from "./services/sun-and-moon";
 import * as weatherService from "./services/weather";
 import * as marineService from "./services/marine";
 import * as usgsService from "./services/usgs";
+import typeDefs from "./graphql/schema";
+import resolvers from "./graphql/resolvers";
 
-const typeDefs = gql`
-  type Query {
-    locations: [Location!]!
-    location(id: ID!): Location
-  }
+export interface Context {
+  services: {
+    tide: typeof tideService;
+    location: typeof locationService;
+    sunMoon: typeof sunMoonService;
+    weather: typeof weatherService;
+    marine: typeof marineService;
+    usgs: typeof usgsService;
+  };
+}
 
-  type Location {
-    id: ID!
-    name: String!
-    tidePreditionStations: [TidePreditionStation!]!
-    lat: Float!
-    long: Float!
-    sun(start: String!, end: String!): [SunDetail!]
-    moon(start: String!, end: String!): [MoonDetail!]
-    weatherForecast: [WeatherForecast!]
-    hourlyWeatherForecast: [WeatherForecast!]
-    marineForecast: [MarineForecast!]
-    waterHeight(numDays: Int = 3): [WaterHeight!]
-    waterTemperature(numDays: Int = 3): [WaterTemperature!]
-    wind(numDays: Int = 3): [Wind!]
-    salinity(numDays: Int = 3): Salinity!
-  }
-
-  type TidePreditionStation {
-    id: ID!
-    name: String!
-    url: String!
-    lat: Float!
-    long: Float!
-    tides(start: String!, end: String!): [TideDetail!]
-  }
-
-  type TideDetail {
-    time: String!
-    height: Float!
-    type: String!
-  }
-
-  type SunDetail {
-    date: String!
-    sunrise: String!
-    sunset: String!
-    dawn: String!
-    dusk: String!
-    nauticalDawn: String!
-    nauticalDusk: String!
-  }
-
-  type MoonDetail {
-    date: String!
-    phase: String!
-    illumination: Int!
-  }
-
-  type WeatherForecast {
-    name: String!
-    startTime: String!
-    endTime: String!
-    isDaytime: Boolean!
-    temperature: Int!
-    temperatureUnit: String!
-    windSpeed: String!
-    windDirection: String!
-    icon: String!
-    shortForecast: String!
-    detailedForecast: String!
-  }
-
-  type MarineForecast {
-    timePeriod: String!
-    forecast: String!
-  }
-
-  type WaterHeight {
-    timestamp: String!
-    "measured in feet"
-    height: Float!
-  }
-
-  type WaterTemperature {
-    timestamp: String!
-    "fahrenheit"
-    temperature: Float!
-  }
-
-  type Wind {
-    timestamp: String!
-    "miles per hour"
-    speed: Float!
-    direction: String!
-    directionDegrees: Float!
-  }
-
-  type Salinity {
-    summary: SalinitySummary!
-    detail: [SalinityDetail!]
-  }
-
-  type SalinitySummary {
-    "parts per thousand"
-    averageValue: Float!
-    startTimestamp: String!
-    endTimestamp: String!
-  }
-
-  type SalinityDetail {
-    timestamp: String!
-    "parts per thousand"
-    salinity: Float!
-  }
-`;
-
-const resolvers = {
-  Query: {
-    locations: (_: any, __: any, { services }: any) => {
-      return services.location.getAll();
-    },
-    location: (_: any, args: any, { services }: any) => {
-      return services.location.getById(args.id);
-    }
-  },
-  Location: {
-    tidePreditionStations: (location: any, __: any, { services }: any) => {
-      return location.tideStationIds.map((id: string) =>
-        services.tide.getStationById(id)
-      );
-    },
-    sun: async (location: any, args: any, { services }: any) => {
-      return services.sunMoon.getSunInfo(
-        new Date(args.start),
-        new Date(args.end),
-        location.lat,
-        location.long
-      );
-    },
-    moon: async (location: any, args: any, { services }: any) => {
-      return services.sunMoon.getMoonInfo(
-        new Date(args.start),
-        new Date(args.end),
-        location.lat,
-        location.long
-      );
-    },
-    weatherForecast: async (location: any, args: any, { services }: any) => {
-      return services.weather.getForecast(location);
-    },
-    hourlyWeatherForecast: async (
-      location: any,
-      args: any,
-      { services }: any
-    ) => {
-      return services.weather.getHourlyForecast(location);
-    },
-    marineForecast: async (location: any, args: any, { services }: any) => {
-      return services.marine.getForecast(location);
-    },
-    waterHeight: async (location: any, args: any, { services }: any) => {
-      return services.usgs.getWaterHeight(location, args.numDays);
-    },
-    waterTemperature: async (location: any, args: any, { services }: any) => {
-      return services.usgs.getWaterTemperature(location, args.numDays);
-    },
-    wind: async (location: any, args: any, { services }: any) => {
-      return services.usgs.getWind(location, args.numDays);
-    },
-    salinity: async (location: any, args: any, { services }: any) => {
-      const detail = await services.usgs.getSalinity(location, args.numDays);
-      const sum = detail.reduce((acc: number, cur: any) => {
-        return (acc += Number.parseFloat(cur.salinity));
-      }, 0);
-      const averageValue = (sum / detail.length).toFixed(1);
-
-      return {
-        detail,
-        summary: {
-          averageValue,
-          startTimestamp: detail[0].timestamp,
-          endTimestamp: detail[detail.length - 1].timestamp
-        }
-      };
-    }
-  },
-  TidePreditionStation: {
-    url: (station: any) => {
-      return `https://tidesandcurrents.noaa.gov/stationhome.html?id=${
-        station.id
-      }`;
-    },
-    tides: async (station: any, args: any, { services }: any) => {
-      return await services.tide.getTidePredictions(
-        args.start,
-        args.end,
-        station.id
-      );
-    }
-  }
-};
-
-const context = {
+const context: Context = {
   services: {
     tide: tideService,
     location: locationService,
@@ -215,7 +30,11 @@ const context = {
     usgs: usgsService
   }
 };
-const server = new ApolloServer({ typeDefs, resolvers, context });
+const server = new ApolloServer({
+  typeDefs,
+  resolvers: resolvers as any,
+  context
+});
 
 const app = new Koa();
 server.applyMiddleware({ app, path: "/api" });

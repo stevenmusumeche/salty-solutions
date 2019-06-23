@@ -2,14 +2,14 @@ import querystring from "querystring";
 import { format } from "date-fns";
 import axios from "axios";
 
-interface TideStation {
+export interface TideStationEntity {
   id: string;
   name: string;
   lat: number;
   long: number;
 }
 
-const tideStations: TideStation[] = [
+const tideStations: TideStationEntity[] = [
   {
     id: "8765551",
     name: "Southwest Pass, Vermilion Bay",
@@ -54,7 +54,7 @@ const tideStations: TideStation[] = [
   }
 ];
 
-export const getStationById = (id: string): TideStation | void => {
+export const getStationById = (id: string): TideStationEntity | undefined => {
   return tideStations.find(tideStation => tideStation.id === id);
 };
 
@@ -62,7 +62,7 @@ export async function getTidePredictions(
   start: Date,
   end: Date,
   stationId: string
-) {
+): Promise<{ time: string; height: number; type: string }[]> {
   const [hiLoData, allData] = await Promise.all([
     fetchTideData(start, end, stationId, true),
     fetchTideData(start, end, stationId, false)
@@ -90,7 +90,7 @@ export async function getTidePredictions(
   return normalized;
 }
 
-interface Prediction {
+interface NoaaPrediction {
   t: string;
   v: string;
   type?: "L" | "H";
@@ -104,7 +104,7 @@ async function fetchTideData(
   end: Date,
   stationId: string,
   onlyHighLow: boolean
-): Promise<Prediction[]> {
+): Promise<NoaaPrediction[]> {
   const params = {
     product: "predictions",
     application: "fishing",
@@ -121,7 +121,7 @@ async function fetchTideData(
     `https://tidesandcurrents.noaa.gov/api/datagetter?` +
     querystring.stringify(params);
 
-  const { data } = await axios.get<{ predictions: Prediction[] }>(url);
+  const { data } = await axios.get<{ predictions: NoaaPrediction[] }>(url);
 
   return data.predictions || [];
 }

@@ -1,0 +1,14 @@
+overwrite: true
+schema: "./src/graphql/schema.ts"
+documents: null
+generates:
+  src/generated/graphql.ts:
+    config: 
+      contextType: "../server#Context"
+      defaultMapper: Partial<{T}>
+      mappers:
+        Location: ../services/location#LocationEntity
+        TidePreditionStation: ../services/tide#TideStationEntity
+    plugins:
+      - "typescript"
+      - "typescript-resolvers"

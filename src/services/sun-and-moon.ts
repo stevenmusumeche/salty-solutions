@@ -7,7 +7,15 @@ export const getSunInfo = (
   end: Date,
   lat: number,
   long: number
-) => {
+): {
+  date: string;
+  sunrise: string;
+  nauticalDawn: string;
+  sunset: string;
+  dawn: string;
+  dusk: string;
+  nauticalDusk: string;
+}[] => {
   let results = [];
   let cur = start;
   while (cur <= end) {
@@ -26,7 +34,11 @@ export const getSunInfo = (
   return results;
 };
 
-const getMoonInfoForDate = async (date: Date, lat: number, long: number) => {
+const getMoonInfoForDate = async (
+  date: Date,
+  lat: number,
+  long: number
+): Promise<{ date: string; phase: string; illumination: number }> => {
   // http://aa.usno.navy.mil/data/docs/api.php
   const url = `http://api.usno.navy.mil/rstt/oneday?date=${format(
     date,
@@ -49,7 +61,7 @@ export const getMoonInfo = async (
   end: Date,
   lat: number,
   long: number
-) => {
+): Promise<{ date: string; phase: string; illumination: number }[]> => {
   let dates = [];
   let cur = start;
   while (cur <= end) {
@@ -60,7 +72,7 @@ export const getMoonInfo = async (
   return Promise.all(promises);
 };
 
-function calcIlluminationFromPhase(phase: string) {
+function calcIlluminationFromPhase(phase: string): number {
   if (phase.toLowerCase() === "new moon") {
     return 0;
   } else if (

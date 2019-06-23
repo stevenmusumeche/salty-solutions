@@ -1,7 +1,9 @@
 import xray from "x-ray";
 var x = xray();
 
-export const getForecast = async (location: any) => {
+export const getForecast = async (
+  location: any
+): Promise<{ timePeriod: string; forecast: string }[]> => {
   const url = `http://marine.weather.gov/MapClick.php?zoneid=${
     location.marineZoneId
   }&zflg=1`;
