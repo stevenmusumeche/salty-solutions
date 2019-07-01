@@ -1,8 +1,8 @@
 overwrite: true
-schema: "./src/graphql/schema.ts"
+schema: "./server/src/graphql/schema.ts"
 documents: null
 generates:
-  src/generated/graphql.ts:
+  server/src/generated/graphql.ts:
     config: 
       contextType: "../server#Context"
       defaultMapper: Partial<{T}>
