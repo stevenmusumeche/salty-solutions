@@ -1,6 +1,12 @@
 import React from "react";
+import { string } from "prop-types";
 
-const ConditionCard = ({ label, value }) => {
+interface Props {
+  label: string;
+  value: string;
+}
+
+const ConditionCard: React.FC<Props> = ({ label, value }) => {
   return (
     <div className="bg-white w-full mr-16 rounded-lg shadow-md text-center margin-killer">
       <div

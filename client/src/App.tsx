@@ -1,7 +1,7 @@
 import React from "react";
 import ConditionCard from "./components/ConditionCard";
 
-function App() {
+const App: React.FC = () => {
   return (
     <div className="container mx-auto py-8 min-h-screen">
       <div className="flex items-center justify-between mb-8">
@@ -16,6 +16,6 @@ function App() {
       </div>
     </div>
   );
-}
+};
 
 export default App;
