@@ -18,9 +18,18 @@ export default gql`
     hourlyWeatherForecast: [WeatherForecast!]
     marineForecast: [MarineForecast!]
     waterHeight(numDays: Int): [WaterHeight!]
-    waterTemperature(numDays: Int): [WaterTemperature!]
-    wind(numDays: Int): [Wind!]
+    waterTemperature(numDays: Int): WaterTemperature!
+    wind: Wind!
     salinity(numDays: Int): Salinity!
+    temperature: Temperature!
+  }
+
+  type Temperature {
+    summary: TemperatureSummary!
+  }
+
+  type TemperatureSummary {
+    mostRecent: Float!
   }
 
   type TidePreditionStation {
@@ -80,12 +89,21 @@ export default gql`
   }
 
   type WaterTemperature {
+    summary: WaterTemperatureSummary!
+    detail(numHours: Int): [WaterTemperatureDetail!]
+  }
+
+  type WaterTemperatureSummary {
+    mostRecent: WaterTemperatureDetail
+  }
+
+  type WaterTemperatureDetail {
     timestamp: String!
     "fahrenheit"
     temperature: Float!
   }
 
-  type Wind {
+  type WindDetail {
     timestamp: String!
     "miles per hour"
     speed: Float!
@@ -93,8 +111,23 @@ export default gql`
     directionDegrees: Float!
   }
 
+  type Wind {
+    summary: WindSummary!
+    detail(numHours: Int): [WindDetail!]
+  }
+
+  type WindSummary {
+    mostRecent: WindDetail
+  }
+
+  type CurrentWind {
+    speed: Float!
+    direction: String!
+    directionDegrees: Float!
+  }
+
   type Salinity {
-    summary: SalinitySummary!
+    summary: SalinitySummary
     detail: [SalinityDetail!]
   }
 

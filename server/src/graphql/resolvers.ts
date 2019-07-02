@@ -2,6 +2,7 @@ import { Resolvers } from "../generated/graphql";
 import { ApolloError } from "apollo-server-koa";
 
 const DEFAULT_NUM_DAYS = 3;
+const DEFAULT_NUM_HOURS = 24;
 
 const resolvers: Resolvers = {
   Query: {
@@ -15,6 +16,15 @@ const resolvers: Resolvers = {
     }
   },
   Location: {
+    temperature: async (location, __, { services }) => {
+      const data = await services.weather.getCurrentConditions(location);
+
+      return {
+        summary: {
+          mostRecent: +data.temperature.toFixed(1)
+        }
+      };
+    },
     tidePreditionStations: (location, __, { services }) => {
       return location.tideStationIds
         .map(id => services.tide.getStationById(id))
@@ -52,13 +62,10 @@ const resolvers: Resolvers = {
       );
     },
     waterTemperature: async (location, args, { services }) => {
-      return services.usgs.getWaterTemperature(
-        location,
-        args.numDays || DEFAULT_NUM_DAYS
-      );
+      return { location };
     },
     wind: async (location, args, { services }) => {
-      return services.usgs.getWind(location, args.numDays || DEFAULT_NUM_DAYS);
+      return { location };
     },
     salinity: async (location, args, { services }) => {
       const detail = await services.usgs.getSalinity(
@@ -93,6 +100,34 @@ const resolvers: Resolvers = {
         new Date(args.end),
         station.id
       );
+    }
+  },
+  Wind: {
+    detail: async (wind, args, { services }) => {
+      return services.usgs.getWind(
+        wind.location,
+        args.numHours || DEFAULT_NUM_HOURS
+      );
+    },
+    summary: async (wind, args, { services }) => {
+      return {
+        mostRecent: await services.usgs.getWindLatest(wind.location)
+      };
+    }
+  },
+  WaterTemperature: {
+    detail: async (waterTemperature, args, { services }) => {
+      return services.usgs.getWaterTemperature(
+        waterTemperature.location,
+        args.numHours || DEFAULT_NUM_HOURS
+      );
+    },
+    summary: async (waterTemperature, args, { services }) => {
+      return {
+        mostRecent: await services.usgs.getWaterTemperatureLatest(
+          waterTemperature.location
+        )
+      };
     }
   }
 };

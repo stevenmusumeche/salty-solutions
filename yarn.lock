@@ -206,6 +206,11 @@
   resolved "https://registry.yarnpkg.com/@types/is-glob/-/is-glob-4.0.1.tgz#a93eec1714172c8eb3225a1cc5eb88c2477b7d00"
   integrity sha512-k3RS5HyBPu4h+5hTmIEfPB2rl5P3LnGdQEZrV2b9OWTJVtsUQ2VBcedqYKGqxvZqle5UALUXdSfVA8nf3HfyWQ==
 
+"@types/lodash@^4.14.135":
+  version "4.14.135"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.135.tgz#d2607c35dd68f70c2b35ba020c667493dedd8447"
+  integrity sha512-Ed+tSZ9qM1oYpi5kzdsBuOzcAIn1wDW+e8TFJ50IMJMlSopGdJgKAbhHzN6h1E1OfjlGOr2JepzEWtg9NIfoNg==
+
 "@types/mkdirp@0.5.2":
   version "0.5.2"
   resolved "https://registry.yarnpkg.com/@types/mkdirp/-/mkdirp-0.5.2.tgz#503aacfe5cc2703d5484326b1b27efa67a339c1f"

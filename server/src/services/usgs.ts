@@ -1,4 +1,6 @@
 import axios from "axios";
+import { LocationEntity } from "./location";
+import { orderBy } from "lodash";
 
 export const getWaterHeight = async (
   location: any,
@@ -10,14 +12,30 @@ export const getWaterHeight = async (
   }));
 };
 
+export const getWaterTemperatureLatest = async (location: LocationEntity) => {
+  const data = await getWaterTemperature(location, 2);
+
+  if (data.length < 1) return null;
+
+  return orderBy(data, ["timestamp"], ["desc"])[0];
+};
+
 export const getWaterTemperature = async (
   location: any,
-  numDays: number
+  numHours: number
 ): Promise<{ timestamp: string; temperature: number }[]> => {
-  return fetchAndMap(location.usgsSiteId, "00010", numDays, (v: any) => ({
+  return fetchAndMap(location.usgsSiteId, "00010", numHours, (v: any) => ({
     timestamp: new Date(v.dateTime).toISOString(),
     temperature: ((Number(v.value) * 9) / 5 + 32).toFixed(1)
   }));
+};
+
+export const getWindLatest = async (location: LocationEntity) => {
+  const data = await getWind(location, 2);
+
+  if (data.length < 1) return null;
+
+  return orderBy(data, ["timestamp"], ["desc"])[0];
 };
 
 interface Wind {
@@ -28,11 +46,11 @@ interface Wind {
 }
 export const getWind = async (
   location: any,
-  numDays: number
+  numHours: number
 ): Promise<Wind[]> => {
   const [speeds, directions] = await Promise.all([
-    getWindSpeed(location, numDays),
-    getWindDirection(location, numDays)
+    getWindSpeed(location, numHours),
+    getWindDirection(location, numHours)
   ]);
 
   const combined: Wind[] = [];
@@ -56,9 +74,9 @@ export const getWind = async (
 
 const getWindSpeed = async (
   location: any,
-  numDays: number
+  numHours: number
 ): Promise<{ timestamp: string; speed: number }[]> => {
-  return fetchAndMap(location.usgsSiteId, "00035", numDays, (v: any) => ({
+  return fetchAndMap(location.usgsSiteId, "00035", numHours, (v: any) => ({
     timestamp: new Date(v.dateTime).toISOString(),
     speed: Number(v.value)
   }));
@@ -66,9 +84,9 @@ const getWindSpeed = async (
 
 const getWindDirection = async (
   location: any,
-  numDays: number
+  numHours: number
 ): Promise<{ timestamp: string; degrees: number; direction: string }[]> => {
-  return fetchAndMap(location.usgsSiteId, "00036", numDays, (v: any) => ({
+  return fetchAndMap(location.usgsSiteId, "00036", numHours, (v: any) => ({
     timestamp: new Date(v.dateTime).toISOString(),
     degrees: Number(v.value),
     direction: degreesToCompass(Number(v.value))
@@ -88,12 +106,14 @@ export const getSalinity = (
 async function fetchAndMap(
   siteId: string,
   parameterCode: string,
-  numDays: number,
+  numHours: number,
   mapFn: any
 ) {
-  const url = `https://waterservices.usgs.gov/nwis/iv/?format=json&sites=${siteId}&period=P${numDays}D&parameterCd=${parameterCode}&siteStatus=all`;
+  const url = `https://waterservices.usgs.gov/nwis/iv/?format=json&sites=${siteId}&period=PT${numHours}H&parameterCd=${parameterCode}&siteStatus=all`;
 
   const { data } = await axios.get(url);
+
+  if (data.value.timeSeries.length < 1) return [];
 
   return data.value.timeSeries[0].values[0].value.map(mapFn);
 }

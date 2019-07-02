@@ -7,6 +7,9 @@ generates:
       contextType: "../server#Context"
       defaultMapper: Partial<{T}>
       mappers:
+        # todo
+        Wind: any
+        WaterTemperature: any
         Location: ../services/location#LocationEntity
         TidePreditionStation: ../services/tide#TideStationEntity
     plugins:

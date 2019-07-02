@@ -13,6 +13,13 @@ export type Scalars = {
   Float: number;
 };
 
+export type CurrentWind = {
+  __typename?: "CurrentWind";
+  speed: Scalars["Float"];
+  direction: Scalars["String"];
+  directionDegrees: Scalars["Float"];
+};
+
 export type Location = {
   __typename?: "Location";
   id: Scalars["ID"];
@@ -26,9 +33,10 @@ export type Location = {
   hourlyWeatherForecast?: Maybe<Array<WeatherForecast>>;
   marineForecast?: Maybe<Array<MarineForecast>>;
   waterHeight?: Maybe<Array<WaterHeight>>;
-  waterTemperature?: Maybe<Array<WaterTemperature>>;
-  wind?: Maybe<Array<Wind>>;
+  waterTemperature: WaterTemperature;
+  wind: Wind;
   salinity: Salinity;
+  temperature: Temperature;
 };
 
 export type LocationSunArgs = {
@@ -46,10 +54,6 @@ export type LocationWaterHeightArgs = {
 };
 
 export type LocationWaterTemperatureArgs = {
-  numDays?: Maybe<Scalars["Int"]>;
-};
-
-export type LocationWindArgs = {
   numDays?: Maybe<Scalars["Int"]>;
 };
 
@@ -82,7 +86,7 @@ export type QueryLocationArgs = {
 
 export type Salinity = {
   __typename?: "Salinity";
-  summary: SalinitySummary;
+  summary?: Maybe<SalinitySummary>;
   detail?: Maybe<Array<SalinityDetail>>;
 };
 
@@ -110,6 +114,16 @@ export type SunDetail = {
   dusk: Scalars["String"];
   nauticalDawn: Scalars["String"];
   nauticalDusk: Scalars["String"];
+};
+
+export type Temperature = {
+  __typename?: "Temperature";
+  summary: TemperatureSummary;
+};
+
+export type TemperatureSummary = {
+  __typename?: "TemperatureSummary";
+  mostRecent: Scalars["Float"];
 };
 
 export type TideDetail = {
@@ -143,9 +157,24 @@ export type WaterHeight = {
 
 export type WaterTemperature = {
   __typename?: "WaterTemperature";
+  summary: WaterTemperatureSummary;
+  detail?: Maybe<Array<WaterTemperatureDetail>>;
+};
+
+export type WaterTemperatureDetailArgs = {
+  numHours?: Maybe<Scalars["Int"]>;
+};
+
+export type WaterTemperatureDetail = {
+  __typename?: "WaterTemperatureDetail";
   timestamp: Scalars["String"];
   /** fahrenheit */
   temperature: Scalars["Float"];
+};
+
+export type WaterTemperatureSummary = {
+  __typename?: "WaterTemperatureSummary";
+  mostRecent?: Maybe<WaterTemperatureDetail>;
 };
 
 export type WeatherForecast = {
@@ -165,11 +194,26 @@ export type WeatherForecast = {
 
 export type Wind = {
   __typename?: "Wind";
+  summary: WindSummary;
+  detail?: Maybe<Array<WindDetail>>;
+};
+
+export type WindDetailArgs = {
+  numHours?: Maybe<Scalars["Int"]>;
+};
+
+export type WindDetail = {
+  __typename?: "WindDetail";
   timestamp: Scalars["String"];
   /** miles per hour */
   speed: Scalars["Float"];
   direction: Scalars["String"];
   directionDegrees: Scalars["Float"];
+};
+
+export type WindSummary = {
+  __typename?: "WindSummary";
+  mostRecent?: Maybe<WindDetail>;
 };
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
@@ -257,11 +301,20 @@ export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Partial<Scalars["Boolean"]>>;
   MarineForecast: ResolverTypeWrapper<Partial<MarineForecast>>;
   WaterHeight: ResolverTypeWrapper<Partial<WaterHeight>>;
-  WaterTemperature: ResolverTypeWrapper<Partial<WaterTemperature>>;
-  Wind: ResolverTypeWrapper<Partial<Wind>>;
+  WaterTemperature: ResolverTypeWrapper<any>;
+  WaterTemperatureSummary: ResolverTypeWrapper<
+    Partial<WaterTemperatureSummary>
+  >;
+  WaterTemperatureDetail: ResolverTypeWrapper<Partial<WaterTemperatureDetail>>;
+  Wind: ResolverTypeWrapper<any>;
+  WindSummary: ResolverTypeWrapper<Partial<WindSummary>>;
+  WindDetail: ResolverTypeWrapper<Partial<WindDetail>>;
   Salinity: ResolverTypeWrapper<Partial<Salinity>>;
   SalinitySummary: ResolverTypeWrapper<Partial<SalinitySummary>>;
   SalinityDetail: ResolverTypeWrapper<Partial<SalinityDetail>>;
+  Temperature: ResolverTypeWrapper<Partial<Temperature>>;
+  TemperatureSummary: ResolverTypeWrapper<Partial<TemperatureSummary>>;
+  CurrentWind: ResolverTypeWrapper<Partial<CurrentWind>>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -280,11 +333,27 @@ export type ResolversParentTypes = {
   Boolean: Partial<Scalars["Boolean"]>;
   MarineForecast: Partial<MarineForecast>;
   WaterHeight: Partial<WaterHeight>;
-  WaterTemperature: Partial<WaterTemperature>;
-  Wind: Partial<Wind>;
+  WaterTemperature: any;
+  WaterTemperatureSummary: Partial<WaterTemperatureSummary>;
+  WaterTemperatureDetail: Partial<WaterTemperatureDetail>;
+  Wind: any;
+  WindSummary: Partial<WindSummary>;
+  WindDetail: Partial<WindDetail>;
   Salinity: Partial<Salinity>;
   SalinitySummary: Partial<SalinitySummary>;
   SalinityDetail: Partial<SalinityDetail>;
+  Temperature: Partial<Temperature>;
+  TemperatureSummary: Partial<TemperatureSummary>;
+  CurrentWind: Partial<CurrentWind>;
+};
+
+export type CurrentWindResolvers<
+  ContextType = Context,
+  ParentType = ResolversParentTypes["CurrentWind"]
+> = {
+  speed?: Resolver<ResolversTypes["Float"], ParentType, ContextType>;
+  direction?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  directionDegrees?: Resolver<ResolversTypes["Float"], ParentType, ContextType>;
 };
 
 export type LocationResolvers<
@@ -334,22 +403,22 @@ export type LocationResolvers<
     LocationWaterHeightArgs
   >;
   waterTemperature?: Resolver<
-    Maybe<Array<ResolversTypes["WaterTemperature"]>>,
+    ResolversTypes["WaterTemperature"],
     ParentType,
     ContextType,
     LocationWaterTemperatureArgs
   >;
-  wind?: Resolver<
-    Maybe<Array<ResolversTypes["Wind"]>>,
-    ParentType,
-    ContextType,
-    LocationWindArgs
-  >;
+  wind?: Resolver<ResolversTypes["Wind"], ParentType, ContextType>;
   salinity?: Resolver<
     ResolversTypes["Salinity"],
     ParentType,
     ContextType,
     LocationSalinityArgs
+  >;
+  temperature?: Resolver<
+    ResolversTypes["Temperature"],
+    ParentType,
+    ContextType
   >;
 };
 
@@ -392,7 +461,7 @@ export type SalinityResolvers<
   ParentType = ResolversParentTypes["Salinity"]
 > = {
   summary?: Resolver<
-    ResolversTypes["SalinitySummary"],
+    Maybe<ResolversTypes["SalinitySummary"]>,
     ParentType,
     ContextType
   >;
@@ -433,6 +502,24 @@ export type SunDetailResolvers<
   nauticalDusk?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
 };
 
+export type TemperatureResolvers<
+  ContextType = Context,
+  ParentType = ResolversParentTypes["Temperature"]
+> = {
+  summary?: Resolver<
+    ResolversTypes["TemperatureSummary"],
+    ParentType,
+    ContextType
+  >;
+};
+
+export type TemperatureSummaryResolvers<
+  ContextType = Context,
+  ParentType = ResolversParentTypes["TemperatureSummary"]
+> = {
+  mostRecent?: Resolver<ResolversTypes["Float"], ParentType, ContextType>;
+};
+
 export type TideDetailResolvers<
   ContextType = Context,
   ParentType = ResolversParentTypes["TideDetail"]
@@ -471,8 +558,36 @@ export type WaterTemperatureResolvers<
   ContextType = Context,
   ParentType = ResolversParentTypes["WaterTemperature"]
 > = {
+  summary?: Resolver<
+    ResolversTypes["WaterTemperatureSummary"],
+    ParentType,
+    ContextType
+  >;
+  detail?: Resolver<
+    Maybe<Array<ResolversTypes["WaterTemperatureDetail"]>>,
+    ParentType,
+    ContextType,
+    WaterTemperatureDetailArgs
+  >;
+};
+
+export type WaterTemperatureDetailResolvers<
+  ContextType = Context,
+  ParentType = ResolversParentTypes["WaterTemperatureDetail"]
+> = {
   timestamp?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   temperature?: Resolver<ResolversTypes["Float"], ParentType, ContextType>;
+};
+
+export type WaterTemperatureSummaryResolvers<
+  ContextType = Context,
+  ParentType = ResolversParentTypes["WaterTemperatureSummary"]
+> = {
+  mostRecent?: Resolver<
+    Maybe<ResolversTypes["WaterTemperatureDetail"]>,
+    ParentType,
+    ContextType
+  >;
 };
 
 export type WeatherForecastResolvers<
@@ -500,13 +615,38 @@ export type WindResolvers<
   ContextType = Context,
   ParentType = ResolversParentTypes["Wind"]
 > = {
+  summary?: Resolver<ResolversTypes["WindSummary"], ParentType, ContextType>;
+  detail?: Resolver<
+    Maybe<Array<ResolversTypes["WindDetail"]>>,
+    ParentType,
+    ContextType,
+    WindDetailArgs
+  >;
+};
+
+export type WindDetailResolvers<
+  ContextType = Context,
+  ParentType = ResolversParentTypes["WindDetail"]
+> = {
   timestamp?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   speed?: Resolver<ResolversTypes["Float"], ParentType, ContextType>;
   direction?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   directionDegrees?: Resolver<ResolversTypes["Float"], ParentType, ContextType>;
 };
 
+export type WindSummaryResolvers<
+  ContextType = Context,
+  ParentType = ResolversParentTypes["WindSummary"]
+> = {
+  mostRecent?: Resolver<
+    Maybe<ResolversTypes["WindDetail"]>,
+    ParentType,
+    ContextType
+  >;
+};
+
 export type Resolvers<ContextType = Context> = {
+  CurrentWind?: CurrentWindResolvers<ContextType>;
   Location?: LocationResolvers<ContextType>;
   MarineForecast?: MarineForecastResolvers<ContextType>;
   MoonDetail?: MoonDetailResolvers<ContextType>;
@@ -515,12 +655,18 @@ export type Resolvers<ContextType = Context> = {
   SalinityDetail?: SalinityDetailResolvers<ContextType>;
   SalinitySummary?: SalinitySummaryResolvers<ContextType>;
   SunDetail?: SunDetailResolvers<ContextType>;
+  Temperature?: TemperatureResolvers<ContextType>;
+  TemperatureSummary?: TemperatureSummaryResolvers<ContextType>;
   TideDetail?: TideDetailResolvers<ContextType>;
   TidePreditionStation?: TidePreditionStationResolvers<ContextType>;
   WaterHeight?: WaterHeightResolvers<ContextType>;
   WaterTemperature?: WaterTemperatureResolvers<ContextType>;
+  WaterTemperatureDetail?: WaterTemperatureDetailResolvers<ContextType>;
+  WaterTemperatureSummary?: WaterTemperatureSummaryResolvers<ContextType>;
   WeatherForecast?: WeatherForecastResolvers<ContextType>;
   Wind?: WindResolvers<ContextType>;
+  WindDetail?: WindDetailResolvers<ContextType>;
+  WindSummary?: WindSummaryResolvers<ContextType>;
 };
 
 /**
