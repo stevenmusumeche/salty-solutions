@@ -20,12 +20,13 @@ export default gql`
     waterHeight(numDays: Int): [WaterHeight!]
     waterTemperature(numDays: Int): WaterTemperature!
     wind: Wind!
-    salinity(numDays: Int): Salinity!
+    salinity(numHours: Int): Salinity!
     temperature: Temperature!
   }
 
   type Temperature {
     summary: TemperatureSummary!
+    detail(numHours: Int): [TemperatureDetail!]
   }
 
   type TemperatureSummary {
@@ -90,14 +91,14 @@ export default gql`
 
   type WaterTemperature {
     summary: WaterTemperatureSummary!
-    detail(numHours: Int): [WaterTemperatureDetail!]
+    detail(numHours: Int): [TemperatureDetail!]
   }
 
   type WaterTemperatureSummary {
-    mostRecent: WaterTemperatureDetail
+    mostRecent: TemperatureDetail
   }
 
-  type WaterTemperatureDetail {
+  type TemperatureDetail {
     timestamp: String!
     "fahrenheit"
     temperature: Float!

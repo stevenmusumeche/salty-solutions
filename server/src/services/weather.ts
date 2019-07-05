@@ -1,5 +1,7 @@
 import axios from "axios";
 import { LocationEntity } from "./location";
+import { format, subHours } from "date-fns";
+import { orderBy } from "lodash";
 
 interface WeatherForecast {
   startTime: string;
@@ -43,6 +45,31 @@ export const getCurrentConditions = async (location: LocationEntity) => {
   };
 };
 
+export const getConditions = async (
+  location: LocationEntity,
+  numHours: number
+) => {
+  const start = format(
+    subHours(new Date(), numHours),
+    "yyyy-MM-dd'T'HH:mm:ssXXX"
+  );
+  const end = format(new Date(), "yyyy-MM-dd'T'HH:mm:ssXXX");
+
+  const url = `https://api.weather.gov/stations/${
+    location.weatherApiStationId
+  }/observations?end=${end}&start=${start}`;
+
+  const { data } = await axios.get<any>(url);
+
+  let temperature = data.features.map((x: any) => ({
+    timestamp: x.properties.timestamp,
+    temperature: celciusToFahrenheit(x.properties.temperature.value)
+  }));
+  temperature = orderBy(temperature, ["timestamp"], ["asc"]);
+
+  return { temperature };
+};
+
 interface NWSLatestObservations {
   properties: {
     temperature: NWSValue;
@@ -67,5 +94,5 @@ interface NWSValue {
 }
 
 function celciusToFahrenheit(celcius: number) {
-  return celcius * 1.8 + 32;
+  return (celcius * 1.8 + 32).toFixed(1);
 }

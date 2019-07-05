@@ -1,10 +1,8 @@
 import React from "react";
 
-interface Props {}
-
-const SkeletonCharacter: React.FC<Props> = ({}) => {
+const SkeletonCharacter: React.FC = () => {
   return (
-    <div className="m-auto mt-4 inline-block">
+    <div className="m-auto inline-block">
       <div className="skeleton-character" style={{ width: 130 }} />
       <div className="skeleton-character" style={{ width: 100 }} />
       <div className="skeleton-character" />

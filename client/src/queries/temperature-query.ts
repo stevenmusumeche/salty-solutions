@@ -7,6 +7,10 @@ const TEMPERATURE_QUERY = gql`
         summary {
           mostRecent
         }
+        detail(numHours: 72) {
+          timestamp
+          temperature
+        }
       }
     }
   }

@@ -16,14 +16,8 @@ const resolvers: Resolvers = {
     }
   },
   Location: {
-    temperature: async (location, __, { services }) => {
-      const data = await services.weather.getCurrentConditions(location);
-
-      return {
-        summary: {
-          mostRecent: +data.temperature.toFixed(1)
-        }
-      };
+    temperature: async location => {
+      return { location };
     },
     tidePreditionStations: (location, __, { services }) => {
       return location.tideStationIds
@@ -61,16 +55,16 @@ const resolvers: Resolvers = {
         args.numDays || DEFAULT_NUM_DAYS
       );
     },
-    waterTemperature: async (location, args, { services }) => {
+    waterTemperature: async location => {
       return { location };
     },
-    wind: async (location, args, { services }) => {
+    wind: async location => {
       return { location };
     },
     salinity: async (location, args, { services }) => {
       const detail = await services.usgs.getSalinity(
         location,
-        args.numDays || DEFAULT_NUM_DAYS
+        args.numHours || DEFAULT_NUM_HOURS
       );
 
       const sum = detail.reduce((acc: number, cur) => {
@@ -128,6 +122,24 @@ const resolvers: Resolvers = {
           waterTemperature.location
         )
       };
+    }
+  },
+  Temperature: {
+    summary: async (temperature, __, { services }) => {
+      const data = await services.weather.getCurrentConditions(
+        temperature.location
+      );
+
+      return {
+        mostRecent: +data.temperature
+      };
+    },
+    detail: async (temperature, args, { services }) => {
+      const data = await services.weather.getConditions(
+        temperature.location,
+        args.numHours || DEFAULT_NUM_HOURS
+      );
+      return data.temperature;
     }
   }
 };

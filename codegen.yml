@@ -10,6 +10,7 @@ generates:
         # todo
         Wind: any
         WaterTemperature: any
+        Temperature: any
         Location: ../services/location#LocationEntity
         TidePreditionStation: ../services/tide#TideStationEntity
     plugins:

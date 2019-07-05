@@ -5,6 +5,7 @@ import WIND_QUERY from "./queries/wind-query";
 import TEMPERATURE_QUERY from "./queries/temperature-query";
 import WATER_TEMPERATURE_QUERY from "./queries/water-temperature-query";
 import MiniGraph from "./components/MiniGraph";
+import SALINITY_QUERY from "./queries/salinity-query";
 
 const App: React.FC = () => {
   const [windResult] = useQuery({
@@ -19,6 +20,10 @@ const App: React.FC = () => {
     query: WATER_TEMPERATURE_QUERY
   });
 
+  const [salinityResult] = useQuery({
+    query: SALINITY_QUERY
+  });
+
   return (
     <div className="container mx-auto py-8 min-h-screen">
       <div className="flex items-center justify-between mb-8">
@@ -30,8 +35,9 @@ const App: React.FC = () => {
           fetching={windResult.fetching}
           error={windResult.error}
           value={
-            windResult.data &&
-            windResult.data.location.wind.summary.mostRecent.speed
+            windResult.data && windResult.data.location.wind.summary.mostRecent
+              ? windResult.data.location.wind.summary.mostRecent.speed
+              : "?"
           }
           label="Wind Speed"
         />
@@ -39,13 +45,24 @@ const App: React.FC = () => {
           fetching={windResult.fetching}
           error={windResult.error}
           value={
-            windResult.data &&
-            windResult.data.location.wind.summary.mostRecent.direction
+            windResult.data && windResult.data.location.wind.summary.mostRecent
+              ? windResult.data.location.wind.summary.mostRecent.direction
+              : "?"
           }
           label="Wind Direction"
         />
-        {/* todo */}
-        <ConditionCard value="14" label="Salinity" fetching={false} />
+        <ConditionCard
+          label="Salinity"
+          fetching={salinityResult.fetching}
+          error={salinityResult.error}
+          value={
+            salinityResult.data &&
+            salinityResult.data.location.salinitySummary.summary
+              ? salinityResult.data.location.salinitySummary.summary
+                  .averageValue
+              : "?"
+          }
+        />
         <ConditionCard
           label="Air Temperature"
           fetching={tempResult.fetching}
@@ -81,12 +98,46 @@ const App: React.FC = () => {
           }
         />
         <MiniGraph />
-        <MiniGraph />
-        <MiniGraph />
-        <MiniGraph />
+        <MiniGraph
+          data={
+            salinityResult.data &&
+            salinityResult.data.location.salinityDetail.detail.map(
+              (data: any) => ({
+                y: data.salinity,
+                x: data.timestamp
+              })
+            )
+          }
+        />
+        <MiniGraph
+          data={
+            tempResult.data &&
+            tempResult.data.location.temperature.detail.map((data: any) => ({
+              y: data.temperature,
+              x: data.timestamp
+            }))
+          }
+          dependentAxisTickFormat={noDecimals}
+        />
+        <MiniGraph
+          data={
+            waterTempResult.data &&
+            waterTempResult.data.location.waterTemperature.detail.map(
+              (data: any) => ({
+                y: data.temperature,
+                x: data.timestamp
+              })
+            )
+          }
+          dependentAxisTickFormat={noDecimals}
+        />
       </div>
     </div>
   );
 };
 
 export default App;
+
+function noDecimals(x: any) {
+  return x.toFixed(0);
+}

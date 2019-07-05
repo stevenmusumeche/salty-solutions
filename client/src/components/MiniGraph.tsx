@@ -4,12 +4,16 @@ import { differenceInCalendarDays } from "date-fns";
 
 interface Props {
   data?: any;
+  dependentAxisTickFormat?: (x: any) => any;
 }
 
-const MiniGraph: React.FC<Props> = ({ data }) => {
+const MiniGraph: React.FC<Props> = ({ data, dependentAxisTickFormat }) => {
   return (
     <div className="bg-white w-full mr-8 rounded-lg shadow-md text-center margin-killer">
-      <VictoryChart padding={{ left: 50, top: 20, right: 30, bottom: 50 }}>
+      <VictoryChart
+        padding={{ left: 50, top: 20, right: 30, bottom: 50 }}
+        domainPadding={5}
+      >
         <VictoryAxis
           fixLabelOverlap={false}
           tickCount={3}
@@ -28,7 +32,9 @@ const MiniGraph: React.FC<Props> = ({ data }) => {
         <VictoryAxis
           scale={{ x: "time" }}
           dependentAxis
+          tickCount={5}
           style={{ tickLabels: { fontSize: 24 } }}
+          tickFormat={dependentAxisTickFormat}
         />
         <VictoryLine
           interpolation="natural"

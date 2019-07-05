@@ -31,7 +31,7 @@ export const getWaterTemperature = async (
 };
 
 export const getWindLatest = async (location: LocationEntity) => {
-  const data = await getWind(location, 2);
+  const data = await getWind(location, 12);
 
   if (data.length < 1) return null;
 
@@ -95,9 +95,9 @@ const getWindDirection = async (
 
 export const getSalinity = (
   location: any,
-  numDays: number
+  numHours: number
 ): Promise<{ timestamp: string; salinity: number }[]> => {
-  return fetchAndMap(location.usgsSiteId, "00480", numDays, (v: any) => ({
+  return fetchAndMap(location.usgsSiteId, "00480", numHours, (v: any) => ({
     timestamp: new Date(v.dateTime).toISOString(),
     salinity: +v.value
   }));
