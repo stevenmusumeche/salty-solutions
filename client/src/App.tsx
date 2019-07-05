@@ -4,6 +4,7 @@ import { useQuery } from "urql";
 import WIND_QUERY from "./queries/wind-query";
 import TEMPERATURE_QUERY from "./queries/temperature-query";
 import WATER_TEMPERATURE_QUERY from "./queries/water-temperature-query";
+import MiniGraph from "./components/MiniGraph";
 
 const App: React.FC = () => {
   const [windResult] = useQuery({
@@ -24,7 +25,7 @@ const App: React.FC = () => {
         <h1 className="text-3xl font-semibold">Calcasieu Lake</h1>
         <div>date selector</div>
       </div>
-      <div className="flex justify-between">
+      <div className="flex justify-between mb-8">
         <ConditionCard
           fetching={windResult.fetching}
           error={windResult.error}
@@ -43,14 +44,17 @@ const App: React.FC = () => {
           }
           label="Wind Direction"
         />
-        {/* <ConditionCard value="14" label="Salinity" /> */}
+        {/* todo */}
+        <ConditionCard value="14" label="Salinity" fetching={false} />
         <ConditionCard
           label="Air Temperature"
           fetching={tempResult.fetching}
           error={tempResult.error}
           value={
             tempResult.data &&
-            `${tempResult.data.location.temperature.summary.mostRecent}°`
+            `${Math.round(
+              tempResult.data.location.temperature.summary.mostRecent
+            )}°`
           }
         />
         <ConditionCard
@@ -59,12 +63,27 @@ const App: React.FC = () => {
           error={waterTempResult.error}
           value={
             waterTempResult.data &&
-            `${
+            `${Math.round(
               waterTempResult.data.location.waterTemperature.summary.mostRecent
                 .temperature
-            }°`
+            )}°`
           }
         />
+      </div>
+      <div className="flex justify-between">
+        <MiniGraph
+          data={
+            windResult.data &&
+            windResult.data.location.wind.detail.map((data: any) => ({
+              y: data.speed,
+              x: data.timestamp
+            }))
+          }
+        />
+        <MiniGraph />
+        <MiniGraph />
+        <MiniGraph />
+        <MiniGraph />
       </div>
     </div>
   );
