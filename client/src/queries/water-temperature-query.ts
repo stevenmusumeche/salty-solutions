@@ -10,7 +10,7 @@ const WATER_TEMPERATURE_QUERY = gql`
             temperature
           }
         }
-        detail(numHours: 72) {
+        detail(numHours: 48) {
           timestamp
           temperature
         }

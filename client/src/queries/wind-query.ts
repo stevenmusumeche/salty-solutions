@@ -9,7 +9,7 @@ const WIND_QUERY = gql`
             ...WindDetailFields
           }
         }
-        detail(numHours: 72) {
+        detail(numHours: 48) {
           ...WindDetailFields
         }
       }

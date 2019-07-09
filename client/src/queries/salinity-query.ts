@@ -13,7 +13,7 @@ const SALINITY_QUERY = gql`
     }
 
     location(id: "2") {
-      salinityDetail: salinity(numHours: 72) {
+      salinityDetail: salinity(numHours: 48) {
         detail {
           timestamp
           salinity

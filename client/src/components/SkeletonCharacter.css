@@ -8,6 +8,10 @@
   animation: shine-lines 1.2s infinite linear;
 }
 
+.skeleton-character:first-child {
+  margin-top: 0;
+}
+
 @keyframes shine-lines {
   0% {
     background-position: -100px;

@@ -12,7 +12,10 @@ interface Props {
 }
 
 const Wrapper: React.FC<{ children: ReactNode }> = ({ children }) => (
-  <div className="relative bg-white w-full mr-8 rounded-lg shadow-md text-center margin-killer flex-col flex h-40 justify-between align-center flex-grow">
+  <div
+    className="relative bg-white w-full mr-8 rounded-lg shadow-md text-center margin-killer flex-col flex justify-between align-center flex-grow"
+    style={{ minHeight: "12rem" }}
+  >
     {children}
   </div>
 );
@@ -24,7 +27,7 @@ const Label: React.FC<{ label: string }> = ({ label }) => (
 );
 
 const ConditionCard: React.FC<Props> = ({ label, value, fetching, error }) => {
-  let displayValue;
+  let displayValue: any = null;
   let fontSize = "6em";
 
   if (fetching) {
@@ -40,18 +43,8 @@ const ConditionCard: React.FC<Props> = ({ label, value, fetching, error }) => {
     );
   } else {
     displayValue = value;
-    const longDirections = [
-      "WNW",
-      "NNW",
-      "ENE",
-      "NNE",
-      "ESE",
-      "SSE",
-      "WSW",
-      "SSW"
-    ];
-    if (longDirections.includes(displayValue || "")) {
-      fontSize = "5em";
+    if (displayValue.length > 3) {
+      fontSize = "5.5em";
     }
   }
 

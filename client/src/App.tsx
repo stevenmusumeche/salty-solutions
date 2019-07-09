@@ -7,6 +7,15 @@ import WATER_TEMPERATURE_QUERY from "./queries/water-temperature-query";
 import MiniGraph from "./components/MiniGraph";
 import SALINITY_QUERY from "./queries/salinity-query";
 
+// import {
+//   salinityResult,
+//   tempResult,
+//   waterTempResult,
+//   windResult
+// } from "./mock-data";
+
+import MiniWindGraph from "./components/MiniWindGraph";
+
 const App: React.FC = () => {
   const [windResult] = useQuery({
     query: WIND_QUERY
@@ -36,23 +45,15 @@ const App: React.FC = () => {
           error={windResult.error}
           value={
             windResult.data && windResult.data.location.wind.summary.mostRecent
-              ? windResult.data.location.wind.summary.mostRecent.speed
+              ? windResult.data.location.wind.summary.mostRecent.speed +
+                "" +
+                windResult.data.location.wind.summary.mostRecent.direction
               : "?"
           }
-          label="Wind Speed"
+          label="Wind (mph)"
         />
         <ConditionCard
-          fetching={windResult.fetching}
-          error={windResult.error}
-          value={
-            windResult.data && windResult.data.location.wind.summary.mostRecent
-              ? windResult.data.location.wind.summary.mostRecent.direction
-              : "?"
-          }
-          label="Wind Direction"
-        />
-        <ConditionCard
-          label="Salinity"
+          label="Salinity (ppt)"
           fetching={salinityResult.fetching}
           error={salinityResult.error}
           value={
@@ -64,7 +65,7 @@ const App: React.FC = () => {
           }
         />
         <ConditionCard
-          label="Air Temperature"
+          label="Air Temperature (F)"
           fetching={tempResult.fetching}
           error={tempResult.error}
           value={
@@ -75,7 +76,7 @@ const App: React.FC = () => {
           }
         />
         <ConditionCard
-          label="Water Temperature"
+          label="Water Temperature (F)"
           fetching={waterTempResult.fetching}
           error={waterTempResult.error}
           value={
@@ -88,17 +89,23 @@ const App: React.FC = () => {
         />
       </div>
       <div className="flex justify-between">
-        <MiniGraph
+        <MiniWindGraph
+          fetching={windResult.fetching}
+          error={windResult.error}
           data={
             windResult.data &&
             windResult.data.location.wind.detail.map((data: any) => ({
               y: data.speed,
-              x: data.timestamp
+              x: data.timestamp,
+              directionDegrees: data.directionDegrees,
+              direction: data.direction
             }))
           }
         />
-        <MiniGraph />
+
         <MiniGraph
+          fetching={salinityResult.fetching}
+          error={salinityResult.error}
           data={
             salinityResult.data &&
             salinityResult.data.location.salinityDetail.detail.map(
@@ -110,6 +117,8 @@ const App: React.FC = () => {
           }
         />
         <MiniGraph
+          fetching={salinityResult.fetching}
+          error={salinityResult.error}
           data={
             tempResult.data &&
             tempResult.data.location.temperature.detail.map((data: any) => ({
@@ -120,6 +129,8 @@ const App: React.FC = () => {
           dependentAxisTickFormat={noDecimals}
         />
         <MiniGraph
+          fetching={waterTempResult.fetching}
+          error={waterTempResult.error}
           data={
             waterTempResult.data &&
             waterTempResult.data.location.waterTemperature.detail.map(

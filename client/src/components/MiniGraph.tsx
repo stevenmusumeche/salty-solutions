@@ -1,28 +1,46 @@
 import React from "react";
 import { VictoryChart, VictoryLine, VictoryAxis } from "victory";
 import { differenceInCalendarDays } from "date-fns";
+import SkeletonCharacter from "./SkeletonCharacter";
+import { CombinedError } from "urql";
+import ErrorIcon from "../assets/error.svg";
+import MiniGraphWrapper from "./MiniGraphWrapper";
 
 interface Props {
-  data?: any;
   dependentAxisTickFormat?: (x: any) => any;
+  tickValues?: any;
+  data?: any;
+  fetching: boolean;
+  error?: CombinedError;
 }
 
-const MiniGraph: React.FC<Props> = ({ data, dependentAxisTickFormat }) => {
-  return (
-    <div className="bg-white w-full mr-8 rounded-lg shadow-md text-center margin-killer">
+const MiniGraph: React.FC<Props> = ({
+  data,
+  dependentAxisTickFormat,
+  fetching,
+  error,
+  tickValues
+}) => {
+  let displayVal = null;
+  if (fetching) {
+    displayVal = <SkeletonCharacter />;
+  } else if (error) {
+    displayVal = <img src={ErrorIcon} style={{ height: "75%" }} alt="error" />;
+  } else if (data) {
+    displayVal = (
       <VictoryChart
         padding={{ left: 50, top: 20, right: 30, bottom: 50 }}
         domainPadding={5}
       >
         <VictoryAxis
           fixLabelOverlap={false}
-          tickCount={3}
+          tickCount={2}
           tickFormat={date => {
             const dayDiff = differenceInCalendarDays(
               new Date(date),
               new Date()
             );
-            return dayDiff === 0 ? "now" : `${dayDiff} days`;
+            return dayDiff === 0 ? "now" : `${dayDiff}d`;
           }}
           style={{
             tickLabels: { fontSize: 24 },
@@ -35,18 +53,21 @@ const MiniGraph: React.FC<Props> = ({ data, dependentAxisTickFormat }) => {
           tickCount={5}
           style={{ tickLabels: { fontSize: 24 } }}
           tickFormat={dependentAxisTickFormat}
+          tickValues={tickValues}
         />
         <VictoryLine
           interpolation="natural"
           data={data}
           style={{
-            data: { stroke: "#2c5282" },
+            data: { stroke: "#C68E37" },
             parent: { border: "1px solid #ccc" }
           }}
         />
       </VictoryChart>
-    </div>
-  );
+    );
+  }
+
+  return <MiniGraphWrapper>{displayVal}</MiniGraphWrapper>;
 };
 
 export default MiniGraph;
