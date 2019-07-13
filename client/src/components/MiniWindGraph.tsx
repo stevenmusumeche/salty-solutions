@@ -27,8 +27,8 @@ const MiniWindGraph: React.FC<Props> = ({ data, fetching, error }) => {
   } else if (data) {
     displayVal = (
       <VictoryChart
-        padding={{ left: 100, top: 20, right: 30, bottom: 50 }}
-        domainPadding={5}
+        padding={{ left: 50, top: 20, right: 30, bottom: 50 }}
+        domainPadding={{ y: [30, 30] }}
       >
         <VictoryAxis
           fixLabelOverlap={false}

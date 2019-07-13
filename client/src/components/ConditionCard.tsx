@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, ReactChildren } from "react";
 import { CombinedError } from "urql";
 import SkeletonCharacter from "./SkeletonCharacter";
 import "./SkeletonCharacter.css";
@@ -6,14 +6,14 @@ import ErrorIcon from "../assets/error.svg";
 
 interface Props {
   label: string;
-  value?: string;
   fetching: boolean;
   error?: CombinedError;
+  children: ReactNode;
 }
 
 const Wrapper: React.FC<{ children: ReactNode }> = ({ children }) => (
   <div
-    className="relative bg-white w-full mr-8 rounded-lg shadow-md text-center margin-killer flex-col flex justify-between align-center flex-grow"
+    className="relative bg-white w-full rounded-lg shadow-md text-center flex-col flex justify-between align-center flex-grow"
     style={{ minHeight: "12rem" }}
   >
     {children}
@@ -26,9 +26,14 @@ const Label: React.FC<{ label: string }> = ({ label }) => (
   </div>
 );
 
-const ConditionCard: React.FC<Props> = ({ label, value, fetching, error }) => {
+const ConditionCard: React.FC<Props> = ({
+  label,
+  fetching,
+  error,
+  children
+}) => {
   let displayValue: any = null;
-  let fontSize = "6em";
+  let fontSize = "7em";
 
   if (fetching) {
     return (
@@ -42,16 +47,13 @@ const ConditionCard: React.FC<Props> = ({ label, value, fetching, error }) => {
       <img src={ErrorIcon} style={{ height: "75%" }} alt="error" />
     );
   } else {
-    displayValue = value;
-    if (displayValue.length > 3) {
-      fontSize = "5.5em";
-    }
+    displayValue = children;
   }
 
   return (
     <Wrapper>
       <div
-        className="text-blue-800 leading-none flex items-center justify-center flex-grow p-2"
+        className="text-blue-800 leading-none flex items-center justify-center flex-grow p-2 relative"
         style={{ fontSize }}
       >
         {displayValue}

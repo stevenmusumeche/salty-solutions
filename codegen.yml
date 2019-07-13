@@ -1,7 +1,15 @@
 overwrite: true
 schema: "./server/src/graphql/schema.ts"
-documents: null
+documents: "./client/src/queries/**/*.ts"
 generates:
+  client/src/generated/graphql.ts:
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-urql
+    config:
+      withHooks: true
+      withComponent: false
   server/src/generated/graphql.ts:
     config: 
       contextType: "../server#Context"

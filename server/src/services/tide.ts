@@ -108,8 +108,8 @@ async function fetchTideData(
   const params = {
     product: "predictions",
     application: "fishing",
-    begin_date: format(start, "YYYYMMDD"),
-    end_date: format(end, "YYYYMMDD"),
+    begin_date: format(start, "yyyyMMdd"),
+    end_date: format(end, "yyyyMMdd"),
     datum: "MLLW",
     station: stationId,
     time_zone: "gmt",

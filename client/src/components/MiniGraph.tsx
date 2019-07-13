@@ -30,7 +30,7 @@ const MiniGraph: React.FC<Props> = ({
     displayVal = (
       <VictoryChart
         padding={{ left: 50, top: 20, right: 30, bottom: 50 }}
-        domainPadding={5}
+        domainPadding={{ y: [30, 30] }}
       >
         <VictoryAxis
           fixLabelOverlap={false}

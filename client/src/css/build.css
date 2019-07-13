@@ -7551,8 +7551,14 @@ video {
   * @import "utilities/skew-transforms";
   */
 
-.margin-killer:last-child {
-  margin-right: 0;
+.current-conditions-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  grid-column-gap: 32px;
+  grid-row-gap: 32px;
+  justify-items: stretch;
+  align-items: stretch;
 }
 
 @media (min-width: 640px) {
