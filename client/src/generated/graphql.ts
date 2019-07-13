@@ -186,8 +186,8 @@ export type WeatherForecast = {
   isDaytime: Scalars["Boolean"];
   temperature: Scalars["Int"];
   temperatureUnit: Scalars["String"];
-  windSpeed: Scalars["String"];
-  windDirection: Scalars["String"];
+  windSpeed?: Maybe<Scalars["String"]>;
+  windDirection?: Maybe<Scalars["String"]>;
   icon: Scalars["String"];
   shortForecast: Scalars["String"];
   detailedForecast: Scalars["String"];
@@ -216,6 +216,39 @@ export type WindSummary = {
   __typename?: "WindSummary";
   mostRecent?: Maybe<WindDetail>;
 };
+export type ForecastQueryVariables = {
+  locationId: Scalars["ID"];
+};
+
+export type ForecastQuery = { __typename?: "Query" } & {
+  location: Maybe<
+    { __typename?: "Location" } & {
+      marineForecast: Maybe<
+        Array<
+          { __typename?: "MarineForecast" } & Pick<
+            MarineForecast,
+            "timePeriod" | "forecast"
+          >
+        >
+      >;
+      weatherForecast: Maybe<
+        Array<
+          { __typename?: "WeatherForecast" } & Pick<
+            WeatherForecast,
+            | "name"
+            | "temperature"
+            | "temperatureUnit"
+            | "windSpeed"
+            | "windDirection"
+            | "icon"
+            | "detailedForecast"
+          >
+        >
+      >;
+    }
+  >;
+};
+
 export type LocationsQueryVariables = {};
 
 export type LocationsQuery = { __typename?: "Query" } & {
@@ -342,6 +375,31 @@ export const WindDetailFieldsFragmentDoc = gql`
     directionDegrees
   }
 `;
+export const ForecastDocument = gql`
+  query Forecast($locationId: ID!) {
+    location(id: $locationId) {
+      marineForecast {
+        timePeriod
+        forecast
+      }
+      weatherForecast {
+        name
+        temperature
+        temperatureUnit
+        windSpeed
+        windDirection
+        icon
+        detailedForecast
+      }
+    }
+  }
+`;
+
+export function useForecastQuery(
+  options: Omit<Urql.UseQueryArgs<ForecastQueryVariables>, "query"> = {}
+) {
+  return Urql.useQuery<ForecastQuery>({ query: ForecastDocument, ...options });
+}
 export const LocationsDocument = gql`
   query Locations {
     locations {

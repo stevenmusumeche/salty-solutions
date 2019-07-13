@@ -9,6 +9,8 @@ import CurrentWaterTempSummaryCard from "./components/CurrentWaterTempSummaryCar
 import CurrentWaterTempDetailGraph from "./components/CurrentWaterTempDetailGraph";
 import { useLocationsQuery, LocationsQuery } from "./generated/graphql";
 import { UseQueryState } from "urql";
+import Forecast from "./components/Forecast";
+import "./App.css";
 
 const App: React.FC = () => {
   const [locations] = useLocationsQuery();
@@ -28,7 +30,7 @@ const App: React.FC = () => {
         />
         <div>date selector</div>
       </div>
-      <div className="current-conditions-grid">
+      <div className="current-conditions-grid mb-8">
         <CurrentWindSummaryCard locationId={locationId} />
         <CurrentSalinitySummaryCard locationId={locationId} />
         <CurrentAirTempSummaryCard locationId={locationId} />
@@ -38,6 +40,7 @@ const App: React.FC = () => {
         <CurrentAirTempDetailGraph locationId={locationId} />
         <CurrentWaterTempDetailGraph locationId={locationId} />
       </div>
+      <Forecast locationId={locationId} />
     </div>
   );
 };

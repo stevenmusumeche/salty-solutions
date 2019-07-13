@@ -187,8 +187,8 @@ export type WeatherForecast = {
   isDaytime: Scalars["Boolean"];
   temperature: Scalars["Int"];
   temperatureUnit: Scalars["String"];
-  windSpeed: Scalars["String"];
-  windDirection: Scalars["String"];
+  windSpeed?: Maybe<Scalars["String"]>;
+  windDirection?: Maybe<Scalars["String"]>;
   icon: Scalars["String"];
   shortForecast: Scalars["String"];
   detailedForecast: Scalars["String"];
@@ -610,8 +610,16 @@ export type WeatherForecastResolvers<
   isDaytime?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
   temperature?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
   temperatureUnit?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
-  windSpeed?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
-  windDirection?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  windSpeed?: Resolver<
+    Maybe<ResolversTypes["String"]>,
+    ParentType,
+    ContextType
+  >;
+  windDirection?: Resolver<
+    Maybe<ResolversTypes["String"]>,
+    ParentType,
+    ContextType
+  >;
   icon?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   shortForecast?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   detailedForecast?: Resolver<

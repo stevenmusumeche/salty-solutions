@@ -71,8 +71,8 @@ export default gql`
     isDaytime: Boolean!
     temperature: Int!
     temperatureUnit: String!
-    windSpeed: String!
-    windDirection: String!
+    windSpeed: String
+    windDirection: String
     icon: String!
     shortForecast: String!
     detailedForecast: String!
