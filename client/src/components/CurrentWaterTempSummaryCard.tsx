@@ -1,13 +1,13 @@
 import React from "react";
 import ConditionCard from "./ConditionCard";
-import { useTemperatureData } from "../hooks/useTemperatureData";
+import { useWaterTemperatureData } from "../hooks/useWaterTemperatureData";
 
 interface Props {
   locationId: string;
 }
 
 const CurrentWaterTempSummaryCard: React.FC<Props> = ({ locationId }) => {
-  const { curValue, fetching, error } = useTemperatureData(locationId);
+  const { curValue, fetching, error } = useWaterTemperatureData(locationId);
 
   return (
     <ConditionCard

@@ -8,6 +8,7 @@ export function useWaterTemperatureData(locationId: string) {
   const [result] = useCurrentWaterTemperatureQuery({
     variables: { locationId }
   });
+
   const { curValue, curDetail } = extractData(result);
   return { curValue, curDetail, ...result };
 }
