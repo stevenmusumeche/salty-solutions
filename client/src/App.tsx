@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, ChangeEventHandler } from "react";
 import CurrentWindSummaryCard from "./components/CurrentWindSummaryCard";
 import CurrentWindDetailGraph from "./components/CurrentWindDetailGraph";
 import CurrentAirTempSummaryCard from "./components/CurrentAirTempSummaryCard";
@@ -7,14 +7,25 @@ import CurrentSalinitySummaryCard from "./components/CurrentSalinitySummaryCard"
 import CurrentSalinityDetailGraph from "./components/CurrentSalinityDetailGraph";
 import CurrentWaterTempSummaryCard from "./components/CurrentWaterTempSummaryCard";
 import CurrentWaterTempDetailGraph from "./components/CurrentWaterTempDetailGraph";
+import { useLocationsQuery, LocationsQuery } from "./generated/graphql";
+import { UseQueryState } from "urql";
 
 const App: React.FC = () => {
-  const [locationId, setLocationId] = useState("1");
+  const [locations] = useLocationsQuery();
+  const [locationId, setLocationId] = useState("2");
+
+  const handleLocationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setLocationId(e.target.value);
+  };
 
   return (
     <div className="container mx-auto py-8 min-h-screen">
       <div className="flex items-center justify-between mb-8">
-        <h1 className="text-3xl font-semibold">Calcasieu Lake</h1>
+        <LocationSelect
+          locations={locations}
+          onChange={handleLocationChange}
+          value={locationId}
+        />
         <div>date selector</div>
       </div>
       <div className="current-conditions-grid">
@@ -32,3 +43,28 @@ const App: React.FC = () => {
 };
 
 export default App;
+
+interface LocationSelectProps {
+  locations: UseQueryState<LocationsQuery>;
+  value: string;
+  onChange: ChangeEventHandler;
+}
+
+const LocationSelect: React.FC<LocationSelectProps> = ({
+  locations,
+  value,
+  onChange
+}) => (
+  <select onChange={onChange} className="text-3xl" value={value}>
+    {locations.data &&
+      locations.data.locations
+        .sort((a, b) => ("" + a.name).localeCompare(b.name))
+        .map(location => {
+          return (
+            <option key={location.id} value={location.id}>
+              {location.name}
+            </option>
+          );
+        })}
+  </select>
+);

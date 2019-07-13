@@ -216,6 +216,12 @@ export type WindSummary = {
   __typename?: "WindSummary";
   mostRecent?: Maybe<WindDetail>;
 };
+export type LocationsQueryVariables = {};
+
+export type LocationsQuery = { __typename?: "Query" } & {
+  locations: Array<{ __typename?: "Location" } & Pick<Location, "id" | "name">>;
+};
+
 export type SalinityQueryVariables = {};
 
 export type SalinityQuery = { __typename?: "Query" } & {
@@ -251,7 +257,9 @@ export type SalinityQuery = { __typename?: "Query" } & {
   >;
 };
 
-export type CurrentTemperatureQueryVariables = {};
+export type CurrentTemperatureQueryVariables = {
+  locationId: Scalars["ID"];
+};
 
 export type CurrentTemperatureQuery = { __typename?: "Query" } & {
   location: Maybe<
@@ -334,6 +342,23 @@ export const WindDetailFieldsFragmentDoc = gql`
     directionDegrees
   }
 `;
+export const LocationsDocument = gql`
+  query Locations {
+    locations {
+      id
+      name
+    }
+  }
+`;
+
+export function useLocationsQuery(
+  options: Omit<Urql.UseQueryArgs<LocationsQueryVariables>, "query"> = {}
+) {
+  return Urql.useQuery<LocationsQuery>({
+    query: LocationsDocument,
+    ...options
+  });
+}
 export const SalinityDocument = gql`
   query Salinity {
     location(id: "2") {
@@ -362,8 +387,8 @@ export function useSalinityQuery(
   return Urql.useQuery<SalinityQuery>({ query: SalinityDocument, ...options });
 }
 export const CurrentTemperatureDocument = gql`
-  query CurrentTemperature {
-    location(id: "2") {
+  query CurrentTemperature($locationId: ID!) {
+    location(id: $locationId) {
       temperature {
         summary {
           mostRecent
