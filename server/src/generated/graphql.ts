@@ -99,9 +99,7 @@ export type SalinityDetail = {
 export type SalinitySummary = {
   __typename?: "SalinitySummary";
   /** parts per thousand */
-  averageValue: Scalars["Float"];
-  startTimestamp: Scalars["String"];
-  endTimestamp: Scalars["String"];
+  mostRecent?: Maybe<SalinityDetail>;
 };
 
 export type SunDetail = {
@@ -313,7 +311,7 @@ export type ResolversTypes = {
   Wind: ResolverTypeWrapper<any>;
   WindSummary: ResolverTypeWrapper<Partial<WindSummary>>;
   WindDetail: ResolverTypeWrapper<Partial<WindDetail>>;
-  Salinity: ResolverTypeWrapper<Partial<Salinity>>;
+  Salinity: ResolverTypeWrapper<any>;
   SalinitySummary: ResolverTypeWrapper<Partial<SalinitySummary>>;
   SalinityDetail: ResolverTypeWrapper<Partial<SalinityDetail>>;
   Temperature: ResolverTypeWrapper<any>;
@@ -343,7 +341,7 @@ export type ResolversParentTypes = {
   Wind: any;
   WindSummary: Partial<WindSummary>;
   WindDetail: Partial<WindDetail>;
-  Salinity: Partial<Salinity>;
+  Salinity: any;
   SalinitySummary: Partial<SalinitySummary>;
   SalinityDetail: Partial<SalinityDetail>;
   Temperature: any;
@@ -488,9 +486,11 @@ export type SalinitySummaryResolvers<
   ContextType = Context,
   ParentType = ResolversParentTypes["SalinitySummary"]
 > = {
-  averageValue?: Resolver<ResolversTypes["Float"], ParentType, ContextType>;
-  startTimestamp?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
-  endTimestamp?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  mostRecent?: Resolver<
+    Maybe<ResolversTypes["SalinityDetail"]>,
+    ParentType,
+    ContextType
+  >;
 };
 
 export type SunDetailResolvers<

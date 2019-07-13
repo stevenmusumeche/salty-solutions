@@ -103,6 +103,14 @@ export const getSalinity = (
   }));
 };
 
+export const getSalinityLatest = async (location: LocationEntity) => {
+  const data = await getSalinity(location, 12);
+
+  if (data.length < 1) return null;
+
+  return orderBy(data, ["timestamp"], ["desc"])[0];
+};
+
 async function fetchAndMap(
   siteId: string,
   parameterCode: string,

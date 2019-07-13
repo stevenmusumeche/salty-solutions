@@ -62,24 +62,7 @@ const resolvers: Resolvers = {
       return { location };
     },
     salinity: async (location, args, { services }) => {
-      const detail = await services.usgs.getSalinity(
-        location,
-        args.numHours || DEFAULT_NUM_HOURS
-      );
-
-      const sum = detail.reduce((acc: number, cur) => {
-        return (acc += cur.salinity);
-      }, 0);
-      const averageValue = +(sum / detail.length).toFixed(1);
-
-      return {
-        detail,
-        summary: {
-          averageValue,
-          startTimestamp: detail[0].timestamp,
-          endTimestamp: detail[detail.length - 1].timestamp
-        }
-      };
+      return { location, numHours: args.numHours };
     }
   },
   TidePreditionStation: {
@@ -140,6 +123,19 @@ const resolvers: Resolvers = {
         args.numHours || DEFAULT_NUM_HOURS
       );
       return data.temperature;
+    }
+  },
+  Salinity: {
+    summary: async (salinity, args, { services }) => {
+      return {
+        mostRecent: await services.usgs.getSalinityLatest(salinity.location)
+      };
+    },
+    detail: async (salinity, args, { services }) => {
+      return services.usgs.getSalinity(
+        salinity.location,
+        salinity.numHours || DEFAULT_NUM_HOURS
+      );
     }
   }
 };

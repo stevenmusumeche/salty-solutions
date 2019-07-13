@@ -134,9 +134,7 @@ export default gql`
 
   type SalinitySummary {
     "parts per thousand"
-    averageValue: Float!
-    startTimestamp: String!
-    endTimestamp: String!
+    mostRecent: SalinityDetail
   }
 
   type SalinityDetail {

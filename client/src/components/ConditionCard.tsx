@@ -1,4 +1,4 @@
-import React, { ReactNode, ReactChildren } from "react";
+import React, { ReactNode } from "react";
 import { CombinedError } from "urql";
 import SkeletonCharacter from "./SkeletonCharacter";
 import "./SkeletonCharacter.css";
@@ -43,9 +43,7 @@ const ConditionCard: React.FC<Props> = ({
       </Wrapper>
     );
   } else if (error) {
-    displayValue = (
-      <img src={ErrorIcon} style={{ height: "75%" }} alt="error" />
-    );
+    displayValue = <img src={ErrorIcon} style={{ height: 120 }} alt="error" />;
   } else {
     displayValue = children;
   }

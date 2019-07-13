@@ -19,6 +19,7 @@ generates:
         Wind: any
         WaterTemperature: any
         Temperature: any
+        Salinity: any
         Location: ../services/location#LocationEntity
         TidePreditionStation: ../services/tide#TideStationEntity
     plugins:

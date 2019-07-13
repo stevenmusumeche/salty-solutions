@@ -25,7 +25,7 @@ const MiniGraph: React.FC<Props> = ({
   if (fetching) {
     displayVal = <SkeletonCharacter />;
   } else if (error) {
-    displayVal = <img src={ErrorIcon} style={{ height: "75%" }} alt="error" />;
+    displayVal = <img src={ErrorIcon} style={{ height: 120 }} alt="error" />;
   } else if (data) {
     displayVal = (
       <VictoryChart

@@ -98,9 +98,7 @@ export type SalinityDetail = {
 export type SalinitySummary = {
   __typename?: "SalinitySummary";
   /** parts per thousand */
-  averageValue: Scalars["Float"];
-  startTimestamp: Scalars["String"];
-  endTimestamp: Scalars["String"];
+  mostRecent?: Maybe<SalinityDetail>;
 };
 
 export type SunDetail = {
@@ -225,10 +223,14 @@ export type SalinityQuery = { __typename?: "Query" } & {
     { __typename?: "Location" } & {
       salinitySummary: { __typename?: "Salinity" } & {
         summary: Maybe<
-          { __typename?: "SalinitySummary" } & Pick<
-            SalinitySummary,
-            "averageValue" | "startTimestamp" | "endTimestamp"
-          >
+          { __typename?: "SalinitySummary" } & {
+            mostRecent: Maybe<
+              { __typename?: "SalinityDetail" } & Pick<
+                SalinityDetail,
+                "salinity"
+              >
+            >;
+          }
         >;
       };
     }
@@ -299,7 +301,9 @@ export type CurrentWaterTemperatureQuery = { __typename?: "Query" } & {
   >;
 };
 
-export type WindDataQueryVariables = {};
+export type WindDataQueryVariables = {
+  locationId: Scalars["ID"];
+};
 
 export type WindDataQuery = { __typename?: "Query" } & {
   location: Maybe<
@@ -335,9 +339,9 @@ export const SalinityDocument = gql`
     location(id: "2") {
       salinitySummary: salinity(numHours: 12) {
         summary {
-          averageValue
-          startTimestamp
-          endTimestamp
+          mostRecent {
+            salinity
+          }
         }
       }
     }
@@ -415,8 +419,8 @@ export function useCurrentWaterTemperatureQuery(
   });
 }
 export const WindDataDocument = gql`
-  query WindData {
-    location(id: "1") {
+  query WindData($locationId: ID!) {
+    location(id: $locationId) {
       wind {
         summary {
           mostRecent {

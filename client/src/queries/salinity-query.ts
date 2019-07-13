@@ -5,9 +5,9 @@ const SALINITY_QUERY = gql`
     location(id: "2") {
       salinitySummary: salinity(numHours: 12) {
         summary {
-          averageValue
-          startTimestamp
-          endTimestamp
+          mostRecent {
+            salinity
+          }
         }
       }
     }

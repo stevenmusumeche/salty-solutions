@@ -1,8 +1,8 @@
 import gql from "graphql-tag";
 
 const TEMPERATURE_QUERY = gql`
-  query CurrentTemperature {
-    location(id: "2") {
+  query CurrentTemperature($locationId: ID!) {
+    location(id: $locationId) {
       temperature {
         summary {
           mostRecent

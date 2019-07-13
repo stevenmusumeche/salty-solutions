@@ -1,8 +1,8 @@
 import gql from "graphql-tag";
 
 const WIND_QUERY = gql`
-  query WindData {
-    location(id: "1") {
+  query WindData($locationId: ID!) {
+    location(id: $locationId) {
       wind {
         summary {
           mostRecent {

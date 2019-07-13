@@ -1,4 +1,5 @@
 import React from "react";
+import { useCurrentWindData } from "../hooks/useWindData";
 import {
   VictoryChart,
   VictoryLine,
@@ -8,23 +9,22 @@ import {
 } from "victory";
 import { differenceInCalendarDays } from "date-fns";
 import SkeletonCharacter from "./SkeletonCharacter";
-import { CombinedError } from "urql";
 import ErrorIcon from "../assets/error.svg";
 import MiniGraphWrapper from "./MiniGraphWrapper";
 
 interface Props {
-  data?: any;
-  fetching: boolean;
-  error?: CombinedError;
+  locationId: string;
 }
 
-const MiniWindGraph: React.FC<Props> = ({ data, fetching, error }) => {
+const CurrentWindDetailGraph: React.FC<Props> = ({ locationId }) => {
+  const { curDetail: data, fetching, error } = useCurrentWindData(locationId);
+
   let displayVal = null;
   if (fetching) {
     displayVal = <SkeletonCharacter />;
   } else if (error) {
-    displayVal = <img src={ErrorIcon} style={{ height: "75%" }} alt="error" />;
-  } else if (data) {
+    displayVal = <img src={ErrorIcon} style={{ height: 120 }} alt="error" />;
+  } else if (data && data.length > 0) {
     displayVal = (
       <VictoryChart
         padding={{ left: 50, top: 20, right: 30, bottom: 50 }}
@@ -69,7 +69,7 @@ const MiniWindGraph: React.FC<Props> = ({ data, fetching, error }) => {
   return <MiniGraphWrapper>{displayVal}</MiniGraphWrapper>;
 };
 
-export default MiniWindGraph;
+export default CurrentWindDetailGraph;
 
 const ArrowPoint: React.FC<any> = ({ x, y, datum, index, ...props }) => {
   if (index % 6 !== 0) return null;
