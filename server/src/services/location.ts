@@ -6,8 +6,11 @@ export interface LocationEntity {
   lat: number;
   long: number;
   usgsSiteId: string;
-  weatherApiBase: string;
-  weatherApiStationId: string;
+  weatherGov: {
+    apiBase: string;
+    stationId: string;
+    radarSiteId: string;
+  };
 }
 
 const locations: LocationEntity[] = [
@@ -19,8 +22,11 @@ const locations: LocationEntity[] = [
     lat: 29.731474,
     long: -91.841371,
     usgsSiteId: "07387040",
-    weatherApiBase: "https://api.weather.gov/gridpoints/LCH/112,73",
-    weatherApiStationId: "" // todo
+    weatherGov: {
+      apiBase: "https://api.weather.gov/gridpoints/LCH/112,73",
+      stationId: "", // todo
+      radarSiteId: "" // todo
+    }
   },
   {
     id: "2",
@@ -30,8 +36,11 @@ const locations: LocationEntity[] = [
     lat: 29.9103,
     long: -93.2785,
     usgsSiteId: "08017095",
-    weatherApiBase: "https://api.weather.gov/gridpoints/LCH/57,80",
-    weatherApiStationId: "KLCH"
+    weatherGov: {
+      apiBase: "https://api.weather.gov/gridpoints/LCH/57,80",
+      stationId: "KLCH",
+      radarSiteId: "LCH"
+    }
   }
 ];
 

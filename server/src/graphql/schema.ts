@@ -22,6 +22,25 @@ export default gql`
     wind: Wind!
     salinity(numHours: Int): Salinity!
     temperature: Temperature!
+    maps: Maps
+  }
+
+  type Maps {
+    radar: [Map!]!
+    overlays: Overlays!
+  }
+
+  type Overlays {
+    topo: String!
+    counties: String!
+    rivers: String!
+    highways: String!
+    cities: String!
+  }
+
+  type Map {
+    imageUrl: String!
+    timestamp: String!
   }
 
   type Temperature {

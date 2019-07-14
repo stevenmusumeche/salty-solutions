@@ -35,6 +35,7 @@ export type Location = {
   wind: Wind;
   salinity: Salinity;
   temperature: Temperature;
+  maps?: Maybe<Maps>;
 };
 
 export type LocationSunArgs = {
@@ -59,6 +60,18 @@ export type LocationSalinityArgs = {
   numHours?: Maybe<Scalars["Int"]>;
 };
 
+export type Map = {
+  __typename?: "Map";
+  imageUrl: Scalars["String"];
+  timestamp: Scalars["String"];
+};
+
+export type Maps = {
+  __typename?: "Maps";
+  radar: Array<Map>;
+  overlays: Overlays;
+};
+
 export type MarineForecast = {
   __typename?: "MarineForecast";
   timePeriod: Scalars["String"];
@@ -70,6 +83,15 @@ export type MoonDetail = {
   date: Scalars["String"];
   phase: Scalars["String"];
   illumination: Scalars["Int"];
+};
+
+export type Overlays = {
+  __typename?: "Overlays";
+  topo: Scalars["String"];
+  counties: Scalars["String"];
+  rivers: Scalars["String"];
+  highways: Scalars["String"];
+  cities: Scalars["String"];
 };
 
 export type Query = {

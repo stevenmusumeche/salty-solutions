@@ -63,6 +63,12 @@ const resolvers: Resolvers = {
     },
     salinity: async (location, args, { services }) => {
       return { location, numHours: args.numHours };
+    },
+    maps: async (location, args, { services }) => {
+      return {
+        radar: await services.radar.getRadarImages(location),
+        overlays: services.radar.getOverlays(location)
+      };
     }
   },
   TidePreditionStation: {

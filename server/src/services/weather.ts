@@ -19,7 +19,7 @@ interface WeatherForecast {
 export const getForecast = async (
   location: LocationEntity
 ): Promise<WeatherForecast[]> => {
-  const url = `${location.weatherApiBase}/forecast`;
+  const url = `${location.weatherGov.apiBase}/forecast`;
   const { data } = await axios.get(url);
 
   return data.properties.periods;
@@ -28,15 +28,14 @@ export const getForecast = async (
 export const getHourlyForecast = async (
   location: LocationEntity
 ): Promise<WeatherForecast[]> => {
-  const url = `${location.weatherApiBase}/forecast/hourly`;
+  const url = `${location.weatherGov.apiBase}/forecast/hourly`;
   const { data } = await axios.get(url);
   return data.properties.periods;
 };
 
-// todo: dataloader
 export const getCurrentConditions = async (location: LocationEntity) => {
   const url = `https://api.weather.gov/stations/${
-    location.weatherApiStationId
+    location.weatherGov.stationId
   }/observations/latest?require_qc=false`;
 
   const { data } = await axios.get<NWSLatestObservations>(url);
@@ -57,7 +56,7 @@ export const getConditions = async (
   const end = format(new Date(), "yyyy-MM-dd'T'HH:mm:ssXXX");
 
   const url = `https://api.weather.gov/stations/${
-    location.weatherApiStationId
+    location.weatherGov.stationId
   }/observations?end=${end}&start=${start}`;
 
   const { data } = await axios.get<any>(url);
