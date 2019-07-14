@@ -15,7 +15,7 @@ const ForecastSummary: React.FC<Props> = ({ locationId }) => {
     return (
       <Wrapper>
         {[...Array(NUM_ENTRIES)].map((x, i) => (
-          <Entry>
+          <Entry key={i}>
             <SkeletonEntry />
           </Entry>
         ))}
@@ -25,7 +25,7 @@ const ForecastSummary: React.FC<Props> = ({ locationId }) => {
     return (
       <Wrapper>
         {[...Array(NUM_ENTRIES)].map((x, i) => (
-          <Entry>
+          <Entry key={i}>
             <img
               src={ErrorIcon}
               alt="error"
@@ -49,7 +49,7 @@ const ForecastSummary: React.FC<Props> = ({ locationId }) => {
       {data &&
         data.map(datum => {
           return (
-            <Entry>
+            <Entry key={datum.name}>
               <img
                 src={datum.icon}
                 alt="forecast icon"
