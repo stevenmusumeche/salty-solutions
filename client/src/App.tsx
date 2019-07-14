@@ -30,6 +30,7 @@ const App: React.FC = () => {
         />
         <div>date selector</div>
       </div>
+      <h2 className="text-4xl mb-8">Current Conditions</h2>
       <div className="current-conditions-grid mb-8">
         <CurrentWindSummaryCard locationId={locationId} />
         <CurrentSalinitySummaryCard locationId={locationId} />
@@ -40,6 +41,7 @@ const App: React.FC = () => {
         <CurrentAirTempDetailGraph locationId={locationId} />
         <CurrentWaterTempDetailGraph locationId={locationId} />
       </div>
+      <h2 className="text-4xl mb-8">Forecast</h2>
       <Forecast locationId={locationId} />
     </div>
   );

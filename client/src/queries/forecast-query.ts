@@ -14,6 +14,7 @@ const FORECAST_QUERY = gql`
         windSpeed
         windDirection
         icon
+        shortForecast
         detailedForecast
       }
     }

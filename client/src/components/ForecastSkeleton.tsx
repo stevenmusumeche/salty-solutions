@@ -21,6 +21,7 @@ const Skeleton: React.FC = () => {
 
       {[...Array(numLines)].map((x, i) => (
         <div
+          key={i}
           className="skeleton-character"
           style={{ width: `${lineWidths[i]}%` }}
         />
@@ -32,8 +33,8 @@ const Skeleton: React.FC = () => {
 const ForecastSkeleton: React.FC = () => {
   return (
     <>
-      {[...Array(7)].map(x => (
-        <Skeleton />
+      {[...Array(7)].map((x, i) => (
+        <Skeleton key={i} />
       ))}
     </>
   );

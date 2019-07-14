@@ -1,8 +1,0 @@
-.forecast-entry {
-  display: grid;
-  grid-template-columns: 6fr 1fr;
-  grid-template-rows: 1fr;
-  grid-column-gap: 16px;
-  justify-items: stretch;
-  align-items: stretch;
-}

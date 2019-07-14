@@ -241,6 +241,7 @@ export type ForecastQuery = { __typename?: "Query" } & {
             | "windSpeed"
             | "windDirection"
             | "icon"
+            | "shortForecast"
             | "detailedForecast"
           >
         >
@@ -389,6 +390,7 @@ export const ForecastDocument = gql`
         windSpeed
         windDirection
         icon
+        shortForecast
         detailedForecast
       }
     }

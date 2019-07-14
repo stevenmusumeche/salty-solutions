@@ -21,6 +21,7 @@ export const getForecast = async (
 ): Promise<WeatherForecast[]> => {
   const url = `${location.weatherApiBase}/forecast`;
   const { data } = await axios.get(url);
+
   return data.properties.periods;
 };
 
