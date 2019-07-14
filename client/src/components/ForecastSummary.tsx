@@ -3,7 +3,7 @@ import { useForecastQuery } from "../generated/graphql";
 import "./ForecastSummary.css";
 import ErrorIcon from "../assets/error.svg";
 
-const NUM_ENTRIES = 7;
+const NUM_ENTRIES = 14;
 
 interface Props {
   locationId: string;
@@ -41,8 +41,7 @@ const ForecastSummary: React.FC<Props> = ({ locationId }) => {
   const data =
     forecast.data &&
     forecast.data.location &&
-    forecast.data.location.weatherForecast &&
-    forecast.data.location.weatherForecast.slice(0, NUM_ENTRIES);
+    forecast.data.location.weatherForecast;
 
   return (
     <Wrapper>
@@ -82,7 +81,9 @@ const ForecastSummary: React.FC<Props> = ({ locationId }) => {
 export default ForecastSummary;
 
 const Wrapper: React.FC<{ children: ReactNode }> = ({ children }) => (
-  <div className="short-forecast-grid mb-8">{children}</div>
+  <div className="custom-scroller container overflow-x-scroll mb-8">
+    <div className="short-forecast-grid mb-4">{children}</div>
+  </div>
 );
 
 const Entry: React.FC<{ children: ReactNode }> = ({ children }) => (

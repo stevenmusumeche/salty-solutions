@@ -47,3 +47,17 @@
 .last-no-margin:last-child {
   margin: 0;
 }
+
+.custom-scroller::-webkit-scrollbar {
+  height: 0.75rem;
+  width: 0.75rem;
+}
+
+.custom-scroller::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scroller::-webkit-scrollbar-thumb {
+  background: #a0aec0;
+  border-radius: 5px;
+}

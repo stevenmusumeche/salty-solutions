@@ -33,7 +33,7 @@ const WeatherForecast: React.FC<Props> = ({ locationId }) => {
     forecast.data &&
     forecast.data.location &&
     forecast.data.location.weatherForecast &&
-    forecast.data.location.weatherForecast.slice(0, 8);
+    forecast.data.location.weatherForecast.slice(0, 10);
 
   return (
     <Wrapper>

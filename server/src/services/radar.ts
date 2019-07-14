@@ -18,7 +18,6 @@ export const getRadarImages = async (location: LocationEntity) => {
     .map(url => {
       const matches = url.match(/.*?_([\d_]{13})_N0R.gif$/i);
       if (matches) {
-        console.log(matches[1] + "+0000");
         const date = parse(
           matches[1] + "+0000",
           "yyyyLLdd_HHmmxxxx",

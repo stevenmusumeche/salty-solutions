@@ -24,8 +24,8 @@ const locations: LocationEntity[] = [
     usgsSiteId: "07387040",
     weatherGov: {
       apiBase: "https://api.weather.gov/gridpoints/LCH/112,73",
-      stationId: "", // todo
-      radarSiteId: "" // todo
+      stationId: "KARA",
+      radarSiteId: "LCH"
     }
   },
   {
