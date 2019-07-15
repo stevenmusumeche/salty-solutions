@@ -15,11 +15,11 @@ generates:
       contextType: "../server#Context"
       defaultMapper: Partial<{T}>
       mappers:
-        # todo
-        Wind: any
-        WaterTemperature: any
-        Temperature: any
-        Salinity: any
+        Wind: "Partial<{T}> & {location: LocationEntity}"
+        WaterTemperature: "Partial<{T}> & {location: LocationEntity}"
+        Temperature: "Partial<{T}> & {location: LocationEntity}"
+        Salinity: "Partial<{T}> & {location: LocationEntity, numHours?: Maybe<number>}"
+        Maps: "Partial<{T}> & {location: LocationEntity}"
         Location: ../services/location#LocationEntity
         TidePreditionStation: ../services/tide#TideStationEntity
     plugins:

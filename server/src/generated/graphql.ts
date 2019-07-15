@@ -73,6 +73,10 @@ export type Maps = {
   overlays: Overlays;
 };
 
+export type MapsRadarArgs = {
+  numImages?: Maybe<Scalars["Int"]>;
+};
+
 export type MarineForecast = {
   __typename?: "MarineForecast";
   timePeriod: Scalars["String"];
@@ -325,20 +329,26 @@ export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Partial<Scalars["Boolean"]>>;
   MarineForecast: ResolverTypeWrapper<Partial<MarineForecast>>;
   WaterHeight: ResolverTypeWrapper<Partial<WaterHeight>>;
-  WaterTemperature: ResolverTypeWrapper<any>;
+  WaterTemperature: ResolverTypeWrapper<
+    Partial<WaterTemperature> & { location: LocationEntity }
+  >;
   WaterTemperatureSummary: ResolverTypeWrapper<
     Partial<WaterTemperatureSummary>
   >;
   TemperatureDetail: ResolverTypeWrapper<Partial<TemperatureDetail>>;
-  Wind: ResolverTypeWrapper<any>;
+  Wind: ResolverTypeWrapper<Partial<Wind> & { location: LocationEntity }>;
   WindSummary: ResolverTypeWrapper<Partial<WindSummary>>;
   WindDetail: ResolverTypeWrapper<Partial<WindDetail>>;
-  Salinity: ResolverTypeWrapper<any>;
+  Salinity: ResolverTypeWrapper<
+    Partial<Salinity> & { location: LocationEntity; numHours?: Maybe<number> }
+  >;
   SalinitySummary: ResolverTypeWrapper<Partial<SalinitySummary>>;
   SalinityDetail: ResolverTypeWrapper<Partial<SalinityDetail>>;
-  Temperature: ResolverTypeWrapper<any>;
+  Temperature: ResolverTypeWrapper<
+    Partial<Temperature> & { location: LocationEntity }
+  >;
   TemperatureSummary: ResolverTypeWrapper<Partial<TemperatureSummary>>;
-  Maps: ResolverTypeWrapper<Partial<Maps>>;
+  Maps: ResolverTypeWrapper<Partial<Maps> & { location: LocationEntity }>;
   Map: ResolverTypeWrapper<Partial<Map>>;
   Overlays: ResolverTypeWrapper<Partial<Overlays>>;
   CurrentWind: ResolverTypeWrapper<Partial<CurrentWind>>;
@@ -360,18 +370,21 @@ export type ResolversParentTypes = {
   Boolean: Partial<Scalars["Boolean"]>;
   MarineForecast: Partial<MarineForecast>;
   WaterHeight: Partial<WaterHeight>;
-  WaterTemperature: any;
+  WaterTemperature: Partial<WaterTemperature> & { location: LocationEntity };
   WaterTemperatureSummary: Partial<WaterTemperatureSummary>;
   TemperatureDetail: Partial<TemperatureDetail>;
-  Wind: any;
+  Wind: Partial<Wind> & { location: LocationEntity };
   WindSummary: Partial<WindSummary>;
   WindDetail: Partial<WindDetail>;
-  Salinity: any;
+  Salinity: Partial<Salinity> & {
+    location: LocationEntity;
+    numHours?: Maybe<number>;
+  };
   SalinitySummary: Partial<SalinitySummary>;
   SalinityDetail: Partial<SalinityDetail>;
-  Temperature: any;
+  Temperature: Partial<Temperature> & { location: LocationEntity };
   TemperatureSummary: Partial<TemperatureSummary>;
-  Maps: Partial<Maps>;
+  Maps: Partial<Maps> & { location: LocationEntity };
   Map: Partial<Map>;
   Overlays: Partial<Overlays>;
   CurrentWind: Partial<CurrentWind>;
@@ -465,7 +478,12 @@ export type MapsResolvers<
   ContextType = Context,
   ParentType = ResolversParentTypes["Maps"]
 > = {
-  radar?: Resolver<Array<ResolversTypes["Map"]>, ParentType, ContextType>;
+  radar?: Resolver<
+    Array<ResolversTypes["Map"]>,
+    ParentType,
+    ContextType,
+    MapsRadarArgs
+  >;
   overlays?: Resolver<ResolversTypes["Overlays"], ParentType, ContextType>;
 };
 

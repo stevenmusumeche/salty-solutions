@@ -66,7 +66,8 @@ const resolvers: Resolvers = {
     },
     maps: async (location, args, { services }) => {
       return {
-        radar: await services.radar.getRadarImages(location),
+        location,
+
         overlays: services.radar.getOverlays(location)
       };
     }
@@ -142,6 +143,11 @@ const resolvers: Resolvers = {
         salinity.location,
         salinity.numHours || DEFAULT_NUM_HOURS
       );
+    }
+  },
+  Maps: {
+    radar: (maps, args, { services }) => {
+      return services.radar.getRadarImages(maps.location, args.numImages);
     }
   }
 };

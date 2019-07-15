@@ -26,7 +26,7 @@ export default gql`
   }
 
   type Maps {
-    radar: [Map!]!
+    radar(numImages: Int): [Map!]!
     overlays: Overlays!
   }
 

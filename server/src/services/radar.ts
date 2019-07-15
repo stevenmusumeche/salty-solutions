@@ -1,13 +1,19 @@
 import { LocationEntity } from "./location";
 import { parse, format } from "date-fns";
-import { orderBy } from "lodash";
+import { orderBy, takeRight } from "lodash";
 import xray from "x-ray";
+import { Maybe } from "../generated/graphql";
 var x = xray();
+
+// todo: axios?
 
 // documentation here:
 // https://www.weather.gov/jetstream/ridge_download
 
-export const getRadarImages = async (location: LocationEntity) => {
+export const getRadarImages = async (
+  location: LocationEntity,
+  numImages?: Maybe<number>
+) => {
   const siteId = location.weatherGov.radarSiteId;
 
   // all images
@@ -40,7 +46,9 @@ export const getRadarImages = async (location: LocationEntity) => {
     timestamp: format(Date.now(), "yyyy-MM-dd'T'HH:mm:ss.SSSxxx")
   });
 
-  return orderBy(allImages, ["timestamp"], ["asc"]);
+  const sorted = orderBy(allImages, ["timestamp"], ["asc"]);
+
+  return numImages ? takeRight(sorted, numImages) : sorted;
 };
 
 export const getOverlays = (location: LocationEntity) => {

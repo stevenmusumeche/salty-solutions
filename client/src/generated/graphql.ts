@@ -72,6 +72,10 @@ export type Maps = {
   overlays: Overlays;
 };
 
+export type MapsRadarArgs = {
+  numImages?: Maybe<Scalars["Int"]>;
+};
+
 export type MarineForecast = {
   __typename?: "MarineForecast";
   timePeriod: Scalars["String"];
