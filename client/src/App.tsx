@@ -7,14 +7,20 @@ import CurrentSalinitySummaryCard from "./components/CurrentSalinitySummaryCard"
 import CurrentSalinityDetailGraph from "./components/CurrentSalinityDetailGraph";
 import CurrentWaterTempSummaryCard from "./components/CurrentWaterTempSummaryCard";
 import CurrentWaterTempDetailGraph from "./components/CurrentWaterTempDetailGraph";
-import { useLocationsQuery, LocationsQuery } from "./generated/graphql";
+import {
+  useLocationsQuery,
+  LocationsQuery,
+  useMapsQuery
+} from "./generated/graphql";
 import { UseQueryState } from "urql";
 import Forecast from "./components/Forecast";
 import "./App.css";
+import RadarMap from "./components/RadarMap";
 
 const App: React.FC = () => {
   const [locations] = useLocationsQuery();
   const [locationId, setLocationId] = useState("2");
+  const [animateMap, setAnimateMap] = useState(false);
 
   const handleLocationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setLocationId(e.target.value);
@@ -22,6 +28,7 @@ const App: React.FC = () => {
 
   return (
     <div className="container mx-auto py-8 min-h-screen">
+      <button onClick={() => setAnimateMap(x => !x)}>animate</button>
       <div className="flex items-center justify-between mb-8">
         <LocationSelect
           locations={locations}
@@ -31,7 +38,8 @@ const App: React.FC = () => {
         <div>date selector</div>
       </div>
       <h2 className="text-4xl mb-8">Current Conditions</h2>
-      <div className="current-conditions-grid mb-8">
+      <RadarMap locationId={locationId} animated={animateMap} />
+      {/* <div className="current-conditions-grid mb-8">
         <CurrentWindSummaryCard locationId={locationId} />
         <CurrentSalinitySummaryCard locationId={locationId} />
         <CurrentAirTempSummaryCard locationId={locationId} />
@@ -42,7 +50,7 @@ const App: React.FC = () => {
         <CurrentWaterTempDetailGraph locationId={locationId} />
       </div>
       <h2 className="text-4xl mb-8">Forecast</h2>
-      <Forecast locationId={locationId} />
+      <Forecast locationId={locationId} /> */}
     </div>
   );
 };

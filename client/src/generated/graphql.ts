@@ -282,6 +282,30 @@ export type LocationsQuery = { __typename?: "Query" } & {
   locations: Array<{ __typename?: "Location" } & Pick<Location, "id" | "name">>;
 };
 
+export type MapsQueryVariables = {
+  locationId: Scalars["ID"];
+};
+
+export type MapsQuery = { __typename?: "Query" } & {
+  location: Maybe<
+    { __typename?: "Location" } & {
+      maps: Maybe<
+        { __typename?: "Maps" } & {
+          radar: Array<
+            { __typename?: "Map" } & Pick<Map, "timestamp" | "imageUrl">
+          >;
+          overlays: { __typename?: "Overlays" } & OverlayMapsFragment;
+        }
+      >;
+    }
+  >;
+};
+
+export type OverlayMapsFragment = { __typename?: "Overlays" } & Pick<
+  Overlays,
+  "topo" | "counties" | "rivers" | "highways" | "cities"
+>;
+
 export type SalinityQueryVariables = {};
 
 export type SalinityQuery = { __typename?: "Query" } & {
@@ -394,6 +418,15 @@ export type WindDetailFieldsFragment = { __typename?: "WindDetail" } & Pick<
   WindDetail,
   "timestamp" | "speed" | "direction" | "directionDegrees"
 >;
+export const OverlayMapsFragmentDoc = gql`
+  fragment OverlayMaps on Overlays {
+    topo
+    counties
+    rivers
+    highways
+    cities
+  }
+`;
 export const WindDetailFieldsFragmentDoc = gql`
   fragment WindDetailFields on WindDetail {
     timestamp
@@ -444,6 +477,28 @@ export function useLocationsQuery(
     query: LocationsDocument,
     ...options
   });
+}
+export const MapsDocument = gql`
+  query Maps($locationId: ID!) {
+    location(id: $locationId) {
+      maps {
+        radar(numImages: 15) {
+          timestamp
+          imageUrl
+        }
+        overlays {
+          ...OverlayMaps
+        }
+      }
+    }
+  }
+  ${OverlayMapsFragmentDoc}
+`;
+
+export function useMapsQuery(
+  options: Omit<Urql.UseQueryArgs<MapsQueryVariables>, "query"> = {}
+) {
+  return Urql.useQuery<MapsQuery>({ query: MapsDocument, ...options });
 }
 export const SalinityDocument = gql`
   query Salinity {
