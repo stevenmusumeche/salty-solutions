@@ -1,28 +1,11 @@
 import React, { useEffect, useRef } from "react";
-import { useMapsQuery, OverlayMapsFragment, Maybe } from "../generated/graphql";
-
-// function useInterval(callback: Function, delay: number, onCancel: Function) {
-//   const savedCallback = useRef<Function>();
-
-//   // Remember the latest callback.
-//   useEffect(() => {
-//     savedCallback.current = callback;
-//   }, [callback]);
-
-//   // Set up the interval.
-//   useEffect(() => {
-//     function tick() {
-//       if (savedCallback.current) savedCallback.current();
-//     }
-//     if (delay !== null) {
-//       let id = setInterval(tick, delay);
-//       return () => {
-//         onCancel();
-//         clearInterval(id);
-//       };
-//     }
-//   }, [delay]);
-// }
+import {
+  useMapsQuery,
+  OverlayMapsFragment,
+  Maybe,
+  Map
+} from "../generated/graphql";
+import { format } from "date-fns";
 
 interface Props {
   locationId: string;
@@ -31,10 +14,9 @@ interface Props {
 
 export const RadarMap: React.FC<Props> = ({ locationId, animated = true }) => {
   const [tick, setTick] = React.useState(0);
-  const [currentMap, setCurrentMap] = React.useState("");
 
   let overlays: Maybe<OverlayMapsFragment> = null;
-  let radar: string[] = [];
+  let radar: Map[] = [];
 
   const [maps] = useMapsQuery({ variables: { locationId } });
 
@@ -45,66 +27,78 @@ export const RadarMap: React.FC<Props> = ({ locationId, animated = true }) => {
       maps.data.location.maps &&
       maps.data.location.maps.overlays;
 
-    radar = maps.data.location.maps.radar.map(x => x.imageUrl);
-    if (!currentMap) setCurrentMap(radar[radar.length - 2]);
+    radar = maps.data.location.maps.radar;
   }
 
-  // useInterval(
-  //   () => {
-  //     if (radar.length) {
-  //       if (animate) {
-  //         setCurrentRadar(radar[mapNum % radar.length]);
-  //         setMapNum(x => ++x);
-  //       } else {
-  //         setCurrentRadar(radar[0]);
-  //       }
-  //     }
-  //   },
-  //   1000,
-  //   () => setCurrentRadar(radar[0])
-  // );
-
-  let timer = React.useRef<NodeJS.Timeout>();
-
-  // todo: fix
+  const timer = useRef<NodeJS.Timeout>();
   useEffect(() => {
     if (animated) {
+      console.log("start ticking");
+
       timer.current = setInterval(() => {
-        console.log("tick", radar[tick % radar.length]);
-        setCurrentMap(radar[tick % radar.length]);
-        setTick(x => x + 1);
-      }, 1000);
+        setTick(x => ++x);
+      }, 750);
     } else {
       console.log("not animated, do nothing");
+      setTick(0);
     }
 
     const cleanup = () => {
       console.log("cleanup");
-      setCurrentMap(radar[radar.length - 2]);
 
       if (timer.current) clearInterval(timer.current);
     };
 
     return cleanup;
-  }, [animated]);
+  }, [animated, timer, radar]);
+
+  const currentImageIndex = animated ? tick % radar.length : 0;
 
   return (
     <>
-      {/* <button
-        className="bg-blue-500 text-white"
-        onClick={() => {
-          setAnimate(x => !x);
-        }}
-      >
-        animate
-      </button> */}
       <div
         className="mb-8 bg-black relative z-0"
         style={{ width: 600, height: 550 }}
       >
+        {/* base overlay maps */}
         {overlays && <OverlayMaps overlays={overlays} />}
-        {currentMap && (
-          <img src={currentMap} className="absolute inset-0 z-20" />
+
+        {/* images for animation */}
+        {radar.map((map, i) => (
+          <img
+            src={map.imageUrl}
+            key={i}
+            className={`absolute inset-0 z-20 ${i !== currentImageIndex &&
+              "hidden"}`}
+          />
+        ))}
+
+        {/* most recent image for non-animated */}
+        {radar.length && (
+          <img
+            src={radar[radar.length - 1].imageUrl}
+            className={`absolute inset-0 z-20 ${animated && "hidden"}`}
+          />
+        )}
+
+        {/* timestamp for current image */}
+        {radar.length && (
+          <div className="absolute bottom-0 inset-x-0 bg-gray-900 text-white px-4 py-2 z-30 flex justify-between">
+            <div className="bg-red-500">
+              {/* todo: display animation in process */}
+              animation stuff
+            </div>
+            <div className="text-right">
+              {format(
+                new Date(
+                  animated
+                    ? radar[currentImageIndex].timestamp
+                    : radar[radar.length - 1].timestamp
+                ),
+                "h:mmaaa"
+              ).toLowerCase()}
+            </div>
+          </div>
         )}
       </div>
     </>

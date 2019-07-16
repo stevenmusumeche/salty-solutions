@@ -40,7 +40,7 @@ export const getRadarImages = async (
     .filter(notUndefined);
 
   // latest image
-  const latest = `http://radar.weather.gov/ridge/RadarImg/N0R/${siteId}_NCR_0.gif`;
+  const latest = `https://radar.weather.gov/ridge/RadarImg/N0R/${siteId}_N0R_0.gif`;
   allImages.push({
     imageUrl: latest,
     timestamp: format(Date.now(), "yyyy-MM-dd'T'HH:mm:ss.SSSxxx")
