@@ -20,7 +20,9 @@ import RadarMap from "./components/RadarMap";
 const App: React.FC = () => {
   const [locations] = useLocationsQuery();
   const [locationId, setLocationId] = useState("2");
-  const [animateMap, setAnimateMap] = useState(false);
+  const [showRadar, setShowRadar] = useState(false);
+
+  const toggleRadar = () => setShowRadar(x => !x);
 
   const handleLocationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setLocationId(e.target.value);
@@ -28,7 +30,6 @@ const App: React.FC = () => {
 
   return (
     <div className="container mx-auto py-8 min-h-screen">
-      <button onClick={() => setAnimateMap(x => !x)}>animate</button>
       <div className="flex items-center justify-between mb-8">
         <LocationSelect
           locations={locations}
@@ -38,8 +39,8 @@ const App: React.FC = () => {
         <div>date selector</div>
       </div>
       <h2 className="text-4xl mb-8">Current Conditions</h2>
-      <RadarMap locationId={locationId} animated={animateMap} />
-      {/* <div className="current-conditions-grid mb-8">
+
+      <div className="current-conditions-grid mb-8">
         <CurrentWindSummaryCard locationId={locationId} />
         <CurrentSalinitySummaryCard locationId={locationId} />
         <CurrentAirTempSummaryCard locationId={locationId} />
@@ -48,9 +49,19 @@ const App: React.FC = () => {
         <CurrentSalinityDetailGraph locationId={locationId} />
         <CurrentAirTempDetailGraph locationId={locationId} />
         <CurrentWaterTempDetailGraph locationId={locationId} />
+        {
+          <div className="">
+            <button onClick={toggleRadar}>
+              {showRadar ? "Hide" : "Show"} Radar
+            </button>
+          </div>
+        }
       </div>
+
+      {showRadar && <RadarMap locationId={locationId} />}
+
       <h2 className="text-4xl mb-8">Forecast</h2>
-      <Forecast locationId={locationId} /> */}
+      <Forecast locationId={locationId} />
     </div>
   );
 };
