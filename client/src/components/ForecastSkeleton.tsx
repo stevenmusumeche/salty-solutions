@@ -15,14 +15,14 @@ const Skeleton: React.FC = () => {
   return (
     <div className="mt-3 mb-6">
       <div
-        className="skeleton-character"
+        className="skeleton-character sentence"
         style={{ width: `${titleWidth}%`, height: "1.5em" }}
       />
 
       {[...Array(numLines)].map((x, i) => (
         <div
           key={i}
-          className="skeleton-character"
+          className="skeleton-character sentence"
           style={{ width: `${lineWidths[i]}%` }}
         />
       ))}
