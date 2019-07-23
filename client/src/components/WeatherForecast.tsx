@@ -2,12 +2,14 @@ import React, { ReactNode } from "react";
 import { useForecastQuery } from "../generated/graphql";
 import ErrorIcon from "../assets/error.svg";
 import ForecastSkeleton from "./ForecastSkeleton";
+import { ForecastType } from "./Forecast";
 
 interface Props {
   locationId: string;
+  setForecastType: (type: ForecastType) => void;
 }
 
-const WeatherForecast: React.FC<Props> = ({ locationId }) => {
+const WeatherForecast: React.FC<Props> = ({ locationId, setForecastType }) => {
   const [forecast] = useForecastQuery({ variables: { locationId } });
 
   if (forecast.fetching) {
@@ -36,7 +38,7 @@ const WeatherForecast: React.FC<Props> = ({ locationId }) => {
     forecast.data.location.weatherForecast.slice(0, 10);
 
   return (
-    <Wrapper>
+    <Wrapper setForecastType={setForecastType}>
       {data &&
         data.map(data => {
           return (
@@ -54,9 +56,22 @@ const WeatherForecast: React.FC<Props> = ({ locationId }) => {
 
 export default WeatherForecast;
 
-const Wrapper: React.FC<{ children: ReactNode }> = ({ children }) => (
-  <div className="relative bg-white rounded-lg shadow-md p-4">
-    <h2 className="text-2xl font-medium mb-2">Weather Forecast</h2>
+const Wrapper: React.FC<{
+  children: ReactNode;
+  setForecastType?: (e: any) => void;
+}> = ({ children, setForecastType }) => (
+  <div className="relative bg-white rounded-lg shadow-md p-4 flex-shrink-0 flex-grow-0">
+    <div className="flex justify-between items-start">
+      <h2 className="text-2xl font-medium mb-2">Weather Forecast</h2>
+      {setForecastType && (
+        <button
+          className="block text-gray-700 text-sm"
+          onClick={() => setForecastType(ForecastType.Hourly)}
+        >
+          View Hourly
+        </button>
+      )}
+    </div>
     {children}
   </div>
 );

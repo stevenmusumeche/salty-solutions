@@ -276,6 +276,31 @@ export type ForecastQuery = { __typename?: "Query" } & {
   >;
 };
 
+export type HourlyForecastQueryVariables = {
+  locationId: Scalars["ID"];
+};
+
+export type HourlyForecastQuery = { __typename?: "Query" } & {
+  location: Maybe<
+    { __typename?: "Location" } & {
+      hourlyWeatherForecast: Maybe<
+        Array<
+          { __typename?: "WeatherForecast" } & Pick<
+            WeatherForecast,
+            | "startTime"
+            | "temperature"
+            | "temperatureUnit"
+            | "windSpeed"
+            | "windDirection"
+            | "icon"
+            | "shortForecast"
+          >
+        >
+      >;
+    }
+  >;
+};
+
 export type LocationsQueryVariables = {};
 
 export type LocationsQuery = { __typename?: "Query" } & {
@@ -460,6 +485,30 @@ export function useForecastQuery(
   options: Omit<Urql.UseQueryArgs<ForecastQueryVariables>, "query"> = {}
 ) {
   return Urql.useQuery<ForecastQuery>({ query: ForecastDocument, ...options });
+}
+export const HourlyForecastDocument = gql`
+  query HourlyForecast($locationId: ID!) {
+    location(id: $locationId) {
+      hourlyWeatherForecast {
+        startTime
+        temperature
+        temperatureUnit
+        windSpeed
+        windDirection
+        icon
+        shortForecast
+      }
+    }
+  }
+`;
+
+export function useHourlyForecastQuery(
+  options: Omit<Urql.UseQueryArgs<HourlyForecastQueryVariables>, "query"> = {}
+) {
+  return Urql.useQuery<HourlyForecastQuery>({
+    query: HourlyForecastDocument,
+    ...options
+  });
 }
 export const LocationsDocument = gql`
   query Locations {

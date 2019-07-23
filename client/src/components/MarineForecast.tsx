@@ -51,7 +51,7 @@ const MarineForecast: React.FC<Props> = ({ locationId }) => {
 export default MarineForecast;
 
 const Wrapper: React.FC<{ children: ReactNode }> = ({ children }) => (
-  <div className="relative bg-white rounded-lg shadow-md p-4">
+  <div className="relative bg-white rounded-lg shadow-md p-4 flex-shrink-0 flex-grow-0">
     <h2 className="text-2xl font-medium mb-2">Marine Forecast</h2>
     {children}
   </div>
