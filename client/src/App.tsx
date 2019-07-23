@@ -16,6 +16,8 @@ import { UseQueryState } from "urql";
 import Forecast from "./components/Forecast";
 import "./App.css";
 import RadarMap from "./components/RadarMap";
+import PlusIcon from "./assets/plus-icon.svg";
+import MinusIcon from "./assets/minus-icon.svg";
 
 const App: React.FC = () => {
   const [locations] = useLocationsQuery();
@@ -49,14 +51,26 @@ const App: React.FC = () => {
         <CurrentSalinityDetailGraph locationId={locationId} />
         <CurrentAirTempDetailGraph locationId={locationId} />
         <CurrentWaterTempDetailGraph locationId={locationId} />
-        {
-          <div className="">
-            <button onClick={toggleRadar}>
-              {showRadar ? "Hide" : "Show"} Radar
-            </button>
-          </div>
-        }
       </div>
+
+      {
+        <button
+          className={`shadow-md flex items-center justify-between bg-gray-700 hover:bg-gray-600 text-gray-200 rounded-lg w-48 px-4 py-2 uppercase tracking-widest ${
+            !showRadar ? "mb-8" : "mb-4"
+          }`}
+          onClick={toggleRadar}
+        >
+          {showRadar ? (
+            <>
+              <div>Hide Radar</div> <img className="w-4" src={MinusIcon} />
+            </>
+          ) : (
+            <>
+              <div>Show Radar</div> <img className="w-4" src={PlusIcon} />
+            </>
+          )}
+        </button>
+      }
 
       {showRadar && <RadarMap locationId={locationId} />}
 

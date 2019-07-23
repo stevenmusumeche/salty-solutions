@@ -5,6 +5,8 @@ import {
   Maybe,
   Map
 } from "../generated/graphql";
+import PlayIcon from "../assets/play.svg";
+import StopIcon from "../assets/stop.svg";
 import { format } from "date-fns";
 
 interface Props {
@@ -106,9 +108,9 @@ export const RadarMap: React.FC<Props> = ({ locationId }) => {
           <BottomBar>
             <>
               {/* play/stop button */}
-              <div className="mr-4">
-                <button onClick={() => setAnimated(x => !x)}>
-                  {animated ? "stop" : "play"}
+              <div className="mr-5 w-5 flex">
+                <button className="w-full" onClick={() => setAnimated(x => !x)}>
+                  <img src={animated ? StopIcon : PlayIcon} />
                 </button>
               </div>
               {/* progress bar */}

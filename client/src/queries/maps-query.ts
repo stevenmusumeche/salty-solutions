@@ -4,7 +4,7 @@ const MAP_QUERY = gql`
   query Maps($locationId: ID!) {
     location(id: $locationId) {
       maps {
-        radar(numImages: 15) {
+        radar(numImages: 8) {
           timestamp
           imageUrl
         }
