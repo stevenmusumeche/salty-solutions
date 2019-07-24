@@ -37,9 +37,7 @@ const MarineForecast: React.FC<Props> = ({ locationId }) => {
         forecast.data.location.marineForecast.map(data => {
           return (
             <div className="mb-4 last-no-margin" key={data.timePeriod}>
-              <div className="uppercase tracking-wider text-gray-600 font-bold">
-                {data.timePeriod}
-              </div>
+              <div className="forecast-header">{data.timePeriod}</div>
               <div>{data.forecast}</div>
             </div>
           );
@@ -51,8 +49,8 @@ const MarineForecast: React.FC<Props> = ({ locationId }) => {
 export default MarineForecast;
 
 const Wrapper: React.FC<{ children: ReactNode }> = ({ children }) => (
-  <div className="relative bg-white rounded-lg shadow-md p-4 flex-shrink-0 flex-grow-0">
-    <h2 className="text-2xl font-medium mb-2">Marine Forecast</h2>
+  <div className="forecast-wrapper">
+    <h2 className="forecast-title">Marine Forecast</h2>
     {children}
   </div>
 );

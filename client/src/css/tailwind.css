@@ -23,6 +23,27 @@
   * .form-input { ... }
   */
 
+.hourly-row {
+  @apply text-sm text-center rounded;
+}
+
+.rounded-image {
+  @apply border-gray-300 border rounded;
+}
+
+.forecast-title {
+  @apply text-2xl font-medium mb-2;
+}
+
+.forecast-header {
+  @apply uppercase tracking-widest text-gray-600 font-semibold;
+}
+
+.forecast-wrapper {
+  @apply relative bg-white rounded-lg shadow-md p-4 flex-shrink-0 flex-grow-0;
+  max-height: 1000px;
+}
+
 /**
   * This injects all of Tailwind's utility classes, generated based on your
   * config file.

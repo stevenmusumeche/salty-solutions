@@ -625,6 +625,42 @@ video {
   * .form-input { ... }
   */
 
+.hourly-row {
+  font-size: 0.875rem;
+  text-align: center;
+  border-radius: 0.25rem;
+}
+
+.rounded-image {
+  border-color: #e2e8f0;
+  border-width: 1px;
+  border-radius: 0.25rem;
+}
+
+.forecast-title {
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.forecast-header {
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #718096;
+  font-weight: 600;
+}
+
+.forecast-wrapper {
+  position: relative;
+  background-color: #fff;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  padding: 1rem;
+  flex-shrink: 0;
+  flex-grow: 0;
+  max-height: 1000px;
+}
+
 /**
   * This injects all of Tailwind's utility classes, generated based on your
   * config file.

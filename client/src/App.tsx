@@ -38,7 +38,7 @@ const App: React.FC = () => {
       </div>
       <h2 className="text-4xl mb-8">Current Conditions</h2>
 
-      <div className="current-conditions-grid mb-8">
+      <div className="current-conditions-grid">
         <CurrentWindSummaryCard locationId={locationId} />
         <CurrentSalinitySummaryCard locationId={locationId} />
         <CurrentAirTempSummaryCard locationId={locationId} />

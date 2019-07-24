@@ -17,7 +17,7 @@ const Forecast: React.FC<Props> = ({ locationId }) => {
   const [forecastType, setForecastType] = useState(ForecastType.Weather);
   return (
     <div>
-      <div className="forecast-grid mb-8">
+      <div className="forecast-grid">
         <MarineForecast locationId={locationId} />
         {forecastType === ForecastType.Weather ? (
           <WeatherForecast

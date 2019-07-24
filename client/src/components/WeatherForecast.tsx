@@ -47,13 +47,11 @@ const WeatherForecast: React.FC<Props> = ({ locationId, setForecastType }) => {
                   <img
                     src={data.icon}
                     alt={data.shortForecast}
-                    className="border-gray-300 border rounded h-20 ml-2 mb-2"
+                    className="rounded-image h-20 ml-2 mb-2"
                   />
                 </div>
                 <div className="min-w-0">
-                  <div className="uppercase tracking-wider text-gray-600 font-bold">
-                    {data.name}
-                  </div>
+                  <div className="forecast-header">{data.name}</div>
                   <div className="">
                     {data.shortForecast}, {data.temperature}°
                     {data.temperatureUnit}
@@ -82,11 +80,11 @@ const Wrapper: React.FC<{
   setForecastType?: (e: any) => void;
 }> = ({ children, setForecastType }) => (
   <div
-    className="relative bg-white rounded-lg shadow-md p-4 flex-shrink-0 flex-grow-0 scroller-vertical"
+    className="forecast-wrapper scroller-vertical"
     style={{ maxHeight: 1000 }}
   >
     <div className="flex justify-between items-start">
-      <h2 className="text-2xl font-medium mb-2">Weather Forecast</h2>
+      <h2 className="forecast-title">Weather Forecast</h2>
       {setForecastType && (
         <button
           className="block text-gray-700 text-sm"

@@ -62,7 +62,7 @@ const HourlyForecast: React.FC<Props> = ({ locationId, setForecastType }) => {
       {days.map(day => {
         return (
           <div key={day} className="mb-8">
-            <div className="uppercase tracking-wider text-gray-600 font-bold mb-4">
+            <div className="forecast-header mb-4">
               {format(new Date(day), "cccc")}
             </div>
             {grouped[day].map(hour => {
@@ -77,7 +77,7 @@ const HourlyForecast: React.FC<Props> = ({ locationId, setForecastType }) => {
 
 const Hour: React.FC<{ hour: HourlyForecastDetailFragment }> = ({ hour }) => {
   return (
-    <div className="hourly-row text-sm text-center rounded">
+    <div className="hourly-row">
       <div className="text-right">
         {format(new Date(hour.startTime), "h:mma").toLowerCase()}
       </div>
@@ -85,7 +85,7 @@ const Hour: React.FC<{ hour: HourlyForecastDetailFragment }> = ({ hour }) => {
         <img
           src={hour.icon}
           alt={hour.shortForecast}
-          className="w-100 border-gray-300 border rounded mx-auto"
+          className="rounded-image w-100 mx-auto"
         />
       </div>
       <div>
@@ -105,12 +105,9 @@ const Wrapper: React.FC<{
   children: ReactNode;
   setForecastType?: (e: any) => void;
 }> = ({ children, setForecastType }) => (
-  <div
-    className="relative bg-white rounded-lg shadow-md p-4 flex-shrink-0 flex-grow-0  scroller-vertical"
-    style={{ maxHeight: 1000 }}
-  >
+  <div className="forecast-wrapper scroller-vertical">
     <div className="flex justify-between items-start">
-      <h2 className="text-2xl font-medium mb-2">Hourly Forecast</h2>
+      <h2 className="forecast-title">Hourly Forecast</h2>
       {setForecastType && (
         <button
           className="block text-gray-700 text-sm"
