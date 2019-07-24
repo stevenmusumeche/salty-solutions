@@ -1,7 +1,0 @@
-.short-forecast-grid {
-  display: grid;
-  grid-template-columns: repeat(14, calc(15%));
-  grid-column-gap: 1rem;
-  justify-items: stretch;
-  align-items: stretch;
-}

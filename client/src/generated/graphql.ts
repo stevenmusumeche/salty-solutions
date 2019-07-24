@@ -284,22 +284,24 @@ export type HourlyForecastQuery = { __typename?: "Query" } & {
   location: Maybe<
     { __typename?: "Location" } & {
       hourlyWeatherForecast: Maybe<
-        Array<
-          { __typename?: "WeatherForecast" } & Pick<
-            WeatherForecast,
-            | "startTime"
-            | "temperature"
-            | "temperatureUnit"
-            | "windSpeed"
-            | "windDirection"
-            | "icon"
-            | "shortForecast"
-          >
-        >
+        Array<{ __typename?: "WeatherForecast" } & HourlyForecastDetailFragment>
       >;
     }
   >;
 };
+
+export type HourlyForecastDetailFragment = {
+  __typename?: "WeatherForecast";
+} & Pick<
+  WeatherForecast,
+  | "startTime"
+  | "temperature"
+  | "temperatureUnit"
+  | "windSpeed"
+  | "windDirection"
+  | "icon"
+  | "shortForecast"
+>;
 
 export type LocationsQueryVariables = {};
 
@@ -443,6 +445,17 @@ export type WindDetailFieldsFragment = { __typename?: "WindDetail" } & Pick<
   WindDetail,
   "timestamp" | "speed" | "direction" | "directionDegrees"
 >;
+export const HourlyForecastDetailFragmentDoc = gql`
+  fragment HourlyForecastDetail on WeatherForecast {
+    startTime
+    temperature
+    temperatureUnit
+    windSpeed
+    windDirection
+    icon
+    shortForecast
+  }
+`;
 export const OverlayMapsFragmentDoc = gql`
   fragment OverlayMaps on Overlays {
     topo
@@ -490,16 +503,11 @@ export const HourlyForecastDocument = gql`
   query HourlyForecast($locationId: ID!) {
     location(id: $locationId) {
       hourlyWeatherForecast {
-        startTime
-        temperature
-        temperatureUnit
-        windSpeed
-        windDirection
-        icon
-        shortForecast
+        ...HourlyForecastDetail
       }
     }
   }
+  ${HourlyForecastDetailFragmentDoc}
 `;
 
 export function useHourlyForecastQuery(

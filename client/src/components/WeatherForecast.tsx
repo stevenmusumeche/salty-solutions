@@ -34,19 +34,40 @@ const WeatherForecast: React.FC<Props> = ({ locationId, setForecastType }) => {
   const data =
     forecast.data &&
     forecast.data.location &&
-    forecast.data.location.weatherForecast &&
-    forecast.data.location.weatherForecast.slice(0, 10);
+    forecast.data.location.weatherForecast;
 
   return (
     <Wrapper setForecastType={setForecastType}>
       {data &&
         data.map(data => {
           return (
-            <div key={data.name} className="mb-4 last-no-margin">
-              <div className="uppercase tracking-wider text-gray-600">
-                {data.name}
+            <div key={data.name} className="mb-8 last-no-margin">
+              <div className="clearfix">
+                <div className="float-right">
+                  <img
+                    src={data.icon}
+                    alt={data.shortForecast}
+                    className="border-gray-300 border rounded h-20 ml-2 mb-2"
+                  />
+                </div>
+                <div className="min-w-0">
+                  <div className="uppercase tracking-wider text-gray-600 font-bold">
+                    {data.name}
+                  </div>
+                  <div className="">
+                    {data.shortForecast}, {data.temperature}°
+                    {data.temperatureUnit}
+                    {data.windSpeed && (
+                      <>
+                        , {data.windSpeed} ({data.windDirection})
+                      </>
+                    )}
+                  </div>
+                  <div className="text-xs mt-1 relative">
+                    {data.detailedForecast}
+                  </div>
+                </div>
               </div>
-              <div>{data.detailedForecast}</div>
             </div>
           );
         })}
@@ -60,7 +81,10 @@ const Wrapper: React.FC<{
   children: ReactNode;
   setForecastType?: (e: any) => void;
 }> = ({ children, setForecastType }) => (
-  <div className="relative bg-white rounded-lg shadow-md p-4 flex-shrink-0 flex-grow-0">
+  <div
+    className="relative bg-white rounded-lg shadow-md p-4 flex-shrink-0 flex-grow-0 scroller-vertical"
+    style={{ maxHeight: 1000 }}
+  >
     <div className="flex justify-between items-start">
       <h2 className="text-2xl font-medium mb-2">Weather Forecast</h2>
       {setForecastType && (

@@ -7,3 +7,15 @@
   justify-items: stretch;
   align-items: stretch;
 }
+
+.hourly-row {
+  display: grid;
+  grid-template-columns: 1fr 0.3fr 0.75fr 1.2fr 4fr;
+  grid-column-gap: 0.5rem;
+  padding: 0.375rem;
+  align-items: center;
+}
+
+.hourly-row:nth-child(even) {
+  background: #edf2f7;
+}

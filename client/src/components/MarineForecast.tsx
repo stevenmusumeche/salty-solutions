@@ -37,7 +37,7 @@ const MarineForecast: React.FC<Props> = ({ locationId }) => {
         forecast.data.location.marineForecast.map(data => {
           return (
             <div className="mb-4 last-no-margin" key={data.timePeriod}>
-              <div className="uppercase tracking-wider text-gray-600">
+              <div className="uppercase tracking-wider text-gray-600 font-bold">
                 {data.timePeriod}
               </div>
               <div>{data.forecast}</div>

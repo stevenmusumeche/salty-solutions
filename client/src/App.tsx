@@ -7,11 +7,7 @@ import CurrentSalinitySummaryCard from "./components/CurrentSalinitySummaryCard"
 import CurrentSalinityDetailGraph from "./components/CurrentSalinityDetailGraph";
 import CurrentWaterTempSummaryCard from "./components/CurrentWaterTempSummaryCard";
 import CurrentWaterTempDetailGraph from "./components/CurrentWaterTempDetailGraph";
-import {
-  useLocationsQuery,
-  LocationsQuery,
-  useMapsQuery
-} from "./generated/graphql";
+import { useLocationsQuery, LocationsQuery } from "./generated/graphql";
 import { UseQueryState } from "urql";
 import Forecast from "./components/Forecast";
 import "./App.css";
@@ -62,11 +58,13 @@ const App: React.FC = () => {
         >
           {showRadar ? (
             <>
-              <div>Hide Radar</div> <img className="w-4" src={MinusIcon} />
+              <div>Hide Radar</div>{" "}
+              <img className="w-4" src={MinusIcon} alt="hide radar icon" />
             </>
           ) : (
             <>
-              <div>Show Radar</div> <img className="w-4" src={PlusIcon} />
+              <div>Show Radar</div>{" "}
+              <img className="w-4" src={PlusIcon} alt="show radar icon" />
             </>
           )}
         </button>

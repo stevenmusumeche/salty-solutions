@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import "./Forecast.css";
 import MarineForecast from "./MarineForecast";
 import WeatherForecast from "./WeatherForecast";
-import ForecastSummary from "./ForecastSummary";
 import HourlyForecast from "./HourlyForecast";
 
 interface Props {
@@ -18,7 +17,6 @@ const Forecast: React.FC<Props> = ({ locationId }) => {
   const [forecastType, setForecastType] = useState(ForecastType.Weather);
   return (
     <div>
-      <ForecastSummary locationId={locationId} />
       <div className="forecast-grid mb-8">
         <MarineForecast locationId={locationId} />
         {forecastType === ForecastType.Weather ? (

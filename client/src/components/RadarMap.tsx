@@ -91,6 +91,7 @@ export const RadarMap: React.FC<Props> = ({ locationId }) => {
           <img
             src={radar[radar.length - 1].imageUrl}
             className={`absolute inset-0 z-20 ${animated && "hidden"}`}
+            alt="radar map"
           />
         )}
 
@@ -101,6 +102,7 @@ export const RadarMap: React.FC<Props> = ({ locationId }) => {
             key={i}
             className={`absolute inset-0 z-20 ${i !== currentImageIndex &&
               "hidden"}`}
+            alt="radar map"
           />
         ))}
 
@@ -110,7 +112,10 @@ export const RadarMap: React.FC<Props> = ({ locationId }) => {
               {/* play/stop button */}
               <div className="mr-5 w-5 flex">
                 <button className="w-full" onClick={() => setAnimated(x => !x)}>
-                  <img src={animated ? StopIcon : PlayIcon} />
+                  <img
+                    src={animated ? StopIcon : PlayIcon}
+                    alt="animation controls"
+                  />
                 </button>
               </div>
               {/* progress bar */}
@@ -155,19 +160,39 @@ const OverlayMaps: React.FC<{ overlays: OverlayMapsFragment }> = ({
   return (
     <>
       {overlays.topo && (
-        <img src={overlays.topo} className="absolute inset-0 z-10" />
+        <img
+          src={overlays.topo}
+          className="absolute inset-0 z-10"
+          alt="radar map"
+        />
       )}
       {overlays.rivers && (
-        <img src={overlays.rivers} className="absolute inset-0 z-10" />
+        <img
+          src={overlays.rivers}
+          className="absolute inset-0 z-10"
+          alt="radar map"
+        />
       )}
       {overlays.counties && (
-        <img src={overlays.counties} className="absolute inset-0 z-10" />
+        <img
+          src={overlays.counties}
+          className="absolute inset-0 z-10"
+          alt="radar map"
+        />
       )}
       {overlays.highways && (
-        <img src={overlays.highways} className="absolute inset-0 z-10" />
+        <img
+          src={overlays.highways}
+          className="absolute inset-0 z-10"
+          alt="radar map"
+        />
       )}
       {overlays.cities && (
-        <img src={overlays.cities} className="absolute inset-0 z-10" />
+        <img
+          src={overlays.cities}
+          className="absolute inset-0 z-10"
+          alt="radar map"
+        />
       )}
     </>
   );
