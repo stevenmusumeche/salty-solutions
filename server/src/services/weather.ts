@@ -22,7 +22,7 @@ export const getForecast = async (
   const url = `${location.weatherGov.apiBase}/forecast`;
   const { data } = await axios.get(url);
 
-  return data.properties.periods;
+  return data.properties.periods.map(stripMph);
 };
 
 export const getHourlyForecast = async (
@@ -30,8 +30,13 @@ export const getHourlyForecast = async (
 ): Promise<WeatherForecast[]> => {
   const url = `${location.weatherGov.apiBase}/forecast/hourly`;
   const { data } = await axios.get(url);
-  return data.properties.periods;
+  return data.properties.periods.map(stripMph);
 };
+
+const stripMph = (x: any) => ({
+  ...x,
+  windSpeed: x.windSpeed.replace("mph", "").trim()
+});
 
 export const getCurrentConditions = async (location: LocationEntity) => {
   const url = `https://api.weather.gov/stations/${

@@ -44,7 +44,10 @@ const HourlyForecast: React.FC<Props> = ({ locationId, setForecastType }) => {
   // group into days (local time)
   const grouped = data.reduce(
     (acc, cur) => {
-      const localDay = format(new Date(cur.startTime), "yyyy-MM-dd");
+      const localDay = format(
+        new Date(cur.startTime),
+        "yyyy-MM-dd'T'00:00:00.000xxx"
+      );
       if (!acc[localDay]) acc[localDay] = [];
       acc[localDay].push(cur);
       return acc;
@@ -58,9 +61,9 @@ const HourlyForecast: React.FC<Props> = ({ locationId, setForecastType }) => {
     <Wrapper setForecastType={setForecastType}>
       {days.map(day => {
         return (
-          <div className="mb-8">
+          <div key={day} className="mb-8">
             <div className="uppercase tracking-wider text-gray-600 font-bold mb-4">
-              {format(new Date(day), "EEEE")}
+              {format(new Date(day), "cccc")}
             </div>
             {grouped[day].map(hour => {
               return <Hour key={`${day}${hour.startTime}`} hour={hour} />;

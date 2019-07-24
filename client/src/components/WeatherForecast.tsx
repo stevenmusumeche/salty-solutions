@@ -59,7 +59,7 @@ const WeatherForecast: React.FC<Props> = ({ locationId, setForecastType }) => {
                     {data.temperatureUnit}
                     {data.windSpeed && (
                       <>
-                        , {data.windSpeed} ({data.windDirection})
+                        , {data.windSpeed} {data.windDirection}
                       </>
                     )}
                   </div>
