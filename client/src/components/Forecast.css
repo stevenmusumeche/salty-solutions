@@ -6,7 +6,7 @@
   grid-row-gap: 2rem;
   justify-items: stretch;
   align-items: stretch;
-  /* margin-bottom: 2rem; */
+  margin-bottom: 2rem;
 }
 
 .hourly-row {

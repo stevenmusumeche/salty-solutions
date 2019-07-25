@@ -13,6 +13,12 @@ const resolvers: Resolvers = {
       const location = services.location.getById(args.id);
       if (!location) throw new ApolloError(`Unknown location ID ${args.id}`);
       return location;
+    },
+    tidePreditionStation: (_, { stationId }, { services }) => {
+      const station = services.tide.getStationById(stationId);
+      if (!station)
+        throw new ApolloError(`Unknown tide station ID ${stationId}`);
+      return station;
     }
   },
   Location: {

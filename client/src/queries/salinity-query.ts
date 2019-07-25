@@ -1,8 +1,8 @@
 import gql from "graphql-tag";
 
 const SALINITY_QUERY = gql`
-  query Salinity {
-    location(id: "2") {
+  query Salinity($locationId: ID!) {
+    location(id: $locationId) {
       salinitySummary: salinity(numHours: 12) {
         summary {
           mostRecent {
@@ -12,7 +12,7 @@ const SALINITY_QUERY = gql`
       }
     }
 
-    detail: location(id: "2") {
+    detail: location(id: $locationId) {
       salinityDetail: salinity(numHours: 48) {
         detail {
           timestamp

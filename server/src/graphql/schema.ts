@@ -4,6 +4,7 @@ export default gql`
   type Query {
     locations: [Location!]!
     location(id: ID!): Location
+    tidePreditionStation(stationId: ID!): TidePreditionStation
   }
 
   type Location {

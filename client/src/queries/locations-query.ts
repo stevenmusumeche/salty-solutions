@@ -5,6 +5,13 @@ const LOCATION_QUERY = gql`
     locations {
       id
       name
+      tidePreditionStations {
+        ...TideStationDetail
+      }
     }
+  }
+  fragment TideStationDetail on TidePreditionStation {
+    id
+    name
   }
 `;

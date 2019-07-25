@@ -103,10 +103,15 @@ export type Query = {
   __typename?: "Query";
   locations: Array<Location>;
   location?: Maybe<Location>;
+  tidePreditionStation?: Maybe<TidePreditionStation>;
 };
 
 export type QueryLocationArgs = {
   id: Scalars["ID"];
+};
+
+export type QueryTidePreditionStationArgs = {
+  stationId: Scalars["ID"];
 };
 
 export type Salinity = {
@@ -529,6 +534,12 @@ export type QueryResolvers<
     ParentType,
     ContextType,
     QueryLocationArgs
+  >;
+  tidePreditionStation?: Resolver<
+    Maybe<ResolversTypes["TidePreditionStation"]>,
+    ParentType,
+    ContextType,
+    QueryTidePreditionStationArgs
   >;
 };
 

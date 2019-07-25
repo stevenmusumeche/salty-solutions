@@ -41,7 +41,7 @@
 
 .forecast-wrapper {
   @apply relative bg-white rounded-lg shadow-md p-4 flex-shrink-0 flex-grow-0;
-  max-height: 1000px;
+  min-height: 1400px;
 }
 
 /**

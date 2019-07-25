@@ -16,21 +16,19 @@ export enum ForecastType {
 const Forecast: React.FC<Props> = ({ locationId }) => {
   const [forecastType, setForecastType] = useState(ForecastType.Weather);
   return (
-    <div>
-      <div className="forecast-grid">
-        <MarineForecast locationId={locationId} />
-        {forecastType === ForecastType.Weather ? (
-          <WeatherForecast
-            locationId={locationId}
-            setForecastType={setForecastType}
-          />
-        ) : (
-          <HourlyForecast
-            locationId={locationId}
-            setForecastType={setForecastType}
-          />
-        )}
-      </div>
+    <div className="forecast-grid">
+      <MarineForecast locationId={locationId} />
+      {forecastType === ForecastType.Weather ? (
+        <WeatherForecast
+          locationId={locationId}
+          setForecastType={setForecastType}
+        />
+      ) : (
+        <HourlyForecast
+          locationId={locationId}
+          setForecastType={setForecastType}
+        />
+      )}
     </div>
   );
 };

@@ -102,10 +102,15 @@ export type Query = {
   __typename?: "Query";
   locations: Array<Location>;
   location?: Maybe<Location>;
+  tidePreditionStation?: Maybe<TidePreditionStation>;
 };
 
 export type QueryLocationArgs = {
   id: Scalars["ID"];
+};
+
+export type QueryTidePreditionStationArgs = {
+  stationId: Scalars["ID"];
 };
 
 export type Salinity = {
@@ -306,8 +311,18 @@ export type HourlyForecastDetailFragment = {
 export type LocationsQueryVariables = {};
 
 export type LocationsQuery = { __typename?: "Query" } & {
-  locations: Array<{ __typename?: "Location" } & Pick<Location, "id" | "name">>;
+  locations: Array<
+    { __typename?: "Location" } & Pick<Location, "id" | "name"> & {
+        tidePreditionStations: Array<
+          { __typename?: "TidePreditionStation" } & TideStationDetailFragment
+        >;
+      }
+  >;
 };
+
+export type TideStationDetailFragment = {
+  __typename?: "TidePreditionStation";
+} & Pick<TidePreditionStation, "id" | "name">;
 
 export type MapsQueryVariables = {
   locationId: Scalars["ID"];
@@ -333,7 +348,9 @@ export type OverlayMapsFragment = { __typename?: "Overlays" } & Pick<
   "topo" | "counties" | "rivers" | "highways" | "cities"
 >;
 
-export type SalinityQueryVariables = {};
+export type SalinityQueryVariables = {
+  locationId: Scalars["ID"];
+};
 
 export type SalinityQuery = { __typename?: "Query" } & {
   location: Maybe<
@@ -389,6 +406,27 @@ export type CurrentTemperatureQuery = { __typename?: "Query" } & {
           >
         >;
       };
+    }
+  >;
+};
+
+export type TideQueryVariables = {
+  stationId: Scalars["ID"];
+  startDate: Scalars["String"];
+  endDate: Scalars["String"];
+};
+
+export type TideQuery = { __typename?: "Query" } & {
+  tidePreditionStation: Maybe<
+    { __typename?: "TidePreditionStation" } & {
+      tides: Maybe<
+        Array<
+          { __typename?: "TideDetail" } & Pick<
+            TideDetail,
+            "time" | "height" | "type"
+          >
+        >
+      >;
     }
   >;
 };
@@ -454,6 +492,12 @@ export const HourlyForecastDetailFragmentDoc = gql`
     windDirection
     icon
     shortForecast
+  }
+`;
+export const TideStationDetailFragmentDoc = gql`
+  fragment TideStationDetail on TidePreditionStation {
+    id
+    name
   }
 `;
 export const OverlayMapsFragmentDoc = gql`
@@ -523,8 +567,12 @@ export const LocationsDocument = gql`
     locations {
       id
       name
+      tidePreditionStations {
+        ...TideStationDetail
+      }
     }
   }
+  ${TideStationDetailFragmentDoc}
 `;
 
 export function useLocationsQuery(
@@ -558,8 +606,8 @@ export function useMapsQuery(
   return Urql.useQuery<MapsQuery>({ query: MapsDocument, ...options });
 }
 export const SalinityDocument = gql`
-  query Salinity {
-    location(id: "2") {
+  query Salinity($locationId: ID!) {
+    location(id: $locationId) {
       salinitySummary: salinity(numHours: 12) {
         summary {
           mostRecent {
@@ -568,7 +616,7 @@ export const SalinityDocument = gql`
         }
       }
     }
-    detail: location(id: "2") {
+    detail: location(id: $locationId) {
       salinityDetail: salinity(numHours: 48) {
         detail {
           timestamp
@@ -610,6 +658,23 @@ export function useCurrentTemperatureQuery(
     query: CurrentTemperatureDocument,
     ...options
   });
+}
+export const TideDocument = gql`
+  query Tide($stationId: ID!, $startDate: String!, $endDate: String!) {
+    tidePreditionStation(stationId: $stationId) {
+      tides(start: $startDate, end: $endDate) {
+        time
+        height
+        type
+      }
+    }
+  }
+`;
+
+export function useTideQuery(
+  options: Omit<Urql.UseQueryArgs<TideQueryVariables>, "query"> = {}
+) {
+  return Urql.useQuery<TideQuery>({ query: TideDocument, ...options });
 }
 export const CurrentWaterTemperatureDocument = gql`
   query CurrentWaterTemperature {

@@ -7,6 +7,7 @@ import CurrentSalinitySummaryCard from "./components/CurrentSalinitySummaryCard"
 import CurrentSalinityDetailGraph from "./components/CurrentSalinityDetailGraph";
 import CurrentWaterTempSummaryCard from "./components/CurrentWaterTempSummaryCard";
 import CurrentWaterTempDetailGraph from "./components/CurrentWaterTempDetailGraph";
+import Tides from "./components/Tides";
 import { useLocationsQuery, LocationsQuery } from "./generated/graphql";
 import { UseQueryState } from "urql";
 import Forecast from "./components/Forecast";
@@ -19,6 +20,9 @@ const App: React.FC = () => {
   const [locations] = useLocationsQuery();
   const [locationId, setLocationId] = useState("2");
   const [showRadar, setShowRadar] = useState(false);
+  const selectedLocation = locations.data
+    ? locations.data.locations.find(location => location.id === locationId)
+    : null;
 
   const toggleRadar = () => setShowRadar(x => !x);
 
@@ -36,7 +40,7 @@ const App: React.FC = () => {
         />
         <div>date selector</div>
       </div>
-      <h2 className="text-4xl mb-8">Current Conditions</h2>
+      <SectionTitle text="Current Conditions" />
 
       <div className="current-conditions-grid">
         <CurrentWindSummaryCard locationId={locationId} />
@@ -72,8 +76,14 @@ const App: React.FC = () => {
 
       {showRadar && <RadarMap locationId={locationId} />}
 
-      <h2 className="text-4xl mb-8">Forecast</h2>
+      <SectionTitle text="Forecast" />
       <Forecast locationId={locationId} />
+
+      <SectionTitle text="Tides" />
+
+      {selectedLocation && (
+        <Tides tideStations={selectedLocation.tidePreditionStations} />
+      )}
     </div>
   );
 };
@@ -85,6 +95,10 @@ interface LocationSelectProps {
   value: string;
   onChange: ChangeEventHandler;
 }
+
+const SectionTitle: React.FC<{ text: string }> = ({ text }) => (
+  <h2 className="text-4xl mb-8">{text}</h2>
+);
 
 const LocationSelect: React.FC<LocationSelectProps> = ({
   locations,

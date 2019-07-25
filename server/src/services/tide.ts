@@ -1,6 +1,7 @@
 import querystring from "querystring";
-import { format } from "date-fns";
 import axios from "axios";
+import { formatToTimeZone } from "date-fns-timezone";
+import { format, parse } from "date-fns";
 
 export interface TideStationEntity {
   id: string;
@@ -108,8 +109,10 @@ async function fetchTideData(
   const params = {
     product: "predictions",
     application: "fishing",
-    begin_date: format(start, "yyyyMMdd"),
-    end_date: format(end, "yyyyMMdd"),
+    begin_date: formatToTimeZone(start, "YYYYMMDD HH:mm", {
+      timeZone: "Etc/UTC"
+    }),
+    end_date: formatToTimeZone(end, "YYYYMMDD HH:mm", { timeZone: "Etc/UTC" }),
     datum: "MLLW",
     station: stationId,
     time_zone: "gmt",
@@ -117,6 +120,7 @@ async function fetchTideData(
     interval: onlyHighLow ? "hilo" : undefined, // only High/Low tide predictions vs 6-minute intervals
     format: "json"
   };
+
   const url =
     `https://tidesandcurrents.noaa.gov/api/datagetter?` +
     querystring.stringify(params);
