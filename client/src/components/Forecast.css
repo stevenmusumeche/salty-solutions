@@ -7,6 +7,7 @@
   justify-items: stretch;
   align-items: stretch;
   margin-bottom: 2rem;
+  max-height: 50rem;
 }
 
 .hourly-row {

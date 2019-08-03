@@ -79,10 +79,7 @@ const Wrapper: React.FC<{
   children: ReactNode;
   setForecastType?: (e: any) => void;
 }> = ({ children, setForecastType }) => (
-  <div
-    className="forecast-wrapper scroller-vertical"
-    style={{ maxHeight: 1000 }}
-  >
+  <div className="forecast-wrapper scroller-vertical">
     <div className="flex justify-between items-start">
       <h2 className="forecast-title">Weather Forecast</h2>
       {setForecastType && (

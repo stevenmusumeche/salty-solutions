@@ -658,7 +658,6 @@ video {
   padding: 1rem;
   flex-shrink: 0;
   flex-grow: 0;
-  min-height: 1400px;
 }
 
 /**

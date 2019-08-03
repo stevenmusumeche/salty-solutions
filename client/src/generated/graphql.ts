@@ -411,6 +411,7 @@ export type CurrentTemperatureQuery = { __typename?: "Query" } & {
 };
 
 export type TideQueryVariables = {
+  locationId: Scalars["ID"];
   stationId: Scalars["ID"];
   startDate: Scalars["String"];
   endDate: Scalars["String"];
@@ -420,16 +421,26 @@ export type TideQuery = { __typename?: "Query" } & {
   tidePreditionStation: Maybe<
     { __typename?: "TidePreditionStation" } & {
       tides: Maybe<
-        Array<
-          { __typename?: "TideDetail" } & Pick<
-            TideDetail,
-            "time" | "height" | "type"
-          >
-        >
+        Array<{ __typename?: "TideDetail" } & TideDetailFieldsFragment>
       >;
     }
   >;
+  location: Maybe<
+    { __typename?: "Location" } & {
+      sun: Maybe<Array<{ __typename?: "SunDetail" } & SunDetailFieldsFragment>>;
+    }
+  >;
 };
+
+export type TideDetailFieldsFragment = { __typename?: "TideDetail" } & Pick<
+  TideDetail,
+  "time" | "height" | "type"
+>;
+
+export type SunDetailFieldsFragment = { __typename?: "SunDetail" } & Pick<
+  SunDetail,
+  "sunrise" | "sunset" | "dawn" | "dusk" | "nauticalDawn" | "nauticalDusk"
+>;
 
 export type CurrentWaterTemperatureQueryVariables = {};
 
@@ -507,6 +518,23 @@ export const OverlayMapsFragmentDoc = gql`
     rivers
     highways
     cities
+  }
+`;
+export const TideDetailFieldsFragmentDoc = gql`
+  fragment TideDetailFields on TideDetail {
+    time
+    height
+    type
+  }
+`;
+export const SunDetailFieldsFragmentDoc = gql`
+  fragment SunDetailFields on SunDetail {
+    sunrise
+    sunset
+    dawn
+    dusk
+    nauticalDawn
+    nauticalDusk
   }
 `;
 export const WindDetailFieldsFragmentDoc = gql`
@@ -660,15 +688,25 @@ export function useCurrentTemperatureQuery(
   });
 }
 export const TideDocument = gql`
-  query Tide($stationId: ID!, $startDate: String!, $endDate: String!) {
+  query Tide(
+    $locationId: ID!
+    $stationId: ID!
+    $startDate: String!
+    $endDate: String!
+  ) {
     tidePreditionStation(stationId: $stationId) {
       tides(start: $startDate, end: $endDate) {
-        time
-        height
-        type
+        ...TideDetailFields
+      }
+    }
+    location(id: $locationId) {
+      sun(start: $startDate, end: $endDate) {
+        ...SunDetailFields
       }
     }
   }
+  ${TideDetailFieldsFragmentDoc}
+  ${SunDetailFieldsFragmentDoc}
 `;
 
 export function useTideQuery(

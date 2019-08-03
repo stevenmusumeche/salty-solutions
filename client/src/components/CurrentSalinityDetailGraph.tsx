@@ -1,5 +1,5 @@
 import React from "react";
-import { noDecimals } from "../hooks/utils";
+import { oneDecimal } from "../hooks/utils";
 import MiniGraph from "./MiniGraph";
 import { useSalinityData } from "../hooks/useSalinityData";
 
@@ -15,7 +15,7 @@ const CurrentSalinityDetailGraph: React.FC<Props> = ({ locationId }) => {
       fetching={fetching}
       error={error}
       data={data}
-      dependentAxisTickFormat={noDecimals}
+      dependentAxisTickFormat={oneDecimal}
     />
   );
 };

@@ -18,7 +18,7 @@ import MinusIcon from "./assets/minus-icon.svg";
 
 const App: React.FC = () => {
   const [locations] = useLocationsQuery();
-  const [locationId, setLocationId] = useState("2");
+  const [locationId, setLocationId] = useState("1");
   const [showRadar, setShowRadar] = useState(false);
   const selectedLocation = locations.data
     ? locations.data.locations.find(location => location.id === locationId)
@@ -82,7 +82,12 @@ const App: React.FC = () => {
       <SectionTitle text="Tides" />
 
       {selectedLocation && (
-        <Tides tideStations={selectedLocation.tidePreditionStations} />
+        <div className="bg-white rounded-lg shadow-md p-4">
+          <Tides
+            locationId={locationId}
+            tideStations={selectedLocation.tidePreditionStations}
+          />
+        </div>
       )}
     </div>
   );

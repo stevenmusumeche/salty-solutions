@@ -17,7 +17,7 @@ const locations: LocationEntity[] = [
   {
     id: "1",
     name: "Cypremore Point",
-    tideStationIds: ["8765251", "8765148", "8765551", "8764931"],
+    tideStationIds: ["8765251", "8765148"],
     marineZoneId: "GMZ435",
     lat: 29.731474,
     long: -91.841371,

@@ -18,6 +18,7 @@ export const getSunInfo = (
 }[] => {
   let results = [];
   let cur = start;
+
   while (cur <= end) {
     const result = suncalc.getTimes(cur, lat, long);
     results.push({

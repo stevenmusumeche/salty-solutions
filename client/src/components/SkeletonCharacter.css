@@ -3,9 +3,11 @@
   height: 16px;
   margin-top: 0.5em;
   border-radius: 7px;
+  background-color: #ddd;
   background-image: linear-gradient(90deg, #ddd 0px, #ececec 40px, #ddd 80px);
   background-size: 600px;
   animation: shine-lines 1.2s infinite linear;
+  background-repeat: no-repeat;
 }
 
 .skeleton-character:first-child {
@@ -32,6 +34,6 @@
   }
   70%,
   100% {
-    background-position: 440px;
+    background-position: 600px;
   }
 }
