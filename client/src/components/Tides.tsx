@@ -23,6 +23,7 @@ import {
   VictoryScatter,
   VictoryLine
 } from "victory";
+import ErrorIcon from "../assets/error.svg";
 
 interface Props {
   tideStations: TideStationDetailFragment[];
@@ -51,21 +52,20 @@ const Tides: React.FC<Props> = ({ tideStations, locationId }) => {
     pause: selectedId === undefined
   });
 
-  if (tideResult.fetching)
-    return (
-      <div>
-        <div className="skeleton-character full" />
-      </div>
-    );
+  if (tideResult.fetching) return <div className="skeleton-character full" />;
   if (
     !tideResult.data ||
     !tideResult.data.tidePreditionStation ||
     !tideResult.data.tidePreditionStation.tides ||
     !tideResult.data.location ||
     !tideResult.data.location.sun
-  )
-    // todo: what to do here?
-    return <div>no data</div>;
+  ) {
+    return (
+      <div className="relative w-full flex items-center justify-center py-8">
+        <img src={ErrorIcon} style={{ height: 120 }} alt="error" />
+      </div>
+    );
+  }
 
   const {
     dawn,
