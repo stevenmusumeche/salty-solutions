@@ -79,7 +79,21 @@ export type MapsRadarArgs = {
 export type MarineForecast = {
   __typename?: "MarineForecast";
   timePeriod: Scalars["String"];
-  forecast: Scalars["String"];
+  forecast: MarineForecastDetail;
+};
+
+export type MarineForecastDetail = {
+  __typename?: "MarineForecastDetail";
+  text: Scalars["String"];
+  waterCondition?: Maybe<Scalars["String"]>;
+  windSpeed?: Maybe<MarineForecastWindSpeedDetail>;
+  windDirection?: Maybe<Scalars["String"]>;
+};
+
+export type MarineForecastWindSpeedDetail = {
+  __typename?: "MarineForecastWindSpeedDetail";
+  from: Scalars["Int"];
+  to: Scalars["Int"];
 };
 
 export type MoonDetail = {
@@ -258,8 +272,13 @@ export type ForecastQuery = { __typename?: "Query" } & {
         Array<
           { __typename?: "MarineForecast" } & Pick<
             MarineForecast,
-            "timePeriod" | "forecast"
-          >
+            "timePeriod"
+          > & {
+              forecast: { __typename?: "MarineForecastDetail" } & Pick<
+                MarineForecastDetail,
+                "text"
+              >;
+            }
         >
       >;
       weatherForecast: Maybe<
@@ -550,7 +569,9 @@ export const ForecastDocument = gql`
     location(id: $locationId) {
       marineForecast {
         timePeriod
-        forecast
+        forecast {
+          text
+        }
       }
       weatherForecast {
         name

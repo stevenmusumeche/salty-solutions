@@ -100,7 +100,19 @@ export default gql`
 
   type MarineForecast {
     timePeriod: String!
-    forecast: String!
+    forecast: MarineForecastDetail!
+  }
+
+  type MarineForecastDetail {
+    text: String!
+    waterCondition: String
+    windSpeed: MarineForecastWindSpeedDetail
+    windDirection: String
+  }
+
+  type MarineForecastWindSpeedDetail {
+    from: Int!
+    to: Int!
   }
 
   type WaterHeight {

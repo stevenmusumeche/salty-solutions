@@ -5,7 +5,9 @@ const FORECAST_QUERY = gql`
     location(id: $locationId) {
       marineForecast {
         timePeriod
-        forecast
+        forecast {
+          text
+        }
       }
       weatherForecast {
         name

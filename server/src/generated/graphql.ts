@@ -80,7 +80,21 @@ export type MapsRadarArgs = {
 export type MarineForecast = {
   __typename?: "MarineForecast";
   timePeriod: Scalars["String"];
-  forecast: Scalars["String"];
+  forecast: MarineForecastDetail;
+};
+
+export type MarineForecastDetail = {
+  __typename?: "MarineForecastDetail";
+  text: Scalars["String"];
+  waterCondition?: Maybe<Scalars["String"]>;
+  windSpeed?: Maybe<MarineForecastWindSpeedDetail>;
+  windDirection?: Maybe<Scalars["String"]>;
+};
+
+export type MarineForecastWindSpeedDetail = {
+  __typename?: "MarineForecastWindSpeedDetail";
+  from: Scalars["Int"];
+  to: Scalars["Int"];
 };
 
 export type MoonDetail = {
@@ -333,6 +347,10 @@ export type ResolversTypes = {
   WeatherForecast: ResolverTypeWrapper<Partial<WeatherForecast>>;
   Boolean: ResolverTypeWrapper<Partial<Scalars["Boolean"]>>;
   MarineForecast: ResolverTypeWrapper<Partial<MarineForecast>>;
+  MarineForecastDetail: ResolverTypeWrapper<Partial<MarineForecastDetail>>;
+  MarineForecastWindSpeedDetail: ResolverTypeWrapper<
+    Partial<MarineForecastWindSpeedDetail>
+  >;
   WaterHeight: ResolverTypeWrapper<Partial<WaterHeight>>;
   WaterTemperature: ResolverTypeWrapper<
     Partial<WaterTemperature> & { location: LocationEntity }
@@ -374,6 +392,8 @@ export type ResolversParentTypes = {
   WeatherForecast: Partial<WeatherForecast>;
   Boolean: Partial<Scalars["Boolean"]>;
   MarineForecast: Partial<MarineForecast>;
+  MarineForecastDetail: Partial<MarineForecastDetail>;
+  MarineForecastWindSpeedDetail: Partial<MarineForecastWindSpeedDetail>;
   WaterHeight: Partial<WaterHeight>;
   WaterTemperature: Partial<WaterTemperature> & { location: LocationEntity };
   WaterTemperatureSummary: Partial<WaterTemperatureSummary>;
@@ -497,7 +517,41 @@ export type MarineForecastResolvers<
   ParentType = ResolversParentTypes["MarineForecast"]
 > = {
   timePeriod?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
-  forecast?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  forecast?: Resolver<
+    ResolversTypes["MarineForecastDetail"],
+    ParentType,
+    ContextType
+  >;
+};
+
+export type MarineForecastDetailResolvers<
+  ContextType = Context,
+  ParentType = ResolversParentTypes["MarineForecastDetail"]
+> = {
+  text?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  waterCondition?: Resolver<
+    Maybe<ResolversTypes["String"]>,
+    ParentType,
+    ContextType
+  >;
+  windSpeed?: Resolver<
+    Maybe<ResolversTypes["MarineForecastWindSpeedDetail"]>,
+    ParentType,
+    ContextType
+  >;
+  windDirection?: Resolver<
+    Maybe<ResolversTypes["String"]>,
+    ParentType,
+    ContextType
+  >;
+};
+
+export type MarineForecastWindSpeedDetailResolvers<
+  ContextType = Context,
+  ParentType = ResolversParentTypes["MarineForecastWindSpeedDetail"]
+> = {
+  from?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
+  to?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
 };
 
 export type MoonDetailResolvers<
@@ -754,6 +808,10 @@ export type Resolvers<ContextType = Context> = {
   Map?: MapResolvers<ContextType>;
   Maps?: MapsResolvers<ContextType>;
   MarineForecast?: MarineForecastResolvers<ContextType>;
+  MarineForecastDetail?: MarineForecastDetailResolvers<ContextType>;
+  MarineForecastWindSpeedDetail?: MarineForecastWindSpeedDetailResolvers<
+    ContextType
+  >;
   MoonDetail?: MoonDetailResolvers<ContextType>;
   Overlays?: OverlaysResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;

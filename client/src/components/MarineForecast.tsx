@@ -42,7 +42,7 @@ const MarineForecast: React.FC<Props> = ({ locationId }) => {
           return (
             <div className="mb-4 last-no-margin" key={data.timePeriod}>
               <div className="forecast-header">{data.timePeriod}</div>
-              <div>{data.forecast}</div>
+              <div>{data.forecast.text}</div>
             </div>
           );
         })}
