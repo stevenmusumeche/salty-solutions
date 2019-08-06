@@ -15,11 +15,14 @@ import "./App.css";
 import RadarMap from "./components/RadarMap";
 import PlusIcon from "./assets/plus-icon.svg";
 import MinusIcon from "./assets/minus-icon.svg";
+import { startOfDay } from "date-fns";
+import DatePicker from "react-date-picker";
 
 const App: React.FC = () => {
   const [locations] = useLocationsQuery();
   const [locationId, setLocationId] = useState("1");
   const [showRadar, setShowRadar] = useState(false);
+  const [date, setDate] = useState(() => startOfDay(new Date()));
   const selectedLocation = locations.data
     ? locations.data.locations.find(location => location.id === locationId)
     : null;
@@ -30,6 +33,11 @@ const App: React.FC = () => {
     setLocationId(e.target.value);
   };
 
+  const handleDateChange = (date: Date | Date[]) => {
+    if (Array.isArray(date)) return;
+    setDate(date);
+  };
+
   return (
     <div className="container mx-auto py-8 min-h-screen">
       <div className="flex items-center justify-between mb-8">
@@ -38,7 +46,13 @@ const App: React.FC = () => {
           onChange={handleLocationChange}
           value={locationId}
         />
-        <div>date selector</div>
+        <div>
+          <DatePicker
+            onChange={handleDateChange}
+            value={date}
+            clearIcon={null}
+          />
+        </div>
       </div>
       <SectionTitle text="Current Conditions" />
 
@@ -86,6 +100,7 @@ const App: React.FC = () => {
           <Tides
             locationId={locationId}
             tideStations={selectedLocation.tidePreditionStations}
+            date={date}
           />
         </div>
       )}
@@ -110,7 +125,11 @@ const LocationSelect: React.FC<LocationSelectProps> = ({
   value,
   onChange
 }) => (
-  <select onChange={onChange} className="text-3xl" value={value}>
+  <select
+    onChange={onChange}
+    className="select-css h-12 text-3xl rounded shadow-md pr-16 pl-3 bg-white"
+    value={value}
+  >
     {locations.data &&
       locations.data.locations
         .sort((a, b) => ("" + a.name).localeCompare(b.name))

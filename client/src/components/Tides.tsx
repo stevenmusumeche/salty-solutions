@@ -24,18 +24,19 @@ import {
   VictoryLine
 } from "victory";
 import ErrorIcon from "../assets/error.svg";
+import "./SkeletonCharacter.css";
 
 interface Props {
   tideStations: TideStationDetailFragment[];
   locationId: string;
+  date: Date;
 }
 
 const ISO_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSxxx";
 const Y_PADDING = 0.2;
 
-const Tides: React.FC<Props> = ({ tideStations, locationId }) => {
+const Tides: React.FC<Props> = ({ tideStations, locationId, date }) => {
   const [selectedId, setSelectedId] = useState(tideStations[0].id);
-  const [date, setDate] = useState(addDays(new Date(), 6));
 
   useEffect(() => {
     // if locationId changes, set tide station back to the default
@@ -52,8 +53,23 @@ const Tides: React.FC<Props> = ({ tideStations, locationId }) => {
     pause: selectedId === undefined
   });
 
-  if (tideResult.fetching) return <div className="skeleton-character full" />;
-  if (
+  const handleStationChange: ChangeEventHandler<HTMLSelectElement> = e =>
+    setSelectedId(e.target.value);
+
+  if (tideResult.fetching) {
+    return (
+      <div>
+        <div className="">
+          <TideStationSelect
+            tideStations={tideStations}
+            handleChange={handleStationChange}
+            selectedId={selectedId}
+          />
+        </div>
+        <div className="skeleton-character full" />
+      </div>
+    );
+  } else if (
     !tideResult.data ||
     !tideResult.data.tidePreditionStation ||
     !tideResult.data.tidePreditionStation.tides ||
@@ -62,9 +78,17 @@ const Tides: React.FC<Props> = ({ tideStations, locationId }) => {
   ) {
     return (
       <div className="relative w-full flex items-center justify-center py-8">
+        <div className="">
+          <TideStationSelect
+            tideStations={tideStations}
+            handleChange={handleStationChange}
+            selectedId={selectedId}
+          />
+        </div>
         <img src={ErrorIcon} style={{ height: 120 }} alt="error" />
       </div>
     );
+  } else {
   }
 
   const {
@@ -79,9 +103,6 @@ const Tides: React.FC<Props> = ({ tideStations, locationId }) => {
     tideResult.data.location.sun[tideResult.data.location.sun.length - 1],
     tideResult.data.tidePreditionStation.tides
   );
-
-  const handleStationChange: ChangeEventHandler<HTMLSelectElement> = e =>
-    setSelectedId(e.target.value);
 
   let tickValues = [];
   for (let i = 0; i <= 24; i += 2) {
@@ -130,8 +151,8 @@ const Tides: React.FC<Props> = ({ tideStations, locationId }) => {
           style={{
             grid: {
               stroke: "718096",
-              strokeWidth: y => (y === 0 ? 2 : 1),
-              strokeDasharray: y => (y === 0 ? "12 6" : "2 10")
+              strokeWidth: y => (y === 0 && min < 0 ? 2 : 1),
+              strokeDasharray: y => (y === 0 && min < 0 ? "12 6" : "2 10")
             },
             tickLabels: { fontSize: 8 }
           }}
@@ -162,7 +183,7 @@ const Tides: React.FC<Props> = ({ tideStations, locationId }) => {
               fill: "transparent"
             },
             labels: {
-              fontSize: 7,
+              fontSize: 8,
               padding: 2,
               fill: "#000000",
               textShadow: "0 0 3px #ffffff"
@@ -181,13 +202,24 @@ const TideStationSelect: React.FC<{
   handleChange: ChangeEventHandler<HTMLSelectElement>;
   selectedId: string;
 }> = ({ tideStations, handleChange, selectedId }) => (
-  <select onChange={handleChange} value={selectedId} className="">
-    {tideStations.map(station => (
-      <option key={station.id} value={station.id}>
-        {station.name}
-      </option>
-    ))}
-  </select>
+  <div className="py-2">
+    <div className="mr-2 inline-block uppercase leading-loose text-gray-700 text-sm">
+      Tide Station:
+    </div>
+    <div className="inline-block rounded border-gray-300 border">
+      <select
+        onChange={handleChange}
+        value={selectedId}
+        className="select-css pr-8 pl-2 py-1 bg-white text-gray-700 text-sm"
+      >
+        {tideStations.map(station => (
+          <option key={station.id} value={station.id}>
+            {station.name}
+          </option>
+        ))}
+      </select>
+    </div>
+  </div>
 );
 
 const renderBackgroundColor = (
