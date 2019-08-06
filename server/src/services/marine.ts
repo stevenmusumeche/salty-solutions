@@ -36,7 +36,7 @@ function parseForecast(forecastText: string) {
   const windRegex = /^(?<direction>[\w]+) winds(?<qualifier> around| up to)? ((?<speed>[\d]+)|((?<speedStart>[\d]+) to (?<speedEnd>[\d]+))) knots( becoming)?/im;
   matches = forecastText.match(windRegex);
   if (matches && matches.groups) {
-    retVal.windDirection = matches.groups.direction;
+    retVal.windDirection = parseWindDirection(matches.groups.direction);
     retVal.windSpeed = matches.groups.speed
       ? {
           from:
@@ -56,3 +56,46 @@ function parseForecast(forecastText: string) {
 // cocodrie: gmz550
 
 // base page: https://www.weather.gov/lch/marine
+
+function parseWindDirection(direction: string) {
+  let text: string;
+  let degrees: number;
+  switch (direction.toLowerCase().trim()) {
+    case "north":
+      text = "N";
+      degrees = 0;
+      break;
+    case "east":
+      text = "E";
+      degrees = 90;
+      break;
+    case "south":
+      text = "S";
+      degrees = 180;
+      break;
+    case "west":
+      text = "W";
+      degrees = 270;
+      break;
+    case "northeast":
+      text = "NE";
+      degrees = 45;
+      break;
+    case "northwest":
+      text = "NW";
+      degrees = 315;
+      break;
+    case "southeast":
+      text = "SE";
+      degrees = 135;
+      break;
+    case "southwest":
+      text = "SW";
+      degrees = 225;
+      break;
+    default:
+      throw new Error("Unknown wind direction");
+  }
+
+  return { text, degrees };
+}

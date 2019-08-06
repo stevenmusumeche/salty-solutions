@@ -107,7 +107,12 @@ export default gql`
     text: String!
     waterCondition: String
     windSpeed: MarineForecastWindSpeedDetail
-    windDirection: String
+    windDirection: WindDirection
+  }
+
+  type WindDirection {
+    text: String!
+    degrees: Int!
   }
 
   type MarineForecastWindSpeedDetail {

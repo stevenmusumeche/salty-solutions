@@ -87,7 +87,7 @@ export type MarineForecastDetail = {
   text: Scalars["String"];
   waterCondition?: Maybe<Scalars["String"]>;
   windSpeed?: Maybe<MarineForecastWindSpeedDetail>;
-  windDirection?: Maybe<Scalars["String"]>;
+  windDirection?: Maybe<WindDirection>;
 };
 
 export type MarineForecastWindSpeedDetail = {
@@ -255,6 +255,12 @@ export type WindDetail = {
   speed: Scalars["Float"];
   direction: Scalars["String"];
   directionDegrees: Scalars["Float"];
+};
+
+export type WindDirection = {
+  __typename?: "WindDirection";
+  text: Scalars["String"];
+  degrees: Scalars["Int"];
 };
 
 export type WindSummary = {

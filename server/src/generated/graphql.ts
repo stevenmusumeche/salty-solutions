@@ -88,7 +88,7 @@ export type MarineForecastDetail = {
   text: Scalars["String"];
   waterCondition?: Maybe<Scalars["String"]>;
   windSpeed?: Maybe<MarineForecastWindSpeedDetail>;
-  windDirection?: Maybe<Scalars["String"]>;
+  windDirection?: Maybe<WindDirection>;
 };
 
 export type MarineForecastWindSpeedDetail = {
@@ -258,6 +258,12 @@ export type WindDetail = {
   directionDegrees: Scalars["Float"];
 };
 
+export type WindDirection = {
+  __typename?: "WindDirection";
+  text: Scalars["String"];
+  degrees: Scalars["Int"];
+};
+
 export type WindSummary = {
   __typename?: "WindSummary";
   mostRecent?: Maybe<WindDetail>;
@@ -351,6 +357,7 @@ export type ResolversTypes = {
   MarineForecastWindSpeedDetail: ResolverTypeWrapper<
     Partial<MarineForecastWindSpeedDetail>
   >;
+  WindDirection: ResolverTypeWrapper<Partial<WindDirection>>;
   WaterHeight: ResolverTypeWrapper<Partial<WaterHeight>>;
   WaterTemperature: ResolverTypeWrapper<
     Partial<WaterTemperature> & { location: LocationEntity }
@@ -394,6 +401,7 @@ export type ResolversParentTypes = {
   MarineForecast: Partial<MarineForecast>;
   MarineForecastDetail: Partial<MarineForecastDetail>;
   MarineForecastWindSpeedDetail: Partial<MarineForecastWindSpeedDetail>;
+  WindDirection: Partial<WindDirection>;
   WaterHeight: Partial<WaterHeight>;
   WaterTemperature: Partial<WaterTemperature> & { location: LocationEntity };
   WaterTemperatureSummary: Partial<WaterTemperatureSummary>;
@@ -540,7 +548,7 @@ export type MarineForecastDetailResolvers<
     ContextType
   >;
   windDirection?: Resolver<
-    Maybe<ResolversTypes["String"]>,
+    Maybe<ResolversTypes["WindDirection"]>,
     ParentType,
     ContextType
   >;
@@ -791,6 +799,14 @@ export type WindDetailResolvers<
   directionDegrees?: Resolver<ResolversTypes["Float"], ParentType, ContextType>;
 };
 
+export type WindDirectionResolvers<
+  ContextType = Context,
+  ParentType = ResolversParentTypes["WindDirection"]
+> = {
+  text?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  degrees?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
+};
+
 export type WindSummaryResolvers<
   ContextType = Context,
   ParentType = ResolversParentTypes["WindSummary"]
@@ -830,6 +846,7 @@ export type Resolvers<ContextType = Context> = {
   WeatherForecast?: WeatherForecastResolvers<ContextType>;
   Wind?: WindResolvers<ContextType>;
   WindDetail?: WindDetailResolvers<ContextType>;
+  WindDirection?: WindDirectionResolvers<ContextType>;
   WindSummary?: WindSummaryResolvers<ContextType>;
 };
 
