@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useSunAndMoonQuery, SunAndMoonQuery } from "../generated/graphql";
 import { format, startOfDay, addDays } from "date-fns";
 import { UseQueryState } from "urql";
