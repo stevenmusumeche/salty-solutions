@@ -2,6 +2,7 @@ import axios from "axios";
 import { LocationEntity } from "./location";
 import { format, subHours } from "date-fns";
 import { orderBy } from "lodash";
+import { degreesToCompass } from "./usgs";
 
 interface WeatherForecast {
   startTime: string;
@@ -72,7 +73,24 @@ export const getConditions = async (
   }));
   temperature = orderBy(temperature, ["timestamp"], ["asc"]);
 
-  return { temperature };
+  let wind = data.features
+    .filter((x: any) => !!x.properties.windDirection.value)
+    .map((x: any) => ({
+      timestamp: x.properties.timestamp,
+      speed: metersPerSecondToMph(x.properties.windSpeed.value),
+      directionDegrees: x.properties.windDirection.value,
+      direction: degreesToCompass(x.properties.windDirection.value)
+    }));
+
+  return { temperature, wind };
+};
+
+export const getLatestConditions = async (location: LocationEntity) => {
+  const data = await getConditions(location, 12);
+  return {
+    temperature: orderBy(data.temperature, ["timestamp"], ["desc"])[0],
+    wind: orderBy(data.wind, ["timestamp"], ["desc"])[0]
+  };
 };
 
 interface NWSLatestObservations {
@@ -100,4 +118,8 @@ interface NWSValue {
 
 function celciusToFahrenheit(celcius: number) {
   return (celcius * 1.8 + 32).toFixed(1);
+}
+
+function metersPerSecondToMph(mps: number) {
+  return mps * 2.237;
 }

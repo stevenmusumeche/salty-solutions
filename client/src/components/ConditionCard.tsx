@@ -7,8 +7,9 @@ import ErrorIcon from "../assets/error.svg";
 interface Props {
   label: string;
   fetching: boolean;
-  error?: CombinedError;
+  error?: CombinedError | boolean;
   children: ReactNode;
+  fontSize?: string;
 }
 
 const Wrapper: React.FC<{ children: ReactNode }> = ({ children }) => (
@@ -30,10 +31,10 @@ const ConditionCard: React.FC<Props> = ({
   label,
   fetching,
   error,
-  children
+  children,
+  fontSize = "7em"
 }) => {
   let displayValue: any = null;
-  let fontSize = "7em";
 
   if (fetching) {
     return (

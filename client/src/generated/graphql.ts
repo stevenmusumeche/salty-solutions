@@ -410,6 +410,35 @@ export type SalinityQuery = { __typename?: "Query" } & {
   >;
 };
 
+export type SunAndMoonQueryVariables = {
+  locationId: Scalars["ID"];
+  startDate: Scalars["String"];
+  endDate: Scalars["String"];
+};
+
+export type SunAndMoonQuery = { __typename?: "Query" } & {
+  location: Maybe<
+    { __typename?: "Location" } & {
+      sun: Maybe<
+        Array<
+          { __typename?: "SunDetail" } & Pick<
+            SunDetail,
+            "sunrise" | "sunset" | "nauticalDawn" | "nauticalDusk"
+          >
+        >
+      >;
+      moon: Maybe<
+        Array<
+          { __typename?: "MoonDetail" } & Pick<
+            MoonDetail,
+            "phase" | "illumination"
+          >
+        >
+      >;
+    }
+  >;
+};
+
 export type CurrentTemperatureQueryVariables = {
   locationId: Scalars["ID"];
 };
@@ -686,6 +715,31 @@ export function useSalinityQuery(
   options: Omit<Urql.UseQueryArgs<SalinityQueryVariables>, "query"> = {}
 ) {
   return Urql.useQuery<SalinityQuery>({ query: SalinityDocument, ...options });
+}
+export const SunAndMoonDocument = gql`
+  query SunAndMoon($locationId: ID!, $startDate: String!, $endDate: String!) {
+    location(id: $locationId) {
+      sun(start: $startDate, end: $endDate) {
+        sunrise
+        sunset
+        nauticalDawn
+        nauticalDusk
+      }
+      moon(start: $startDate, end: $endDate) {
+        phase
+        illumination
+      }
+    }
+  }
+`;
+
+export function useSunAndMoonQuery(
+  options: Omit<Urql.UseQueryArgs<SunAndMoonQueryVariables>, "query"> = {}
+) {
+  return Urql.useQuery<SunAndMoonQuery>({
+    query: SunAndMoonDocument,
+    ...options
+  });
 }
 export const CurrentTemperatureDocument = gql`
   query CurrentTemperature($locationId: ID!) {

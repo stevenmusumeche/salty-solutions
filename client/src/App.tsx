@@ -17,10 +17,11 @@ import PlusIcon from "./assets/plus-icon.svg";
 import MinusIcon from "./assets/minus-icon.svg";
 import { startOfDay } from "date-fns";
 import DatePicker from "react-date-picker";
+import SunAndMoon from "./components/SunAndMoon";
 
 const App: React.FC = () => {
   const [locations] = useLocationsQuery();
-  const [locationId, setLocationId] = useState("1");
+  const [locationId, setLocationId] = useState("2");
   const [showRadar, setShowRadar] = useState(false);
   const [date, setDate] = useState(() => startOfDay(new Date()));
   const selectedLocation = locations.data
@@ -39,72 +40,79 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="container mx-auto py-8 min-h-screen">
-      <div className="flex items-center justify-between mb-8">
-        <LocationSelect
-          locations={locations}
-          onChange={handleLocationChange}
-          value={locationId}
-        />
-        <div>
-          <DatePicker
-            onChange={handleDateChange}
-            value={date}
-            clearIcon={null}
+    <>
+      <div className="sticky top-0 py-4 z-50 bg-gray-500 mb-8 shadow-lg">
+        <div className="container mx-auto flex items-center justify-between">
+          <LocationSelect
+            locations={locations}
+            onChange={handleLocationChange}
+            value={locationId}
           />
+          <div>
+            <DatePicker
+              onChange={handleDateChange}
+              value={date}
+              clearIcon={null}
+            />
+          </div>
         </div>
       </div>
-      <SectionTitle text="Current Conditions" />
+      <div className="container mx-auto pb-8 min-h-screen">
+        <SectionTitle text="Current Conditions" />
 
-      <div className="current-conditions-grid">
-        <CurrentWindSummaryCard locationId={locationId} />
-        <CurrentSalinitySummaryCard locationId={locationId} />
-        <CurrentAirTempSummaryCard locationId={locationId} />
-        <CurrentWaterTempSummaryCard locationId={locationId} />
-        <CurrentWindDetailGraph locationId={locationId} />
-        <CurrentSalinityDetailGraph locationId={locationId} />
-        <CurrentAirTempDetailGraph locationId={locationId} />
-        <CurrentWaterTempDetailGraph locationId={locationId} />
-      </div>
-
-      {
-        <button
-          className={`shadow-md flex items-center justify-between bg-gray-700 hover:bg-gray-600 text-gray-200 rounded-lg w-48 px-4 py-2 uppercase tracking-widest ${
-            !showRadar ? "mb-8" : "mb-4"
-          }`}
-          onClick={toggleRadar}
-        >
-          {showRadar ? (
-            <>
-              <div>Hide Radar</div>{" "}
-              <img className="w-4" src={MinusIcon} alt="hide radar icon" />
-            </>
-          ) : (
-            <>
-              <div>Show Radar</div>{" "}
-              <img className="w-4" src={PlusIcon} alt="show radar icon" />
-            </>
-          )}
-        </button>
-      }
-
-      {showRadar && <RadarMap locationId={locationId} />}
-
-      <SectionTitle text="Forecast" />
-      <Forecast locationId={locationId} />
-
-      <SectionTitle text="Tides" />
-
-      {selectedLocation && (
-        <div className="bg-white rounded-lg shadow-md p-4">
-          <Tides
-            locationId={locationId}
-            tideStations={selectedLocation.tidePreditionStations}
-            date={date}
-          />
+        <div className="current-conditions-grid">
+          <CurrentWindSummaryCard locationId={locationId} />
+          <CurrentSalinitySummaryCard locationId={locationId} />
+          <CurrentAirTempSummaryCard locationId={locationId} />
+          <CurrentWaterTempSummaryCard locationId={locationId} />
+          <CurrentWindDetailGraph locationId={locationId} />
+          <CurrentSalinityDetailGraph locationId={locationId} />
+          <CurrentAirTempDetailGraph locationId={locationId} />
+          <CurrentWaterTempDetailGraph locationId={locationId} />
         </div>
-      )}
-    </div>
+
+        {
+          <button
+            className={`shadow-md flex items-center justify-between bg-gray-700 hover:bg-gray-600 text-gray-200 rounded-lg w-48 px-4 py-2 uppercase tracking-widest ${
+              !showRadar ? "mb-8" : "mb-4"
+            }`}
+            onClick={toggleRadar}
+          >
+            {showRadar ? (
+              <>
+                <div>Hide Radar</div>{" "}
+                <img className="w-4" src={MinusIcon} alt="hide radar icon" />
+              </>
+            ) : (
+              <>
+                <div>Show Radar</div>{" "}
+                <img className="w-4" src={PlusIcon} alt="show radar icon" />
+              </>
+            )}
+          </button>
+        }
+
+        {showRadar && <RadarMap locationId={locationId} />}
+
+        <SectionTitle text="Tides" />
+
+        {selectedLocation && (
+          <div className="bg-white rounded-lg shadow-md p-4 mb-8">
+            <Tides
+              locationId={locationId}
+              tideStations={selectedLocation.tidePreditionStations}
+              date={date}
+            />
+          </div>
+        )}
+
+        <SectionTitle text="Solunar Data" />
+        <SunAndMoon locationId={locationId} date={date} />
+
+        <SectionTitle text="Forecast" />
+        <Forecast locationId={locationId} />
+      </div>
+    </>
   );
 };
 

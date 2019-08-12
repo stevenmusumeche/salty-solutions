@@ -7618,6 +7618,11 @@ video {
   background-color: transparent;
 }
 
+.react-date-picker__calendar.react-date-picker__calendar--open {
+  bottom: unset !important;
+  top: 100% !important;
+}
+
 .react-date-picker__wrapper {
   background-color: #fff;
   border-radius: 0.25rem;
@@ -7667,6 +7672,10 @@ video {
 
 .select-css option {
   font-weight: normal;
+}
+
+.w-22 {
+  width: 5.5rem;
 }
 
 @media (min-width: 640px) {

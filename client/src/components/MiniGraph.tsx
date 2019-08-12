@@ -29,7 +29,7 @@ const MiniGraph: React.FC<Props> = ({
   } else if (data) {
     displayVal = (
       <VictoryChart
-        padding={{ left: 50, top: 20, right: 30, bottom: 50 }}
+        padding={{ left: 55, top: 20, right: 30, bottom: 50 }}
         domainPadding={{ y: [30, 30] }}
       >
         <VictoryAxis

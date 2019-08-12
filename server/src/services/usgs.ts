@@ -126,7 +126,7 @@ async function fetchAndMap(
   return data.value.timeSeries[0].values[0].value.map(mapFn);
 }
 
-function degreesToCompass(degrees: number): string {
+export function degreesToCompass(degrees: number): string {
   var val = Math.floor(degrees / 22.5 + 0.5);
   var arr = [
     "N",

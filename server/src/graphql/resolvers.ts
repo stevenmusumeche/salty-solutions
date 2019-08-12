@@ -94,14 +94,21 @@ const resolvers: Resolvers = {
   },
   Wind: {
     detail: async (wind, args, { services }) => {
-      return services.usgs.getWind(
+      // return services.usgs.getWind(
+      //   wind.location,
+      //   args.numHours || DEFAULT_NUM_HOURS
+      // );
+      const result = await services.weather.getConditions(
         wind.location,
         args.numHours || DEFAULT_NUM_HOURS
       );
+      return result.wind;
     },
     summary: async (wind, args, { services }) => {
+      const result = await services.weather.getLatestConditions(wind.location);
       return {
-        mostRecent: await services.usgs.getWindLatest(wind.location)
+        //mostRecent: await services.usgs.getWindLatest(wind.location)
+        mostRecent: result.wind
       };
     }
   },

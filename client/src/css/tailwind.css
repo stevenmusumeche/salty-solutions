@@ -96,6 +96,11 @@
   background-color: transparent;
 }
 
+.react-date-picker__calendar.react-date-picker__calendar--open {
+  bottom: unset !important;
+  top: 100% !important;
+}
+
 .react-date-picker__wrapper {
   @apply bg-white rounded text-3xl px-2 border-0 shadow-md h-12;
   border: none !important;
@@ -134,4 +139,8 @@
 }
 .select-css option {
   font-weight: normal;
+}
+
+.w-22 {
+  width: 5.5rem;
 }

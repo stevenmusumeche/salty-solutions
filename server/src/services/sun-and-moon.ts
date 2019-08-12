@@ -41,9 +41,9 @@ const getMoonInfoForDate = async (
   long: number
 ): Promise<{ date: string; phase: string; illumination: number }> => {
   // http://aa.usno.navy.mil/data/docs/api.php
-  const url = `http://api.usno.navy.mil/rstt/oneday?date=${format(
+  const url = `https://api.usno.navy.mil/rstt/oneday?date=${format(
     date,
-    "M/D/YYYY"
+    "M/d/yyyy"
   )}&coords=${lat},${long}`;
   const { data } = await axios.get(url);
   const phase = data.curphase || data.closestphase.phase;
