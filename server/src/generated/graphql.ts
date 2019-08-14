@@ -19,6 +19,13 @@ export type CurrentWind = {
   directionDegrees: Scalars["Float"];
 };
 
+export type Forecast = {
+  __typename?: "Forecast";
+  timePeriod: Scalars["String"];
+  weather?: Maybe<WeatherForecast>;
+  marine?: Maybe<MarineForecastDetail>;
+};
+
 export type Location = {
   __typename?: "Location";
   id: Scalars["ID"];
@@ -28,6 +35,7 @@ export type Location = {
   long: Scalars["Float"];
   sun?: Maybe<Array<SunDetail>>;
   moon?: Maybe<Array<MoonDetail>>;
+  forecast: Array<Forecast>;
   weatherForecast?: Maybe<Array<WeatherForecast>>;
   hourlyWeatherForecast?: Maybe<Array<WeatherForecast>>;
   marineForecast?: Maybe<Array<MarineForecast>>;
@@ -350,14 +358,15 @@ export type ResolversTypes = {
   SunDetail: ResolverTypeWrapper<Partial<SunDetail>>;
   MoonDetail: ResolverTypeWrapper<Partial<MoonDetail>>;
   Int: ResolverTypeWrapper<Partial<Scalars["Int"]>>;
+  Forecast: ResolverTypeWrapper<Partial<Forecast>>;
   WeatherForecast: ResolverTypeWrapper<Partial<WeatherForecast>>;
   Boolean: ResolverTypeWrapper<Partial<Scalars["Boolean"]>>;
-  MarineForecast: ResolverTypeWrapper<Partial<MarineForecast>>;
   MarineForecastDetail: ResolverTypeWrapper<Partial<MarineForecastDetail>>;
   MarineForecastWindSpeedDetail: ResolverTypeWrapper<
     Partial<MarineForecastWindSpeedDetail>
   >;
   WindDirection: ResolverTypeWrapper<Partial<WindDirection>>;
+  MarineForecast: ResolverTypeWrapper<Partial<MarineForecast>>;
   WaterHeight: ResolverTypeWrapper<Partial<WaterHeight>>;
   WaterTemperature: ResolverTypeWrapper<
     Partial<WaterTemperature> & { location: LocationEntity }
@@ -396,12 +405,13 @@ export type ResolversParentTypes = {
   SunDetail: Partial<SunDetail>;
   MoonDetail: Partial<MoonDetail>;
   Int: Partial<Scalars["Int"]>;
+  Forecast: Partial<Forecast>;
   WeatherForecast: Partial<WeatherForecast>;
   Boolean: Partial<Scalars["Boolean"]>;
-  MarineForecast: Partial<MarineForecast>;
   MarineForecastDetail: Partial<MarineForecastDetail>;
   MarineForecastWindSpeedDetail: Partial<MarineForecastWindSpeedDetail>;
   WindDirection: Partial<WindDirection>;
+  MarineForecast: Partial<MarineForecast>;
   WaterHeight: Partial<WaterHeight>;
   WaterTemperature: Partial<WaterTemperature> & { location: LocationEntity };
   WaterTemperatureSummary: Partial<WaterTemperatureSummary>;
@@ -432,6 +442,23 @@ export type CurrentWindResolvers<
   directionDegrees?: Resolver<ResolversTypes["Float"], ParentType, ContextType>;
 };
 
+export type ForecastResolvers<
+  ContextType = Context,
+  ParentType = ResolversParentTypes["Forecast"]
+> = {
+  timePeriod?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  weather?: Resolver<
+    Maybe<ResolversTypes["WeatherForecast"]>,
+    ParentType,
+    ContextType
+  >;
+  marine?: Resolver<
+    Maybe<ResolversTypes["MarineForecastDetail"]>,
+    ParentType,
+    ContextType
+  >;
+};
+
 export type LocationResolvers<
   ContextType = Context,
   ParentType = ResolversParentTypes["Location"]
@@ -456,6 +483,11 @@ export type LocationResolvers<
     ParentType,
     ContextType,
     LocationMoonArgs
+  >;
+  forecast?: Resolver<
+    Array<ResolversTypes["Forecast"]>,
+    ParentType,
+    ContextType
   >;
   weatherForecast?: Resolver<
     Maybe<Array<ResolversTypes["WeatherForecast"]>>,
@@ -820,6 +852,7 @@ export type WindSummaryResolvers<
 
 export type Resolvers<ContextType = Context> = {
   CurrentWind?: CurrentWindResolvers<ContextType>;
+  Forecast?: ForecastResolvers<ContextType>;
   Location?: LocationResolvers<ContextType>;
   Map?: MapResolvers<ContextType>;
   Maps?: MapsResolvers<ContextType>;

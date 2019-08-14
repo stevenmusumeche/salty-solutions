@@ -18,6 +18,13 @@ export type CurrentWind = {
   directionDegrees: Scalars["Float"];
 };
 
+export type Forecast = {
+  __typename?: "Forecast";
+  timePeriod: Scalars["String"];
+  weather?: Maybe<WeatherForecast>;
+  marine?: Maybe<MarineForecastDetail>;
+};
+
 export type Location = {
   __typename?: "Location";
   id: Scalars["ID"];
@@ -27,6 +34,7 @@ export type Location = {
   long: Scalars["Float"];
   sun?: Maybe<Array<SunDetail>>;
   moon?: Maybe<Array<MoonDetail>>;
+  forecast: Array<Forecast>;
   weatherForecast?: Maybe<Array<WeatherForecast>>;
   hourlyWeatherForecast?: Maybe<Array<WeatherForecast>>;
   marineForecast?: Maybe<Array<MarineForecast>>;

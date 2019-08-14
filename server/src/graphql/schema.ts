@@ -15,6 +15,7 @@ export default gql`
     long: Float!
     sun(start: String!, end: String!): [SunDetail!]
     moon(start: String!, end: String!): [MoonDetail!]
+    forecast: [Forecast!]!
     weatherForecast: [WeatherForecast!]
     hourlyWeatherForecast: [WeatherForecast!]
     marineForecast: [MarineForecast!]
@@ -24,6 +25,12 @@ export default gql`
     salinity(numHours: Int): Salinity!
     temperature: Temperature!
     maps: Maps
+  }
+
+  type Forecast {
+    timePeriod: String!
+    weather: WeatherForecast
+    marine: MarineForecastDetail
   }
 
   type Maps {

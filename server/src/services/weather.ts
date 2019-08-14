@@ -4,7 +4,7 @@ import { format, subHours } from "date-fns";
 import { orderBy } from "lodash";
 import { degreesToCompass } from "./usgs";
 
-interface WeatherForecast {
+export interface WeatherForecast {
   startTime: string;
   endTime: string;
   temperature: number;
@@ -15,6 +15,7 @@ interface WeatherForecast {
   icon: string;
   shortForecast: string;
   detailedForecast: string;
+  name: string;
 }
 
 export const getForecast = async (
@@ -36,7 +37,8 @@ export const getHourlyForecast = async (
 
 const stripMph = (x: any) => ({
   ...x,
-  windSpeed: x.windSpeed.replace("mph", "").trim()
+  windSpeed: x.windSpeed.replace("mph", "").trim(),
+  name: x.name.replace("Overnight", "Tonight").trim()
 });
 
 export const getCurrentConditions = async (location: LocationEntity) => {

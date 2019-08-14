@@ -46,6 +46,9 @@ const resolvers: Resolvers = {
         location.long
       );
     },
+    forecast: async (location, args, { services }) => {
+      return services.forecast.getForecast(location);
+    },
     weatherForecast: async (location, args, { services }) => {
       return services.weather.getForecast(location);
     },
@@ -94,10 +97,6 @@ const resolvers: Resolvers = {
   },
   Wind: {
     detail: async (wind, args, { services }) => {
-      // return services.usgs.getWind(
-      //   wind.location,
-      //   args.numHours || DEFAULT_NUM_HOURS
-      // );
       const result = await services.weather.getConditions(
         wind.location,
         args.numHours || DEFAULT_NUM_HOURS
@@ -107,7 +106,6 @@ const resolvers: Resolvers = {
     summary: async (wind, args, { services }) => {
       const result = await services.weather.getLatestConditions(wind.location);
       return {
-        //mostRecent: await services.usgs.getWindLatest(wind.location)
         mostRecent: result.wind
       };
     }

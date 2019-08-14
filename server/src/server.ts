@@ -7,6 +7,7 @@ import * as weatherService from "./services/weather";
 import * as marineService from "./services/marine";
 import * as usgsService from "./services/usgs";
 import * as radarService from "./services/radar";
+import * as forecastService from "./services/forecast";
 import typeDefs from "./graphql/schema";
 import resolvers from "./graphql/resolvers";
 
@@ -19,6 +20,7 @@ export interface Context {
     marine: typeof marineService;
     usgs: typeof usgsService;
     radar: typeof radarService;
+    forecast: typeof forecastService;
   };
 }
 
@@ -30,7 +32,8 @@ const context: Context = {
     weather: weatherService,
     marine: marineService,
     usgs: usgsService,
-    radar: radarService
+    radar: radarService,
+    forecast: forecastService
   }
 };
 const server = new ApolloServer({

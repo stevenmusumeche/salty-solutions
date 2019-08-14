@@ -1,9 +1,16 @@
 import xray from "x-ray";
 var x = xray();
 
-export const getForecast = async (
-  location: any
-): Promise<{ timePeriod: string; forecast: { text: string } }[]> => {
+export interface MarineForecast {
+  timePeriod: string;
+  forecast: {
+    text: string;
+    waterCondition?: string;
+    windDirection?: { text: string; degrees: number };
+    windSpeed?: { from: number; to: number };
+  };
+}
+export const getForecast = async (location: any): Promise<MarineForecast[]> => {
   const url = `http://marine.weather.gov/MapClick.php?zoneid=${
     location.marineZoneId
   }&zflg=1`;
