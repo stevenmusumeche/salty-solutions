@@ -29,6 +29,6 @@
     "gql-gen": "graphql-codegen --config codegen.yml",
     "dev:server": "nodemon --watch 'server/src/**/*' -e ts,tsx --exec ts-node ./server/src/server.ts",
     "dev:client": "yarn --cwd ./client start",
-    "build:server": "cd server && sls package"
+    "build:server": "cd server && ./node_modules/.bin/sls package"
   }
 }
