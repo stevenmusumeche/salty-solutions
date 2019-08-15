@@ -1,0 +1,25 @@
+service:
+  name: fishing-app
+
+plugins:
+  - serverless-webpack
+  - serverless-offline
+
+provider:
+  name: aws
+  runtime: nodejs10.x
+  profile: serverless
+
+functions:
+  hello:
+    handler: ./src/server.hello
+    events:
+      - http:
+          method: get
+          path: hello
+  graphql:    
+    handler: ./src/server.graphql
+    events:      
+      - http:          
+          method: post          
+          path: api

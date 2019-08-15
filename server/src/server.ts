@@ -1,4 +1,5 @@
 import Koa from "koa";
+import serverless from "serverless-http";
 import { ApolloServer } from "apollo-server-koa";
 import * as tideService from "./services/tide";
 import * as locationService from "./services/location";
@@ -10,6 +11,7 @@ import * as radarService from "./services/radar";
 import * as forecastService from "./services/forecast";
 import typeDefs from "./graphql/schema";
 import resolvers from "./graphql/resolvers";
+import { APIGatewayProxyHandler } from "aws-lambda";
 
 export interface Context {
   services: {
@@ -45,6 +47,23 @@ const server = new ApolloServer({
 const app = new Koa();
 server.applyMiddleware({ app, path: "/api" });
 
-app.listen({ port: 4000 }, () =>
-  console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`)
-);
+// app.listen({ port: 4000 }, () =>
+//   console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`)
+// );
+
+export const graphql = serverless(app);
+
+export const hello: APIGatewayProxyHandler = async (event, _context) => {
+  return {
+    statusCode: 200,
+    body: JSON.stringify(
+      {
+        message:
+          "Go Serverless Webpack (Typescript) v1.0! Your function executed successfully!",
+        input: event
+      },
+      null,
+      2
+    )
+  };
+};
