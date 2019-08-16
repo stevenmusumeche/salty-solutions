@@ -11,7 +11,6 @@ import * as radarService from "./services/radar";
 import * as forecastService from "./services/forecast";
 import typeDefs from "./graphql/schema";
 import resolvers from "./graphql/resolvers";
-import { APIGatewayProxyHandler } from "aws-lambda";
 
 export interface Context {
   services: {
@@ -41,29 +40,12 @@ const context: Context = {
 const server = new ApolloServer({
   typeDefs,
   resolvers: resolvers as any,
-  context
+  context,
+  playground: process.env.NODE_ENV !== "production",
+  introspection: process.env.NODE_ENV !== "production"
 });
 
 const app = new Koa();
-server.applyMiddleware({ app, path: "/api" });
-
-// app.listen({ port: 4000 }, () =>
-//   console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`)
-// );
+server.applyMiddleware({ app, path: "/api", cors: true });
 
 export const graphql = serverless(app);
-
-export const hello: APIGatewayProxyHandler = async (event, _context) => {
-  return {
-    statusCode: 200,
-    body: JSON.stringify(
-      {
-        message:
-          "Go Serverless Webpack (Typescript) v1.0! Your function executed successfully!",
-        input: event
-      },
-      null,
-      2
-    )
-  };
-};

@@ -8,18 +8,17 @@ plugins:
 provider:
   name: aws
   runtime: nodejs10.x
-  # profile: serverless
+  profile: serverless
 
 functions:
-  hello:
-    handler: ./src/server.hello
-    events:
-      - http:
-          method: get
-          path: hello
   graphql:    
     handler: ./src/server.graphql
     events:      
-      - http:          
-          method: post          
+      - http:
+          cors: true
+          method: any
           path: api
+
+custom:
+  serverless-offline:
+    port: 4000

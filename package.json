@@ -9,7 +9,6 @@
     "date-fns-timezone": "^0.1.4",
     "graphql": "^14.4.2",
     "lodash": "^4.17.11",
-    "netlify-lambda": "^1.5.1",
     "react-date-picker": "^7.8.1"
   },
   "devDependencies": {
@@ -27,8 +26,8 @@
     "build": "yarn build:server",
     "dev": "yarn dev:server & yarn dev:client",
     "gql-gen": "graphql-codegen --config codegen.yml",
-    "dev:server": "nodemon --watch 'server/src/**/*' -e ts,tsx --exec ts-node ./server/src/server.ts",
+    "dev:server": "cd server && sls offline start",
     "dev:client": "yarn --cwd ./client start",
-    "build:server": "cd server && ./node_modules/.bin/sls package"
+    "deploy:server": "cd server && sls deploy"
   }
 }
