@@ -1,6 +1,6 @@
 [build]
   base = "/"
-  publish = "client/build/"
+  publish = "./client/build/"
   command = "yarn install && yarn --cwd client install && yarn --cwd build"
 
 [context.production]
