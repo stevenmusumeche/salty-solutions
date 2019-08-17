@@ -9,6 +9,7 @@ provider:
   name: aws
   runtime: nodejs10.x
   profile: serverless
+  stage: ${opt:stage, 'dev'}
 
 functions:
   graphql:    
@@ -18,6 +19,8 @@ functions:
           cors: true
           method: any
           path: api
+    environment:
+      SERVERLESS_STAGE: ${self:provider.stage}
 
 custom:
   serverless-offline:

@@ -12,6 +12,8 @@ import * as forecastService from "./services/forecast";
 import typeDefs from "./graphql/schema";
 import resolvers from "./graphql/resolvers";
 
+const IS_DEV = process.env.SERVERLESS_STAGE === "dev";
+
 export interface Context {
   services: {
     tide: typeof tideService;
@@ -37,12 +39,13 @@ const context: Context = {
     forecast: forecastService
   }
 };
+
 const server = new ApolloServer({
   typeDefs,
   resolvers: resolvers as any,
   context,
-  playground: process.env.NODE_ENV !== "production",
-  introspection: process.env.NODE_ENV !== "production"
+  playground: IS_DEV,
+  introspection: IS_DEV
 });
 
 const app = new Koa();
