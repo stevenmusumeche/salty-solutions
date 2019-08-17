@@ -5,10 +5,7 @@ import App from "./App";
 import { Provider, createClient } from "urql";
 
 const client = createClient({
-  url:
-    process.env.NODE_ENV === "production"
-      ? (process.env.REACT_APP_API_URL as string)
-      : (process.env.REACT_APP_LOCAL_API_URL as string)
+  url: process.env.REACT_APP_API_URL as string
 });
 
 ReactDOM.render(
