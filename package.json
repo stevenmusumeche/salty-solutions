@@ -26,7 +26,8 @@
     "build": "yarn build:server",
     "dev": "yarn dev:server & yarn dev:client",
     "gql-gen": "graphql-codegen --config codegen.yml",
-    "dev:server": "cd server && sls offline start",
+    "dev:serverless": "cd server && sls offline start",
+    "dev:server": "LOCAL_DEV=true nodemon --watch 'server/src/**/*' -e ts,tsx --exec ts-node ./server/src/server.ts",
     "dev:client": "yarn --cwd ./client start",
     "deploy:server": "cd server && sls deploy"
   }

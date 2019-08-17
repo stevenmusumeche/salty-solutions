@@ -11,10 +11,17 @@ export const HOURLY_FORECAST_QUERY = gql`
 
   fragment HourlyForecastDetail on WeatherForecast {
     startTime
-    temperature
-    temperatureUnit
-    windSpeed
-    windDirection
+    temperature {
+      degrees
+      unit
+    }
+    windSpeed {
+      from
+      to
+    }
+    windDirection {
+      text
+    }
     icon
     shortForecast
   }

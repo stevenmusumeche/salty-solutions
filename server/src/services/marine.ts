@@ -1,4 +1,5 @@
 import xray from "x-ray";
+import { parseWindDirection } from "./utils";
 var x = xray();
 
 export interface MarineForecast {
@@ -49,10 +50,13 @@ function parseForecast(forecastText: string) {
           from:
             matches.groups.qualifier.trim() === "up to"
               ? 0
-              : matches.groups.speed,
-          to: matches.groups.speed
+              : Number(matches.groups.speed),
+          to: Number(matches.groups.speed)
         }
-      : { from: matches.groups.speedStart, to: matches.groups.speedEnd };
+      : {
+          from: Number(matches.groups.speedStart),
+          to: Number(matches.groups.speedEnd)
+        };
   }
   return retVal;
 }
@@ -63,46 +67,3 @@ function parseForecast(forecastText: string) {
 // cocodrie: gmz550
 
 // base page: https://www.weather.gov/lch/marine
-
-function parseWindDirection(direction: string) {
-  let text: string;
-  let degrees: number;
-  switch (direction.toLowerCase().trim()) {
-    case "north":
-      text = "N";
-      degrees = 0;
-      break;
-    case "east":
-      text = "E";
-      degrees = 90;
-      break;
-    case "south":
-      text = "S";
-      degrees = 180;
-      break;
-    case "west":
-      text = "W";
-      degrees = 270;
-      break;
-    case "northeast":
-      text = "NE";
-      degrees = 45;
-      break;
-    case "northwest":
-      text = "NW";
-      degrees = 315;
-      break;
-    case "southeast":
-      text = "SE";
-      degrees = 135;
-      break;
-    case "southwest":
-      text = "SW";
-      degrees = 225;
-      break;
-    default:
-      throw new Error("Unknown wind direction");
-  }
-
-  return { text, degrees };
-}

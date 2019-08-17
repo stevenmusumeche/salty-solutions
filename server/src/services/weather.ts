@@ -3,20 +3,8 @@ import { LocationEntity } from "./location";
 import { format, subHours } from "date-fns";
 import { orderBy } from "lodash";
 import { degreesToCompass } from "./usgs";
-
-export interface WeatherForecast {
-  startTime: string;
-  endTime: string;
-  temperature: number;
-  temperatureUnit: "F" | "C";
-  isDaytime: boolean;
-  windSpeed: string;
-  windDirection: string;
-  icon: string;
-  shortForecast: string;
-  detailedForecast: string;
-  name: string;
-}
+import { WeatherForecast } from "../generated/graphql";
+import { parseWindDirection } from "./utils";
 
 export const getForecast = async (
   location: LocationEntity
@@ -24,7 +12,7 @@ export const getForecast = async (
   const url = `${location.weatherGov.apiBase}/forecast`;
   const { data } = await axios.get(url);
 
-  return data.properties.periods.map(stripMph);
+  return data.properties.periods.map(parseForecast);
 };
 
 export const getHourlyForecast = async (
@@ -32,14 +20,61 @@ export const getHourlyForecast = async (
 ): Promise<WeatherForecast[]> => {
   const url = `${location.weatherGov.apiBase}/forecast/hourly`;
   const { data } = await axios.get(url);
-  return data.properties.periods.map(stripMph);
+  return data.properties.periods.map(parseForecast);
 };
 
-const stripMph = (x: any) => ({
-  ...x,
-  windSpeed: x.windSpeed.replace("mph", "").trim(),
-  name: x.name.replace("Overnight", "Tonight").trim()
-});
+const parseForecast = (x: any) => {
+  const {
+    chanceOfPrecipitation,
+    windSpeed,
+    windDirection,
+    temperature
+  } = extractForecast(x);
+  return {
+    ...x,
+    windSpeed,
+    windDirection,
+    chanceOfPrecipitation,
+    temperature
+  };
+};
+
+const extractForecast = ({
+  detailedForecast,
+  windSpeed,
+  windDirection,
+  temperature,
+  temperatureUnit
+}: any) => {
+  let extracted = {
+    temperature: { degrees: temperature, unit: temperatureUnit }
+  } as Partial<WeatherForecast>;
+
+  // chance of precipitation
+  let matches = detailedForecast.match(/precipitation( is )?([\d]{1,2})%/ims);
+  if (matches) extracted.chanceOfPrecipitation = Number(matches[2]);
+
+  // wind speed
+  matches = windSpeed.match(
+    /^((?<from>[\d]{1,2}) to )?(?<to>[\d]{1,2}) mph$/ims
+  );
+
+  // wind direction
+  if (windDirection) {
+    extracted.windDirection = parseWindDirection(windDirection);
+  }
+
+  if (matches && matches.groups) {
+    extracted.windSpeed = {
+      from: matches.groups.from
+        ? Number(matches.groups.from)
+        : Number(matches.groups.to),
+      to: Number(matches.groups.to)
+    };
+  }
+
+  return extracted;
+};
 
 export const getCurrentConditions = async (location: LocationEntity) => {
   const url = `https://api.weather.gov/stations/${
@@ -49,7 +84,13 @@ export const getCurrentConditions = async (location: LocationEntity) => {
   const { data } = await axios.get<NWSLatestObservations>(url);
 
   return {
-    temperature: celciusToFahrenheit(data.properties.temperature.value)
+    timestamp: new Date(data.properties.timestamp).toISOString(),
+    temperature: {
+      degrees: parseFloat(
+        celciusToFahrenheit(data.properties.temperature.value)
+      ),
+      unit: "F"
+    }
   };
 };
 
@@ -71,7 +112,10 @@ export const getConditions = async (
 
   let temperature = data.features.map((x: any) => ({
     timestamp: x.properties.timestamp,
-    temperature: celciusToFahrenheit(x.properties.temperature.value)
+    temperature: {
+      degrees: parseFloat(celciusToFahrenheit(x.properties.temperature.value)),
+      unit: "F"
+    }
   }));
   temperature = orderBy(temperature, ["timestamp"], ["asc"]);
 
@@ -97,6 +141,7 @@ export const getLatestConditions = async (location: LocationEntity) => {
 
 interface NWSLatestObservations {
   properties: {
+    timestamp: string;
     temperature: NWSValue;
     windDirection: NWSValue;
     windSpeed: NWSValue;

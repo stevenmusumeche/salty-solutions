@@ -40,6 +40,17 @@ const WeatherForecast: React.FC<Props> = ({ locationId, setForecastType }) => {
     <Wrapper setForecastType={setForecastType}>
       {data &&
         data.map(data => {
+          let windDisplay;
+          if (data.windSpeed && data.windDirection) {
+            if (data.windSpeed.from === data.windSpeed.to) {
+              windDisplay = `${data.windSpeed.to} ${data.windDirection.text}`;
+            } else {
+              windDisplay = `${data.windSpeed.from}-${data.windSpeed.to} ${
+                data.windDirection.text
+              }`;
+            }
+          }
+
           return (
             <div key={data.name} className="mb-8 last-no-margin">
               <div className="clearfix">
@@ -53,13 +64,9 @@ const WeatherForecast: React.FC<Props> = ({ locationId, setForecastType }) => {
                 <div className="min-w-0">
                   <div className="forecast-header">{data.name}</div>
                   <div className="">
-                    {data.shortForecast}, {data.temperature}°
-                    {data.temperatureUnit}
-                    {data.windSpeed && (
-                      <>
-                        , {data.windSpeed} {data.windDirection}
-                      </>
-                    )}
+                    {data.shortForecast}, {data.temperature.degrees}°
+                    {data.temperature.unit}
+                    {windDisplay && <>, {windDisplay}</>}
                   </div>
                   <div className="text-xs mt-1 relative">
                     {data.detailedForecast}

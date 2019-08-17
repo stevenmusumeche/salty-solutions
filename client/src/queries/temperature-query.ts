@@ -5,11 +5,17 @@ const TEMPERATURE_QUERY = gql`
     location(id: $locationId) {
       temperature {
         summary {
-          mostRecent
+          mostRecent {
+            temperature {
+              degrees
+            }
+          }
         }
         detail(numHours: 48) {
           timestamp
-          temperature
+          temperature {
+            degrees
+          }
         }
       }
     }

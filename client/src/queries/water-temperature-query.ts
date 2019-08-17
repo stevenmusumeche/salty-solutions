@@ -1,18 +1,22 @@
 import gql from "graphql-tag";
 
 const WATER_TEMPERATURE_QUERY = gql`
-  query CurrentWaterTemperature {
-    location(id: "2") {
+  query CurrentWaterTemperature($locationId: ID!) {
+    location(id: $locationId) {
       waterTemperature {
         summary {
           mostRecent {
             timestamp
-            temperature
+            temperature {
+              degrees
+            }
           }
         }
         detail(numHours: 48) {
           timestamp
-          temperature
+          temperature {
+            degrees
+          }
         }
       }
     }

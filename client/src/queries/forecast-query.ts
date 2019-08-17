@@ -11,10 +11,17 @@ const FORECAST_QUERY = gql`
       }
       weatherForecast {
         name
-        temperature
-        temperatureUnit
-        windSpeed
-        windDirection
+        temperature {
+          degrees
+          unit
+        }
+        windSpeed {
+          to
+          from
+        }
+        windDirection {
+          text
+        }
         icon
         shortForecast
         detailedForecast

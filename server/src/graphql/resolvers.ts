@@ -1,5 +1,6 @@
 import { Resolvers } from "../generated/graphql";
 import { ApolloError } from "apollo-server-koa";
+import { notUndefined } from "../services/utils";
 
 const DEFAULT_NUM_DAYS = 3;
 const DEFAULT_NUM_HOURS = 24;
@@ -46,8 +47,8 @@ const resolvers: Resolvers = {
         location.long
       );
     },
-    forecast: async (location, args, { services }) => {
-      return services.forecast.getForecast(location);
+    combinedForecast: async (location, args, { services }) => {
+      return services.combinedForecast.getCombinedForecast(location);
     },
     weatherForecast: async (location, args, { services }) => {
       return services.weather.getForecast(location);
@@ -125,14 +126,14 @@ const resolvers: Resolvers = {
       };
     }
   },
-  Temperature: {
+  TemperatureResult: {
     summary: async (temperature, __, { services }) => {
       const data = await services.weather.getCurrentConditions(
         temperature.location
       );
 
       return {
-        mostRecent: +data.temperature
+        mostRecent: data
       };
     },
     detail: async (temperature, args, { services }) => {
@@ -164,7 +165,3 @@ const resolvers: Resolvers = {
 };
 
 export default resolvers;
-
-function notUndefined<T>(x: T | undefined): x is T {
-  return x !== undefined;
-}

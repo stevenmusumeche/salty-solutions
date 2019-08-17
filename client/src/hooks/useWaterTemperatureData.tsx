@@ -21,7 +21,7 @@ function extractData(data: UseQueryState<CurrentWaterTemperatureQuery>) {
     data.data.location.waterTemperature.summary &&
     data.data.location.waterTemperature.summary.mostRecent &&
     `${Math.round(
-      data.data.location.waterTemperature.summary.mostRecent.temperature
+      data.data.location.waterTemperature.summary.mostRecent.temperature.degrees
     )}°`;
 
   const curDetail =
@@ -30,7 +30,7 @@ function extractData(data: UseQueryState<CurrentWaterTemperatureQuery>) {
     data.data.location.waterTemperature &&
     data.data.location.waterTemperature.detail &&
     data.data.location.waterTemperature.detail.map(data => ({
-      y: data.temperature,
+      y: data.temperature.degrees,
       x: data.timestamp
     }));
 

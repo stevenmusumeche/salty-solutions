@@ -8,11 +8,12 @@ import * as weatherService from "./services/weather";
 import * as marineService from "./services/marine";
 import * as usgsService from "./services/usgs";
 import * as radarService from "./services/radar";
-import * as forecastService from "./services/forecast";
+import * as combinedForecastService from "./services/combined-forecast";
 import typeDefs from "./graphql/schema";
 import resolvers from "./graphql/resolvers";
 
-const IS_DEV = process.env.SERVERLESS_STAGE === "dev";
+const IS_DEV =
+  process.env.SERVERLESS_STAGE === "dev" || !!process.env.LOCAL_DEV;
 
 export interface Context {
   services: {
@@ -23,7 +24,7 @@ export interface Context {
     marine: typeof marineService;
     usgs: typeof usgsService;
     radar: typeof radarService;
-    forecast: typeof forecastService;
+    combinedForecast: typeof combinedForecastService;
   };
 }
 
@@ -36,7 +37,7 @@ const context: Context = {
     marine: marineService,
     usgs: usgsService,
     radar: radarService,
-    forecast: forecastService
+    combinedForecast: combinedForecastService
   }
 };
 
@@ -50,5 +51,11 @@ const server = new ApolloServer({
 
 const app = new Koa();
 server.applyMiddleware({ app, path: "/api", cors: true });
+
+if (process.env.LOCAL_DEV) {
+  app.listen({ port: 4000 }, () =>
+    console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`)
+  );
+}
 
 export const graphql = serverless(app);

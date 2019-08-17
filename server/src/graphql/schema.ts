@@ -15,7 +15,7 @@ export default gql`
     long: Float!
     sun(start: String!, end: String!): [SunDetail!]
     moon(start: String!, end: String!): [MoonDetail!]
-    forecast: [Forecast!]!
+    combinedForecast: [CombinedForecast!]!
     weatherForecast: [WeatherForecast!]
     hourlyWeatherForecast: [WeatherForecast!]
     marineForecast: [MarineForecast!]
@@ -23,14 +23,30 @@ export default gql`
     waterTemperature(numDays: Int): WaterTemperature!
     wind: Wind!
     salinity(numHours: Int): Salinity!
-    temperature: Temperature!
+    temperature: TemperatureResult!
     maps: Maps
   }
 
-  type Forecast {
+  type CombinedForecast {
     timePeriod: String!
-    weather: WeatherForecast
-    marine: MarineForecastDetail
+    wind: WindForecast!
+    waterCondition: WaterCondition
+    temperature: Temperature!
+    marine: String
+    short: String!
+    detailed: String!
+    chanceOfPrecipitation: Int
+    icon: String!
+  }
+
+  type WaterCondition {
+    text: String!
+    icon: String!
+  }
+
+  type WindForecast {
+    speed: ForecastWindSpeedDetail
+    direction: WindDirection
   }
 
   type Maps {
@@ -51,13 +67,13 @@ export default gql`
     timestamp: String!
   }
 
-  type Temperature {
+  type TemperatureResult {
     summary: TemperatureSummary!
     detail(numHours: Int): [TemperatureDetail!]
   }
 
   type TemperatureSummary {
-    mostRecent: Float!
+    mostRecent: TemperatureDetail!
   }
 
   type TidePreditionStation {
@@ -96,13 +112,18 @@ export default gql`
     startTime: String!
     endTime: String!
     isDaytime: Boolean!
-    temperature: Int!
-    temperatureUnit: String!
-    windSpeed: String
-    windDirection: String
+    temperature: Temperature!
+    windSpeed: ForecastWindSpeedDetail
+    windDirection: WindDirection
     icon: String!
     shortForecast: String!
     detailedForecast: String!
+    chanceOfPrecipitation: Int
+  }
+
+  type Temperature {
+    degrees: Float!
+    unit: String!
   }
 
   type MarineForecast {
@@ -113,7 +134,7 @@ export default gql`
   type MarineForecastDetail {
     text: String!
     waterCondition: String
-    windSpeed: MarineForecastWindSpeedDetail
+    windSpeed: ForecastWindSpeedDetail
     windDirection: WindDirection
   }
 
@@ -122,7 +143,7 @@ export default gql`
     degrees: Int!
   }
 
-  type MarineForecastWindSpeedDetail {
+  type ForecastWindSpeedDetail {
     from: Int!
     to: Int!
   }
@@ -144,8 +165,7 @@ export default gql`
 
   type TemperatureDetail {
     timestamp: String!
-    "fahrenheit"
-    temperature: Float!
+    temperature: Temperature!
   }
 
   type WindDetail {

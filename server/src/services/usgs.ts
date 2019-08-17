@@ -20,13 +20,13 @@ export const getWaterTemperatureLatest = async (location: LocationEntity) => {
   return orderBy(data, ["timestamp"], ["desc"])[0];
 };
 
-export const getWaterTemperature = async (
-  location: any,
-  numHours: number
-): Promise<{ timestamp: string; temperature: number }[]> => {
+export const getWaterTemperature = async (location: any, numHours: number) => {
   return fetchAndMap(location.usgsSiteId, "00010", numHours, (v: any) => ({
     timestamp: new Date(v.dateTime).toISOString(),
-    temperature: ((Number(v.value) * 9) / 5 + 32).toFixed(1)
+    temperature: {
+      degrees: ((Number(v.value) * 9) / 5 + 32).toFixed(1),
+      unit: "F"
+    }
   }));
 };
 

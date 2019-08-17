@@ -11,6 +11,19 @@ export type Scalars = {
   Float: number;
 };
 
+export type CombinedForecast = {
+  __typename?: "CombinedForecast";
+  timePeriod: Scalars["String"];
+  wind: WindForecast;
+  waterCondition?: Maybe<WaterCondition>;
+  temperature: Temperature;
+  marine?: Maybe<Scalars["String"]>;
+  short: Scalars["String"];
+  detailed: Scalars["String"];
+  chanceOfPrecipitation?: Maybe<Scalars["Int"]>;
+  icon: Scalars["String"];
+};
+
 export type CurrentWind = {
   __typename?: "CurrentWind";
   speed: Scalars["Float"];
@@ -18,11 +31,10 @@ export type CurrentWind = {
   directionDegrees: Scalars["Float"];
 };
 
-export type Forecast = {
-  __typename?: "Forecast";
-  timePeriod: Scalars["String"];
-  weather?: Maybe<WeatherForecast>;
-  marine?: Maybe<MarineForecastDetail>;
+export type ForecastWindSpeedDetail = {
+  __typename?: "ForecastWindSpeedDetail";
+  from: Scalars["Int"];
+  to: Scalars["Int"];
 };
 
 export type Location = {
@@ -34,7 +46,7 @@ export type Location = {
   long: Scalars["Float"];
   sun?: Maybe<Array<SunDetail>>;
   moon?: Maybe<Array<MoonDetail>>;
-  forecast: Array<Forecast>;
+  combinedForecast: Array<CombinedForecast>;
   weatherForecast?: Maybe<Array<WeatherForecast>>;
   hourlyWeatherForecast?: Maybe<Array<WeatherForecast>>;
   marineForecast?: Maybe<Array<MarineForecast>>;
@@ -42,7 +54,7 @@ export type Location = {
   waterTemperature: WaterTemperature;
   wind: Wind;
   salinity: Salinity;
-  temperature: Temperature;
+  temperature: TemperatureResult;
   maps?: Maybe<Maps>;
 };
 
@@ -94,14 +106,8 @@ export type MarineForecastDetail = {
   __typename?: "MarineForecastDetail";
   text: Scalars["String"];
   waterCondition?: Maybe<Scalars["String"]>;
-  windSpeed?: Maybe<MarineForecastWindSpeedDetail>;
+  windSpeed?: Maybe<ForecastWindSpeedDetail>;
   windDirection?: Maybe<WindDirection>;
-};
-
-export type MarineForecastWindSpeedDetail = {
-  __typename?: "MarineForecastWindSpeedDetail";
-  from: Scalars["Int"];
-  to: Scalars["Int"];
 };
 
 export type MoonDetail = {
@@ -167,24 +173,29 @@ export type SunDetail = {
 
 export type Temperature = {
   __typename?: "Temperature";
-  summary: TemperatureSummary;
-  detail?: Maybe<Array<TemperatureDetail>>;
-};
-
-export type TemperatureDetailArgs = {
-  numHours?: Maybe<Scalars["Int"]>;
+  degrees: Scalars["Float"];
+  unit: Scalars["String"];
 };
 
 export type TemperatureDetail = {
   __typename?: "TemperatureDetail";
   timestamp: Scalars["String"];
-  /** fahrenheit */
-  temperature: Scalars["Float"];
+  temperature: Temperature;
+};
+
+export type TemperatureResult = {
+  __typename?: "TemperatureResult";
+  summary: TemperatureSummary;
+  detail?: Maybe<Array<TemperatureDetail>>;
+};
+
+export type TemperatureResultDetailArgs = {
+  numHours?: Maybe<Scalars["Int"]>;
 };
 
 export type TemperatureSummary = {
   __typename?: "TemperatureSummary";
-  mostRecent: Scalars["Float"];
+  mostRecent: TemperatureDetail;
 };
 
 export type TideDetail = {
@@ -207,6 +218,12 @@ export type TidePreditionStation = {
 export type TidePreditionStationTidesArgs = {
   start: Scalars["String"];
   end: Scalars["String"];
+};
+
+export type WaterCondition = {
+  __typename?: "WaterCondition";
+  text: Scalars["String"];
+  icon: Scalars["String"];
 };
 
 export type WaterHeight = {
@@ -237,13 +254,13 @@ export type WeatherForecast = {
   startTime: Scalars["String"];
   endTime: Scalars["String"];
   isDaytime: Scalars["Boolean"];
-  temperature: Scalars["Int"];
-  temperatureUnit: Scalars["String"];
-  windSpeed?: Maybe<Scalars["String"]>;
-  windDirection?: Maybe<Scalars["String"]>;
+  temperature: Temperature;
+  windSpeed?: Maybe<ForecastWindSpeedDetail>;
+  windDirection?: Maybe<WindDirection>;
   icon: Scalars["String"];
   shortForecast: Scalars["String"];
   detailedForecast: Scalars["String"];
+  chanceOfPrecipitation?: Maybe<Scalars["Int"]>;
 };
 
 export type Wind = {
@@ -269,6 +286,12 @@ export type WindDirection = {
   __typename?: "WindDirection";
   text: Scalars["String"];
   degrees: Scalars["Int"];
+};
+
+export type WindForecast = {
+  __typename?: "WindForecast";
+  speed?: Maybe<ForecastWindSpeedDetail>;
+  direction?: Maybe<WindDirection>;
 };
 
 export type WindSummary = {
@@ -299,15 +322,22 @@ export type ForecastQuery = { __typename?: "Query" } & {
         Array<
           { __typename?: "WeatherForecast" } & Pick<
             WeatherForecast,
-            | "name"
-            | "temperature"
-            | "temperatureUnit"
-            | "windSpeed"
-            | "windDirection"
-            | "icon"
-            | "shortForecast"
-            | "detailedForecast"
-          >
+            "name" | "icon" | "shortForecast" | "detailedForecast"
+          > & {
+              temperature: { __typename?: "Temperature" } & Pick<
+                Temperature,
+                "degrees" | "unit"
+              >;
+              windSpeed: Maybe<
+                { __typename?: "ForecastWindSpeedDetail" } & Pick<
+                  ForecastWindSpeedDetail,
+                  "to" | "from"
+                >
+              >;
+              windDirection: Maybe<
+                { __typename?: "WindDirection" } & Pick<WindDirection, "text">
+              >;
+            }
         >
       >;
     }
@@ -330,16 +360,21 @@ export type HourlyForecastQuery = { __typename?: "Query" } & {
 
 export type HourlyForecastDetailFragment = {
   __typename?: "WeatherForecast";
-} & Pick<
-  WeatherForecast,
-  | "startTime"
-  | "temperature"
-  | "temperatureUnit"
-  | "windSpeed"
-  | "windDirection"
-  | "icon"
-  | "shortForecast"
->;
+} & Pick<WeatherForecast, "startTime" | "icon" | "shortForecast"> & {
+    temperature: { __typename?: "Temperature" } & Pick<
+      Temperature,
+      "degrees" | "unit"
+    >;
+    windSpeed: Maybe<
+      { __typename?: "ForecastWindSpeedDetail" } & Pick<
+        ForecastWindSpeedDetail,
+        "from" | "to"
+      >
+    >;
+    windDirection: Maybe<
+      { __typename?: "WindDirection" } & Pick<WindDirection, "text">
+    >;
+  };
 
 export type LocationsQueryVariables = {};
 
@@ -454,17 +489,26 @@ export type CurrentTemperatureQueryVariables = {
 export type CurrentTemperatureQuery = { __typename?: "Query" } & {
   location: Maybe<
     { __typename?: "Location" } & {
-      temperature: { __typename?: "Temperature" } & {
-        summary: { __typename?: "TemperatureSummary" } & Pick<
-          TemperatureSummary,
-          "mostRecent"
-        >;
+      temperature: { __typename?: "TemperatureResult" } & {
+        summary: { __typename?: "TemperatureSummary" } & {
+          mostRecent: { __typename?: "TemperatureDetail" } & {
+            temperature: { __typename?: "Temperature" } & Pick<
+              Temperature,
+              "degrees"
+            >;
+          };
+        };
         detail: Maybe<
           Array<
             { __typename?: "TemperatureDetail" } & Pick<
               TemperatureDetail,
-              "timestamp" | "temperature"
-            >
+              "timestamp"
+            > & {
+                temperature: { __typename?: "Temperature" } & Pick<
+                  Temperature,
+                  "degrees"
+                >;
+              }
           >
         >;
       };
@@ -504,7 +548,9 @@ export type SunDetailFieldsFragment = { __typename?: "SunDetail" } & Pick<
   "sunrise" | "sunset" | "dawn" | "dusk" | "nauticalDawn" | "nauticalDusk"
 >;
 
-export type CurrentWaterTemperatureQueryVariables = {};
+export type CurrentWaterTemperatureQueryVariables = {
+  locationId: Scalars["ID"];
+};
 
 export type CurrentWaterTemperatureQuery = { __typename?: "Query" } & {
   location: Maybe<
@@ -514,16 +560,26 @@ export type CurrentWaterTemperatureQuery = { __typename?: "Query" } & {
           mostRecent: Maybe<
             { __typename?: "TemperatureDetail" } & Pick<
               TemperatureDetail,
-              "timestamp" | "temperature"
-            >
+              "timestamp"
+            > & {
+                temperature: { __typename?: "Temperature" } & Pick<
+                  Temperature,
+                  "degrees"
+                >;
+              }
           >;
         };
         detail: Maybe<
           Array<
             { __typename?: "TemperatureDetail" } & Pick<
               TemperatureDetail,
-              "timestamp" | "temperature"
-            >
+              "timestamp"
+            > & {
+                temperature: { __typename?: "Temperature" } & Pick<
+                  Temperature,
+                  "degrees"
+                >;
+              }
           >
         >;
       };
@@ -559,10 +615,17 @@ export type WindDetailFieldsFragment = { __typename?: "WindDetail" } & Pick<
 export const HourlyForecastDetailFragmentDoc = gql`
   fragment HourlyForecastDetail on WeatherForecast {
     startTime
-    temperature
-    temperatureUnit
-    windSpeed
-    windDirection
+    temperature {
+      degrees
+      unit
+    }
+    windSpeed {
+      from
+      to
+    }
+    windDirection {
+      text
+    }
     icon
     shortForecast
   }
@@ -618,10 +681,17 @@ export const ForecastDocument = gql`
       }
       weatherForecast {
         name
-        temperature
-        temperatureUnit
-        windSpeed
-        windDirection
+        temperature {
+          degrees
+          unit
+        }
+        windSpeed {
+          to
+          from
+        }
+        windDirection {
+          text
+        }
         icon
         shortForecast
         detailedForecast
@@ -754,11 +824,17 @@ export const CurrentTemperatureDocument = gql`
     location(id: $locationId) {
       temperature {
         summary {
-          mostRecent
+          mostRecent {
+            temperature {
+              degrees
+            }
+          }
         }
         detail(numHours: 48) {
           timestamp
-          temperature
+          temperature {
+            degrees
+          }
         }
       }
     }
@@ -804,18 +880,22 @@ export function useTideQuery(
   return Urql.useQuery<TideQuery>({ query: TideDocument, ...options });
 }
 export const CurrentWaterTemperatureDocument = gql`
-  query CurrentWaterTemperature {
-    location(id: "2") {
+  query CurrentWaterTemperature($locationId: ID!) {
+    location(id: $locationId) {
       waterTemperature {
         summary {
           mostRecent {
             timestamp
-            temperature
+            temperature {
+              degrees
+            }
           }
         }
         detail(numHours: 48) {
           timestamp
-          temperature
+          temperature {
+            degrees
+          }
         }
       }
     }

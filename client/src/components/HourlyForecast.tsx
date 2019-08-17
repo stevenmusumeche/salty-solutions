@@ -76,6 +76,16 @@ const HourlyForecast: React.FC<Props> = ({ locationId, setForecastType }) => {
 };
 
 const Hour: React.FC<{ hour: HourlyForecastDetailFragment }> = ({ hour }) => {
+  let windDisplay;
+  if (hour.windSpeed && hour.windDirection) {
+    if (hour.windSpeed.from === hour.windSpeed.to) {
+      windDisplay = `${hour.windSpeed.to} ${hour.windDirection.text}`;
+    } else {
+      windDisplay = `${hour.windSpeed.from}-${hour.windSpeed.to} ${
+        hour.windDirection.text
+      }`;
+    }
+  }
   return (
     <div className="hourly-row">
       <div className="text-right">
@@ -89,11 +99,9 @@ const Hour: React.FC<{ hour: HourlyForecastDetailFragment }> = ({ hour }) => {
         />
       </div>
       <div>
-        {hour.temperature}°{hour.temperatureUnit}
+        {hour.temperature.degrees}°{hour.temperature.unit}
       </div>
-      <div>
-        {hour.windSpeed ? `${hour.windSpeed} ${hour.windDirection}` : null}
-      </div>
+      <div>{windDisplay || null}</div>
       <div className="text-left">{hour.shortForecast}</div>
     </div>
   );
