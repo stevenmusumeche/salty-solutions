@@ -10,7 +10,6 @@ import CurrentWaterTempDetailGraph from "./components/CurrentWaterTempDetailGrap
 import Tides from "./components/Tides";
 import { useLocationsQuery, LocationsQuery } from "./generated/graphql";
 import { UseQueryState } from "urql";
-import Forecast from "./components/Forecast";
 import "./App.css";
 import RadarMap from "./components/RadarMap";
 import PlusIcon from "./assets/plus-icon.svg";
@@ -19,6 +18,7 @@ import { startOfDay } from "date-fns";
 import DatePicker from "react-date-picker";
 import SunAndMoon from "./components/SunAndMoon";
 import CombinedForecast from "./components/CombinedForecast";
+import HourlyForecast from "./components/HourlyForecast";
 
 const App: React.FC = () => {
   const [locations] = useLocationsQuery();
@@ -111,9 +111,9 @@ const App: React.FC = () => {
 
         <SectionTitle text="Forecast" />
         <CombinedForecast locationId={locationId} />
-        {/* 
-        <SectionTitle text="Forecast" />
-        <Forecast locationId={locationId} /> */}
+
+        <SectionTitle text="Hourly Forecast" />
+        <HourlyForecast locationId={locationId} />
       </div>
     </>
   );

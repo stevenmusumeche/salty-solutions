@@ -1,11 +1,7 @@
 import React, { ReactNode } from "react";
-import {
-  useForecastQuery,
-  useCombinedForecastQuery
-} from "../generated/graphql";
+import { useCombinedForecastQuery } from "../generated/graphql";
 import ErrorIcon from "../assets/error.svg";
 import ForecastSkeleton from "./ForecastSkeleton";
-import { ForecastType } from "./Forecast";
 import Compass from "../assets/compass.svg";
 import Smooth from "../assets/water-conditions/smooth.svg";
 import LightChop from "../assets/water-conditions/light-chop.svg";

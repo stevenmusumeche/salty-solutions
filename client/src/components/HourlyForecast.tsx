@@ -5,15 +5,13 @@ import {
 } from "../generated/graphql";
 import ErrorIcon from "../assets/error.svg";
 import ForecastSkeleton from "./ForecastSkeleton";
-import { ForecastType } from "./Forecast";
 import { format } from "date-fns";
 
 interface Props {
   locationId: string;
-  setForecastType: (type: ForecastType) => void;
 }
 
-const HourlyForecast: React.FC<Props> = ({ locationId, setForecastType }) => {
+const HourlyForecast: React.FC<Props> = ({ locationId }) => {
   const [forecast] = useHourlyForecastQuery({ variables: { locationId } });
 
   if (forecast.fetching) {
@@ -55,17 +53,31 @@ const HourlyForecast: React.FC<Props> = ({ locationId, setForecastType }) => {
     {} as { [date: string]: HourlyForecastDetailFragment[] }
   );
 
-  const days = Object.keys(grouped).sort();
+  const days = Object.keys(grouped)
+    .sort()
+    .splice(0, 6);
 
   return (
-    <Wrapper setForecastType={setForecastType}>
+    <Wrapper>
       {days.map(day => {
+        const numHours = grouped[day].length;
+        if (numHours < 24) {
+          // @ts-ignore
+          grouped[day] = [
+            ...Array.from({ length: 24 - numHours }, (v, i) => null),
+            ...grouped[day]
+          ];
+        }
+
         return (
           <div key={day} className="mb-8">
             <div className="forecast-header mb-4">
               {format(new Date(day), "cccc")}
             </div>
             {grouped[day].map(hour => {
+              if (hour === null) {
+                return <div className="hourly-row">&nbsp;</div>;
+              }
               return <Hour key={`${day}${hour.startTime}`} hour={hour} />;
             })}
           </div>
@@ -111,20 +123,15 @@ export default HourlyForecast;
 
 const Wrapper: React.FC<{
   children: ReactNode;
-  setForecastType?: (e: any) => void;
-}> = ({ children, setForecastType }) => (
-  <div className="forecast-wrapper scroller-vertical">
-    <div className="flex justify-between items-start">
-      <h2 className="forecast-title">Hourly Forecast</h2>
-      {setForecastType && (
-        <button
-          className="block text-gray-700 text-sm"
-          onClick={() => setForecastType(ForecastType.Weather)}
-        >
-          View Daily
-        </button>
-      )}
-    </div>
+}> = ({ children }) => (
+  <div
+    className="forecast-wrapper mb-8"
+    style={{
+      display: "grid",
+      gridTemplateColumns: "1fr 1fr",
+      gridColumnGap: "2rem"
+    }}
+  >
     {children}
   </div>
 );
