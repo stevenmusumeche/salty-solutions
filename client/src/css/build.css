@@ -662,7 +662,7 @@ video {
 
 .forecast-row {
   display: grid;
-  grid-template-columns: 1fr 1.5fr 1.5fr 7fr;
+  grid-template-columns: 1fr 1.5fr 1.1fr 7fr;
   grid-column-gap: 2rem;
 }
 

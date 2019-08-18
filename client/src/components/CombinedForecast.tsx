@@ -99,7 +99,7 @@ const CombinedForecast: React.FC<Props> = ({ locationId }) => {
                   className="text-gray-800 text-left text-4xl leading-none h-24 items-center"
                   style={{
                     display: "grid",
-                    gridTemplateColumns: "2fr 1fr",
+                    gridTemplateColumns: "4.5rem auto",
                     gridTemplateRows: "1fr 1fr"
                   }}
                 >

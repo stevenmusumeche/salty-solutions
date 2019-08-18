@@ -13,7 +13,7 @@ export const getWaterHeight = async (
 };
 
 export const getWaterTemperatureLatest = async (location: LocationEntity) => {
-  const data = await getWaterTemperature(location, 2);
+  const data = await getWaterTemperature(location, 12);
 
   if (data.length < 1) return null;
 
