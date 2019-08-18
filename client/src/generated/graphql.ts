@@ -298,6 +298,53 @@ export type WindSummary = {
   __typename?: "WindSummary";
   mostRecent?: Maybe<WindDetail>;
 };
+export type CombinedForecastQueryVariables = {
+  locationId: Scalars["ID"];
+};
+
+export type CombinedForecastQuery = { __typename?: "Query" } & {
+  location: Maybe<
+    { __typename?: "Location" } & {
+      combinedForecast: Array<
+        { __typename?: "CombinedForecast" } & Pick<
+          CombinedForecast,
+          | "timePeriod"
+          | "chanceOfPrecipitation"
+          | "icon"
+          | "marine"
+          | "short"
+          | "detailed"
+        > & {
+            wind: { __typename?: "WindForecast" } & {
+              speed: Maybe<
+                { __typename?: "ForecastWindSpeedDetail" } & Pick<
+                  ForecastWindSpeedDetail,
+                  "from" | "to"
+                >
+              >;
+              direction: Maybe<
+                { __typename?: "WindDirection" } & Pick<
+                  WindDirection,
+                  "text" | "degrees"
+                >
+              >;
+            };
+            waterCondition: Maybe<
+              { __typename?: "WaterCondition" } & Pick<
+                WaterCondition,
+                "text" | "icon"
+              >
+            >;
+            temperature: { __typename?: "Temperature" } & Pick<
+              Temperature,
+              "degrees" | "unit"
+            >;
+          }
+      >;
+    }
+  >;
+};
+
 export type ForecastQueryVariables = {
   locationId: Scalars["ID"];
 };
@@ -670,6 +717,47 @@ export const WindDetailFieldsFragmentDoc = gql`
     directionDegrees
   }
 `;
+export const CombinedForecastDocument = gql`
+  query CombinedForecast($locationId: ID!) {
+    location(id: $locationId) {
+      combinedForecast {
+        timePeriod
+        wind {
+          speed {
+            from
+            to
+          }
+          direction {
+            text
+            degrees
+          }
+        }
+        waterCondition {
+          text
+          icon
+        }
+        temperature {
+          degrees
+          unit
+        }
+        chanceOfPrecipitation
+        icon
+        marine
+        short
+        detailed
+      }
+    }
+  }
+`;
+
+export function useCombinedForecastQuery(
+  options: Omit<Urql.UseQueryArgs<CombinedForecastQueryVariables>, "query"> = {}
+) {
+  return Urql.useQuery<CombinedForecastQuery>({
+    query: CombinedForecastDocument,
+    ...options
+  });
+}
 export const ForecastDocument = gql`
   query Forecast($locationId: ID!) {
     location(id: $locationId) {

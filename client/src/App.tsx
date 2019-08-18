@@ -18,6 +18,7 @@ import MinusIcon from "./assets/minus-icon.svg";
 import { startOfDay } from "date-fns";
 import DatePicker from "react-date-picker";
 import SunAndMoon from "./components/SunAndMoon";
+import CombinedForecast from "./components/CombinedForecast";
 
 const App: React.FC = () => {
   const [locations] = useLocationsQuery();
@@ -59,7 +60,6 @@ const App: React.FC = () => {
       </div>
       <div className="container mx-auto pb-8 min-h-screen">
         <SectionTitle text="Current Conditions" />
-
         <div className="current-conditions-grid">
           <CurrentWindSummaryCard locationId={locationId} />
           <CurrentSalinitySummaryCard locationId={locationId} />
@@ -110,7 +110,10 @@ const App: React.FC = () => {
         <SunAndMoon locationId={locationId} date={date} />
 
         <SectionTitle text="Forecast" />
-        <Forecast locationId={locationId} />
+        <CombinedForecast locationId={locationId} />
+        {/* 
+        <SectionTitle text="Forecast" />
+        <Forecast locationId={locationId} /> */}
       </div>
     </>
   );

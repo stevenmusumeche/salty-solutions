@@ -43,6 +43,12 @@
   @apply relative bg-white rounded-lg shadow-md p-4 flex-shrink-0 flex-grow-0;
 }
 
+.forecast-row {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr 1.5fr 7fr;
+  grid-column-gap: 2rem;
+}
+
 /**
   * This injects all of Tailwind's utility classes, generated based on your
   * config file.
