@@ -74,9 +74,13 @@ const HourlyForecast: React.FC<Props> = ({ locationId }) => {
             <div className="forecast-header mb-4">
               {format(new Date(day), "cccc")}
             </div>
-            {grouped[day].map(hour => {
+            {grouped[day].map((hour, i) => {
               if (hour === null) {
-                return <div className="hourly-row">&nbsp;</div>;
+                return (
+                  <div className="hourly-row" key={i}>
+                    &nbsp;
+                  </div>
+                );
               }
               return <Hour key={`${day}${hour.startTime}`} hour={hour} />;
             })}

@@ -8,10 +8,12 @@ import WaxingCrescent from "../assets/moon-phases/waxing-crescent.svg";
 import WaningGibbous from "../assets/moon-phases/waning-gibbous.svg";
 import WaxingGibbous from "../assets/moon-phases/waxing-gibbous.svg";
 
-const MoonPhase: React.FC<{ phase: string }> = ({ phase }) => (
+const MoonPhase: React.FC<{
+  phase?: string | null;
+}> = ({ phase }) => (
   <div>
     <div className="w-22 h-22 mx-auto">
-      <img src={getImageForPhase(phase)} alt={phase} />
+      <img src={getImageForPhase(phase || "")} alt={phase || undefined} />
     </div>
   </div>
 );

@@ -1,39 +1,38 @@
-import React, { useState, ChangeEventHandler } from "react";
-import CurrentWindSummaryCard from "./components/CurrentWindSummaryCard";
-import CurrentWindDetailGraph from "./components/CurrentWindDetailGraph";
-import CurrentAirTempSummaryCard from "./components/CurrentAirTempSummaryCard";
-import CurrentAirTempDetailGraph from "./components/CurrentAirTempDetailGraph";
-import CurrentSalinitySummaryCard from "./components/CurrentSalinitySummaryCard";
-import CurrentSalinityDetailGraph from "./components/CurrentSalinityDetailGraph";
-import CurrentWaterTempSummaryCard from "./components/CurrentWaterTempSummaryCard";
-import CurrentWaterTempDetailGraph from "./components/CurrentWaterTempDetailGraph";
-import Tides from "./components/Tides";
-import { useLocationsQuery, LocationsQuery } from "./generated/graphql";
-import { UseQueryState } from "urql";
-import "./App.css";
-import RadarMap from "./components/RadarMap";
-import PlusIcon from "./assets/plus-icon.svg";
-import MinusIcon from "./assets/minus-icon.svg";
 import { startOfDay } from "date-fns";
-import DatePicker from "react-date-picker";
-import SunAndMoon from "./components/SunAndMoon";
+import React, { useState } from "react";
+import "./App.css";
+import MinusIcon from "./assets/minus-icon.svg";
+import PlusIcon from "./assets/plus-icon.svg";
 import CombinedForecast from "./components/CombinedForecast";
+import CurrentAirTempDetailGraph from "./components/CurrentAirTempDetailGraph";
+import CurrentAirTempSummaryCard from "./components/CurrentAirTempSummaryCard";
+import CurrentSalinityDetailGraph from "./components/CurrentSalinityDetailGraph";
+import CurrentSalinitySummaryCard from "./components/CurrentSalinitySummaryCard";
+import CurrentWaterTempDetailGraph from "./components/CurrentWaterTempDetailGraph";
+import CurrentWaterTempSummaryCard from "./components/CurrentWaterTempSummaryCard";
+import CurrentWindDetailGraph from "./components/CurrentWindDetailGraph";
+import CurrentWindSummaryCard from "./components/CurrentWindSummaryCard";
+import Header from "./components/Header";
 import HourlyForecast from "./components/HourlyForecast";
+import RadarMap from "./components/RadarMap";
+import SunAndMoon from "./components/SunAndMoon";
+import Tides from "./components/Tides";
+import { useLocationsQuery } from "./generated/graphql";
+import Button from "./components/Button";
+
+const INITIAL_LOCATION = "2";
 
 const App: React.FC = () => {
   const [locations] = useLocationsQuery();
-  const [locationId, setLocationId] = useState("2");
-  const [showRadar, setShowRadar] = useState(false);
-  const [date, setDate] = useState(() => startOfDay(new Date()));
+  const [locationId, setLocationId] = useState(INITIAL_LOCATION);
   const selectedLocation = locations.data
     ? locations.data.locations.find(location => location.id === locationId)
     : null;
 
-  const toggleRadar = () => setShowRadar(x => !x);
+  const [date, setDate] = useState(() => startOfDay(new Date()));
 
-  const handleLocationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setLocationId(e.target.value);
-  };
+  const [showRadar, setShowRadar] = useState(false);
+  const toggleRadar = () => setShowRadar(x => !x);
 
   const handleDateChange = (date: Date | Date[]) => {
     if (Array.isArray(date)) return;
@@ -42,22 +41,13 @@ const App: React.FC = () => {
 
   return (
     <>
-      <div className="sticky top-0 py-4 z-50 bg-gray-500 mb-8 shadow-lg">
-        <div className="container mx-auto flex items-center justify-between">
-          <LocationSelect
-            locations={locations}
-            onChange={handleLocationChange}
-            value={locationId}
-          />
-          <div>
-            <DatePicker
-              onChange={handleDateChange}
-              value={date}
-              clearIcon={null}
-            />
-          </div>
-        </div>
-      </div>
+      <Header
+        setLocationId={id => setLocationId(id)}
+        activeLocationId={locationId}
+        setActiveDate={handleDateChange}
+        activeDate={date}
+      />
+
       <div className="container mx-auto pb-8 min-h-screen">
         <SectionTitle text="Current Conditions" />
         <div className="current-conditions-grid">
@@ -71,26 +61,7 @@ const App: React.FC = () => {
           <CurrentWaterTempDetailGraph locationId={locationId} />
         </div>
 
-        {
-          <button
-            className={`shadow-md flex items-center justify-between bg-gray-700 hover:bg-gray-600 text-gray-200 rounded-lg w-48 px-4 py-2 uppercase tracking-widest ${
-              !showRadar ? "mb-8" : "mb-4"
-            }`}
-            onClick={toggleRadar}
-          >
-            {showRadar ? (
-              <>
-                <div>Hide Radar</div>{" "}
-                <img className="w-4" src={MinusIcon} alt="hide radar icon" />
-              </>
-            ) : (
-              <>
-                <div>Show Radar</div>{" "}
-                <img className="w-4" src={PlusIcon} alt="show radar icon" />
-              </>
-            )}
-          </button>
-        }
+        <RadarButton showRadar={showRadar} toggleRadar={toggleRadar} />
 
         {showRadar && <RadarMap locationId={locationId} />}
 
@@ -121,35 +92,28 @@ const App: React.FC = () => {
 
 export default App;
 
-interface LocationSelectProps {
-  locations: UseQueryState<LocationsQuery>;
-  value: string;
-  onChange: ChangeEventHandler;
-}
-
 const SectionTitle: React.FC<{ text: string }> = ({ text }) => (
   <h2 className="text-4xl mb-8">{text}</h2>
 );
 
-const LocationSelect: React.FC<LocationSelectProps> = ({
-  locations,
-  value,
-  onChange
-}) => (
-  <select
-    onChange={onChange}
-    className="select-css h-12 text-3xl rounded shadow-md pr-16 pl-3 bg-white"
-    value={value}
+const RadarButton: React.FC<{
+  showRadar: boolean;
+  toggleRadar: () => void;
+}> = ({ showRadar, toggleRadar }) => (
+  <Button
+    className={`w-48 ${!showRadar ? "mb-8" : "mb-4"}`}
+    onClick={toggleRadar}
   >
-    {locations.data &&
-      locations.data.locations
-        .sort((a, b) => ("" + a.name).localeCompare(b.name))
-        .map(location => {
-          return (
-            <option key={location.id} value={location.id}>
-              {location.name}
-            </option>
-          );
-        })}
-  </select>
+    {showRadar ? (
+      <>
+        <div>Hide Radar</div>{" "}
+        <img className="w-4" src={MinusIcon} alt="hide radar icon" />
+      </>
+    ) : (
+      <>
+        <div>Show Radar</div>{" "}
+        <img className="w-4" src={PlusIcon} alt="show radar icon" />
+      </>
+    )}
+  </Button>
 );

@@ -16,7 +16,7 @@ export interface LocationEntity {
 const locations: LocationEntity[] = [
   {
     id: "1",
-    name: "Cypremore Point",
+    name: "Cypremort Point",
     tideStationIds: ["8765251", "8765148"],
     marineZoneId: "GMZ435",
     lat: 29.731474,

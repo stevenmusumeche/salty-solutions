@@ -22,8 +22,6 @@ const SunAndMoon: React.FC<Props> = ({ locationId, date }) => {
 
   const { sun, moon } = extractData(result);
 
-  // if (!sun || !moon) return null;
-
   return (
     <div className="sun-and-moon-grid">
       <ConditionCard
@@ -61,10 +59,10 @@ const SunAndMoon: React.FC<Props> = ({ locationId, date }) => {
       <ConditionCard
         fetching={result.fetching}
         error={result.error && !moon}
-        label={moon ? moon.phase : "Moon Phase"}
+        label={moon ? `${moon.phase} (${moon.illumination}%)` : "Moon Phase"}
         fontSize="5rem"
       >
-        <MoonPhase phase={moon ? moon.phase : ""} />
+        <MoonPhase phase={moon && moon.phase} />
       </ConditionCard>
     </div>
   );
