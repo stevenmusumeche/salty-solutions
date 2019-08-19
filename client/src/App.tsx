@@ -19,6 +19,8 @@ import SunAndMoon from "./components/SunAndMoon";
 import Tides from "./components/Tides";
 import { useLocationsQuery } from "./generated/graphql";
 import Button from "./components/Button";
+import Modal from "./components/Modal";
+import About from "./components/About";
 
 const INITIAL_LOCATION = "2";
 
@@ -34,6 +36,8 @@ const App: React.FC = () => {
   const [showRadar, setShowRadar] = useState(false);
   const toggleRadar = () => setShowRadar(x => !x);
 
+  const [showAbout, setShowAbout] = useState(false);
+
   const handleDateChange = (date: Date | Date[]) => {
     if (Array.isArray(date)) return;
     setDate(date);
@@ -46,7 +50,14 @@ const App: React.FC = () => {
         activeLocationId={locationId}
         setActiveDate={handleDateChange}
         activeDate={date}
+        showAbout={() => setShowAbout(true)}
       />
+
+      {showAbout && (
+        <Modal close={() => setShowAbout(false)}>
+          <About />
+        </Modal>
+      )}
 
       <div className="container mx-auto pb-8 min-h-screen">
         <SectionTitle text="Current Conditions" />

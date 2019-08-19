@@ -9,13 +9,15 @@ interface Props {
   activeLocationId: string;
   setActiveDate: (date: Date | Date[]) => void;
   activeDate: Date;
+  showAbout: () => void;
 }
 
 const Header: React.FC<Props> = ({
   setLocationId,
   activeLocationId,
   activeDate,
-  setActiveDate
+  setActiveDate,
+  showAbout
 }) => {
   const [locations] = useLocationsQuery();
 
@@ -35,7 +37,7 @@ const Header: React.FC<Props> = ({
           />
         </div>
         <div>
-          <Button onClick={e => {}}>About</Button>
+          <Button onClick={showAbout}>About</Button>
         </div>
       </div>
     </div>

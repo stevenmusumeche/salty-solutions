@@ -49,7 +49,9 @@ const CombinedForecast: React.FC<Props> = ({ locationId }) => {
           if (data.wind && data.wind.speed && data.wind.direction) {
             const from = data.wind.speed.from;
             const to = data.wind.speed.to;
-            degrees = data.wind.direction ? data.wind.direction.degrees : null;
+            degrees = data.wind.direction
+              ? data.wind.direction.degrees + 180
+              : null;
             if (from === to) {
               windDisplay = `${to} ${data.wind.direction.text}`;
             } else {
