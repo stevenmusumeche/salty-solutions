@@ -1,8 +1,14 @@
 import React from "react";
+import UrStupidFace from "../assets/steven.jpg";
 
 const About: React.FC = () => (
   <div>
     <h1 className="text-4xl mb-4">About</h1>
+    <img
+      src={UrStupidFace}
+      alt="steven musumeche"
+      className="float-right mr-4 mb-4 rounded-full w-48 border border-gray-300 shadow-md"
+    />
     <p className="">
       Hi, I'm{" "}
       <Link
