@@ -25,6 +25,15 @@ export default gql`
     salinity(numHours: Int): Salinity!
     temperature: TemperatureResult!
     maps: Maps
+    dataSources: DataSources
+  }
+
+  type DataSources {
+    tideStationIds: [String!]!
+    marineZoneId: String!
+    usgsSiteId: String!
+    weatherStationId: String!
+    weatherRadarSiteId: String!
   }
 
   type CombinedForecast {

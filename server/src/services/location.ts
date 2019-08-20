@@ -49,3 +49,11 @@ export const getAll = (): LocationEntity[] => locations;
 export const getById = (id: string): LocationEntity | undefined => {
   return locations.find(location => location.id === id);
 };
+
+export const getDataSources = (location: LocationEntity) => ({
+  tideStationIds: location.tideStationIds,
+  marineZoneId: location.marineZoneId,
+  usgsSiteId: location.usgsSiteId,
+  weatherStationId: location.weatherGov.stationId,
+  weatherRadarSiteId: location.weatherGov.radarSiteId
+});

@@ -80,6 +80,9 @@ const resolvers: Resolvers = {
 
         overlays: services.radar.getOverlays(location)
       };
+    },
+    dataSources: async (location, args, { services }) => {
+      return services.location.getDataSources(location);
     }
   },
   TidePreditionStation: {

@@ -31,6 +31,15 @@ export type CurrentWind = {
   directionDegrees: Scalars["Float"];
 };
 
+export type DataSources = {
+  __typename?: "DataSources";
+  tideStationIds: Array<Scalars["String"]>;
+  marineZoneId: Scalars["String"];
+  usgsSiteId: Scalars["String"];
+  weatherStationId: Scalars["String"];
+  weatherRadarSiteId: Scalars["String"];
+};
+
 export type ForecastWindSpeedDetail = {
   __typename?: "ForecastWindSpeedDetail";
   from: Scalars["Int"];
@@ -56,6 +65,7 @@ export type Location = {
   salinity: Salinity;
   temperature: TemperatureResult;
   maps?: Maybe<Maps>;
+  dataSources?: Maybe<DataSources>;
 };
 
 export type LocationSunArgs = {

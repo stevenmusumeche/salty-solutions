@@ -32,6 +32,15 @@ export type CurrentWind = {
   directionDegrees: Scalars["Float"];
 };
 
+export type DataSources = {
+  __typename?: "DataSources";
+  tideStationIds: Array<Scalars["String"]>;
+  marineZoneId: Scalars["String"];
+  usgsSiteId: Scalars["String"];
+  weatherStationId: Scalars["String"];
+  weatherRadarSiteId: Scalars["String"];
+};
+
 export type ForecastWindSpeedDetail = {
   __typename?: "ForecastWindSpeedDetail";
   from: Scalars["Int"];
@@ -57,6 +66,7 @@ export type Location = {
   salinity: Salinity;
   temperature: TemperatureResult;
   maps?: Maybe<Maps>;
+  dataSources?: Maybe<DataSources>;
 };
 
 export type LocationSunArgs = {
@@ -416,6 +426,7 @@ export type ResolversTypes = {
   Maps: ResolverTypeWrapper<Partial<Maps> & { location: LocationEntity }>;
   Map: ResolverTypeWrapper<Partial<Map>>;
   Overlays: ResolverTypeWrapper<Partial<Overlays>>;
+  DataSources: ResolverTypeWrapper<Partial<DataSources>>;
   CurrentWind: ResolverTypeWrapper<Partial<CurrentWind>>;
 };
 
@@ -459,6 +470,7 @@ export type ResolversParentTypes = {
   Maps: Partial<Maps> & { location: LocationEntity };
   Map: Partial<Map>;
   Overlays: Partial<Overlays>;
+  DataSources: Partial<DataSources>;
   CurrentWind: Partial<CurrentWind>;
 };
 
@@ -496,6 +508,29 @@ export type CurrentWindResolvers<
   speed?: Resolver<ResolversTypes["Float"], ParentType, ContextType>;
   direction?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   directionDegrees?: Resolver<ResolversTypes["Float"], ParentType, ContextType>;
+};
+
+export type DataSourcesResolvers<
+  ContextType = Context,
+  ParentType = ResolversParentTypes["DataSources"]
+> = {
+  tideStationIds?: Resolver<
+    Array<ResolversTypes["String"]>,
+    ParentType,
+    ContextType
+  >;
+  marineZoneId?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  usgsSiteId?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  weatherStationId?: Resolver<
+    ResolversTypes["String"],
+    ParentType,
+    ContextType
+  >;
+  weatherRadarSiteId?: Resolver<
+    ResolversTypes["String"],
+    ParentType,
+    ContextType
+  >;
 };
 
 export type ForecastWindSpeedDetailResolvers<
@@ -576,6 +611,11 @@ export type LocationResolvers<
     ContextType
   >;
   maps?: Resolver<Maybe<ResolversTypes["Maps"]>, ParentType, ContextType>;
+  dataSources?: Resolver<
+    Maybe<ResolversTypes["DataSources"]>,
+    ParentType,
+    ContextType
+  >;
 };
 
 export type MapResolvers<
@@ -940,6 +980,7 @@ export type WindSummaryResolvers<
 export type Resolvers<ContextType = Context> = {
   CombinedForecast?: CombinedForecastResolvers<ContextType>;
   CurrentWind?: CurrentWindResolvers<ContextType>;
+  DataSources?: DataSourcesResolvers<ContextType>;
   ForecastWindSpeedDetail?: ForecastWindSpeedDetailResolvers<ContextType>;
   Location?: LocationResolvers<ContextType>;
   Map?: MapResolvers<ContextType>;
