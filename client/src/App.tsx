@@ -46,7 +46,10 @@ const App: React.FC = () => {
   return (
     <>
       <Header
-        setLocationId={id => setLocationId(id)}
+        setLocationId={id => {
+          setLocationId(id);
+          window.scrollTo({ top: 0 });
+        }}
         activeLocationId={locationId}
         setActiveDate={handleDateChange}
         activeDate={date}
