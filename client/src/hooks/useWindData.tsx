@@ -27,12 +27,16 @@ function extractData(windData: UseQueryState<WindDataQuery>) {
     windData.data.location &&
     windData.data.location.wind &&
     windData.data.location.wind.detail &&
-    windData.data.location.wind.detail.map(data => ({
-      y: data.speed,
-      x: data.timestamp,
-      directionDegrees: data.directionDegrees,
-      direction: data.direction
-    }));
+    windData.data.location.wind.detail
+      .map(data => ({
+        y: data.speed,
+        x: data.timestamp,
+        directionDegrees: data.directionDegrees,
+        direction: data.direction
+      }))
+      .sort((a, b) => {
+        return new Date(a.x).getTime() - new Date(b.x).getTime();
+      });
 
   return { curValue, curDirectionValue, curDetail };
 }
