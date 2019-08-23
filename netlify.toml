@@ -8,3 +8,10 @@
 
 [context.deploy-preview]
   environment = { REACT_APP_API_URL = "https://li0rnckwp5.execute-api.us-east-1.amazonaws.com/dev/api"}
+
+# The following redirect is intended for use with most SPAs that handle
+# routing internally.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

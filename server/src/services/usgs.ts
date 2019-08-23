@@ -105,7 +105,6 @@ export const getSalinity = (
 
 export const getSalinityLatest = async (location: LocationEntity) => {
   const data = await getSalinity(location, 24);
-  console.log(data);
 
   if (data.length < 1) return null;
 
