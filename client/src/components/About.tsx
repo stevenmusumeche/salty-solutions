@@ -16,13 +16,14 @@ const About: React.FC<RouteComponentProps> = () => (
 
         <p className="">
           Hi, I'm{" "}
-          <Link
+          <a
             href="https://musumeche.com"
             target="_blank"
             className="text-blue-600"
+            rel="noopener noreferrer"
           >
             Steven Musumeche
-          </Link>
+          </a>
           , a resident of Lafayette, LA and avid saltwater fisherman. I created
           Salty Solutions to answer a question that I'm always asking myself:
         </p>
@@ -48,17 +49,22 @@ const About: React.FC<RouteComponentProps> = () => (
         </p>
         <p className="mb-4">
           I hope you find it useful - please{" "}
-          <Link href="mailto:steven@musumeche.com" className="text-blue-600">
+          <a href="mailto:steven@musumeche.com" className="text-blue-600">
             contact me
-          </Link>{" "}
+          </a>{" "}
           with any suggestions or comments.
         </p>
         <h2 className="text-3xl mb-4">Nerdy Stuff</h2>
         <p>
           The code used to run this site is{" "}
-          <Link href="https://github.com/stevenmusumeche/salty-solutions">
+          <a
+            href="https://github.com/stevenmusumeche/salty-solutions"
+            target="_blank"
+            className="text-blue-600"
+            rel="noopener noreferrer"
+          >
             completely open-source
-          </Link>
+          </a>
           . Feel free to look around if you're curious. The API that powers the
           site is a GraphQL server, written in TypeScript, and hosted on AWS
           Lambda. The browser application is a React app, also written in
@@ -70,9 +76,3 @@ const About: React.FC<RouteComponentProps> = () => (
 );
 
 export default About;
-
-const Link: React.FC<any> = ({ children, ...props }) => (
-  <a className="text-blue-600" {...props}>
-    {children}
-  </a>
-);

@@ -1,5 +1,5 @@
 import { startOfDay } from "date-fns";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "./App.css";
 import MinusIcon from "./assets/minus-icon.svg";
 import PlusIcon from "./assets/plus-icon.svg";
@@ -19,16 +19,15 @@ import SunAndMoon from "./components/SunAndMoon";
 import Tides from "./components/Tides";
 import { useLocationsQuery } from "./generated/graphql";
 import Button from "./components/Button";
-import Modal from "./components/Modal";
-import About from "./components/About";
 import Shell from "./components/Shell";
-import { RouteComponentProps, navigate, Redirect } from "@reach/router";
+import NotFound from "./components/NotFound";
+import { RouteComponentProps, navigate } from "@reach/router";
 
 const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
   locationSlug
 }) => {
   const [locations] = useLocationsQuery();
-  const [locationId, setLocationId] = useState(() => locationSlug!);
+  const [locationId, setLocationId] = useState(locationSlug!);
 
   const selectedLocation = locations.data
     ? locations.data.locations.find(location => location.id === locationId)
@@ -44,17 +43,12 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
     setDate(date);
   };
 
-  useEffect(() => {
-    console.log("useeffect");
-  }, [locationId]);
+  if (locations.fetching) {
+    return null;
+  }
 
-  // todo
   if (!selectedLocation) {
-    return (
-      <Shell>
-        <div>no location OR loading</div>
-      </Shell>
-    );
+    return <NotFound locationSlug={locationSlug!} />;
   }
 
   return (

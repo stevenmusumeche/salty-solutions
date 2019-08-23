@@ -1,4 +1,4 @@
-import React, { Component, ReactNode } from "react";
+import React, { ReactNode } from "react";
 import "../css/build.css";
 import HeaderWrapper from "./HeaderWrapper";
 import { Link as ReachLink } from "@reach/router";
@@ -10,7 +10,11 @@ const Shell: React.FC<{ header?: ReactNode }> = ({ children, header }) => (
       <div className="container mx-auto flex items-center justify-between h-full">
         <div className="flex items-center">
           <ReachLink to="/">
-            <img src={Logo} className="block mr-6 h-10" />
+            <img
+              src={Logo}
+              className="block mr-6 h-10"
+              alt="salty solutions logo"
+            />
           </ReachLink>
         </div>
         {header}
@@ -21,7 +25,11 @@ const Shell: React.FC<{ header?: ReactNode }> = ({ children, header }) => (
       <div className="container mx-auto py-4 flex justify-between">
         <div>
           Engineered by{" "}
-          <a href="https://www.musumeche.com" target="_blank">
+          <a
+            href="https://www.musumeche.com"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             Steven Musumeche
           </a>
         </div>
