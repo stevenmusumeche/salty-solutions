@@ -2,49 +2,39 @@ import React, { ChangeEventHandler } from "react";
 import DatePicker from "react-date-picker";
 import { UseQueryState } from "urql";
 import { LocationsQuery, useLocationsQuery } from "../generated/graphql";
-import Button from "./Button";
 
 interface Props {
   setLocationId: (id: string) => void;
   activeLocationId: string;
   setActiveDate: (date: Date | Date[]) => void;
   activeDate: Date;
-  showAbout: () => void;
 }
 
-const Header: React.FC<Props> = ({
+const AppHeader: React.FC<Props> = ({
   setLocationId,
   activeLocationId,
   activeDate,
-  setActiveDate,
-  showAbout
+  setActiveDate
 }) => {
   const [locations] = useLocationsQuery();
 
   return (
-    <div className="sticky top-0 py-4 z-50 bg-gray-500 mb-8 shadow-lg">
-      <div className="container mx-auto flex items-center justify-between">
-        <div className="flex">
-          <LocationSelect
-            locations={locations}
-            onChange={e => setLocationId(e.target.value)}
-            value={activeLocationId}
-          />
-          <DatePicker
-            onChange={setActiveDate}
-            value={activeDate}
-            clearIcon={null}
-          />
-        </div>
-        <div>
-          <Button onClick={showAbout}>About</Button>
-        </div>
-      </div>
+    <div className="flex">
+      <LocationSelect
+        locations={locations}
+        onChange={e => setLocationId(e.target.value)}
+        value={activeLocationId}
+      />
+      <DatePicker
+        onChange={setActiveDate}
+        value={activeDate}
+        clearIcon={null}
+      />
     </div>
   );
 };
 
-export default Header;
+export default AppHeader;
 
 interface LocationSelectProps {
   locations: UseQueryState<LocationsQuery>;
@@ -57,7 +47,7 @@ const LocationSelect: React.FC<LocationSelectProps> = ({
   value,
   onChange
 }) => (
-  <div className="mr-4">
+  <div className="mr-6">
     <select
       onChange={onChange}
       className="select-css h-12 text-3xl rounded shadow-md pr-16 pl-3 bg-white"

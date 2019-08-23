@@ -7,10 +7,6 @@ interface Props {
   locationId: string;
 }
 
-// todo: can we parse the marine forecast text to extract info, like
-// wind: SW 5-10 from, light chop
-// Southwest winds 5 to 10 knots. Lake waters a light chop. Chance of showers and thunderstorms late in the morning, then showers and thunderstorms in the afternoon."
-
 const MarineForecast: React.FC<Props> = ({ locationId }) => {
   const [forecast] = useForecastQuery({ variables: { locationId } });
 

@@ -1,5 +1,5 @@
 import { startOfDay } from "date-fns";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import MinusIcon from "./assets/minus-icon.svg";
 import PlusIcon from "./assets/plus-icon.svg";
@@ -12,7 +12,7 @@ import CurrentWaterTempDetailGraph from "./components/CurrentWaterTempDetailGrap
 import CurrentWaterTempSummaryCard from "./components/CurrentWaterTempSummaryCard";
 import CurrentWindDetailGraph from "./components/CurrentWindDetailGraph";
 import CurrentWindSummaryCard from "./components/CurrentWindSummaryCard";
-import Header from "./components/Header";
+import AppHeader from "./components/AppHeader";
 import HourlyForecast from "./components/HourlyForecast";
 import RadarMap from "./components/RadarMap";
 import SunAndMoon from "./components/SunAndMoon";
@@ -21,12 +21,15 @@ import { useLocationsQuery } from "./generated/graphql";
 import Button from "./components/Button";
 import Modal from "./components/Modal";
 import About from "./components/About";
+import Shell from "./components/Shell";
+import { RouteComponentProps, navigate, Redirect } from "@reach/router";
 
-const INITIAL_LOCATION = "2";
-
-const App: React.FC = () => {
+const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
+  locationSlug
+}) => {
   const [locations] = useLocationsQuery();
-  const [locationId, setLocationId] = useState(INITIAL_LOCATION);
+  const [locationId, setLocationId] = useState(() => locationSlug!);
+
   const selectedLocation = locations.data
     ? locations.data.locations.find(location => location.id === locationId)
     : null;
@@ -36,33 +39,40 @@ const App: React.FC = () => {
   const [showRadar, setShowRadar] = useState(false);
   const toggleRadar = () => setShowRadar(x => !x);
 
-  const [showAbout, setShowAbout] = useState(false);
-
   const handleDateChange = (date: Date | Date[]) => {
     if (Array.isArray(date)) return;
     setDate(date);
   };
 
+  useEffect(() => {
+    console.log("useeffect");
+  }, [locationId]);
+
+  // todo
+  if (!selectedLocation) {
+    return (
+      <Shell>
+        <div>no location OR loading</div>
+      </Shell>
+    );
+  }
+
   return (
-    <>
-      <Header
-        setLocationId={id => {
-          setLocationId(id);
-          window.scrollTo({ top: 0 });
-        }}
-        activeLocationId={locationId}
-        setActiveDate={handleDateChange}
-        activeDate={date}
-        showAbout={() => setShowAbout(true)}
-      />
-
-      {showAbout && (
-        <Modal close={() => setShowAbout(false)}>
-          <About />
-        </Modal>
-      )}
-
-      <div className="container mx-auto pb-8 min-h-screen">
+    <Shell
+      header={
+        <AppHeader
+          setLocationId={id => {
+            setLocationId(id);
+            window.scrollTo({ top: 0 });
+            navigate(`/${id}`);
+          }}
+          activeLocationId={locationId}
+          setActiveDate={handleDateChange}
+          activeDate={date}
+        />
+      }
+    >
+      <div className="container mx-auto">
         <SectionTitle text="Current Conditions" />
         <div className="current-conditions-grid">
           <CurrentWindSummaryCard locationId={locationId} />
@@ -74,33 +84,24 @@ const App: React.FC = () => {
           <CurrentAirTempDetailGraph locationId={locationId} />
           <CurrentWaterTempDetailGraph locationId={locationId} />
         </div>
-
         <RadarButton showRadar={showRadar} toggleRadar={toggleRadar} />
-
         {showRadar && <RadarMap locationId={locationId} />}
-
         <SectionTitle text="Tides" />
-
-        {selectedLocation && (
-          <div className="bg-white rounded-lg shadow-md p-4 mb-8">
-            <Tides
-              locationId={locationId}
-              tideStations={selectedLocation.tidePreditionStations}
-              date={date}
-            />
-          </div>
-        )}
-
+        <div className="bg-white rounded-lg shadow-md p-4 mb-8">
+          <Tides
+            locationId={locationId}
+            tideStations={selectedLocation.tidePreditionStations}
+            date={date}
+          />
+        </div>
         <SectionTitle text="Solunar Data" />
         <SunAndMoon locationId={locationId} date={date} />
-
         <SectionTitle text="Forecast" />
         <CombinedForecast locationId={locationId} />
-
         <SectionTitle text="Hourly Forecast" />
         <HourlyForecast locationId={locationId} />
       </div>
-    </>
+    </Shell>
   );
 };
 
