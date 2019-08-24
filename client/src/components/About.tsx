@@ -2,6 +2,7 @@ import React from "react";
 import UrStupidFace from "../assets/steven.jpg";
 import Shell from "./Shell";
 import { RouteComponentProps } from "@reach/router";
+import Link from "./Link";
 
 const About: React.FC<RouteComponentProps> = () => (
   <Shell>
@@ -54,7 +55,68 @@ const About: React.FC<RouteComponentProps> = () => (
           </a>{" "}
           with any suggestions or comments.
         </p>
-        <h2 className="text-3xl mb-4">Nerdy Stuff</h2>
+        <h2 className="text-3xl mb-4">Contact Me</h2>
+        <p className="mb-4">
+          I'd love to hear your feedback about this tool or to connect and swap
+          fishing stories.
+        </p>
+        <ul className="mb-4 flex">
+          <li className="mr-4">
+            {" "}
+            <Link
+              to="mailto:steven@musumeche.com?subject=Salty Solutions Feedback"
+              target="_blank"
+              rel="noopener nofollow"
+            >
+              steven@musumeche.com
+            </Link>
+          </li>
+          <li className="mr-4">•</li>
+          <li className="mr-4">
+            {" "}
+            <Link
+              to="https://www.facebook.com/musumeche"
+              target="_blank"
+              rel="noopener nofollow"
+            >
+              Facebook
+            </Link>
+          </li>
+          <li className="mr-4">•</li>
+          <li className="mr-4">
+            {" "}
+            <Link
+              to="https://twitter.com/smusumeche"
+              target="_blank"
+              rel="noopener nofollow"
+            >
+              Twitter
+            </Link>
+          </li>
+          <li className="mr-4">•</li>
+          <li className="mr-4">
+            {" "}
+            <Link
+              to="https://www.linkedin.com/in/smusumeche/"
+              target="_blank"
+              rel="noopener nofollow"
+            >
+              LinkedIn
+            </Link>
+          </li>
+          <li className="mr-4">•</li>
+          <li className="mr-4">
+            {" "}
+            <Link
+              to="https://github.com/stevenmusumeche"
+              target="_blank"
+              rel="noopener nofollow"
+            >
+              GitHub
+            </Link>
+          </li>
+        </ul>
+        <h2 className="text-3xl mb-4">Technical Details</h2>
         <p>
           The code used to run this site is{" "}
           <a

@@ -5,7 +5,6 @@ import App from "./App";
 import { Provider, createClient } from "urql";
 import { Router, Redirect } from "@reach/router";
 import About from "./components/About";
-import Contact from "./components/Contact";
 import useLocalStorage from "./hooks/useLocalStorage";
 
 const client = createClient({
@@ -20,7 +19,6 @@ const Root = () => {
     <Provider value={client}>
       <Router>
         <About path="/about" />
-        <Contact path="/contact" />
         <App path="/:locationSlug" />
         <Redirect from="/" to={`/${locationId}`} noThrow />
       </Router>

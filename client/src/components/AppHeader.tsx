@@ -26,6 +26,7 @@ const AppHeader: React.FC<Props> = ({
         value={activeLocationId}
       />
       <DatePicker
+        aria-label="select date"
         onChange={setActiveDate}
         value={activeDate}
         clearIcon={null}
@@ -49,6 +50,7 @@ const LocationSelect: React.FC<LocationSelectProps> = ({
 }) => (
   <div className="mr-6">
     <select
+      aria-label="select location"
       onChange={onChange}
       className="select-css h-12 text-3xl rounded shadow-md pr-16 pl-3 bg-white"
       value={value}
