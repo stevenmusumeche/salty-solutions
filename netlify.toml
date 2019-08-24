@@ -2,6 +2,7 @@
   base = "/"
   publish = "./client/build/"
   command = "yarn install && yarn --cwd client install && yarn --cwd client build"
+  environment = { NODE_ENV = "production"}
 
 [context.production]
   environment = { REACT_APP_API_URL = "https://o2hlpsp9ac.execute-api.us-east-1.amazonaws.com/prod/api"}
