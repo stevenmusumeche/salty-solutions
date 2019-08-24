@@ -3,7 +3,7 @@ var tailwindcss = require("tailwindcss");
 
 // see https://tailwindcss.com/docs/controlling-file-size
 const purgeCss = new Purgecss({
-  content: ["**/*.tsx", "**/*.html"],
+  content: ["**/*.tsx", "**/*.html", "src/css/tailwind.css"],
   defaultExtractor: content => content.match(/[\w-/:]+(?<!:)/g) || []
 });
 
