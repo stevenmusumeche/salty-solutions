@@ -23,7 +23,7 @@
     "typescript": "^3.4.5"
   },
   "scripts": {
-    "build": "yarn build:server",
+    "build": "yarn --cwd client build",
     "dev": "yarn dev:server & yarn dev:client",
     "gql-gen": "graphql-codegen --config codegen.yml",
     "dev:serverless": "cd server && sls offline start",
