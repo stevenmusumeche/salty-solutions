@@ -149,13 +149,18 @@ const WaterConditionIcon: React.FC<{ text?: string }> = ({ text = "" }) => {
   let image = Unknown;
   switch (text) {
     case "smooth":
+    case "0-1":
       image = Smooth;
       break;
     case "light chop":
     case "moderate chop":
+    case "0-2":
+    case "1-2":
       image = LightChop;
       break;
     case "choppy":
+    case "2-3":
+    case "2-4":
       image = Choppy;
       break;
     case "rough":
@@ -175,7 +180,7 @@ const WaterConditionIcon: React.FC<{ text?: string }> = ({ text = "" }) => {
       if (text.startsWith("rough")) {
         image = Rough;
       }
-      if (text.startsWith("very rough")) {
+      if (text.startsWith("very rough") || Number(text[0]) >= 4) {
         image = Rough;
       }
       break;

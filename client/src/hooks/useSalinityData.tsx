@@ -1,11 +1,19 @@
 import { useSalinityQuery, SalinityQuery } from "../generated/graphql";
-import { UseQueryState } from "urql";
+import { UseQueryState, CombinedError } from "urql";
 import { noDecimals } from "./utils";
 
 export function useSalinityData(locationId: string) {
   const [result] = useSalinityQuery({ variables: { locationId } });
   const { curValue, curDetail } = extractData(result);
-  return { curValue, curDetail, ...result };
+  return {
+    curValue,
+    curDetail,
+    ...result,
+    error:
+      curValue === null
+        ? new CombinedError({ graphQLErrors: ["no value"] })
+        : result.error
+  };
 }
 
 function extractData(data: UseQueryState<SalinityQuery>) {
@@ -17,7 +25,7 @@ function extractData(data: UseQueryState<SalinityQuery>) {
       ? noDecimals(
           data.data.location.salinitySummary.summary.mostRecent.salinity
         )
-      : "?";
+      : null;
 
   const curDetail =
     data.data &&

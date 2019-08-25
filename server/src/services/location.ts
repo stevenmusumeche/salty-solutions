@@ -41,10 +41,25 @@ const locations: LocationEntity[] = [
       stationId: "KLCH",
       radarSiteId: "LCH"
     }
+  },
+  {
+    id: "cocodrie",
+    name: "Cocodrie",
+    tideStationIds: ["8762928", "8762888", "8762850"],
+    marineZoneId: "GMZ550",
+    lat: 29.246742,
+    long: -90.661058,
+    usgsSiteId: "073813498",
+    weatherGov: {
+      apiBase: "https://api.weather.gov/gridpoints/LIX/47,58",
+      stationId: "KHUM",
+      radarSiteId: "LIX"
+    }
   }
 ];
 
-export const getAll = (): LocationEntity[] => locations;
+export const getAll = (): LocationEntity[] =>
+  locations.sort((a, b) => a.name.localeCompare(b.name));
 
 export const getById = (id: string): LocationEntity | undefined => {
   return locations.find(location => location.id === id);

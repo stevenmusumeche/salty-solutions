@@ -6,6 +6,19 @@ import { degreesToCompass } from "./usgs";
 import { WeatherForecast } from "../generated/graphql";
 import { parseWindDirection } from "./utils";
 
+/**
+   How do I discover weather data using the API?
+  The API uses linked data to allow applications to discover content. Similar to a web site that provides HTML links to help users navigate to each page; linked data helps applications navigate to each endpoint. The /points/location endpoint is the most common endpoint to discover additional API content given the popularity of weather data based upon a location (latitude and longitude).
+
+  For example, to discover the endpoint of the raw forecast, the application would first request:
+
+  https://api.weather.gov/points/39.7456,-97.0892
+  This response tells the application where to find relative information–including office, zone and forecast data–for a given point. The application can then use the linked data in the previous response to locate the raw forecast:
+
+  https://api.weather.gov/gridpoints/TOP/31,80
+  If an application knows the office and grid position for a location (through caching—a similar concept to a bookmark for users), the link data would not be needed to locate the content for raw forecast data.
+  */
+
 export const getForecast = async (
   location: LocationEntity
 ): Promise<WeatherForecast[]> => {
@@ -77,9 +90,7 @@ const extractForecast = ({
 };
 
 export const getCurrentConditions = async (location: LocationEntity) => {
-  const url = `https://api.weather.gov/stations/${
-    location.weatherGov.stationId
-  }/observations/latest?require_qc=false`;
+  const url = `https://api.weather.gov/stations/${location.weatherGov.stationId}/observations/latest?require_qc=false`;
 
   const { data } = await axios.get<NWSLatestObservations>(url);
 
@@ -104,9 +115,7 @@ export const getConditions = async (
   );
   const end = format(new Date(), "yyyy-MM-dd'T'HH:mm:ssXXX");
 
-  const url = `https://api.weather.gov/stations/${
-    location.weatherGov.stationId
-  }/observations?end=${end}&start=${start}`;
+  const url = `https://api.weather.gov/stations/${location.weatherGov.stationId}/observations?end=${end}&start=${start}`;
 
   const { data } = await axios.get<any>(url);
 

@@ -12,9 +12,7 @@ export interface MarineForecast {
   };
 }
 export const getForecast = async (location: any): Promise<MarineForecast[]> => {
-  const url = `https://marine.weather.gov/MapClick.php?zoneid=${
-    location.marineZoneId
-  }&zflg=1`;
+  const url = `https://marine.weather.gov/MapClick.php?zoneid=${location.marineZoneId}&zflg=1`;
   const result = await x(url, "#detailed-forecast-body", {
     labels: [".row-forecast .forecast-label"],
     texts: [".row-forecast .forecast-text"]
@@ -33,16 +31,14 @@ export const getForecast = async (location: any): Promise<MarineForecast[]> => {
   return forecast;
 };
 
-function parseForecast(forecastText: string) {
+export function parseForecast(
+  forecastText: string
+): MarineForecast["forecast"] {
   let retVal: any = { text: forecastText };
-  const waterConditionRegex = /(Bay|Lake) waters a? ?(?<data>.*?)\./im;
-  let matches = forecastText.match(waterConditionRegex);
-  if (matches && matches.groups) {
-    retVal.waterCondition = matches.groups.data;
-  }
+  retVal.waterCondition = parseWaterCondition(forecastText);
 
   const windRegex = /^(?<direction>[\w]+) winds(?<qualifier> around| up to)? ((?<speed>[\d]+)|((?<speedStart>[\d]+) to (?<speedEnd>[\d]+))) knots( becoming)?/im;
-  matches = forecastText.match(windRegex);
+  let matches = forecastText.match(windRegex);
   if (matches && matches.groups) {
     retVal.windDirection = parseWindDirection(matches.groups.direction);
     retVal.windSpeed = matches.groups.speed
@@ -57,10 +53,40 @@ function parseForecast(forecastText: string) {
           from: Number(matches.groups.speedStart),
           to: Number(matches.groups.speedEnd)
         };
+  } else {
+    console.error({ message: "Unable to parse wind direction", forecastText });
   }
   return retVal;
 }
 
+function parseWaterCondition(forecastText: string): string | void {
+  const inshoreRegex = /(Bay|Lake|Nearshore) waters a? ?(?<data>.*?)\./im;
+  const offshoreRegex = /(seas|waves) (?<qualifier>(around)|(less than) )?(?<numbers>.*?)(\.|(?<postQualifier> or less)\.)/im;
+  const inshoreMatches = forecastText.match(inshoreRegex);
+  const offshoreMatches = forecastText.match(offshoreRegex);
+  if (inshoreMatches && inshoreMatches.groups) {
+    return inshoreMatches.groups.data;
+  } else if (offshoreMatches && offshoreMatches.groups) {
+    const g = offshoreMatches.groups;
+
+    const [from, to] = g.numbers
+      .replace(/foot|feet/im, "")
+      .trim()
+      .split(" to ");
+
+    if (g.qualifier && g.qualifier.trim() === "around") {
+      return `${from}-${from}`;
+    } else if (g.qualifier && g.qualifier.trim() === "less than") {
+      return `0-${from}`;
+    } else if (g.postQualifier && g.postQualifier.trim() === "or less") {
+      return `0-${from}`;
+    } else {
+      return `${from}-${to}`;
+    }
+  } else {
+    console.error({ message: "Unable to parse water condition", forecastText });
+  }
+}
 // calcasieu lake: https://forecast.weather.gov/shmrn.php?mz=gmz432
 // sabine lake: https://forecast.weather.gov/shmrn.php?mz=gmz430
 // vermillion bay: https://forecast.weather.gov/shmrn.php?mz=gmz435

@@ -6,8 +6,8 @@ import { format, parse } from "date-fns";
 export interface TideStationEntity {
   id: string;
   name: string;
-  lat: number;
-  long: number;
+  lat?: number;
+  long?: number;
 }
 
 const tideStations: TideStationEntity[] = [
@@ -52,8 +52,16 @@ const tideStations: TideStationEntity[] = [
     name: "Cote Blanche Island",
     lat: 29.735,
     long: -91.7133
-  }
+  },
+  { id: "8763206", name: "Caillou Boca" },
+  { id: "8763506", name: "Raccoon Point, Isle Dernieres" },
+  { id: "8762888", name: "E. Isle Dernieres, Lake Pelto" },
+  { id: "8762928", name: "Cocodrie, Terrebonne Bay" },
+  { id: "8762850", name: "Wine Island, Terrebonne Bay" },
+  { id: "8762481", name: "Pelican Islands, Timbalier Bay" }
 ];
+
+// tide stations: https://tidesandcurrents.noaa.gov/tide_predictions.html?gid=1400
 
 export const getStationById = (id: string): TideStationEntity | undefined => {
   return tideStations.find(tideStation => tideStation.id === id);
@@ -68,6 +76,11 @@ export async function getTidePredictions(
     fetchTideData(start, end, stationId, true),
     fetchTideData(start, end, stationId, false)
   ]);
+
+  // is this a tide station with only hi/lo values?
+  if (allData.length === 0) {
+    console.log(hiLoData);
+  }
 
   const data = allData.concat(hiLoData);
 

@@ -123,7 +123,9 @@ async function fetchAndMap(
 
   if (data.value.timeSeries.length < 1) return [];
 
-  return data.value.timeSeries[0].values[0].value.map(mapFn);
+  return data.value.timeSeries[0].values[0].value
+    .filter((v: any) => v.value !== "-999999")
+    .map(mapFn);
 }
 
 export function degreesToCompass(degrees: number): string {
