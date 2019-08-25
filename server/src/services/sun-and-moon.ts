@@ -1,6 +1,5 @@
 import suncalc from "suncalc";
-import { addDays, format } from "date-fns";
-import axios from "axios";
+import { addDays } from "date-fns";
 
 export const getSunInfo = (
   start: Date,
@@ -40,20 +39,12 @@ const getMoonInfoForDate = async (
   lat: number,
   long: number
 ): Promise<{ date: string; phase: string; illumination: number }> => {
-  // http://aa.usno.navy.mil/data/docs/api.php
-  const url = `https://api.usno.navy.mil/rstt/oneday?date=${format(
-    date,
-    "M/d/yyyy"
-  )}&coords=${lat},${long}`;
-  const { data } = await axios.get(url);
-  const phase = data.curphase || data.closestphase.phase;
+  const data = suncalc.getMoonIllumination(date);
 
   return {
     date: date.toISOString(),
-    phase,
-    illumination: data.fracillum
-      ? Number(data.fracillum.replace("%", ""))
-      : calcIlluminationFromPhase(phase)
+    phase: calcPhaseName(data.phase),
+    illumination: Math.round(data.fraction * 100)
   };
 };
 
@@ -73,17 +64,24 @@ export const getMoonInfo = async (
   return Promise.all(promises);
 };
 
-function calcIlluminationFromPhase(phase: string): number {
-  if (phase.toLowerCase() === "new moon") {
-    return 0;
-  } else if (
-    phase.toLowerCase() === "last quarter" ||
-    phase.toLowerCase() === "first quarter"
-  ) {
-    return 50;
-  } else if (phase.toLowerCase() === "full moon") {
-    return 100;
+function calcPhaseName(phase: number): string {
+  if (phase >= 0 && phase < 0.125) {
+    return "New Moon";
+  } else if (phase >= 0.125 && phase < 0.25) {
+    return "Waxing Crescent";
+  } else if (phase >= 0.25 && phase < 0.325) {
+    return "First Quarter";
+  } else if (phase >= 0.325 && phase < 0.5) {
+    return "Waxing Gibbous";
+  } else if (phase >= 0.5 && phase < 0.625) {
+    return "Full Moon";
+  } else if (phase >= 0.625 && phase < 0.75) {
+    return "Waning Gibbous";
+  } else if (phase >= 0.75 && phase < 0.825) {
+    return "Last Quarter";
+  } else if (phase >= 0.825 && phase <= 1) {
+    return "Waning Crescent";
   }
 
-  return 0;
+  throw new Error("Out of bounds fraction");
 }
