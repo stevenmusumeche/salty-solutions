@@ -2,7 +2,7 @@ import React, { ReactNode } from "react";
 import "../css/build.css";
 import HeaderWrapper from "./HeaderWrapper";
 import { Link as ReachLink } from "@reach/router";
-import Logo from "../assets/logo.svg";
+import Logo from "../assets/logos/logo.svg";
 
 const Shell: React.FC<{ header?: ReactNode }> = ({ children, header }) => (
   <div className="min-h-screen flex flex-col">
@@ -12,7 +12,7 @@ const Shell: React.FC<{ header?: ReactNode }> = ({ children, header }) => (
           <ReachLink to="/">
             <img
               src={Logo}
-              className="block mr-6 h-10"
+              className="block mr-6 h-16 -ml-1"
               alt="salty solutions logo"
             />
           </ReachLink>
