@@ -17,7 +17,14 @@ const locations: LocationEntity[] = [
   {
     id: "cypremort-point",
     name: "Cypremort Point",
-    tideStationIds: ["8765251", "8765148"],
+    tideStationIds: [
+      "8765251",
+      "8765148",
+      "8765551",
+      "8765568",
+      "8764931",
+      "8765026"
+    ],
     marineZoneId: "GMZ435",
     lat: 29.731474,
     long: -91.841371,
@@ -45,7 +52,14 @@ const locations: LocationEntity[] = [
   {
     id: "cocodrie",
     name: "Cocodrie",
-    tideStationIds: ["8762928", "8762888", "8762850"],
+    tideStationIds: [
+      "8762928",
+      "8762888",
+      "8762850",
+      "8763206",
+      "8763506",
+      "8762675"
+    ],
     marineZoneId: "GMZ550",
     lat: 29.246742,
     long: -90.661058,

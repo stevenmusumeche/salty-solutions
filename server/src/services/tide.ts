@@ -65,7 +65,12 @@ const tideStations: TideStationEntity[] = [
   { id: "8762888", name: "E. Isle Dernieres, Lake Pelto" },
   { id: "8762928", name: "Cocodrie, Terrebonne Bay" },
   { id: "8762850", name: "Wine Island, Terrebonne Bay" },
-  { id: "8762481", name: "Pelican Islands, Timbalier Bay" }
+  { id: "8762481", name: "Pelican Islands, Timbalier Bay" },
+  { id: "8765568", name: "Lighthouse Point" },
+  { id: "8764931", name: "Cote Blanche Island, West Cote Blanche Bay" },
+  { id: "8765026", name: "Marsh Island, Atchafalaya Bay" },
+  { id: "8761819", name: "Texaco Dock, Hackberry" },
+  { id: "8762675", name: "Timbalier Island, Timbalier Bay" }
 ];
 
 // tide stations: https://tidesandcurrents.noaa.gov/tide_predictions.html?gid=1400
