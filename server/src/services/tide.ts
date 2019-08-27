@@ -1,7 +1,14 @@
-import querystring from "querystring";
 import axios from "axios";
+import {
+  addDays,
+  addMinutes,
+  differenceInMinutes,
+  isAfter,
+  isBefore,
+  subDays
+} from "date-fns";
 import { formatToTimeZone } from "date-fns-timezone";
-import { format, parse } from "date-fns";
+import querystring from "querystring";
 
 export interface TideStationEntity {
   id: string;
@@ -67,31 +74,44 @@ export const getStationById = (id: string): TideStationEntity | undefined => {
   return tideStations.find(tideStation => tideStation.id === id);
 };
 
+interface Normalized {
+  time: string;
+  height: number;
+  type: string;
+}
+
 export async function getTidePredictions(
   start: Date,
   end: Date,
   stationId: string
 ): Promise<{ time: string; height: number; type: string }[]> {
   const [hiLoData, allData] = await Promise.all([
-    fetchTideData(start, end, stationId, true),
+    fetchTideData(subDays(start, 1), addDays(end, 1), stationId, true),
     fetchTideData(start, end, stationId, false)
   ]);
 
+  let data = allData.concat(hiLoData);
+
+  let normalized: Normalized[] = data.map(data => ({
+    time: new Date(`${data.t}:00+00:00`).toISOString(),
+    height: Number(data.v),
+    type:
+      data.type === "L" ? "low" : data.type === "H" ? "high" : "intermediate"
+  }));
+
   // is this a tide station with only hi/lo values?
   if (allData.length === 0) {
-    // todo
-    console.log(hiLoData);
+    normalized = await extrapolateFromHiLow(normalized);
   }
 
-  const data = allData.concat(hiLoData);
-
-  const normalized = data
-    .map(data => ({
-      time: new Date(`${data.t}:00+00:00`).toISOString(),
-      height: Number(data.v),
-      type:
-        data.type === "L" ? "low" : data.type === "H" ? "high" : "intermediate"
-    }))
+  return normalized
+    .filter(entry => {
+      const entryTime = new Date(entry.time);
+      if (isBefore(entryTime, start) || isAfter(entryTime, end)) {
+        return false;
+      }
+      return true;
+    })
     .sort((a, b) => {
       const aDate = new Date(a.time);
       const bDate = new Date(b.time);
@@ -101,8 +121,6 @@ export async function getTidePredictions(
 
       return 0;
     });
-
-  return normalized;
 }
 
 interface NoaaPrediction {
@@ -142,4 +160,39 @@ async function fetchTideData(
   const { data } = await axios.get<{ predictions: NoaaPrediction[] }>(url);
 
   return data.predictions || [];
+}
+
+async function extrapolateFromHiLow(data: Normalized[]) {
+  let final: Normalized[] = [];
+  for (let i = 0; i < data.length - 1; i++) {
+    const a = data[i];
+    const b = data[i + 1];
+
+    // find time diff between consecutive entries
+    const minuteDiff = differenceInMinutes(new Date(b.time), new Date(a.time));
+
+    final.push(a);
+    for (let j = 1; j < minuteDiff; j++) {
+      // insert calculated step values
+      const time = addMinutes(new Date(a.time), j);
+      const percentDone = j / minuteDiff;
+      final.push({
+        time: time.toISOString(),
+        height: lerp(a.height, b.height, inOutQuad(percentDone)),
+        type: "intermediate"
+      });
+    }
+
+    if (i === data.length - 2) final.push(b);
+  }
+
+  return final;
+}
+
+function lerp(v0: number, v1: number, t: number) {
+  return v0 * (1 - t) + v1 * t;
+}
+
+function inOutQuad(t: number) {
+  return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
 }
