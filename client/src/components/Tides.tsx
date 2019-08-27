@@ -33,7 +33,7 @@ interface Props {
 }
 
 const ISO_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSxxx";
-const Y_PADDING = 0.2;
+const Y_PADDING = 0.3;
 
 const Tides: React.FC<Props> = ({ tideStations, locationId, date }) => {
   const [selectedId, setSelectedId] = useState(tideStations[0].id);
@@ -88,8 +88,10 @@ const Tides: React.FC<Props> = ({ tideStations, locationId, date }) => {
         <img src={ErrorIcon} style={{ height: 120 }} alt="error" />
       </div>
     );
-  } else {
   }
+
+  const sunData =
+    tideResult.data.location.sun[tideResult.data.location.sun.length - 1];
 
   const {
     dawn,
@@ -99,10 +101,7 @@ const Tides: React.FC<Props> = ({ tideStations, locationId, date }) => {
     daylight,
     tideData,
     hiLowData
-  } = buildDatasets(
-    tideResult.data.location.sun[tideResult.data.location.sun.length - 1],
-    tideResult.data.tidePreditionStation.tides
-  );
+  } = buildDatasets(sunData, tideResult.data.tidePreditionStation.tides);
 
   let tickValues = [];
   for (let i = 0; i <= 24; i += 2) {
@@ -185,8 +184,20 @@ const Tides: React.FC<Props> = ({ tideStations, locationId, date }) => {
             labels: {
               fontSize: 8,
               padding: 2,
-              fill: "#000000",
-              textShadow: "0 0 3px #ffffff"
+              fill: datum => {
+                const isNight =
+                  isAfter(datum.x, new Date(sunData.nauticalDusk)) ||
+                  isBefore(datum.x, new Date(sunData.nauticalDawn));
+
+                return isNight ? "#a0aec0" : "#000000";
+              },
+              textShadow: datum => {
+                const isNight =
+                  isAfter(datum.x, new Date(sunData.nauticalDusk)) ||
+                  isBefore(datum.x, new Date(sunData.nauticalDawn));
+
+                return isNight ? "0 0 5px #000000" : "0 0 5px #ffffff";
+              }
             }
           }}
         />
