@@ -66,7 +66,9 @@ const CurrentWindDetailGraph: React.FC<Props> = ({ locationId }) => {
     );
   }
 
-  return <MiniGraphWrapper>{displayVal}</MiniGraphWrapper>;
+  return (
+    <MiniGraphWrapper className="wind-graph">{displayVal}</MiniGraphWrapper>
+  );
 };
 
 export default CurrentWindDetailGraph;

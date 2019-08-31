@@ -12,7 +12,7 @@ const MoonPhase: React.FC<{
   phase?: string | null;
 }> = ({ phase }) => (
   <div>
-    <div className="w-22 h-22 mx-auto">
+    <div className="w-16 h-16 md:w-22 md:h-22 mx-auto">
       <img src={getImageForPhase(phase || "")} alt={phase || undefined} />
     </div>
   </div>

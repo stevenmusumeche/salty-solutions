@@ -1,4 +1,9 @@
-import React, { useState, ChangeEventHandler, useEffect } from "react";
+import React, {
+  useState,
+  ChangeEventHandler,
+  useEffect,
+  useContext
+} from "react";
 import {
   TideStationDetailFragment,
   useTideQuery,
@@ -25,6 +30,7 @@ import {
 } from "victory";
 import ErrorIcon from "../assets/error.svg";
 import "./SkeletonCharacter.css";
+import { WindowSizeContext } from "../providers/WindowSizeProvider";
 
 interface Props {
   tideStations: TideStationDetailFragment[];
@@ -37,6 +43,7 @@ const Y_PADDING = 0.3;
 
 const Tides: React.FC<Props> = ({ tideStations, locationId, date }) => {
   const [selectedId, setSelectedId] = useState(tideStations[0].id);
+  const { isSmall } = useContext(WindowSizeContext);
 
   useEffect(() => {
     // if locationId changes, set tide station back to the default
@@ -104,7 +111,7 @@ const Tides: React.FC<Props> = ({ tideStations, locationId, date }) => {
   } = buildDatasets(sunData, tideResult.data.tidePreditionStation.tides);
 
   let tickValues = [];
-  for (let i = 0; i <= 24; i += 2) {
+  for (let i = 0; i <= 24; i += isSmall ? 4 : 2) {
     tickValues.push(addHours(startOfDay(date), i));
   }
 
@@ -125,7 +132,12 @@ const Tides: React.FC<Props> = ({ tideStations, locationId, date }) => {
         width={450}
         height={250}
         style={{ parent: { backgroundColor: "white" } }}
-        padding={{ top: 10, bottom: 30, left: 30, right: 10 }}
+        padding={{
+          top: 10,
+          bottom: 30,
+          left: isSmall ? 50 : 30,
+          right: isSmall ? 30 : 10
+        }}
       >
         {/* background colors for time periods like night, dusk, etc */}
         {renderBackgroundColor(darkMorning, "#4a5568", min)}
@@ -137,8 +149,12 @@ const Tides: React.FC<Props> = ({ tideStations, locationId, date }) => {
         {/* time x-axis */}
         <VictoryAxis
           style={{
-            grid: { stroke: "#718096", strokeDasharray: "2 10" },
-            tickLabels: { fontSize: 8 }
+            grid: {
+              strokeWidth: isSmall ? 1 : 1,
+              stroke: "#718096",
+              strokeDasharray: isSmall ? "2 4" : "2 10"
+            },
+            tickLabels: { fontSize: isSmall ? 20 : 8 }
           }}
           tickFormat={date => format(new Date(date), "ha").toLowerCase()}
           tickValues={tickValues}
@@ -150,12 +166,12 @@ const Tides: React.FC<Props> = ({ tideStations, locationId, date }) => {
           style={{
             grid: {
               stroke: "718096",
-              strokeWidth: y => (y === 0 && min < 0 ? 2 : 1),
+              strokeWidth: y => (isSmall ? 0 : y === 0 && min < 0 ? 2 : 1),
               strokeDasharray: y => (y === 0 && min < 0 ? "12 6" : "2 10")
             },
-            tickLabels: { fontSize: 8 }
+            tickLabels: { fontSize: isSmall ? 20 : 8 }
           }}
-          tickCount={10}
+          tickCount={isSmall ? 6 : 10}
           crossAxis={false}
         />
         {/* actual tide line */}
@@ -171,37 +187,59 @@ const Tides: React.FC<Props> = ({ tideStations, locationId, date }) => {
           }}
         />
         {/* hi and low tide labels */}
-        <VictoryScatter
-          data={hiLowData}
-          size={1.5}
-          labels={data =>
-            format(new Date(data.x), "h:mma") + `\n${data.y.toFixed(1)}ft`
-          }
-          style={{
-            data: {
-              fill: "transparent"
-            },
-            labels: {
-              fontSize: 8,
-              padding: 2,
-              fill: datum => {
-                const isNight =
-                  isAfter(datum.x, new Date(sunData.nauticalDusk)) ||
-                  isBefore(datum.x, new Date(sunData.nauticalDawn));
-
-                return isNight ? "#a0aec0" : "#000000";
-              },
-              textShadow: datum => {
-                const isNight =
-                  isAfter(datum.x, new Date(sunData.nauticalDusk)) ||
-                  isBefore(datum.x, new Date(sunData.nauticalDawn));
-
-                return isNight ? "0 0 5px #000000" : "0 0 5px #ffffff";
-              }
+        {!isSmall && (
+          <VictoryScatter
+            data={hiLowData}
+            size={1.5}
+            labels={data =>
+              format(new Date(data.x), "h:mma") + `\n${data.y.toFixed(1)}ft`
             }
-          }}
-        />
+            style={{
+              data: {
+                fill: "transparent"
+              },
+              labels: {
+                fontSize: 8,
+                padding: 2,
+                fill: datum => {
+                  const isNight =
+                    isAfter(datum.x, new Date(sunData.nauticalDusk)) ||
+                    isBefore(datum.x, new Date(sunData.nauticalDawn));
+
+                  return isNight ? "#a0aec0" : "#000000";
+                },
+                textShadow: datum => {
+                  const isNight =
+                    isAfter(datum.x, new Date(sunData.nauticalDusk)) ||
+                    isBefore(datum.x, new Date(sunData.nauticalDawn));
+
+                  return isNight ? "0 0 5px #000000" : "0 0 5px #ffffff";
+                }
+              }
+            }}
+          />
+        )}
       </VictoryChart>
+      <div
+        className="md:hidden mt-8"
+        style={{ fontVariantNumeric: "tabular-nums" }}
+      >
+        {hiLowData.map(({ x, y, type }, i) => (
+          <div
+            key={i}
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr 2fr",
+              gridColumnGap: "1rem",
+              backgroundColor: i % 2 === 0 ? "#edf2f7" : "white"
+            }}
+          >
+            <div className="text-right">{format(new Date(x), "h:mma")}</div>
+            <div>{type} tide</div>
+            <div>{y.toFixed(1)} feet</div>
+          </div>
+        ))}
+      </div>
     </>
   );
 };
@@ -296,7 +334,8 @@ const buildDatasets = (
 
   const toVictory = (tide: TideDetail) => ({
     x: new Date(tide.time),
-    y: tide.height
+    y: tide.height,
+    type: tide.type
   });
 
   const tideData = tideDetails.map(toVictory);

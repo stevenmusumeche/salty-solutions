@@ -66,7 +66,7 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
         />
       }
     >
-      <div className="container mx-auto">
+      <div className="container p-4 md:mx-auto md:my-0">
         <SectionTitle text="Current Conditions" />
         <div className="current-conditions-grid">
           <CurrentWindSummaryCard locationId={locationId} />
@@ -81,7 +81,7 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
         <RadarButton showRadar={showRadar} toggleRadar={toggleRadar} />
         {showRadar && <RadarMap locationId={locationId} />}
         <SectionTitle text="Tides" />
-        <div className="bg-white rounded-lg shadow-md p-4 mb-8">
+        <div className="bg-white rounded-lg shadow-md p-4 mb-4 md:mb-8">
           <Tides
             locationId={locationId}
             tideStations={selectedLocation.tidePreditionStations}
@@ -102,7 +102,9 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
 export default App;
 
 const SectionTitle: React.FC<{ text: string }> = ({ text }) => (
-  <h2 className="text-4xl mb-8">{text}</h2>
+  <h2 className="text-2xl md:text-4xl mb-4 md:mb-8 text-center md:text-left">
+    {text}
+  </h2>
 );
 
 const RadarButton: React.FC<{
@@ -110,7 +112,7 @@ const RadarButton: React.FC<{
   toggleRadar: () => void;
 }> = ({ showRadar, toggleRadar }) => (
   <Button
-    className={`w-48 ${!showRadar ? "mb-8" : "mb-4"}`}
+    className={`w-48 hidden m:block ${!showRadar ? "mb-8" : "mb-4"}`}
     onClick={toggleRadar}
   >
     {showRadar ? (

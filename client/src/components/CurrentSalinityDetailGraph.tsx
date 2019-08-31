@@ -16,6 +16,7 @@ const CurrentSalinityDetailGraph: React.FC<Props> = ({ locationId }) => {
       error={error}
       data={data}
       dependentAxisTickFormat={oneDecimal}
+      className="salinity-graph"
     />
   );
 };

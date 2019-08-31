@@ -14,11 +14,16 @@ const CurrentWindSummaryCard: React.FC<Props> = ({ locationId }) => {
   } = useCurrentWindData(locationId);
 
   return (
-    <ConditionCard fetching={windFetching} error={windError} label="Wind (mph)">
+    <ConditionCard
+      fetching={windFetching}
+      error={windError}
+      label="Wind (mph)"
+      className="wind-summary"
+    >
       {curValue ? (
         <div>
           {curValue}
-          <div className="absolute right-0 top-0 p-2 text-2xl">
+          <div className="absolute right-0 top-0 p-2 text-lg md:text-2xl">
             {curDirectionValue}
           </div>
         </div>

@@ -18,6 +18,7 @@ const CurrentWaterTempDetailGraph: React.FC<Props> = ({ locationId }) => {
       error={error}
       data={data}
       dependentAxisTickFormat={noDecimals}
+      className="water-temp-graph"
     />
   );
 };

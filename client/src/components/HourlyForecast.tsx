@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, useContext } from "react";
 import {
   useHourlyForecastQuery,
   HourlyForecastDetailFragment
@@ -6,6 +6,7 @@ import {
 import ErrorIcon from "../assets/error.svg";
 import ForecastSkeleton from "./ForecastSkeleton";
 import { format } from "date-fns";
+import { WindowSizeContext } from "../providers/WindowSizeProvider";
 
 interface Props {
   locationId: string;
@@ -13,6 +14,7 @@ interface Props {
 
 const HourlyForecast: React.FC<Props> = ({ locationId }) => {
   const [forecast] = useHourlyForecastQuery({ variables: { locationId } });
+  const { isSmall } = useContext(WindowSizeContext);
 
   if (forecast.fetching) {
     return (
@@ -61,7 +63,7 @@ const HourlyForecast: React.FC<Props> = ({ locationId }) => {
     <Wrapper>
       {days.map(day => {
         const numHours = grouped[day].length;
-        if (numHours < 24) {
+        if (numHours < 24 && !isSmall) {
           // @ts-ignore
           grouped[day] = [
             ...Array.from({ length: 24 - numHours }, (v, i) => null),
@@ -70,7 +72,10 @@ const HourlyForecast: React.FC<Props> = ({ locationId }) => {
         }
 
         return (
-          <div key={day} className="mb-8">
+          <div
+            key={day}
+            className={`${isSmall && "forecast-wrapper"} mb-4 md:mb-8`}
+          >
             <div className="forecast-header mb-4">
               {format(new Date(day), "cccc")}
             </div>
@@ -92,29 +97,33 @@ const HourlyForecast: React.FC<Props> = ({ locationId }) => {
 };
 
 const Hour: React.FC<{ hour: HourlyForecastDetailFragment }> = ({ hour }) => {
+  const { isSmall } = useContext(WindowSizeContext);
   let windDisplay;
   if (hour.windSpeed && hour.windDirection) {
     if (hour.windSpeed.from === hour.windSpeed.to) {
       windDisplay = `${hour.windSpeed.to} ${hour.windDirection.text}`;
     } else {
-      windDisplay = `${hour.windSpeed.from}-${hour.windSpeed.to} ${
-        hour.windDirection.text
-      }`;
+      windDisplay = `${hour.windSpeed.from}-${hour.windSpeed.to} ${hour.windDirection.text}`;
     }
   }
   return (
     <div className="hourly-row">
-      <div className="text-right">
-        {format(new Date(hour.startTime), "h:mma").toLowerCase()}
+      <div
+        className="text-right"
+        style={{ fontVariantNumeric: "tabular-nums" }}
+      >
+        {format(new Date(hour.startTime), "ha").toLowerCase()}
       </div>
-      <div>
-        <img
-          src={hour.icon}
-          alt={hour.shortForecast}
-          className="rounded-image w-100 mx-auto"
-        />
-      </div>
-      <div>
+      {!isSmall && (
+        <div>
+          <img
+            src={hour.icon}
+            alt={hour.shortForecast}
+            className="rounded-image w-100 mx-auto"
+          />
+        </div>
+      )}
+      <div style={{ fontVariantNumeric: "tabular-nums" }}>
         {hour.temperature.degrees}°{hour.temperature.unit}
       </div>
       <div>{windDisplay || null}</div>
@@ -127,15 +136,18 @@ export default HourlyForecast;
 
 const Wrapper: React.FC<{
   children: ReactNode;
-}> = ({ children }) => (
-  <div
-    className="forecast-wrapper mb-8"
-    style={{
-      display: "grid",
-      gridTemplateColumns: "1fr 1fr",
-      gridColumnGap: "2rem"
-    }}
-  >
-    {children}
-  </div>
-);
+}> = ({ children }) => {
+  const { isSmall } = useContext(WindowSizeContext);
+  return (
+    <div
+      className={`${!isSmall && "forecast-wrapper"}  mb-0 md:mb-8`}
+      style={{
+        display: "grid",
+        gridTemplateColumns: isSmall ? "1fr" : "1fr 1fr",
+        gridColumnGap: isSmall ? "1rem" : "2rem"
+      }}
+    >
+      {children}
+    </div>
+  );
+};

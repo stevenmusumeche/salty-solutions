@@ -630,15 +630,25 @@ video {
   text-align: center;
   border-radius: 0.25rem;
   display: grid;
-  grid-template-columns: 1fr 0.3fr 0.75fr 1.2fr 4fr;
+  grid-template-columns: 0.75fr 0.75fr 0.75fr 3fr;
   grid-column-gap: 0.5rem;
   padding: 0.375rem;
   align-items: center;
-  height: 2.25rem;
+  height: auto;
+  line-height: 1;
+  overflow: hidden;
 }
 
 .hourly-row:nth-child(even) {
   background: #edf2f7;
+}
+
+@media (min-width: 768px) {
+  .hourly-row {
+    grid-template-columns: 1fr 0.3fr 0.75fr 1.2fr 4fr;
+    grid-column-gap: 0.5rem;
+    height: 2.5rem;
+  }
 }
 
 .rounded-image {
@@ -672,8 +682,19 @@ video {
 
 .forecast-row {
   display: grid;
-  grid-template-columns: 1fr 1.5fr 1.1fr 7fr;
-  grid-column-gap: 2rem;
+  grid-template-columns: 0.75fr 1.5fr 1fr;
+  grid-column-gap: 1rem;
+  grid-row-gap: 1rem;
+  grid-template-areas: "wind water temp" "text text text";
+}
+
+@media (min-width: 768px) {
+  .forecast-row {
+    grid-template-columns: 1fr 1.5fr 1.1fr 7fr;
+    grid-template-rows: auto;
+    grid-column-gap: 2rem;
+    grid-template-areas: "wind water temp text";
+  }
 }
 
 /**
@@ -7692,6 +7713,60 @@ video {
 
 .w-22 {
   width: 5.5rem;
+}
+
+.wind-summary {
+  grid-row: 1;
+  grid-column: 1;
+}
+
+.wind-graph {
+  grid-row: 1;
+  grid-column: 2;
+}
+
+.salinity-summary {
+  grid-row: 2;
+  grid-column: 1;
+}
+
+.salinity-graph {
+  grid-row: 2;
+  grid-column: 2;
+}
+
+.air-temp-summary {
+  grid-row: 3;
+  grid-column: 1;
+}
+
+.air-temp-graph {
+  grid-row: 3;
+  grid-column: 2;
+}
+
+.water-temp-summary {
+  grid-row: 4;
+  grid-column: 1;
+}
+
+.water-temp-graph {
+  grid-row: 4;
+  grid-column: 2;
+}
+
+@media (min-width: 768px) {
+  .salinity-summary,
+  .salinity-graph,
+  .wind-summary,
+  .wind-graph,
+  .air-temp-summary,
+  .air-temp-graph,
+  .water-temp-summary,
+  .water-temp-graph {
+    grid-row: auto;
+    grid-column: auto;
+  }
 }
 
 @media (min-width: 640px) {

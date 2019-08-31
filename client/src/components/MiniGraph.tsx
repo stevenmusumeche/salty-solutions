@@ -12,6 +12,7 @@ interface Props {
   data?: any;
   fetching: boolean;
   error?: CombinedError;
+  className?: string;
 }
 
 const MiniGraph: React.FC<Props> = ({
@@ -19,7 +20,8 @@ const MiniGraph: React.FC<Props> = ({
   dependentAxisTickFormat,
   fetching,
   error,
-  tickValues
+  tickValues,
+  className
 }) => {
   let displayVal = null;
   if (fetching) {
@@ -67,7 +69,9 @@ const MiniGraph: React.FC<Props> = ({
     );
   }
 
-  return <MiniGraphWrapper>{displayVal}</MiniGraphWrapper>;
+  return (
+    <MiniGraphWrapper className={className}>{displayVal}</MiniGraphWrapper>
+  );
 };
 
 export default MiniGraph;

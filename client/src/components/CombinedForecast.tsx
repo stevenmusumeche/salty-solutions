@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, useContext } from "react";
 import { useCombinedForecastQuery } from "../generated/graphql";
 import ErrorIcon from "../assets/error.svg";
 import ForecastSkeleton from "./ForecastSkeleton";
@@ -8,6 +8,7 @@ import LightChop from "../assets/water-conditions/light-chop.svg";
 import Unknown from "../assets/water-conditions/unknown.svg";
 import Choppy from "../assets/water-conditions/choppy.svg";
 import Rough from "../assets/water-conditions/rough.svg";
+import { WindowSizeContext } from "../providers/WindowSizeProvider";
 
 interface Props {
   locationId: string;
@@ -15,6 +16,7 @@ interface Props {
 
 const CombinedForecast: React.FC<Props> = ({ locationId }) => {
   const [forecast] = useCombinedForecastQuery({ variables: { locationId } });
+  const { isSmall } = useContext(WindowSizeContext);
 
   if (forecast.fetching) {
     return (
@@ -40,6 +42,9 @@ const CombinedForecast: React.FC<Props> = ({ locationId }) => {
     forecast.data.location &&
     forecast.data.location.combinedForecast;
 
+  const cardClasses =
+    "shadow p-2 rounded md:shadow-none md:p-0 md:rounded-none md:border-0";
+
   return (
     <Wrapper>
       {data &&
@@ -60,26 +65,29 @@ const CombinedForecast: React.FC<Props> = ({ locationId }) => {
           }
 
           return (
-            <div key={data.timePeriod}>
+            <div
+              key={data.timePeriod}
+              className={`${isSmall && "forecast-wrapper mb-4"}`}
+            >
               <div className="forecast-header text-xl mb-2">
                 {data.timePeriod}
               </div>
-              <div className="forecast-row mb-10">
-                <div>
+              <div className="forecast-row mb-0 md:mb-10">
+                <div style={{ gridArea: "wind" }} className={cardClasses}>
                   <img
                     src={Compass}
                     alt="compass"
-                    className="block m-auto h-20 w-20"
+                    className="block m-auto h-12 w-12 md:h-20 md:w-20"
                     style={{
                       transform: `rotate(${degrees}deg)`,
                       maxWidth: "5rem"
                     }}
                   />
-                  <div className="mt-2 text-xl text-center text-gray-800 leading-none ">
+                  <div className="mt-2 text-xs md:text-base md:text-xl text-center text-gray-800 leading-none">
                     {windDisplay}
                   </div>
                 </div>
-                <div className="">
+                <div className={cardClasses} style={{ gridArea: "water" }}>
                   <>
                     <WaterConditionIcon
                       text={
@@ -88,36 +96,39 @@ const CombinedForecast: React.FC<Props> = ({ locationId }) => {
                           : undefined
                       }
                     />
-                    <div className="mt-2 text-xl text-center leading-none text-gray-800">
-                      {data.waterCondition && data.waterCondition.text}
+                    <div className="mt-2 text-xs md:text-xl text-center leading-none text-gray-800">
+                      {data.waterCondition
+                        ? data.waterCondition.text
+                        : "unknown"}
                     </div>
                   </>
                 </div>
                 <div
-                  className="text-gray-800 text-left text-4xl leading-none h-24 items-center"
+                  className={`text-gray-800 text-left text-2xl md:text-4xl leading-none h-auto md:h-24 items-center ${cardClasses}`}
                   style={{
                     display: "grid",
-                    gridTemplateColumns: "4.5rem auto",
-                    gridTemplateRows: "1fr 1fr"
+                    gridTemplateColumns: isSmall ? "3rem auto" : "4.5rem auto",
+                    gridTemplateRows: "1fr 1fr",
+                    gridArea: "temp"
                   }}
                 >
                   <div>{data.temperature.degrees}°</div>
-                  <div className="font-thin text-gray-600 text-base pl-2 -mb-3">
+                  <div className="font-thin text-gray-600 text-xs md:text-base pl-2 -mb-3">
                     F
                   </div>
-                  {data.chanceOfPrecipitation && (
+                  {data.chanceOfPrecipitation !== null && (
                     <>
                       <div className="leading-none">
                         {data.chanceOfPrecipitation}%
                       </div>
-                      <div className="font-thin text-gray-600 text-base pl-2 -mb-3">
+                      <div className="font-thin text-gray-600 text-xs md:text-base pl-2 -mb-3">
                         rain
                       </div>
                     </>
                   )}
                 </div>
 
-                <div>
+                <div style={{ gridArea: "text" }}>
                   {data.marine ? (
                     <>
                       <div className="mb-4 leading-snug">{data.marine}</div>
@@ -141,9 +152,17 @@ export default CombinedForecast;
 
 const Wrapper: React.FC<{
   children: ReactNode;
-}> = ({ children }) => (
-  <div className="forecast-wrapper scroller-vertical mb-8">{children}</div>
-);
+}> = ({ children }) => {
+  const { isSmall } = useContext(WindowSizeContext);
+  return (
+    <div
+      className={`${!isSmall &&
+        "forecast-wrapper"} scroller-vertical mb-0 md:mb-8`}
+    >
+      {children}
+    </div>
+  );
+};
 
 const WaterConditionIcon: React.FC<{ text?: string }> = ({ text = "" }) => {
   let image = Unknown;
@@ -187,7 +206,7 @@ const WaterConditionIcon: React.FC<{ text?: string }> = ({ text = "" }) => {
   }
 
   return (
-    <div className="w-full h-20 flex items-center">
+    <div className="w-full h-12 md:h-20 flex items-center">
       <img src={image} alt={text} className="w-full h-auto" />
     </div>
   );

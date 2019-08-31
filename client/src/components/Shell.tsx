@@ -20,9 +20,9 @@ const Shell: React.FC<{ header?: ReactNode }> = ({ children, header }) => (
         {header}
       </div>
     </HeaderWrapper>
-    <div className="flex-grow my-8">{children}</div>
+    <div className="flex-grow md:my-4">{children}</div>
     <footer className="bg-gray-700 text-white w-full">
-      <div className="container mx-auto py-4 flex justify-between">
+      <div className="container mx-auto p-2 md:px-0 md:py-4 flex justify-between text-sm md:text-base">
         <div>
           Engineered by{" "}
           <a
@@ -46,7 +46,7 @@ export default Shell;
 const Link: React.FC<{ to: string }> = ({ children, to }) => (
   <ReachLink
     to={to}
-    className="text-lg font-light uppercase tracking-widest ml-6 hover:underline"
+    className="text-sm md:text-lg font-light uppercase tracking-widest ml-6 md:hover:underline"
   >
     {children}
   </ReachLink>

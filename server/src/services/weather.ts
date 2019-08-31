@@ -63,9 +63,15 @@ const extractForecast = ({
     temperature: { degrees: temperature, unit: temperatureUnit }
   } as Partial<WeatherForecast>;
 
+  let matches;
+
   // chance of precipitation
-  let matches = detailedForecast.match(/precipitation( is )?([\d]{1,2})%/ims);
-  if (matches) extracted.chanceOfPrecipitation = Number(matches[2]);
+  if (detailedForecast.includes("precipitation")) {
+    matches = detailedForecast.match(/precipitation( is )?([\d]{1,2})%/ims);
+    if (matches) extracted.chanceOfPrecipitation = Number(matches[2]);
+  } else {
+    extracted.chanceOfPrecipitation = 0;
+  }
 
   // wind speed
   matches = windSpeed.match(

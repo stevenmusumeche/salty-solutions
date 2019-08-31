@@ -14,6 +14,7 @@ const CurrentAirTempSummaryCard: React.FC<Props> = ({ locationId }) => {
       label="Air Temperature (F)"
       fetching={fetching}
       error={error}
+      className="air-temp-summary"
     >
       {curValue}
     </ConditionCard>

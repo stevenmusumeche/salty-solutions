@@ -1,4 +1,4 @@
-import React, { createContext, Component, FC } from "react";
+import React, { createContext, FC } from "react";
 import useBreakpoints from "../hooks/useBreakpoints";
 
 export const WindowSizeContext = createContext({

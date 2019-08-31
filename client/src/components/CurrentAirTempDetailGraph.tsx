@@ -16,6 +16,7 @@ const CurrentAirTempDetailGraph: React.FC<Props> = ({ locationId }) => {
       error={error}
       data={data}
       dependentAxisTickFormat={noDecimals}
+      className="air-temp-graph"
     />
   );
 };
