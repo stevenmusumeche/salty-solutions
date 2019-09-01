@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ReactDOM from "react-dom";
 
 import App from "./App";
@@ -16,6 +16,13 @@ const client = createClient({
 
 const Root = () => {
   const [locationId] = useLocalStorage("locationId", INITIAL_LOCATION);
+
+  useEffect(() => {
+    const $el = document.getElementById("pre-app-loader");
+    if ($el) {
+      $el.remove();
+    }
+  }, []);
 
   return (
     <MediaQueryProvider>
