@@ -13,7 +13,8 @@
     "jest": "24.7.1",
     "lodash": "^4.17.11",
     "react-date-picker": "^7.8.1",
-    "ts-jest": "^24.0.2"
+    "ts-jest": "^24.0.2",
+    "whatwg-fetch": "^3.0.0"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^1.4.0",

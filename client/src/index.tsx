@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import ReactDOM from "react-dom";
+import "whatwg-fetch";
 
 import App from "./App";
 import { Provider as UrqlProvider, createClient } from "urql";
