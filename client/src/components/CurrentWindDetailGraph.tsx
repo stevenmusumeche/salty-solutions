@@ -29,6 +29,7 @@ const CurrentWindDetailGraph: React.FC<Props> = ({ locationId }) => {
       <VictoryChart
         padding={{ left: 50, top: 20, right: 30, bottom: 50 }}
         domainPadding={{ y: [30, 30] }}
+        style={{ parent: { touchAction: "auto" } }}
       >
         <VictoryAxis
           fixLabelOverlap={false}

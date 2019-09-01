@@ -33,6 +33,7 @@ const MiniGraph: React.FC<Props> = ({
       <VictoryChart
         padding={{ left: 55, top: 20, right: 30, bottom: 50 }}
         domainPadding={{ y: [30, 30] }}
+        style={{ parent: { touchAction: "auto" } }}
       >
         <VictoryAxis
           fixLabelOverlap={false}

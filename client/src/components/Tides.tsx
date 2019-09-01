@@ -131,7 +131,7 @@ const Tides: React.FC<Props> = ({ tideStations, locationId, date }) => {
       <VictoryChart
         width={450}
         height={250}
-        style={{ parent: { backgroundColor: "white" } }}
+        style={{ parent: { backgroundColor: "white", touchAction: "auto" } }}
         padding={{
           top: 10,
           bottom: 30,
