@@ -42,8 +42,7 @@ const CombinedForecast: React.FC<Props> = ({ locationId }) => {
     forecast.data.location &&
     forecast.data.location.combinedForecast;
 
-  const cardClasses =
-    "shadow p-2 rounded md:shadow-none md:p-0 md:rounded-none md:border-0";
+  const cardClasses = "p-2 md:p-0";
 
   return (
     <Wrapper>

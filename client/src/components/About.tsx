@@ -11,7 +11,7 @@ const About: React.FC<RouteComponentProps> = () => (
         <img
           src={UrStupidFace}
           alt="steven musumeche"
-          className="block float-right m-8 rounded-full w-48 border border-gray-300 shadow-md"
+          className="block float-right m-4 md:m-8 rounded-full w-2/5 md:w-48 border border-gray-300 shadow-md"
         />
         <h1 className="text-4xl mb-4">About</h1>
 
@@ -60,7 +60,7 @@ const About: React.FC<RouteComponentProps> = () => (
           I'd love to hear your feedback about this tool or to connect and swap
           fishing stories.
         </p>
-        <ul className="mb-4 flex">
+        <ul className="mb-4 md:flex list-disc ml-8 md:list-none md:ml-0">
           <li className="mr-4">
             {" "}
             <Link
@@ -71,7 +71,7 @@ const About: React.FC<RouteComponentProps> = () => (
               steven@musumeche.com
             </Link>
           </li>
-          <li className="mr-4">•</li>
+          <li className="mr-4 hidden md:block">•</li>
           <li className="mr-4">
             {" "}
             <Link
@@ -82,7 +82,7 @@ const About: React.FC<RouteComponentProps> = () => (
               Facebook
             </Link>
           </li>
-          <li className="mr-4">•</li>
+          <li className="mr-4 hidden md:block">•</li>
           <li className="mr-4">
             {" "}
             <Link
@@ -93,7 +93,7 @@ const About: React.FC<RouteComponentProps> = () => (
               Twitter
             </Link>
           </li>
-          <li className="mr-4">•</li>
+          <li className="mr-4 hidden md:block">•</li>
           <li className="mr-4">
             {" "}
             <Link
@@ -104,7 +104,7 @@ const About: React.FC<RouteComponentProps> = () => (
               LinkedIn
             </Link>
           </li>
-          <li className="mr-4">•</li>
+          <li className="mr-4 hidden md:block">•</li>
           <li className="mr-4">
             {" "}
             <Link

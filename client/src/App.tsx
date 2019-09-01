@@ -66,7 +66,7 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
         />
       }
     >
-      <div className="container p-4 md:mx-auto md:my-0">
+      <div className="container p-4 md:p-0 md:mx-auto md:my-0">
         <SectionTitle text="Current Conditions" />
         <div className="current-conditions-grid">
           <CurrentWindSummaryCard locationId={locationId} />

@@ -19,7 +19,7 @@ const AppHeader: React.FC<Props> = ({
   const [locations] = useLocationsQuery();
 
   return (
-    <div className="flex">
+    <div className="md:flex ml-2 md:ml-0">
       <LocationSelect
         locations={locations}
         onChange={e => setLocationId(e.target.value)}
@@ -48,11 +48,11 @@ const LocationSelect: React.FC<LocationSelectProps> = ({
   value,
   onChange
 }) => (
-  <div className="mr-6">
+  <div className="md:mr-6 mb-2 md:mb-0">
     <select
       aria-label="select location"
       onChange={onChange}
-      className="select-css h-12 text-3xl rounded shadow-md pr-16 pl-3 bg-white"
+      className="select-css h-8 md:h-12 md:text-3xl rounded shadow-md pr-16 pl-3 bg-white"
       value={value}
     >
       {locations.data &&

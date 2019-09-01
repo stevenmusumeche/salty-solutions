@@ -53,7 +53,8 @@ export const getCombinedForecast = async (
 // these should be considered the same time period and normalized to the first entry
 const timePeriodMappers = [
   ["today", "this afternoon", "rest of today"],
-  ["tonight", "overnight"]
+  ["tonight", "overnight"],
+  ["monday", "labor day"]
 ];
 
 const getNormalizedName = (name: string) => {

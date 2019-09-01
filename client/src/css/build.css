@@ -7660,16 +7660,29 @@ video {
   top: 100% !important;
 }
 
+.react-date-picker {
+  width: 100%;
+}
+
 .react-date-picker__wrapper {
   background-color: #fff;
   border-radius: 0.25rem;
-  font-size: 1.875rem;
-  padding-left: 0.5rem;
-  padding-right: 0.5rem;
   border-width: 0;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  height: 3rem;
+  height: 2rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  width: 100%;
   border: none !important;
+}
+
+@media (min-width: 768px) {
+  .react-date-picker__wrapper {
+    font-size: 1.875rem;
+    height: 3rem;
+    width: auto;
+    border: none !important;
+  }
 }
 
 .react-date-picker__calendar-button__icon {

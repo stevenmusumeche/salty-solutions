@@ -227,6 +227,7 @@ const Tides: React.FC<Props> = ({ tideStations, locationId, date }) => {
         {hiLowData.map(({ x, y, type }, i) => (
           <div
             key={i}
+            className="py-1"
             style={{
               display: "grid",
               gridTemplateColumns: "1fr 1fr 2fr",

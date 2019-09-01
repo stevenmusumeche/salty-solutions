@@ -8,11 +8,12 @@ const Shell: React.FC<{ header?: ReactNode }> = ({ children, header }) => (
   <div className="min-h-screen flex flex-col">
     <HeaderWrapper>
       <div className="container mx-auto flex items-center justify-between h-full">
-        <div className="flex items-center">
+        <div className="">
           <ReachLink to="/">
             <img
               src={Logo}
-              className="block mr-6 h-16 -ml-1"
+              className="block mr-6 w-full md:w-auto md:h-16 md:-ml-1"
+              style={{ maxWidth: "40vw" }}
               alt="salty solutions logo"
             />
           </ReachLink>
@@ -46,6 +47,7 @@ export default Shell;
 const Link: React.FC<{ to: string }> = ({ children, to }) => (
   <ReachLink
     to={to}
+    onClick={() => window.scrollTo({ top: 0 })}
     className="text-sm md:text-lg font-light uppercase tracking-widest ml-6 md:hover:underline"
   >
     {children}
