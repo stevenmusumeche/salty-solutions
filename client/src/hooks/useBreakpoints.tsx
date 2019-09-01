@@ -43,7 +43,7 @@ export default function useBreakpoints(
 
   useEffect(() => {
     // setup event listeners
-    sizes.forEach(size => matches[size].addEventListener("change", callback));
+    sizes.forEach(size => matches[size].addListener(callback));
 
     // unsubscribe from even listeners
     return () =>
