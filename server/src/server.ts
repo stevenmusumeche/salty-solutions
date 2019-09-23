@@ -1,3 +1,5 @@
+// process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+
 import Koa from "koa";
 import serverless from "serverless-http";
 import { ApolloServer } from "apollo-server-koa";
@@ -9,6 +11,8 @@ import * as marineService from "./services/marine";
 import * as usgsService from "./services/usgs";
 import * as radarService from "./services/radar";
 import * as combinedForecastService from "./services/combined-forecast";
+import * as nowcastService from "./services/nowcast";
+import * as modisService from "./services/modis";
 import typeDefs from "./graphql/schema";
 import resolvers from "./graphql/resolvers";
 
@@ -25,6 +29,8 @@ export interface Context {
     usgs: typeof usgsService;
     radar: typeof radarService;
     combinedForecast: typeof combinedForecastService;
+    nowcast: typeof nowcastService;
+    modis: typeof modisService;
   };
 }
 
@@ -37,7 +43,9 @@ const context: Context = {
     marine: marineService,
     usgs: usgsService,
     radar: radarService,
-    combinedForecast: combinedForecastService
+    combinedForecast: combinedForecastService,
+    nowcast: nowcastService,
+    modis: modisService
   }
 };
 

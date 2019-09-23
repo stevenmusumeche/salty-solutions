@@ -36,6 +36,6 @@
     "dev:serverless": "cd server && sls offline start",
     "dev:server": "LOCAL_DEV=true nodemon --watch 'server/src/**/*' -e ts,tsx --exec ts-node ./server/src/server.ts",
     "dev:client": "yarn --cwd ./client start",
-    "deploy:server": "cd server && sls deploy --stage prod"
+    "deploy:server": "cd server && ./node_modules/.bin/sls deploy --stage prod"
   }
 }

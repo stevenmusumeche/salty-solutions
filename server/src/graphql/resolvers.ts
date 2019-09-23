@@ -1,6 +1,7 @@
 import { Resolvers } from "../generated/graphql";
 import { ApolloError } from "apollo-server-koa";
 import { notUndefined } from "../services/utils";
+import { format, subDays } from "date-fns";
 
 const DEFAULT_NUM_DAYS = 3;
 const DEFAULT_NUM_HOURS = 24;
@@ -83,13 +84,17 @@ const resolvers: Resolvers = {
     },
     dataSources: async (location, args, { services }) => {
       return services.location.getDataSources(location);
+    },
+    modisMaps: async (location, { numDays }, { services }) => {
+      return services.modis.getMaps(location, numDays || 1);
+    },
+    salinityMap: async (location, args, { services }) => {
+      return services.nowcast.getSalinityMap(location);
     }
   },
   TidePreditionStation: {
     url: station => {
-      return `https://tidesandcurrents.noaa.gov/stationhome.html?id=${
-        station.id
-      }`;
+      return `https://tidesandcurrents.noaa.gov/stationhome.html?id=${station.id}`;
     },
     tides: async (station, args, { services }) => {
       return await services.tide.getTidePredictions(

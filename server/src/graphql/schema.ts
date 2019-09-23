@@ -26,6 +26,13 @@ export default gql`
     temperature: TemperatureResult!
     maps: Maps
     dataSources: DataSources
+    modisMaps(numDays: Int): [ModusMap!]!
+    salinityMap: String!
+  }
+
+  type ModusMap {
+    date: String!
+    url: String!
   }
 
   type DataSources {

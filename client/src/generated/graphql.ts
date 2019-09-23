@@ -66,6 +66,8 @@ export type Location = {
   temperature: TemperatureResult;
   maps?: Maybe<Maps>;
   dataSources?: Maybe<DataSources>;
+  modisMaps: Array<ModusMap>;
+  salinityMap: Scalars["String"];
 };
 
 export type LocationSunArgs = {
@@ -88,6 +90,10 @@ export type LocationWaterTemperatureArgs = {
 
 export type LocationSalinityArgs = {
   numHours?: Maybe<Scalars["Int"]>;
+};
+
+export type LocationModisMapsArgs = {
+  numDays?: Maybe<Scalars["Int"]>;
 };
 
 export type Map = {
@@ -118,6 +124,12 @@ export type MarineForecastDetail = {
   waterCondition?: Maybe<Scalars["String"]>;
   windSpeed?: Maybe<ForecastWindSpeedDetail>;
   windDirection?: Maybe<WindDirection>;
+};
+
+export type ModusMap = {
+  __typename?: "ModusMap";
+  date: Scalars["String"];
+  url: Scalars["String"];
 };
 
 export type MoonDetail = {

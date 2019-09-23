@@ -67,6 +67,8 @@ export type Location = {
   temperature: TemperatureResult;
   maps?: Maybe<Maps>;
   dataSources?: Maybe<DataSources>;
+  modisMaps: Array<ModusMap>;
+  salinityMap: Scalars["String"];
 };
 
 export type LocationSunArgs = {
@@ -89,6 +91,10 @@ export type LocationWaterTemperatureArgs = {
 
 export type LocationSalinityArgs = {
   numHours?: Maybe<Scalars["Int"]>;
+};
+
+export type LocationModisMapsArgs = {
+  numDays?: Maybe<Scalars["Int"]>;
 };
 
 export type Map = {
@@ -119,6 +125,12 @@ export type MarineForecastDetail = {
   waterCondition?: Maybe<Scalars["String"]>;
   windSpeed?: Maybe<ForecastWindSpeedDetail>;
   windDirection?: Maybe<WindDirection>;
+};
+
+export type ModusMap = {
+  __typename?: "ModusMap";
+  date: Scalars["String"];
+  url: Scalars["String"];
 };
 
 export type MoonDetail = {
@@ -427,6 +439,7 @@ export type ResolversTypes = {
   Map: ResolverTypeWrapper<Partial<Map>>;
   Overlays: ResolverTypeWrapper<Partial<Overlays>>;
   DataSources: ResolverTypeWrapper<Partial<DataSources>>;
+  ModusMap: ResolverTypeWrapper<Partial<ModusMap>>;
   CurrentWind: ResolverTypeWrapper<Partial<CurrentWind>>;
 };
 
@@ -471,6 +484,7 @@ export type ResolversParentTypes = {
   Map: Partial<Map>;
   Overlays: Partial<Overlays>;
   DataSources: Partial<DataSources>;
+  ModusMap: Partial<ModusMap>;
   CurrentWind: Partial<CurrentWind>;
 };
 
@@ -616,6 +630,13 @@ export type LocationResolvers<
     ParentType,
     ContextType
   >;
+  modisMaps?: Resolver<
+    Array<ResolversTypes["ModusMap"]>,
+    ParentType,
+    ContextType,
+    LocationModisMapsArgs
+  >;
+  salinityMap?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
 };
 
 export type MapResolvers<
@@ -671,6 +692,14 @@ export type MarineForecastDetailResolvers<
     ParentType,
     ContextType
   >;
+};
+
+export type ModusMapResolvers<
+  ContextType = Context,
+  ParentType = ResolversParentTypes["ModusMap"]
+> = {
+  date?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  url?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
 };
 
 export type MoonDetailResolvers<
@@ -987,6 +1016,7 @@ export type Resolvers<ContextType = Context> = {
   Maps?: MapsResolvers<ContextType>;
   MarineForecast?: MarineForecastResolvers<ContextType>;
   MarineForecastDetail?: MarineForecastDetailResolvers<ContextType>;
+  ModusMap?: ModusMapResolvers<ContextType>;
   MoonDetail?: MoonDetailResolvers<ContextType>;
   Overlays?: OverlaysResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;

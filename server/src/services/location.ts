@@ -11,6 +11,8 @@ export interface LocationEntity {
     stationId: string;
     radarSiteId: string;
   };
+  nowcastSubdomain: string;
+  modisArea: string;
 }
 
 const locations: LocationEntity[] = [
@@ -33,7 +35,9 @@ const locations: LocationEntity[] = [
       apiBase: "https://api.weather.gov/gridpoints/LCH/112,73",
       stationId: "KARA",
       radarSiteId: "LCH"
-    }
+    },
+    nowcastSubdomain: "0",
+    modisArea: "USA7"
   },
   {
     id: "calcasieu-lake",
@@ -47,7 +51,9 @@ const locations: LocationEntity[] = [
       apiBase: "https://api.weather.gov/gridpoints/LCH/57,80",
       stationId: "KLCH",
       radarSiteId: "LCH"
-    }
+    },
+    nowcastSubdomain: "cc",
+    modisArea: "USA7"
   },
   {
     id: "cocodrie",
@@ -68,7 +74,9 @@ const locations: LocationEntity[] = [
       apiBase: "https://api.weather.gov/gridpoints/LIX/47,58",
       stationId: "KHUM",
       radarSiteId: "LIX"
-    }
+    },
+    nowcastSubdomain: "0",
+    modisArea: "USA7"
   }
 ];
 
