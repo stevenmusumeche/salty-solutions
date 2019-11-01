@@ -53,6 +53,16 @@ const server = new ApolloServer({
   typeDefs,
   resolvers: resolvers as any,
   context,
+  formatError: error => {
+    console.error({
+      name: "Apollo Server Error",
+      message: error.message,
+      locations: error.locations,
+      path: error.path,
+      extensions: error.extensions
+    });
+    return error;
+  },
   playground: IS_DEV,
   introspection: IS_DEV
 });

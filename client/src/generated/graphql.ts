@@ -126,10 +126,19 @@ export type MarineForecastDetail = {
   windDirection?: Maybe<WindDirection>;
 };
 
+export type ModisMapEntry = {
+  __typename?: "ModisMapEntry";
+  url: Scalars["String"];
+  width: Scalars["Int"];
+  height: Scalars["Int"];
+};
+
 export type ModusMap = {
   __typename?: "ModusMap";
   date: Scalars["String"];
-  url: Scalars["String"];
+  small: ModisMapEntry;
+  medium: ModisMapEntry;
+  large: ModisMapEntry;
 };
 
 export type MoonDetail = {
@@ -484,6 +493,37 @@ export type OverlayMapsFragment = { __typename?: "Overlays" } & Pick<
   Overlays,
   "topo" | "counties" | "rivers" | "highways" | "cities"
 >;
+
+export type ModisMapQueryVariables = {
+  locationId: Scalars["ID"];
+};
+
+export type ModisMapQuery = { __typename?: "Query" } & {
+  location: Maybe<
+    { __typename?: "Location" } & {
+      modisMaps: Array<
+        { __typename?: "ModusMap" } & Pick<ModusMap, "date"> & {
+            small: { __typename?: "ModisMapEntry" } & Pick<
+              ModisMapEntry,
+              "url" | "width" | "height"
+            >;
+            large: { __typename?: "ModisMapEntry" } & Pick<
+              ModisMapEntry,
+              "url" | "width" | "height"
+            >;
+          }
+      >;
+    }
+  >;
+};
+
+export type SalinityMapQueryVariables = {
+  locationId: Scalars["ID"];
+};
+
+export type SalinityMapQuery = { __typename?: "Query" } & {
+  location: Maybe<{ __typename?: "Location" } & Pick<Location, "salinityMap">>;
+};
 
 export type SalinityQueryVariables = {
   locationId: Scalars["ID"];
@@ -876,6 +916,47 @@ export function useMapsQuery(
   options: Omit<Urql.UseQueryArgs<MapsQueryVariables>, "query"> = {}
 ) {
   return Urql.useQuery<MapsQuery>({ query: MapsDocument, ...options });
+}
+export const ModisMapDocument = gql`
+  query ModisMap($locationId: ID!) {
+    location(id: $locationId) {
+      modisMaps(numDays: 7) {
+        date
+        small {
+          url
+          width
+          height
+        }
+        large {
+          url
+          width
+          height
+        }
+      }
+    }
+  }
+`;
+
+export function useModisMapQuery(
+  options: Omit<Urql.UseQueryArgs<ModisMapQueryVariables>, "query"> = {}
+) {
+  return Urql.useQuery<ModisMapQuery>({ query: ModisMapDocument, ...options });
+}
+export const SalinityMapDocument = gql`
+  query SalinityMap($locationId: ID!) {
+    location(id: $locationId) {
+      salinityMap
+    }
+  }
+`;
+
+export function useSalinityMapQuery(
+  options: Omit<Urql.UseQueryArgs<SalinityMapQueryVariables>, "query"> = {}
+) {
+  return Urql.useQuery<SalinityMapQuery>({
+    query: SalinityMapDocument,
+    ...options
+  });
 }
 export const SalinityDocument = gql`
   query Salinity($locationId: ID!) {

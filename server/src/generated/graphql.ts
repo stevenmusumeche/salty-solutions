@@ -127,10 +127,19 @@ export type MarineForecastDetail = {
   windDirection?: Maybe<WindDirection>;
 };
 
+export type ModisMapEntry = {
+  __typename?: "ModisMapEntry";
+  url: Scalars["String"];
+  width: Scalars["Int"];
+  height: Scalars["Int"];
+};
+
 export type ModusMap = {
   __typename?: "ModusMap";
   date: Scalars["String"];
-  url: Scalars["String"];
+  small: ModisMapEntry;
+  medium: ModisMapEntry;
+  large: ModisMapEntry;
 };
 
 export type MoonDetail = {
@@ -440,6 +449,7 @@ export type ResolversTypes = {
   Overlays: ResolverTypeWrapper<Partial<Overlays>>;
   DataSources: ResolverTypeWrapper<Partial<DataSources>>;
   ModusMap: ResolverTypeWrapper<Partial<ModusMap>>;
+  ModisMapEntry: ResolverTypeWrapper<Partial<ModisMapEntry>>;
   CurrentWind: ResolverTypeWrapper<Partial<CurrentWind>>;
 };
 
@@ -485,6 +495,7 @@ export type ResolversParentTypes = {
   Overlays: Partial<Overlays>;
   DataSources: Partial<DataSources>;
   ModusMap: Partial<ModusMap>;
+  ModisMapEntry: Partial<ModisMapEntry>;
   CurrentWind: Partial<CurrentWind>;
 };
 
@@ -694,12 +705,23 @@ export type MarineForecastDetailResolvers<
   >;
 };
 
+export type ModisMapEntryResolvers<
+  ContextType = Context,
+  ParentType = ResolversParentTypes["ModisMapEntry"]
+> = {
+  url?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  width?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
+  height?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
+};
+
 export type ModusMapResolvers<
   ContextType = Context,
   ParentType = ResolversParentTypes["ModusMap"]
 > = {
   date?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
-  url?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  small?: Resolver<ResolversTypes["ModisMapEntry"], ParentType, ContextType>;
+  medium?: Resolver<ResolversTypes["ModisMapEntry"], ParentType, ContextType>;
+  large?: Resolver<ResolversTypes["ModisMapEntry"], ParentType, ContextType>;
 };
 
 export type MoonDetailResolvers<
@@ -1016,6 +1038,7 @@ export type Resolvers<ContextType = Context> = {
   Maps?: MapsResolvers<ContextType>;
   MarineForecast?: MarineForecastResolvers<ContextType>;
   MarineForecastDetail?: MarineForecastDetailResolvers<ContextType>;
+  ModisMapEntry?: ModisMapEntryResolvers<ContextType>;
   ModusMap?: ModusMapResolvers<ContextType>;
   MoonDetail?: MoonDetailResolvers<ContextType>;
   Overlays?: OverlaysResolvers<ContextType>;

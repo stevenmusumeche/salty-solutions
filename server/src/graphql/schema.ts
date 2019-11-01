@@ -32,7 +32,15 @@ export default gql`
 
   type ModusMap {
     date: String!
+    small: ModisMapEntry!
+    medium: ModisMapEntry!
+    large: ModisMapEntry!
+  }
+
+  type ModisMapEntry {
     url: String!
+    width: Int!
+    height: Int!
   }
 
   type DataSources {
