@@ -1,11 +1,11 @@
 import {
-  CurrentWaterTemperatureQuery,
-  useCurrentWaterTemperatureQuery
+  useCurrentConditionsDataQuery,
+  CurrentConditionsDataQuery
 } from "../generated/graphql";
 import { UseQueryState } from "urql";
 
 export function useWaterTemperatureData(locationId: string) {
-  const [result] = useCurrentWaterTemperatureQuery({
+  const [result] = useCurrentConditionsDataQuery({
     variables: { locationId }
   });
 
@@ -13,7 +13,7 @@ export function useWaterTemperatureData(locationId: string) {
   return { curValue, curDetail, ...result };
 }
 
-function extractData(data: UseQueryState<CurrentWaterTemperatureQuery>) {
+function extractData(data: UseQueryState<CurrentConditionsDataQuery>) {
   const curValue =
     data.data &&
     data.data.location &&

@@ -1,7 +1,7 @@
 import React, { ReactNode, useContext } from "react";
 import {
-  useHourlyForecastQuery,
-  HourlyForecastDetailFragment
+  HourlyForecastDetailFragment,
+  useCombinedForecastQuery
 } from "../generated/graphql";
 import ErrorIcon from "../assets/error.svg";
 import ForecastSkeleton from "./ForecastSkeleton";
@@ -13,8 +13,14 @@ interface Props {
 }
 
 const HourlyForecast: React.FC<Props> = ({ locationId }) => {
-  const [forecast] = useHourlyForecastQuery({ variables: { locationId } });
+  const [forecast] = useCombinedForecastQuery({ variables: { locationId } });
   const { isSmall } = useContext(WindowSizeContext);
+
+  const data =
+    (forecast.data &&
+      forecast.data.location &&
+      forecast.data.location.hourlyWeatherForecast) ||
+    [];
 
   if (forecast.fetching) {
     return (
@@ -22,9 +28,9 @@ const HourlyForecast: React.FC<Props> = ({ locationId }) => {
         <ForecastSkeleton />
       </Wrapper>
     );
-  } else if (forecast.error) {
+  } else if (forecast.error && data.length === 0) {
     return (
-      <Wrapper>
+      <Wrapper isError={true}>
         <img
           src={ErrorIcon}
           style={{ height: 120 }}
@@ -34,12 +40,6 @@ const HourlyForecast: React.FC<Props> = ({ locationId }) => {
       </Wrapper>
     );
   }
-
-  const data =
-    (forecast.data &&
-      forecast.data.location &&
-      forecast.data.location.hourlyWeatherForecast) ||
-    [];
 
   // group into days (local time)
   const grouped = data.reduce(
@@ -136,14 +136,15 @@ export default HourlyForecast;
 
 const Wrapper: React.FC<{
   children: ReactNode;
-}> = ({ children }) => {
+  isError?: boolean;
+}> = ({ children, isError }) => {
   const { isSmall } = useContext(WindowSizeContext);
   return (
     <div
       className={`${!isSmall && "forecast-wrapper"}  mb-0 md:mb-8`}
       style={{
         display: "grid",
-        gridTemplateColumns: isSmall ? "1fr" : "1fr 1fr",
+        gridTemplateColumns: isSmall || isError ? "1fr" : "1fr 1fr",
         gridColumnGap: isSmall ? "1rem" : "2rem"
       }}
     >

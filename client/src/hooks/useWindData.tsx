@@ -1,24 +1,32 @@
-import { useWindDataQuery, WindDataQuery } from "../generated/graphql";
+import {
+  useCurrentConditionsDataQuery,
+  CurrentConditionsDataQuery
+} from "../generated/graphql";
 import { noDecimals } from "./utils";
 import { UseQueryState } from "urql";
 
 export function useCurrentWindData(locationId: string) {
-  const [result] = useWindDataQuery({ variables: { locationId } });
+  const [result] = useCurrentConditionsDataQuery({ variables: { locationId } });
+
   const { curValue, curDirectionValue, curDetail } = extractData(result);
 
   return { curValue, curDirectionValue, curDetail, ...result };
 }
 
-function extractData(windData: UseQueryState<WindDataQuery>) {
+function extractData(windData: UseQueryState<CurrentConditionsDataQuery>) {
   const curValue =
     windData.data &&
     windData.data.location &&
+    windData.data.location.wind &&
+    windData.data.location.wind.summary &&
     windData.data.location.wind.summary.mostRecent &&
     noDecimals(windData.data.location.wind.summary.mostRecent.speed);
 
   const curDirectionValue =
     windData.data &&
     windData.data.location &&
+    windData.data.location.wind &&
+    windData.data.location.wind.summary &&
     windData.data.location.wind.summary.mostRecent &&
     windData.data.location.wind.summary.mostRecent.direction;
 

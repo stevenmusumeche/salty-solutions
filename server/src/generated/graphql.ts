@@ -56,14 +56,14 @@ export type Location = {
   long: Scalars["Float"];
   sun?: Maybe<Array<SunDetail>>;
   moon?: Maybe<Array<MoonDetail>>;
-  combinedForecast: Array<CombinedForecast>;
+  combinedForecast?: Maybe<Array<CombinedForecast>>;
   weatherForecast?: Maybe<Array<WeatherForecast>>;
   hourlyWeatherForecast?: Maybe<Array<WeatherForecast>>;
   marineForecast?: Maybe<Array<MarineForecast>>;
   waterHeight?: Maybe<Array<WaterHeight>>;
-  waterTemperature: WaterTemperature;
-  wind: Wind;
-  salinity: Salinity;
+  waterTemperature?: Maybe<WaterTemperature>;
+  wind?: Maybe<Wind>;
+  salinity?: Maybe<Salinity>;
   temperature: TemperatureResult;
   maps?: Maybe<Maps>;
   dataSources?: Maybe<DataSources>;
@@ -592,7 +592,7 @@ export type LocationResolvers<
     LocationMoonArgs
   >;
   combinedForecast?: Resolver<
-    Array<ResolversTypes["CombinedForecast"]>,
+    Maybe<Array<ResolversTypes["CombinedForecast"]>>,
     ParentType,
     ContextType
   >;
@@ -618,14 +618,14 @@ export type LocationResolvers<
     LocationWaterHeightArgs
   >;
   waterTemperature?: Resolver<
-    ResolversTypes["WaterTemperature"],
+    Maybe<ResolversTypes["WaterTemperature"]>,
     ParentType,
     ContextType,
     LocationWaterTemperatureArgs
   >;
-  wind?: Resolver<ResolversTypes["Wind"], ParentType, ContextType>;
+  wind?: Resolver<Maybe<ResolversTypes["Wind"]>, ParentType, ContextType>;
   salinity?: Resolver<
-    ResolversTypes["Salinity"],
+    Maybe<ResolversTypes["Salinity"]>,
     ParentType,
     ContextType,
     LocationSalinityArgs

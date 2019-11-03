@@ -1,9 +1,12 @@
-import { useSalinityQuery, SalinityQuery } from "../generated/graphql";
+import {
+  useCurrentConditionsDataQuery,
+  CurrentConditionsDataQuery
+} from "../generated/graphql";
 import { UseQueryState, CombinedError } from "urql";
 import { noDecimals } from "./utils";
 
 export function useSalinityData(locationId: string) {
-  const [result] = useSalinityQuery({ variables: { locationId } });
+  const [result] = useCurrentConditionsDataQuery({ variables: { locationId } });
   const { curValue, curDetail } = extractData(result);
   return {
     curValue,
@@ -16,10 +19,11 @@ export function useSalinityData(locationId: string) {
   };
 }
 
-function extractData(data: UseQueryState<SalinityQuery>) {
+function extractData(data: UseQueryState<CurrentConditionsDataQuery>) {
   const curValue =
     data.data &&
     data.data.location &&
+    data.data.location.salinitySummary &&
     data.data.location.salinitySummary.summary &&
     data.data.location.salinitySummary.summary.mostRecent
       ? noDecimals(
@@ -29,10 +33,10 @@ function extractData(data: UseQueryState<SalinityQuery>) {
 
   const curDetail =
     data.data &&
-    data.data.detail &&
-    data.data.detail.salinityDetail &&
-    data.data.detail.salinityDetail.detail &&
-    data.data.detail.salinityDetail.detail.map(data => ({
+    data.data.salinityDetail &&
+    data.data.salinityDetail.salinity &&
+    data.data.salinityDetail.salinity.detail &&
+    data.data.salinityDetail.salinity.detail.map(data => ({
       y: data.salinity,
       x: data.timestamp
     }));

@@ -18,13 +18,18 @@ const CombinedForecast: React.FC<Props> = ({ locationId }) => {
   const [forecast] = useCombinedForecastQuery({ variables: { locationId } });
   const { isSmall } = useContext(WindowSizeContext);
 
+  const data =
+    forecast.data &&
+    forecast.data.location &&
+    forecast.data.location.combinedForecast;
+
   if (forecast.fetching) {
     return (
       <Wrapper>
         <ForecastSkeleton />
       </Wrapper>
     );
-  } else if (forecast.error) {
+  } else if (forecast.error && !data) {
     return (
       <Wrapper>
         <img
@@ -36,11 +41,6 @@ const CombinedForecast: React.FC<Props> = ({ locationId }) => {
       </Wrapper>
     );
   }
-
-  const data =
-    forecast.data &&
-    forecast.data.location &&
-    forecast.data.location.combinedForecast;
 
   const cardClasses = "p-2 md:p-0";
 

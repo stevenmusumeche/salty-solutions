@@ -1,7 +1,7 @@
 import { LocationEntity } from "./location";
 import { getForecast as getMarineForecast, MarineForecast } from "./marine";
 import { getForecast as getWeatherForecast } from "./weather";
-import { WeatherForecast, CombinedForecast } from "../generated/graphql";
+import { CombinedForecast } from "../generated/graphql";
 
 export const getCombinedForecast = async (
   location: LocationEntity

@@ -9,14 +9,14 @@ const CurrentWindSummaryCard: React.FC<Props> = ({ locationId }) => {
   const {
     curValue,
     curDirectionValue,
-    fetching: windFetching,
-    error: windError
+    fetching: fetching,
+    error: error
   } = useCurrentWindData(locationId);
 
   return (
     <ConditionCard
-      fetching={windFetching}
-      error={windError}
+      fetching={fetching}
+      error={error}
       label="Wind (mph)"
       className="wind-summary"
     >

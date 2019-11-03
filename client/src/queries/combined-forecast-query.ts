@@ -29,6 +29,27 @@ export const COMBINED_FORECAST_QUERY = gql`
         short
         detailed
       }
+
+      hourlyWeatherForecast {
+        ...HourlyForecastDetail
+      }
     }
+  }
+
+  fragment HourlyForecastDetail on WeatherForecast {
+    startTime
+    temperature {
+      degrees
+      unit
+    }
+    windSpeed {
+      from
+      to
+    }
+    windDirection {
+      text
+    }
+    icon
+    shortForecast
   }
 `;

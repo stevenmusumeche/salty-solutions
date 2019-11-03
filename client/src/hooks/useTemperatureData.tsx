@@ -1,16 +1,16 @@
 import {
-  useCurrentTemperatureQuery,
-  CurrentTemperatureQuery
+  useCurrentConditionsDataQuery,
+  CurrentConditionsDataQuery
 } from "../generated/graphql";
 import { UseQueryState } from "urql";
 
 export function useTemperatureData(locationId: string) {
-  const [result] = useCurrentTemperatureQuery({ variables: { locationId } });
+  const [result] = useCurrentConditionsDataQuery({ variables: { locationId } });
   const { curValue, curDetail } = extractData(result);
   return { curValue, curDetail, ...result };
 }
 
-function extractData(data: UseQueryState<CurrentTemperatureQuery>) {
+function extractData(data: UseQueryState<CurrentConditionsDataQuery>) {
   const curValue =
     data.data &&
     data.data.location &&

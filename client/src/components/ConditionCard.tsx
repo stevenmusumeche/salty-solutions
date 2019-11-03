@@ -14,9 +14,6 @@ interface Props {
   className?: string;
 }
 
-// todo: create app context with breakpoints
-// todo: create app contet with selected location
-
 const Wrapper: React.FC<{ children: ReactNode; className?: string }> = ({
   children,
   className
@@ -57,7 +54,7 @@ const ConditionCard: React.FC<Props> = ({
         <Label label={label} />
       </Wrapper>
     );
-  } else if (error) {
+  } else if (error && !children) {
     displayValue = <img src={ErrorIcon} style={{ height: 120 }} alt="error" />;
   } else {
     displayValue = children;

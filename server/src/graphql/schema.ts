@@ -15,14 +15,14 @@ export default gql`
     long: Float!
     sun(start: String!, end: String!): [SunDetail!]
     moon(start: String!, end: String!): [MoonDetail!]
-    combinedForecast: [CombinedForecast!]!
+    combinedForecast: [CombinedForecast!]
     weatherForecast: [WeatherForecast!]
     hourlyWeatherForecast: [WeatherForecast!]
     marineForecast: [MarineForecast!]
     waterHeight(numDays: Int): [WaterHeight!]
-    waterTemperature(numDays: Int): WaterTemperature!
-    wind: Wind!
-    salinity(numHours: Int): Salinity!
+    waterTemperature(numDays: Int): WaterTemperature
+    wind: Wind
+    salinity(numHours: Int): Salinity
     temperature: TemperatureResult!
     maps: Maps
     dataSources: DataSources
