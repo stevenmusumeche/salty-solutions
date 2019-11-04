@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useModisMapQuery, ModisMapQuery } from "../generated/graphql";
 import ErrorIcon from "../assets/error.svg";
 import { UseQueryState } from "urql";
@@ -12,12 +12,30 @@ interface Props {
 }
 
 const ModisMap: React.FC<Props> = ({ locationId }) => {
-  const [modisMap] = useModisMapQuery({ variables: { locationId } });
+  const [modisMap, refresh] = useModisMapQuery({ variables: { locationId } });
   const [curIndex, setCurIndex] = useState(0);
+
+  // preload the large image
+  useEffect(() => {
+    if (modisMap && modisMap.data && modisMap.data.location) {
+      new Image().src = modisMap.data.location.modisMaps[curIndex].large.url;
+    }
+  }, [curIndex, modisMap]);
 
   function renderMap(modisMap: UseQueryState<ModisMapQuery>) {
     if (modisMap.error)
-      return <img src={ErrorIcon} style={{ height: 120 }} alt="error" />;
+      return (
+        <div className="flex flex-col h-full justify-center items-center">
+          <img src={ErrorIcon} style={{ height: 120 }} alt="error" />
+          <button
+            onClick={() => refresh({ requestPolicy: "network-only" })}
+            type="button"
+            className={"text-black text-sm hover:underline mt-2 mb-1"}
+          >
+            retry
+          </button>
+        </div>
+      );
 
     if (modisMap.fetching || !modisMap.data || !modisMap.data.location) {
       return <div className="text-black">Loading Satellite Map</div>;
@@ -48,7 +66,8 @@ const ModisMap: React.FC<Props> = ({ locationId }) => {
       <span>
         <p className="mb-4 text-left">
           MODIS is an extensive program using sensors on two satellites that
-          each provide complete daily coverage of the earth.
+          each provide complete daily coverage of the earth. Hover over an image
+          to zoom.
         </p>
         <div className="mb-4 flex justify-center items-center">
           <button

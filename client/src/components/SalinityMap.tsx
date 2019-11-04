@@ -8,11 +8,26 @@ interface Props {
 }
 
 export const SalinityMap: React.FC<Props> = ({ locationId }) => {
-  const [salinityMap] = useSalinityMapQuery({ variables: { locationId } });
+  const [salinityMap, refresh] = useSalinityMapQuery({
+    variables: { locationId }
+  });
 
   function renderMap(salinityMap: UseQueryState<SalinityMapQuery>) {
     if (salinityMap.error)
-      return <img src={ErrorIcon} style={{ height: 120 }} alt="error" />;
+      return (
+        <div className="flex flex-col h-full justify-center items-center">
+          <img src={ErrorIcon} style={{ height: 120 }} alt="error" />
+          {refresh && (
+            <button
+              onClick={() => refresh({ requestPolicy: "network-only" })}
+              type="button"
+              className={"text-black text-sm hover:underline mt-2 mb-1"}
+            >
+              retry
+            </button>
+          )}
+        </div>
+      );
 
     if (
       salinityMap.fetching ||

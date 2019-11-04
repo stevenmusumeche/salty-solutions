@@ -8,6 +8,7 @@ import {
 import PlayIcon from "../assets/play.svg";
 import StopIcon from "../assets/stop.svg";
 import { format } from "date-fns";
+import ErrorIcon from "../assets/error.svg";
 
 interface Props {
   locationId: string;
@@ -20,7 +21,7 @@ export const RadarMap: React.FC<Props> = ({ locationId }) => {
   let overlays: Maybe<OverlayMapsFragment> = null;
   let radar: Map[] = [];
 
-  const [maps] = useMapsQuery({ variables: { locationId } });
+  const [maps, refresh] = useMapsQuery({ variables: { locationId } });
 
   if (maps.data && maps.data.location && maps.data.location.maps) {
     overlays =
@@ -80,6 +81,21 @@ export const RadarMap: React.FC<Props> = ({ locationId }) => {
         {maps.fetching && (
           <div className="flex items-center justify-center h-full">
             Loading Maps
+          </div>
+        )}
+
+        {maps.error && (
+          <div className="flex flex-col h-full justify-center items-center">
+            <img src={ErrorIcon} style={{ height: 120 }} alt="error" />
+            {refresh && (
+              <button
+                onClick={() => refresh({ requestPolicy: "network-only" })}
+                type="button"
+                className={"text-white text-sm hover:underline mt-2 mb-1"}
+              >
+                retry
+              </button>
+            )}
           </div>
         )}
 
