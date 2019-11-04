@@ -7,7 +7,9 @@ interface Props {
 }
 
 const CurrentWaterTempSummaryCard: React.FC<Props> = ({ locationId }) => {
-  const { curValue, fetching, error } = useWaterTemperatureData(locationId);
+  const { curValue, fetching, error, refresh } = useWaterTemperatureData(
+    locationId
+  );
 
   return (
     <ConditionCard
@@ -15,6 +17,7 @@ const CurrentWaterTempSummaryCard: React.FC<Props> = ({ locationId }) => {
       fetching={fetching}
       error={error}
       className="water-temp-summary"
+      refresh={refresh}
     >
       {curValue}
     </ConditionCard>

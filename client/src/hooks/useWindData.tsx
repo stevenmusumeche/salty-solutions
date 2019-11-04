@@ -6,11 +6,19 @@ import { noDecimals } from "./utils";
 import { UseQueryState } from "urql";
 
 export function useCurrentWindData(locationId: string) {
-  const [result] = useCurrentConditionsDataQuery({ variables: { locationId } });
+  const [result, executeQuery] = useCurrentConditionsDataQuery({
+    variables: { locationId }
+  });
 
   const { curValue, curDirectionValue, curDetail } = extractData(result);
 
-  return { curValue, curDirectionValue, curDetail, ...result };
+  return {
+    curValue,
+    curDirectionValue,
+    curDetail,
+    refresh: executeQuery,
+    ...result
+  };
 }
 
 function extractData(windData: UseQueryState<CurrentConditionsDataQuery>) {

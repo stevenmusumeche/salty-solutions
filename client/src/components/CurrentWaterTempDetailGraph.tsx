@@ -8,7 +8,7 @@ interface Props {
 }
 
 const CurrentWaterTempDetailGraph: React.FC<Props> = ({ locationId }) => {
-  const { curDetail: data, fetching, error } = useWaterTemperatureData(
+  const { curDetail: data, fetching, error, refresh } = useWaterTemperatureData(
     locationId
   );
 
@@ -19,6 +19,7 @@ const CurrentWaterTempDetailGraph: React.FC<Props> = ({ locationId }) => {
       data={data}
       dependentAxisTickFormat={noDecimals}
       className="water-temp-graph"
+      refresh={refresh}
     />
   );
 };

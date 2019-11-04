@@ -50,7 +50,7 @@ const Tides: React.FC<Props> = ({ tideStations, locationId, date }) => {
     setSelectedId(tideStations[0].id);
   }, [locationId, tideStations]);
 
-  const [tideResult] = useTideQuery({
+  const [tideResult, refresh] = useTideQuery({
     variables: {
       locationId,
       stationId: selectedId!,
@@ -84,7 +84,7 @@ const Tides: React.FC<Props> = ({ tideStations, locationId, date }) => {
     !tideResult.data.location.sun
   ) {
     return (
-      <div className="relative w-full flex items-center justify-center py-8">
+      <>
         <div className="">
           <TideStationSelect
             tideStations={tideStations}
@@ -92,8 +92,17 @@ const Tides: React.FC<Props> = ({ tideStations, locationId, date }) => {
             selectedId={selectedId}
           />
         </div>
-        <img src={ErrorIcon} style={{ height: 120 }} alt="error" />
-      </div>
+        <div className="relative w-full flex items-center justify-center py-8 flex-col">
+          <img src={ErrorIcon} style={{ height: 120 }} alt="error" />
+          <button
+            onClick={() => refresh({ requestPolicy: "network-only" })}
+            type="button"
+            className={"text-black text-sm hover:underline mt-2 mb-1"}
+          >
+            retry
+          </button>
+        </div>
+      </>
     );
   }
 

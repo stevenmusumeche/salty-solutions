@@ -23,16 +23,26 @@ const ModisMap: React.FC<Props> = ({ locationId }) => {
       return <div className="text-black">Loading Satellite Map</div>;
     }
 
+    const numMaps = modisMap.data.location.modisMaps.length;
+    const curImage = modisMap.data.location.modisMaps[curIndex];
+
     const goBack = () => {
-      console.log("go back");
-      setCurIndex(i => i + 1);
+      setCurIndex(i => {
+        if (i === numMaps - 1) {
+          return 0;
+        }
+        return i + 1;
+      });
     };
 
     const goForward = () => {
-      console.log("go forward");
+      setCurIndex(i => {
+        if (i === 0) {
+          return numMaps - 1;
+        }
+        return i - 1;
+      });
     };
-
-    const curImage = modisMap.data.location.modisMaps[curIndex];
 
     return (
       <span>
@@ -41,13 +51,21 @@ const ModisMap: React.FC<Props> = ({ locationId }) => {
           each provide complete daily coverage of the earth.
         </p>
         <div className="mb-4 flex justify-center items-center">
-          <button onClick={goBack}>
+          <button
+            onClick={goBack}
+            disabled={curIndex === numMaps - 1}
+            className="disabled:opacity-25 disabled:cursor-not-allowed"
+          >
             <img src={BackIcon} alt="back" className="h-5" />
           </button>
-          <div className="mx-4">
+          <div className="mx-4 w-48">
             {format(new Date(curImage.date), "EEEE, LLL d")}
           </div>
-          <button onClick={goForward}>
+          <button
+            onClick={goForward}
+            disabled={curIndex === 0}
+            className="disabled:opacity-25 disabled:cursor-not-allowed"
+          >
             <img src={ForwardIcon} alt="forward" className="h-5" />
           </button>
         </div>

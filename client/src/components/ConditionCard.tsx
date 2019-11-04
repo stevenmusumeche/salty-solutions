@@ -1,5 +1,5 @@
 import React, { ReactNode, useContext } from "react";
-import { CombinedError } from "urql";
+import { CombinedError, OperationContext } from "urql";
 import SkeletonCharacter from "./SkeletonCharacter";
 import "./SkeletonCharacter.css";
 import ErrorIcon from "../assets/error.svg";
@@ -12,6 +12,7 @@ interface Props {
   children: ReactNode;
   fontSize?: string;
   className?: string;
+  refresh?: (opts?: Partial<OperationContext> | undefined) => void;
 }
 
 const Wrapper: React.FC<{ children: ReactNode; className?: string }> = ({
@@ -42,7 +43,8 @@ const ConditionCard: React.FC<Props> = ({
   error,
   children,
   fontSize = "7em",
-  className
+  className,
+  refresh
 }) => {
   let displayValue: any = null;
   const { isSmall } = useContext(WindowSizeContext);
@@ -55,7 +57,20 @@ const ConditionCard: React.FC<Props> = ({
       </Wrapper>
     );
   } else if (error && !children) {
-    displayValue = <img src={ErrorIcon} style={{ height: 120 }} alt="error" />;
+    displayValue = (
+      <div className="flex flex-col">
+        <img src={ErrorIcon} style={{ height: 120 }} alt="error" />
+        {refresh && (
+          <button
+            onClick={() => refresh({ requestPolicy: "network-only" })}
+            type="button"
+            className={"text-black text-sm hover:underline mt-2 mb-1"}
+          >
+            retry
+          </button>
+        )}
+      </div>
+    );
   } else {
     displayValue = children;
   }

@@ -2,7 +2,7 @@ import React from "react";
 import { VictoryChart, VictoryLine, VictoryAxis } from "victory";
 import { differenceInCalendarDays } from "date-fns";
 import SkeletonCharacter from "./SkeletonCharacter";
-import { CombinedError } from "urql";
+import { CombinedError, OperationContext } from "urql";
 import ErrorIcon from "../assets/error.svg";
 import MiniGraphWrapper from "./MiniGraphWrapper";
 
@@ -13,6 +13,7 @@ interface Props {
   fetching: boolean;
   error?: CombinedError;
   className?: string;
+  refresh?: (opts?: Partial<OperationContext> | undefined) => void;
 }
 
 const MiniGraph: React.FC<Props> = ({
@@ -21,13 +22,27 @@ const MiniGraph: React.FC<Props> = ({
   fetching,
   error,
   tickValues,
-  className
+  className,
+  refresh
 }) => {
   let displayVal = null;
   if (fetching) {
     displayVal = <SkeletonCharacter />;
   } else if (error && !data) {
-    displayVal = <img src={ErrorIcon} style={{ height: 120 }} alt="error" />;
+    displayVal = (
+      <div className="flex flex-col">
+        <img src={ErrorIcon} style={{ height: 120 }} alt="error" />
+        {refresh && (
+          <button
+            onClick={() => refresh({ requestPolicy: "network-only" })}
+            type="button"
+            className={"text-black text-sm hover:underline mt-2 mb-1"}
+          >
+            retry
+          </button>
+        )}
+      </div>
+    );
   } else if (data) {
     displayVal = (
       <VictoryChart

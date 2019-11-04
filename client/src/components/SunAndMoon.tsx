@@ -11,8 +11,10 @@ interface Props {
 }
 const ISO_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSxxx";
 
+// todo: add error retry ability
+
 const SunAndMoon: React.FC<Props> = ({ locationId, date }) => {
-  const [result] = useSunAndMoonQuery({
+  const [result, refresh] = useSunAndMoonQuery({
     variables: {
       locationId,
       startDate: format(startOfDay(date), ISO_FORMAT),
@@ -29,40 +31,45 @@ const SunAndMoon: React.FC<Props> = ({ locationId, date }) => {
         error={result.error && !sun}
         label="Nautical Dawn"
         fontSize="5rem"
+        refresh={refresh}
       >
-        <div>{sun && format(new Date(sun.nauticalDawn), "h:mm")}</div>
+        {sun && format(new Date(sun.nauticalDawn), "h:mm")}
       </ConditionCard>
       <ConditionCard
         fetching={result.fetching}
         error={result.error && !sun}
         label="Sunrise"
         fontSize="5rem"
+        refresh={refresh}
       >
-        <div>{sun && format(new Date(sun.sunrise), "h:mm")}</div>
+        {sun && format(new Date(sun.sunrise), "h:mm")}
       </ConditionCard>
       <ConditionCard
         fetching={result.fetching}
         error={result.error && !sun}
         label="Sunset"
         fontSize="5rem"
+        refresh={refresh}
       >
-        <div>{sun && format(new Date(sun.sunset), "h:mm")}</div>
+        {sun && format(new Date(sun.sunset), "h:mm")}
       </ConditionCard>
       <ConditionCard
         fetching={result.fetching}
         error={result.error && !sun}
         label="Nautical Dusk"
         fontSize="5rem"
+        refresh={refresh}
       >
-        <div>{sun && format(new Date(sun.nauticalDusk), "h:mm")}</div>
+        {sun && format(new Date(sun.nauticalDusk), "h:mm")}
       </ConditionCard>
       <ConditionCard
         fetching={result.fetching}
         error={result.error && !moon}
         label={moon ? `${moon.phase} (${moon.illumination}%)` : "Moon Phase"}
         fontSize="5rem"
+        refresh={refresh}
       >
-        <MoonPhase phase={moon && moon.phase} />
+        {moon && <MoonPhase phase={moon.phase} />}
       </ConditionCard>
     </div>
   );

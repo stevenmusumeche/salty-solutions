@@ -5,12 +5,12 @@ import {
 import { UseQueryState } from "urql";
 
 export function useWaterTemperatureData(locationId: string) {
-  const [result] = useCurrentConditionsDataQuery({
+  const [result, refresh] = useCurrentConditionsDataQuery({
     variables: { locationId }
   });
 
   const { curValue, curDetail } = extractData(result);
-  return { curValue, curDetail, ...result };
+  return { curValue, curDetail, refresh, ...result };
 }
 
 function extractData(data: UseQueryState<CurrentConditionsDataQuery>) {

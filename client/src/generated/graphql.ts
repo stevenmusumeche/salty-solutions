@@ -946,7 +946,7 @@ export function useMapsQuery(
 export const ModisMapDocument = gql`
   query ModisMap($locationId: ID!) {
     location(id: $locationId) {
-      modisMaps(numDays: 7) {
+      modisMaps(numDays: 8) {
         date
         small {
           url
