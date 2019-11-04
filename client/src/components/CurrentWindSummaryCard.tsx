@@ -6,12 +6,9 @@ interface Props {
   locationId: string;
 }
 const CurrentWindSummaryCard: React.FC<Props> = ({ locationId }) => {
-  const {
-    curValue,
-    curDirectionValue,
-    fetching: fetching,
-    error: error
-  } = useCurrentWindData(locationId);
+  const { curValue, curDirectionValue, fetching, error } = useCurrentWindData(
+    locationId
+  );
 
   return (
     <ConditionCard
