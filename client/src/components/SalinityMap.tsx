@@ -2,6 +2,7 @@ import React from "react";
 import { useSalinityMapQuery, SalinityMapQuery } from "../generated/graphql";
 import ErrorIcon from "../assets/error.svg";
 import { UseQueryState } from "urql";
+import useBreakpoints from "../hooks/useBreakpoints";
 
 interface Props {
   locationId: string;
@@ -12,8 +13,10 @@ export const SalinityMap: React.FC<Props> = ({ locationId }) => {
     variables: { locationId }
   });
 
+  const { isSmall } = useBreakpoints();
+
   function renderMap(salinityMap: UseQueryState<SalinityMapQuery>) {
-    if (salinityMap.error)
+    if (salinityMap.error) {
       return (
         <div className="flex flex-col h-full justify-center items-center">
           <img src={ErrorIcon} style={{ height: 120 }} alt="error" />
@@ -28,6 +31,7 @@ export const SalinityMap: React.FC<Props> = ({ locationId }) => {
           )}
         </div>
       );
+    }
 
     if (
       salinityMap.fetching ||
@@ -37,21 +41,25 @@ export const SalinityMap: React.FC<Props> = ({ locationId }) => {
       return <div className="text-black">Loading Salinity Map</div>;
     }
 
+    const mapUrl: string = salinityMap.data.location.salinityMap;
+
     return (
-      <img
-        src={salinityMap.data.location.salinityMap}
-        className="max-h-full"
-        alt="salinity map"
-      />
+      <ConditionalWrapper
+        condition={isSmall}
+        wrapper={(children: any) => (
+          <a href={mapUrl} target="_blank" rel="noopener noreferrer">
+            {children}
+          </a>
+        )}
+      >
+        <img src={mapUrl} className="max-h-full" alt="salinity map" />
+      </ConditionalWrapper>
     );
   }
 
   return (
     <>
-      <div
-        className="mb-8 bg-white rounded-lg shadow-md relative z-0 text-white inline-flex items-start justify-center p-8"
-        style={{ width: 800 }}
-      >
+      <div className="mb-8 bg-white rounded-lg shadow-md relative z-0 text-white inline-flex items-start justify-center p-8 salinity-map-wrapper">
         {renderMap(salinityMap)}
       </div>
     </>
@@ -59,3 +67,9 @@ export const SalinityMap: React.FC<Props> = ({ locationId }) => {
 };
 
 export default SalinityMap;
+
+const ConditionalWrapper: React.FC<{
+  condition: boolean;
+  wrapper: any;
+}> = ({ condition, wrapper, children }) =>
+  condition ? wrapper(children) : children;

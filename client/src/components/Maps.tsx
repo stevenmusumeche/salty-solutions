@@ -5,6 +5,7 @@ import RadarMap from "./RadarMap";
 import MinusIcon from "../assets/minus-icon.svg";
 import PlusIcon from "../assets/plus-icon.svg";
 import ModisMap from "./ModisMap";
+import useBreakpoints from "../hooks/useBreakpoints";
 
 interface Props {
   locationId: string;
@@ -65,30 +66,43 @@ const reducer = (state: State, action: Action) => {
 const Maps: React.FC<Props> = ({ locationId }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
+  const { isSmall, isAtLeastMedium } = useBreakpoints();
+
   useEffect(() => {
     dispatch({ type: "DISABLE_ALL" });
   }, [locationId]);
 
   return (
-    <>
-      <div className="flex">
+    <div>
+      <div className="flex flex-col md:flex-row">
         <RadarButton
           showRadar={state.showRadar}
           toggleRadar={() => dispatch({ type: "TOGGLE_RADAR" })}
         />
+        {state.showRadar && isSmall && <RadarMap locationId={locationId} />}
         <SalinityButton
           showSalinity={state.showSalinity}
           toggle={() => dispatch({ type: "TOGGLE_SALINITY" })}
         />
+        {state.showSalinity && isSmall && (
+          <SalinityMap locationId={locationId} />
+        )}
         <ModisButton
           show={state.showModis}
           toggle={() => dispatch({ type: "TOGGLE_MODIS" })}
         />
+        {state.showModis && isSmall && <ModisMap locationId={locationId} />}
       </div>
-      {state.showRadar && <RadarMap locationId={locationId} />}
-      {state.showSalinity && <SalinityMap locationId={locationId} />}
-      {state.showModis && <ModisMap locationId={locationId} />}
-    </>
+      {state.showRadar && isAtLeastMedium && (
+        <RadarMap locationId={locationId} />
+      )}
+      {state.showSalinity && isAtLeastMedium && (
+        <SalinityMap locationId={locationId} />
+      )}
+      {state.showModis && isAtLeastMedium && (
+        <ModisMap locationId={locationId} />
+      )}
+    </div>
   );
 };
 
@@ -98,7 +112,10 @@ const RadarButton: React.FC<{
   showRadar: boolean;
   toggleRadar: () => void;
 }> = ({ showRadar, toggleRadar }) => (
-  <Button className={`w-80 hidden md:flex mb-8 mr-8`} onClick={toggleRadar}>
+  <Button
+    className={`w-full md:w-80 flex mb-4 md:mb-8 md:mr-8`}
+    onClick={toggleRadar}
+  >
     <div>{showRadar ? "Hide " : "Show "} Radar</div>{" "}
     <img
       className="w-4 ml-6"
@@ -112,7 +129,10 @@ const SalinityButton: React.FC<{
   showSalinity: boolean;
   toggle: () => void;
 }> = ({ showSalinity, toggle }) => (
-  <Button className={`w-80 hidden md:flex mb-8 mr-8`} onClick={toggle}>
+  <Button
+    className={`w-full md:w-80 flex mb-4 md:mb-8 md:mr-8`}
+    onClick={toggle}
+  >
     <div>{showSalinity ? "Hide " : "Show "} Salinity Forecast</div>{" "}
     <img
       className="w-4 ml-6"
@@ -126,7 +146,10 @@ const ModisButton: React.FC<{
   show: boolean;
   toggle: () => void;
 }> = ({ show, toggle }) => (
-  <Button className={`w-80 hidden md:flex mb-8 mr-8`} onClick={toggle}>
+  <Button
+    className={`w-full md:w-80 flex mb-4 md:mb-8 md:mr-8`}
+    onClick={toggle}
+  >
     <div>{show ? "Hide " : "Show "} Latest Satellite</div>{" "}
     <img
       className="w-4 ml-6"

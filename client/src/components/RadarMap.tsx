@@ -74,10 +74,7 @@ export const RadarMap: React.FC<Props> = ({ locationId }) => {
 
   return (
     <>
-      <div
-        className="mb-8 bg-black relative z-0 text-white"
-        style={{ width: 600, height: 550 }}
-      >
+      <div className="mb-8 bg-black relative z-0 text-white radar-wrapper">
         {maps.fetching && (
           <div className="flex items-center justify-center h-full">
             Loading Maps
