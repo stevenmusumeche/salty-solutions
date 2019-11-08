@@ -265,3 +265,11 @@
     width: 800px;
   }
 }
+
+.magnifier-image-mobile img {
+  max-width: none;
+  width: calc(100% + 2rem);
+  margin-left: -1rem;
+  margin-right: -1rem;
+  margin-bottom: -1rem;
+}

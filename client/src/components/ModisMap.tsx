@@ -6,12 +6,14 @@ import Magnifier from "react-magnifier";
 import { format } from "date-fns";
 import BackIcon from "../assets/back.svg";
 import ForwardIcon from "../assets/forward.svg";
+import useBreakpoints from "../hooks/useBreakpoints";
 
 interface Props {
   locationId: string;
 }
 
 const ModisMap: React.FC<Props> = ({ locationId }) => {
+  const { isAtLeastMedium } = useBreakpoints();
   const [modisMap, refresh] = useModisMapQuery({ variables: { locationId } });
   const [curIndex, setCurIndex] = useState(0);
 
@@ -66,8 +68,10 @@ const ModisMap: React.FC<Props> = ({ locationId }) => {
       <span>
         <p className="mb-4 text-left">
           MODIS is an extensive program using sensors on two satellites that
-          each provide complete daily coverage of the earth. Hover over an image
-          to zoom.
+          each provide complete daily coverage of the earth.{" "}
+          {isAtLeastMedium
+            ? "Hover over an image to zoom."
+            : "Touch and drag the image to zoom."}
         </p>
         <div className="mb-4 flex justify-center items-center">
           <button
@@ -89,12 +93,12 @@ const ModisMap: React.FC<Props> = ({ locationId }) => {
           </button>
         </div>
         <Magnifier
+          className={"magnifier-image-mobile"}
           src={curImage.small.url}
-          width={curImage.small.width}
           zoomImgSrc={curImage.large.url}
           zoomFactor={5}
-          mgWidth={400}
-          mgHeight={275}
+          mgWidth={isAtLeastMedium ? 400 : window.innerWidth - 120}
+          mgHeight={isAtLeastMedium ? 275 : 200}
           mgShape="square"
         />
       </span>
@@ -103,10 +107,7 @@ const ModisMap: React.FC<Props> = ({ locationId }) => {
 
   return (
     <>
-      <div
-        className="mb-8 bg-white rounded-lg shadow-md z-0 text-white p-8 inline-flex items-center justify-center text-gray-900 text-center"
-        style={{ width: 750 }}
-      >
+      <div className="mb-8 bg-white rounded-lg shadow-md z-0 text-white p-8 inline-flex items-center justify-center text-gray-900 text-center w-full md:w-200">
         {renderMap(modisMap)}
       </div>
     </>
