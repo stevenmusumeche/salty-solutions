@@ -15,8 +15,6 @@ const bugsnagClient = bugsnag("c1260c2450f57d001639a05b6c1335f7");
 bugsnagClient.use(bugsnagReact, React);
 const ErrorBoundary = bugsnagClient.getPlugin("react");
 
-bugsnagClient.notify(new Error("Test error"));
-
 export const INITIAL_LOCATION = "calcasieu-lake";
 
 const client = createClient({
