@@ -7,7 +7,6 @@ const DEFAULT_NUM_DAYS = 3;
 const DEFAULT_NUM_HOURS = 24;
 
 const resolvers: Resolvers = {
-  // @ts-ignore
   Query: {
     locations: (_, __, { services }) => {
       return services.location.getAll();
@@ -34,7 +33,6 @@ const resolvers: Resolvers = {
         .filter(notUndefined);
     },
     sun: async (location, args, { services }) => {
-      throw new UserInputError("test 7");
       return services.sunMoon.getSunInfo(
         new Date(args.start),
         new Date(args.end),
