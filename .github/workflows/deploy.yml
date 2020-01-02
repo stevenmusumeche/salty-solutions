@@ -14,6 +14,8 @@ jobs:
           node-version: "10.x"
       - run: npm install
       - run: npm install
+        working-directory: ./client
+      - run: npm install
         working-directory: ./server
       - run: ./node_modules/.bin/sls deploy --stage prod
         working-directory: ./server
