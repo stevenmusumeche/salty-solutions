@@ -15,8 +15,7 @@ jobs:
       - run: npm install
       - run: npm install
         working-directory: ./server
-      - run: ./node_modules/.bin/sls deploy --stage prod
-        working-directory: ./server
+      - run: ./server/node_modules/.bin/sls deploy --stage prod
         env:
           ROLLBAR_KEY: ${{ secrets.ROLLBAR_KEY }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_SERVERLESS }}
