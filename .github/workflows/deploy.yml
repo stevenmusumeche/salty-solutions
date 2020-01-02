@@ -12,9 +12,10 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: "10.x"
-      - run: pwd
-        working-directory: ./server
       - run: npm install
         working-directory: ./server
+      - run: sls deploy --stage prod
         env:
           ROLLBAR_KEY: ${{ secrets.ROLLBAR_KEY }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_SERVERLESS }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY_SERVERLESS }}
