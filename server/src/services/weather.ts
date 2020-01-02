@@ -123,7 +123,11 @@ export const getConditions = async (
 
   const url = `https://api.weather.gov/stations/${location.weatherGov.stationId}/observations?end=${end}&start=${start}`;
 
+  console.log({ url });
+
   const { data } = await axios.get<any>(url);
+
+  console.log({ data: data.features });
 
   let temperature = data.features.map((x: any) => ({
     timestamp: x.properties.timestamp,
