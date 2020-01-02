@@ -127,7 +127,7 @@ export const getConditions = async (
 
   const { data } = await axios.get<any>(url);
 
-  console.log({ data: data.features });
+  console.log({ data: JSON.stringify(data.features) });
 
   let temperature = data.features.map((x: any) => ({
     timestamp: x.properties.timestamp,
@@ -137,6 +137,9 @@ export const getConditions = async (
     }
   }));
   temperature = orderBy(temperature, ["timestamp"], ["asc"]);
+  console.log({
+    wind: data.features.filter((x: any) => !!x.properties.windDirection.value)
+  });
 
   let wind = data.features
     .filter((x: any) => !!x.properties.windDirection.value)
