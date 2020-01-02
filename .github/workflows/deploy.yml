@@ -12,8 +12,9 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: "10.x"
-      - run: cd server
       - run: pwd
+        working-directory: ./server
       - run: npm install
+        working-directory: ./server
         env:
           ROLLBAR_KEY: ${{ secrets.ROLLBAR_KEY }}
