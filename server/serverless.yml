@@ -8,19 +8,19 @@ plugins:
 provider:
   name: aws
   runtime: nodejs10.x
-  profile: serverless
   stage: ${opt:stage, 'dev'}
 
 functions:
-  graphql:    
+  graphql:
     handler: ./src/server.graphql
-    events:      
+    events:
       - http:
           cors: true
           method: any
           path: api
     environment:
       SERVERLESS_STAGE: ${self:provider.stage}
+      ROLLBAR_KEY: ${env:ROLLBAR_KEY}
 
 custom:
   serverless-offline:
