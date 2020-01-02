@@ -4,7 +4,7 @@ on:
     branches:
       - master
 jobs:
-  foo:
+  backend:
     name: "Deploy backend"
     runs-on: ubuntu-latest
     steps:
@@ -13,6 +13,7 @@ jobs:
         with:
           node-version: "10.x"
       - run: cd server
+      - run: pwd
       - run: npm install
         env:
           ROLLBAR_KEY: ${{ secrets.ROLLBAR_KEY }}
