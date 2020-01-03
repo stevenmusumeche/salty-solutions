@@ -1,7 +1,7 @@
 import axios from "axios";
 import { LocationEntity } from "./location";
 import { format, subHours } from "date-fns";
-import { orderBy } from "lodash";
+import orderBy from "lodash/orderBy";
 import { degreesToCompass } from "./usgs";
 import { WeatherForecast } from "../generated/graphql";
 import { parseWindDirection } from "./utils";
@@ -123,11 +123,7 @@ export const getConditions = async (
 
   const url = `https://api.weather.gov/stations/${location.weatherGov.stationId}/observations?end=${end}&start=${start}`;
 
-  // console.log({ url });
-
   const { data } = await axios.get<any>(url);
-
-  // console.log({ data: JSON.stringify(data.features) });
 
   let temperature = data.features.map((x: any) => ({
     timestamp: x.properties.timestamp,
@@ -137,9 +133,6 @@ export const getConditions = async (
     }
   }));
   temperature = orderBy(temperature, ["timestamp"], ["asc"]);
-  // console.log({
-  //   wind: data.features.filter((x: any) => !!x.properties.windDirection.value)
-  // });
 
   let wind = data.features
     .filter((x: any) => !!x.properties.windDirection.value)

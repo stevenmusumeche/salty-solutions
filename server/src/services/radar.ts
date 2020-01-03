@@ -1,6 +1,7 @@
 import { LocationEntity } from "./location";
 import { parse, format } from "date-fns";
-import { orderBy, takeRight } from "lodash";
+import orderBy from "lodash/orderBy";
+import takeRight from "lodash/takeRight";
 import xray from "x-ray";
 import { Maybe } from "../generated/graphql";
 var x = xray();
