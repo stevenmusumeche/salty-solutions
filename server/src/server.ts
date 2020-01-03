@@ -81,8 +81,8 @@ const server = new ApolloServer({
     };
   },
   extensions: [() => new FormatErrorWithContextExtension(formatError)],
-  playground: IS_DEV,
-  introspection: IS_DEV
+  playground: true, // IS_DEV,
+  introspection: true // IS_DEV
 });
 
 const app = new Koa();
