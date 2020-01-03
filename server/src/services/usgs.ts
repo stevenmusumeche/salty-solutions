@@ -1,6 +1,6 @@
 import axios from "axios";
 import { LocationEntity } from "./location";
-import { orderBy } from "lodash";
+import orderBy from "lodash/orderBy";
 
 export const getWaterHeight = async (
   location: any,
