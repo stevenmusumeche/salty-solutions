@@ -12,7 +12,6 @@ export interface MarineForecast {
   };
 }
 export const getForecast = async (location: any): Promise<MarineForecast[]> => {
-  return [];
   const url = `https://marine.weather.gov/MapClick.php?zoneid=${location.marineZoneId}&zflg=1`;
   const result = await x(url, "#detailed-forecast-body", {
     labels: [".row-forecast .forecast-label"],
