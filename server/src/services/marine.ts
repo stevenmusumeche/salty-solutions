@@ -12,24 +12,28 @@ export interface MarineForecast {
   };
 }
 export const getForecast = async (location: any): Promise<MarineForecast[]> => {
-  return [];
-  const url = `https://marine.weather.gov/MapClick.php?zoneid=${location.marineZoneId}&zflg=1`;
-  const result = await x(url, "#detailed-forecast-body", {
-    labels: [".row-forecast .forecast-label"],
-    texts: [".row-forecast .forecast-text"]
-  });
-
-  const forecast = [];
-  for (let i = 0; i < result.labels.length; i++) {
-    const parsed = parseForecast(result.texts[i].trim());
-
-    forecast.push({
-      timePeriod: result.labels[i].trim(),
-      forecast: { ...parsed }
+  try {
+    const url = `https://marine.weather.gov/MapClick.php?zoneid=${location.marineZoneId}&zflg=1`;
+    const result = await x(url, "#detailed-forecast-body", {
+      labels: [".row-forecast .forecast-label"],
+      texts: [".row-forecast .forecast-text"]
     });
-  }
 
-  return forecast;
+    const forecast = [];
+    for (let i = 0; i < result.labels.length; i++) {
+      const parsed = parseForecast(result.texts[i].trim());
+
+      forecast.push({
+        timePeriod: result.labels[i].trim(),
+        forecast: { ...parsed }
+      });
+    }
+
+    return forecast;
+  } catch (e) {
+    console.error(e);
+    return [];
+  }
 };
 
 export function parseForecast(
