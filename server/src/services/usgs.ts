@@ -20,10 +20,10 @@ export const getWaterTemperatureLatest = async (location: LocationEntity) => {
   console.log("water temp data", data);
   console.log(
     "water temp data solution",
-    orderBy(data, ["timestamp"], ["desc"])[0]
+    orderBy(data, [x => x.timestamp], ["desc"])[0]
   );
 
-  return orderBy(data, ["timestamp"], ["desc"])[0];
+  return orderBy(data, [x => x.timestamp], ["desc"])[0];
 };
 
 export const getWaterTemperature = async (location: any, numHours: number) => {
