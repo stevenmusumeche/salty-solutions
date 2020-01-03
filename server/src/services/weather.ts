@@ -22,7 +22,6 @@ import { parseWindDirection } from "./utils";
 export const getForecast = async (
   location: LocationEntity
 ): Promise<WeatherForecast[]> => {
-  return [];
   const url = `${location.weatherGov.apiBase}/forecast`;
   const { data } = await axios.get(url);
 
