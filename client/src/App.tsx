@@ -73,9 +73,8 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
           <CurrentWaterTempDetailGraph locationId={locationId} />
         </div>
 
-        <SectionTitle text="Maps" />
-        <Maps locationId={locationId} />
-
+        <SectionTitle text="Forecast" />
+        <CombinedForecast locationId={locationId} />
         <SectionTitle text="Tides" />
         <div className="bg-white rounded-lg shadow-md p-4 mb-4 md:mb-8">
           <Tides
@@ -86,8 +85,9 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
         </div>
         <SectionTitle text="Solunar Data" />
         <SunAndMoon locationId={locationId} date={date} />
-        <SectionTitle text="Forecast" />
-        <CombinedForecast locationId={locationId} />
+        <SectionTitle text="Maps" />
+        <Maps locationId={locationId} />
+
         <SectionTitle text="Hourly Forecast" />
         <HourlyForecast locationId={locationId} />
       </div>

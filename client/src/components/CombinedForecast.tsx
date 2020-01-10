@@ -165,6 +165,8 @@ const Wrapper: React.FC<{
 
 const WaterConditionIcon: React.FC<{ text?: string }> = ({ text = "" }) => {
   let image = Unknown;
+  const [, second] = text.split("-");
+
   switch (text) {
     case "smooth":
     case "0-1":
@@ -195,10 +197,13 @@ const WaterConditionIcon: React.FC<{ text?: string }> = ({ text = "" }) => {
       if (text.startsWith("moderate chop")) {
         image = LightChop;
       }
-      if (text.startsWith("rough")) {
+      if (
+        text.startsWith("rough") ||
+        (Number(second) >= 3 && Number(second) < 6)
+      ) {
         image = Rough;
       }
-      if (text.startsWith("very rough") || Number(text[0]) >= 4) {
+      if (text.startsWith("very rough") || Number(second) >= 6) {
         image = Rough;
       }
       break;
