@@ -2,11 +2,9 @@ import { LocationEntity } from "./location";
 import { parse, format } from "date-fns";
 import orderBy from "lodash/orderBy";
 import takeRight from "lodash/takeRight";
-import xray from "x-ray";
+import axios from "axios";
+import cheerio from "cheerio";
 import { Maybe } from "../generated/graphql";
-var x = xray();
-
-// todo: axios?
 
 // documentation here:
 // https://www.weather.gov/jetstream/ridge_download
@@ -19,7 +17,14 @@ export const getRadarImages = async (
 
   // all images
   const url = `https://radar.weather.gov/ridge/RadarImg/N0R/${siteId}/`;
-  let rawUrls: string[] = await x(url, "table", ["a@href"]);
+
+  const result = await axios.get(url);
+  const $ = cheerio.load(result.data);
+  const rawUrls: string[] = $("a", "table")
+    .map((i, el) => {
+      return $(el).attr("href");
+    })
+    .get();
 
   const allImages = rawUrls
     .map(url => {

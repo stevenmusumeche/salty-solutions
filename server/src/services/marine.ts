@@ -1,6 +1,6 @@
-import xray from "x-ray";
+import axios from "axios";
 import { parseWindDirection } from "./utils";
-var x = xray();
+import cheerio from "cheerio";
 
 export interface MarineForecast {
   timePeriod: string;
@@ -14,25 +14,24 @@ export interface MarineForecast {
 export const getForecast = async (location: any): Promise<MarineForecast[]> => {
   try {
     const url = `https://marine.weather.gov/MapClick.php?zoneid=${location.marineZoneId}&zflg=1`;
-    console.log({ marineUrl: url });
-
-    const result = await x(url, "#detailed-forecast-body", {
-      labels: [".row-forecast .forecast-label"],
-      texts: [".row-forecast .forecast-text"]
-    });
-    console.log({ result });
-
-    const forecast = [];
-    for (let i = 0; i < result.labels.length; i++) {
-      const parsed = parseForecast(result.texts[i].trim());
-
-      forecast.push({
-        timePeriod: result.labels[i].trim(),
-        forecast: { ...parsed }
-      });
-    }
-
-    return forecast;
+    const result = await axios.get(url);
+    const $ = cheerio.load(result.data);
+    return $(".row-forecast", "#detailed-forecast-body")
+      .map((i, el) => {
+        return {
+          timePeriod: $(".forecast-label", el)
+            .text()
+            .trim(),
+          forecast: {
+            ...parseForecast(
+              $(".forecast-text", el)
+                .text()
+                .trim()
+            )
+          }
+        };
+      })
+      .get();
   } catch (e) {
     console.error(e);
     return [];

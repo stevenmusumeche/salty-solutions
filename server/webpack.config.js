@@ -1,6 +1,5 @@
 const path = require("path");
 const slsw = require("serverless-webpack");
-const webpack = require("webpack");
 
 module.exports = {
   mode: slsw.lib.webpack.isLocal ? "development" : "production",
@@ -20,11 +19,5 @@ module.exports = {
       // all files with a `.ts` or `.tsx` extension will be handled by `ts-loader`
       { test: /\.tsx?$/, loader: "ts-loader" }
     ]
-  },
-  plugins: [
-    // hack to make x-ray module work
-    new webpack.DefinePlugin({
-      "global.GENTLY": false
-    })
-  ]
+  }
 };
