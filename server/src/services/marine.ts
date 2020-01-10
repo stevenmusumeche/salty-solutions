@@ -44,7 +44,7 @@ export function parseForecast(
   let retVal: any = { text: forecastText };
   retVal.waterCondition = parseWaterCondition(forecastText);
 
-  const windRegex = /^(?<direction>[\w]+) winds(?<qualifier> around| up to)? ((?<speed>[\d]+)|((?<speedStart>[\d]+) to (?<speedEnd>[\d]+))) knots( becoming)?/im;
+  const windRegex = /^(?<direction>[\w]+) winds(?<qualifier> around| up to| near)? ((?<speed>[\d]+)|((?<speedStart>[\d]+) to (?<speedEnd>[\d]+))) knots( becoming)?/im;
   let matches = forecastText.match(windRegex);
   if (matches && matches.groups) {
     retVal.windDirection = parseWindDirection(matches.groups.direction);
