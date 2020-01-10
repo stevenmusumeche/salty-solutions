@@ -8,7 +8,7 @@ import cases from "jest-in-case";
 
 describe("marine forecast water condition parsing", () => {
   cases(
-    "inshore",
+    "all",
     opts => {
       expect(parseForecast(opts.forecast).waterCondition).toBe(opts.expected);
     },
@@ -84,20 +84,12 @@ describe("marine forecast water condition parsing", () => {
       {
         forecast: "Seas around 1 foot.",
         expected: "1-1"
+      },
+      {
+        forecast:
+          "Southeast winds building to 15 to 20 knots rising to 20 knots. Seas building to 4 to 7 feet with occasional seas to 9 feet. Dominant period 9 seconds.",
+        expected: "4-7"
       }
     ]
   );
-  // test("inshore", () => {
-  //   let forecast =
-  //     "Bay waters choppy. Patchy fog late in the morning. Chance of showers late in the morning. Chance of thunderstorms through the day. Showers in the afternoon.";
-  //   let expected = "choppy";
-  //   let { waterCondition } = parseForecast(forecast);
-  //   expect(waterCondition).toBe(expected);
-
-  //   forecast =
-  //     "Lake waters a light chop. Slight chance of showers and thunderstorms late in the morning, then showers likely and chance of thunderstorms in the afternoon.";
-  //   expected = "light chop";
-  //   ({ waterCondition } = parseForecast(forecast));
-  //   expect(waterCondition).toBe(expected);
-  // });
 });
