@@ -12,11 +12,7 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: "12.x"
-      - run: npm install
-      - run: npm install
-        working-directory: ./client
-      - run: npm install
-        working-directory: ./server
+      - run: yarn install
       - run: ./node_modules/.bin/sls deploy --stage prod
         working-directory: ./server
         env:

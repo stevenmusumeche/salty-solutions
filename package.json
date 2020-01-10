@@ -3,6 +3,21 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "server",
+    "client"
+  ],
+  "scripts": {
+    "test": "jest",
+    "build": "yarn --cwd client build",
+    "dev": "yarn dev:server & yarn dev:client",
+    "gql-gen": "graphql-codegen --config codegen.yml",
+    "dev:serverless": "cd server && sls offline start",
+    "dev:server": "LOCAL_DEV=true nodemon --watch 'server/src/**/*' -e ts,tsx --exec ts-node ./server/src/server.ts",
+    "dev:client": "yarn --cwd ./client start",
+    "deploy:server": "cd server && ./node_modules/.bin/sls deploy --stage prod"
+  },
   "dependencies": {
     "@graphql-codegen/typescript-urql": "^1.4.0",
     "@types/jest": "^24.0.18",
@@ -28,15 +43,5 @@
     "nodemon": "^1.19.0",
     "ts-node": "^8.1.0",
     "typescript": "^3.7.4"
-  },
-  "scripts": {
-    "test": "jest",
-    "build": "yarn --cwd client build",
-    "dev": "yarn dev:server & yarn dev:client",
-    "gql-gen": "graphql-codegen --config codegen.yml",
-    "dev:serverless": "cd server && sls offline start",
-    "dev:server": "LOCAL_DEV=true nodemon --watch 'server/src/**/*' -e ts,tsx --exec ts-node ./server/src/server.ts",
-    "dev:client": "yarn --cwd ./client start",
-    "deploy:server": "cd server && ./node_modules/.bin/sls deploy --stage prod"
   }
 }
