@@ -71,7 +71,7 @@ export function parseForecast(
 
 function parseWaterCondition(forecastText: string): string | void {
   const inshoreRegex = /(Bay|Lake|Nearshore) waters a? ?(?<data>.*?)\./im;
-  const offshoreRegex = /(seas|waves) (?<qualifier>(around)|(less than)|(building to) )?(?<numbers>.*?)(\.|(?<postQualifier>( or less)|( with occasional seas.*?))\.)/im;
+  const offshoreRegex = /(seas|waves) (?<qualifier>(around)|(less than)|(building to) )?(?<numbers>.*?)(\.|(?<postQualifier>( or less)|( with occasional.*?))\.)/im;
   const inshoreMatches = forecastText.match(inshoreRegex);
   const offshoreMatches = forecastText.match(offshoreRegex);
   if (inshoreMatches && inshoreMatches.groups) {
