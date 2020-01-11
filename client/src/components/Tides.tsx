@@ -106,8 +106,12 @@ const Tides: React.FC<Props> = ({ tideStations, locationId, date }) => {
     );
   }
 
-  const sunData =
-    tideResult.data.location.sun[tideResult.data.location.sun.length - 1];
+  // we get an array of sun data with the various dates. use the one that matches the selected date
+  const sunData = tideResult.data.location.sun.filter(
+    x =>
+      startOfDay(new Date(x.sunrise)).toISOString() ===
+      startOfDay(date).toISOString()
+  )[0];
 
   const {
     dawn,
