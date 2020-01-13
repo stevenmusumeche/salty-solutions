@@ -70,10 +70,22 @@ const tideStations: TideStationEntity[] = [
   { id: "8764931", name: "Cote Blanche Island, West Cote Blanche Bay" },
   { id: "8765026", name: "Marsh Island, Atchafalaya Bay" },
   { id: "8761819", name: "Texaco Dock, Hackberry" },
-  { id: "8762675", name: "Timbalier Island, Timbalier Bay" }
+  { id: "8762675", name: "Timbalier Island, Timbalier Bay" },
+  { id: "8761305", name: "Shell Beach, LA" },
+  { id: "8761529", name: "Martello Castle, Lake Borgne, LA" },
+  { id: "8760742", name: "Comfort Island, LA" },
+  { id: "8761108", name: "Bay Gardene, LA" },
+  { id: "8760595", name: "Breton Island, LA" },
+  { id: "8761724", name: "Grand Isle, LA" },
+  { id: "8761826", name: "Caminada Pass, LA" },
+  { id: "8761687", name: "Barataria Pass, LA" },
+  { id: "8761677", name: "Independence Island" },
+  { id: "8761742", name: "Mendicant Island, Barataria Bay" },
+  { id: "8762075", name: "Port Fourchon, Belle Pass, LA" }
 ];
 
 // tide stations: https://tidesandcurrents.noaa.gov/tide_predictions.html?gid=1400
+// tide station map: https://tidesandcurrents.noaa.gov/map/index.html
 
 export const getStationById = (id: string): TideStationEntity | undefined => {
   return tideStations.find(tideStation => tideStation.id === id);

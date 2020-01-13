@@ -77,8 +77,49 @@ const locations: LocationEntity[] = [
     },
     nowcastSubdomain: "0",
     modisArea: "USA7"
+  },
+  {
+    id: "hopedale",
+    name: "Hopedale",
+    tideStationIds: ["8761305", "8761529", "8760742", "8761108", "8760595"],
+    marineZoneId: "GMZ536",
+    lat: 29.8203972,
+    long: -89.65689,
+    usgsSiteId: "073745257",
+    weatherGov: {
+      apiBase: "https://api.weather.gov/gridpoints/LIX/85,84",
+      stationId: "KNBG",
+      radarSiteId: "LIX"
+    },
+    nowcastSubdomain: "0",
+    modisArea: "USA7"
+  },
+  {
+    id: "grand-isle",
+    name: "Grand Isle",
+    tideStationIds: [
+      "8761724",
+      "8761826",
+      "8761687",
+      "8761677",
+      "8761742",
+      "8762075"
+    ],
+    marineZoneId: "gmz572",
+    lat: 29.2366,
+    long: -89.9873,
+    usgsSiteId: "07380249",
+    weatherGov: {
+      apiBase: "https://api.weather.gov/gridpoints/LIX/73,58",
+      stationId: "KGAO",
+      radarSiteId: "LIX"
+    },
+    nowcastSubdomain: "0",
+    modisArea: "USA7"
   }
 ];
+
+// venice
 
 export const getAll = (): LocationEntity[] =>
   locations.sort((a, b) => a.name.localeCompare(b.name));
