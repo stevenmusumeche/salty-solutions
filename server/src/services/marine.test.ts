@@ -89,6 +89,11 @@ describe("marine forecast water condition parsing", () => {
         forecast:
           "Southeast winds building to 15 to 20 knots rising to 20 knots. Seas building to 4 to 7 feet with occasional seas to 9 feet. Dominant period 9 seconds.",
         expected: "4-7"
+      },
+      {
+        forecast:
+          "Lake waters choppy decreasing to a light chop after midnight.",
+        expected: "choppy"
       }
     ]
   );
