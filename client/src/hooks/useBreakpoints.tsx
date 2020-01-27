@@ -22,14 +22,11 @@ export default function useBreakpoints(
 
   const calcMatches = useCallback(
     (breakpoints: Breakpoints): BreakpointMatches => {
-      return sizes.reduce(
-        (acc, size) => {
-          const query = `(min-width: ${breakpoints[size]}px)`;
-          acc[size] = window.matchMedia(query);
-          return acc;
-        },
-        {} as BreakpointMatches
-      );
+      return sizes.reduce((acc, size) => {
+        const query = `(min-width: ${breakpoints[size]}px)`;
+        acc[size] = window.matchMedia(query);
+        return acc;
+      }, {} as BreakpointMatches);
     },
     [sizes]
   );
@@ -47,9 +44,11 @@ export default function useBreakpoints(
 
     // unsubscribe from even listeners
     return () =>
-      sizes.forEach(size =>
-        matches[size].removeEventListener("change", callback)
-      );
+      sizes.forEach(size => {
+        if (matches[size]) {
+          matches[size].removeEventListener("change", callback);
+        }
+      });
   }, [callback, sizes, matches]);
 
   const helpers = useMemo(() => {
