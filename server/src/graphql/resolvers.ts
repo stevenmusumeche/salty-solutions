@@ -89,7 +89,13 @@ const resolvers: Resolvers = {
       return services.modis.getMaps(location, numDays || 1);
     },
     salinityMap: async (location, args, { services }) => {
-      return services.nowcast.getSalinityMap(location);
+      if (location.nowcastSubdomain) {
+        return services.nowcast.getSalinityMap(location);
+      } else if (location.saveOurLake) {
+        return services.saveOurLake.getSalinityMap(location);
+      }
+
+      return "";
     }
   },
   TidePreditionStation: {

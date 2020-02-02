@@ -13,6 +13,7 @@ import * as radarService from "./services/radar";
 import * as combinedForecastService from "./services/combined-forecast";
 import * as nowcastService from "./services/nowcast";
 import * as modisService from "./services/modis";
+import * as saveOurLakeService from "./services/saveourlake";
 import typeDefs from "./graphql/schema";
 import resolvers from "./graphql/resolvers";
 import Rollbar from "rollbar";
@@ -41,6 +42,7 @@ export interface Context {
     combinedForecast: typeof combinedForecastService;
     nowcast: typeof nowcastService;
     modis: typeof modisService;
+    saveOurLake: typeof saveOurLakeService;
   };
 }
 
@@ -76,7 +78,8 @@ const server = new ApolloServer({
         radar: radarService,
         combinedForecast: combinedForecastService,
         nowcast: nowcastService,
-        modis: modisService
+        modis: modisService,
+        saveOurLake: saveOurLakeService
       }
     };
   },

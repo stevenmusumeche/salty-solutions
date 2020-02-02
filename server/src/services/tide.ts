@@ -81,11 +81,24 @@ const tideStations: TideStationEntity[] = [
   { id: "8761687", name: "Barataria Pass, LA" },
   { id: "8761677", name: "Independence Island" },
   { id: "8761742", name: "Mendicant Island, Barataria Bay" },
-  { id: "8762075", name: "Port Fourchon, Belle Pass, LA" }
+  { id: "8762075", name: "Port Fourchon, Belle Pass, LA" },
+  { id: "8760721", name: "Pilottown, LA" },
+  { id: "8760736", name: "Joseph Bayou, LA" },
+  { id: "8760551", name: "South Pass, LA" },
+  { id: "8760579", name: "Port Eads, South Pass, LA" },
+  { id: "8760922", name: "Pilots Station East, Southwest Pass, LA" },
+  { id: "8760959", name: "Southwest Pass, LA" },
+  { id: "8760416", name: "Southeast Pass, LA" },
+  { id: "8760412", name: "North Pass, Pass a Loutre" },
+  { id: "8760424", name: "Lonesome Bayou (Thomasin), LA" },
+  { id: "8760841", name: "Jack Bay, LA" },
+  { id: "8760889", name: "Olga Compressor Station, Grand Bay, LA" },
+  { id: "8761212", name: "Empire Jetty, LA" }
 ];
 
-// tide stations: https://tidesandcurrents.noaa.gov/tide_predictions.html?gid=1400
+// tide stations in LA: https://tidesandcurrents.noaa.gov/tide_predictions.html?gid=1400
 // tide station map: https://tidesandcurrents.noaa.gov/map/index.html
+// better map: https://tidesandcurrents.noaa.gov/map/index.html?type=TidePredictions&region=
 
 export const getStationById = (id: string): TideStationEntity | undefined => {
   return tideStations.find(tideStation => tideStation.id === id);

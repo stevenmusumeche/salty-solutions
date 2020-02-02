@@ -41,7 +41,8 @@ export const SalinityMap: React.FC<Props> = ({ locationId }) => {
       return <div className="text-black">Loading Salinity Map</div>;
     }
 
-    const mapUrl: string = salinityMap.data.location.salinityMap;
+    const mapUrl = salinityMap.data.location.salinityMap;
+    const isPdf = /saveourlake/.test(mapUrl);
 
     return (
       <ConditionalWrapper
@@ -52,7 +53,22 @@ export const SalinityMap: React.FC<Props> = ({ locationId }) => {
           </a>
         )}
       >
-        <img src={mapUrl} className="max-h-full" alt="salinity map" />
+        {isPdf ? (
+          isSmall ? (
+            <span className="text-black cursor-pointer underline">
+              Open Salinity Map PDF
+            </span>
+          ) : (
+            <embed
+              src={mapUrl}
+              type="application/pdf"
+              width="100%"
+              height="900px"
+            />
+          )
+        ) : (
+          <img src={mapUrl} className="max-h-full" alt="salinity map" />
+        )}
       </ConditionalWrapper>
     );
   }

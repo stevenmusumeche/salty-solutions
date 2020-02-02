@@ -6,6 +6,8 @@ import { degreesToCompass } from "./usgs";
 import { WeatherForecast } from "../generated/graphql";
 import { parseWindDirection } from "./utils";
 
+// https://w1.weather.gov/xml/current_obs/seek.php?state=la&Find=Find
+
 /**
    How do I discover weather data using the API?
   The API uses linked data to allow applications to discover content. Similar to a web site that provides HTML links to help users navigate to each page; linked data helps applications navigate to each endpoint. The /points/location endpoint is the most common endpoint to discover additional API content given the popularity of weather data based upon a location (latitude and longitude).

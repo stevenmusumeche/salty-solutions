@@ -11,7 +11,8 @@ export interface LocationEntity {
     stationId: string;
     radarSiteId: string;
   };
-  nowcastSubdomain: string;
+  nowcastSubdomain?: string;
+  saveOurLake?: boolean;
   modisArea: string;
 }
 
@@ -91,7 +92,7 @@ const locations: LocationEntity[] = [
       stationId: "KNBG",
       radarSiteId: "LIX"
     },
-    nowcastSubdomain: "0",
+    saveOurLake: true,
     modisArea: "USA7"
   },
   {
@@ -116,10 +117,65 @@ const locations: LocationEntity[] = [
     },
     nowcastSubdomain: "0",
     modisArea: "USA7"
+  },
+  {
+    id: "venice",
+    name: "Venice",
+    tideStationIds: [
+      "8760721",
+      "8760736",
+      "8760551",
+      "8760579",
+      "8760922",
+      "8760959",
+      "8760416",
+      "8760412",
+      "8760424",
+      "8760841",
+      "8760889",
+      "8761212",
+      "8760595"
+    ],
+    marineZoneId: "GMZ555",
+    lat: 29.277165,
+    long: -89.3547759,
+    usgsSiteId: "292952089453800",
+    weatherGov: {
+      apiBase: "https://api.weather.gov/gridpoints/LIX/97,61",
+      stationId: "KMIS",
+      radarSiteId: "LIX"
+    },
+    modisArea: "USA7",
+    saveOurLake: true
   }
 ];
 
 // venice
+// shell beach
+// delacroix
+// lake ponchatrain
+// rigolets
+// empire
+// Port Sulphur
+// bay gardene
+// breton island
+// port fouchon
+// golden meadow
+// Myrtle Grove
+// Happy Jack
+// Isle of Pitre, Cat Island, Ship Island, and Back Bay Biloxi, Bay St. Louis.
+
+// https://www.facebook.com/groups/154496828630117/permalink/362118351201296/
+
+// ideas:
+// show tide stations on a map
+// put a link at the top of the page for each section. That way you know what all is provided without scrolling thru everything.
+// barometric pressure
+// native app
+// see tides from days before and after
+// salinity tables? not sure what that is
+// pick locations from a map instead of a drop down
+// river guage info - The Atchafalaya river at butte Larose is pertinent to us here on vermilion bay.
 
 export const getAll = (): LocationEntity[] =>
   locations.sort((a, b) => a.name.localeCompare(b.name));
