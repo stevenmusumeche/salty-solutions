@@ -114,7 +114,10 @@ const RadarButton: React.FC<{
 }> = ({ showRadar, toggleRadar }) => (
   <Button
     className={`w-full md:w-80 flex mb-4 md:mb-8 md:mr-8`}
-    onClick={toggleRadar}
+    onClick={e => {
+      e.preventDefault();
+      toggleRadar();
+    }}
   >
     <div>{showRadar ? "Hide " : "Show "} Radar</div>{" "}
     <img
@@ -131,7 +134,10 @@ const SalinityButton: React.FC<{
 }> = ({ showSalinity, toggle }) => (
   <Button
     className={`w-full md:w-80 flex mb-4 md:mb-8 md:mr-8`}
-    onClick={toggle}
+    onClick={e => {
+      e.preventDefault();
+      toggle();
+    }}
   >
     <div>{showSalinity ? "Hide " : "Show "} Salinity Forecast</div>{" "}
     <img
@@ -148,7 +154,10 @@ const ModisButton: React.FC<{
 }> = ({ show, toggle }) => (
   <Button
     className={`w-full md:w-80 flex mb-4 md:mb-8 md:mr-8`}
-    onClick={toggle}
+    onClick={e => {
+      e.preventDefault();
+      toggle();
+    }}
   >
     <div>{show ? "Hide " : "Show "} Latest Satellite</div>{" "}
     <img
