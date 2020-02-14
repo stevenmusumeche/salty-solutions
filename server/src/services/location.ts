@@ -81,7 +81,7 @@ const locations: LocationEntity[] = [
   },
   {
     id: "hopedale",
-    name: "Hopedale",
+    name: "Hopedale/Shell Beach",
     tideStationIds: ["8761305", "8761529", "8760742", "8761108", "8760595"],
     marineZoneId: "GMZ536",
     lat: 29.8203972,
@@ -147,14 +147,36 @@ const locations: LocationEntity[] = [
     },
     modisArea: "USA7",
     saveOurLake: true
+  },
+  {
+    id: "lake-ponchartrain",
+    name: "Lake Ponchartrain",
+    tideStationIds: [
+      "8761402",
+      "8761487",
+      "8761927",
+      "8761529",
+      "TEC4445",
+      "8761473",
+      "8761993",
+      "8762372",
+      "8762483"
+    ],
+    marineZoneId: "GMZ530",
+    lat: 30.193165894,
+    long: -90.120332852,
+    usgsSiteId: "301001089442600",
+    weatherGov: {
+      apiBase: "https://api.weather.gov/gridpoints/LIX/66,100",
+      stationId: "KASD",
+      radarSiteId: "LIX"
+    },
+    modisArea: "USA7",
+    saveOurLake: true
   }
 ];
 
-// venice
-// shell beach
 // delacroix
-// lake ponchatrain
-// rigolets
 // empire
 // Port Sulphur
 // bay gardene
