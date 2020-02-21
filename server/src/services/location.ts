@@ -87,10 +87,7 @@ const locations: LocationEntity[] = [
       "8763506", // raccoon
       "8763206", // calliou boca
       "8763719", // ship shoal
-      "8762928", // cocodrie
-      "8762888", // e last island
-      "8762850", // wine
-      "8762675" // tambalier
+      "8762928" // cocodrie
     ],
     marineZoneId: "GMZ550",
     lat: 29.412207,

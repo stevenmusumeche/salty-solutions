@@ -131,17 +131,22 @@ const tideStations: TideStationEntity[] = [
   { id: "8760742", name: "Comfort Island", lat: 29.8233333, lon: -89.27 },
   { id: "8761108", name: "Bay Gardene", lat: 29.5983333, lon: -89.6183333 },
   { id: "8760595", name: "Breton Island", lat: 29.4933333, lon: -89.1733333 },
-  { id: "8761724", name: "Grand Isle", lat: 888, lon: 888 },
-  { id: "8761826", name: "Caminada Pass", lat: 888, lon: 888 },
-  { id: "8761687", name: "Barataria Pass", lat: 888, lon: 888 },
-  { id: "8761677", name: "Independence Island", lat: 888, lon: 888 },
+  { id: "8761724", name: "Grand Isle", lat: 29.2633333, lon: -89.9566667 },
+  { id: "8761826", name: "Caminada Pass", lat: 29.21, lon: -90.04 },
+  { id: "8761687", name: "Barataria Pass", lat: 29.275, lon: -89.945 },
+  { id: "8761677", name: "Independence Island", lat: 29.31, lon: -89.9383333 },
   {
     id: "8761742",
     name: "Mendicant Island, Barataria Bay",
-    lat: 888,
-    lon: 888
+    lat: 29.3183333,
+    lon: -89.98
   },
-  { id: "8762075", name: "Port Fourchon, Belle Pass", lat: 888, lon: 888 },
+  {
+    id: "8762075",
+    name: "Port Fourchon, Belle Pass",
+    lat: 29.1133333,
+    lon: -90.1983333
+  },
   { id: "8760721", name: "Pilottown", lat: 888, lon: 888 },
   { id: "8760736", name: "Joseph Bayou", lat: 888, lon: 888 },
   { id: "8760551", name: "South Pass", lat: 888, lon: 888 },
