@@ -1,7 +1,9 @@
 import { LocationEntity } from "./location";
 import axios from "axios";
+import axiosRetry from "axios-retry";
 import cheerio from "cheerio";
-import { parse, isValid } from "date-fns";
+
+axiosRetry(axios, { retries: 3, retryDelay: retryCount => retryCount * 500 });
 
 // https://saveourlake.org/lpbf-programs/coastal/hydrocoast-maps/pontchartrain-basin/pontchartrain-basin-hydrocoast-map-archives/
 export async function getSalinityMap(

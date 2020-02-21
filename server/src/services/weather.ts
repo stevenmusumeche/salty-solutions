@@ -1,10 +1,13 @@
 import axios from "axios";
+import axiosRetry from "axios-retry";
 import { LocationEntity } from "./location";
 import { format, subHours } from "date-fns";
 import orderBy from "lodash/orderBy";
 import { degreesToCompass } from "./usgs";
 import { WeatherForecast } from "../generated/graphql";
 import { parseWindDirection } from "./utils";
+
+axiosRetry(axios, { retries: 3, retryDelay: retryCount => retryCount * 500 });
 
 // https://w1.weather.gov/xml/current_obs/seek.php?state=la&Find=Find
 
@@ -24,7 +27,7 @@ import { parseWindDirection } from "./utils";
 export const getForecast = async (
   location: LocationEntity
 ): Promise<WeatherForecast[]> => {
-  const url = `${location.weatherGov.apiBase}/forecast`;
+  let url = `${location.weatherGov.apiBase}/forecast`;
   const { data } = await axios.get(url);
 
   return data.properties.periods.map(parseForecast);

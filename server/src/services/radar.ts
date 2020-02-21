@@ -3,8 +3,11 @@ import { parse, format } from "date-fns";
 import orderBy from "lodash/orderBy";
 import takeRight from "lodash/takeRight";
 import axios from "axios";
+import axiosRetry from "axios-retry";
 import cheerio from "cheerio";
 import { Maybe } from "../generated/graphql";
+
+axiosRetry(axios, { retries: 3, retryDelay: retryCount => retryCount * 500 });
 
 // documentation here:
 // https://www.weather.gov/jetstream/ridge_download

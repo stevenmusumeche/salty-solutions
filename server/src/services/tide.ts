@@ -1,4 +1,5 @@
 import axios from "axios";
+import axiosRetry from "axios-retry";
 import {
   addDays,
   addMinutes,
@@ -9,6 +10,8 @@ import {
 } from "date-fns";
 import { formatToTimeZone } from "date-fns-timezone";
 import querystring from "querystring";
+
+axiosRetry(axios, { retries: 3, retryDelay: retryCount => retryCount * 500 });
 
 export interface TideStationEntity {
   id: string;

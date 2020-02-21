@@ -1,6 +1,9 @@
 import axios from "axios";
+import axiosRetry from "axios-retry";
 import { LocationEntity } from "./location";
 import orderBy from "lodash/orderBy";
+
+axiosRetry(axios, { retries: 3, retryDelay: retryCount => retryCount * 500 });
 
 // https://waterwatch.usgs.gov/?m=real&r=la
 

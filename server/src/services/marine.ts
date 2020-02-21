@@ -1,6 +1,9 @@
 import axios from "axios";
+import axiosRetry from "axios-retry";
 import { parseWindDirection } from "./utils";
 import cheerio from "cheerio";
+
+axiosRetry(axios, { retries: 3, retryDelay: retryCount => retryCount * 500 });
 
 export interface MarineForecast {
   timePeriod: string;

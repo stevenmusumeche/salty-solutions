@@ -1,7 +1,10 @@
 import { format, subDays } from "date-fns";
 import { LocationEntity } from "./location";
 import axios from "axios";
+import axiosRetry from "axios-retry";
 import { ModusMap } from "../../../client/src/generated/graphql";
+
+axiosRetry(axios, { retries: 3, retryDelay: retryCount => retryCount * 500 });
 
 export const getMaps = async (
   location: LocationEntity,

@@ -1,6 +1,9 @@
 import { LocationEntity } from "./location";
 import axios from "axios";
+import axiosRetry from "axios-retry";
 import cheerio from "cheerio";
+
+axiosRetry(axios, { retries: 3, retryDelay: retryCount => retryCount * 500 });
 
 export async function getSalinityMap(location: LocationEntity) {
   const url = `https://tidesandcurrents.noaa.gov/ofs/ofs_animation.shtml?ofsregion=ng&subdomain=${location.nowcastSubdomain}&model_type=salinity_nowcast`;
