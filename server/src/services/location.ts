@@ -80,6 +80,31 @@ const locations: LocationEntity[] = [
     modisArea: "USA7"
   },
   {
+    id: "dularge",
+    name: "Dularge",
+    tideStationIds: [
+      "8763535", // calliou lake
+      "8763506", // raccoon
+      "8763206", // calliou boca
+      "8763719", // ship shoal
+      "8762928", // cocodrie
+      "8762888", // e last island
+      "8762850", // wine
+      "8762675" // tambalier
+    ],
+    marineZoneId: "GMZ550",
+    lat: 29.412207,
+    long: -90.782918,
+    usgsSiteId: "07381349",
+    weatherGov: {
+      apiBase: "ttps://api.weather.gov/gridpoints/LIX/42,65",
+      stationId: "KHUM",
+      radarSiteId: "LIX"
+    },
+    nowcastSubdomain: "0",
+    modisArea: "USA7"
+  },
+  {
     id: "hopedale",
     name: "Hopedale/Shell Beach",
     tideStationIds: ["8761305", "8761529", "8760742", "8761108", "8760595"],
