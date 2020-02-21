@@ -147,45 +147,74 @@ const tideStations: TideStationEntity[] = [
     lat: 29.1133333,
     lon: -90.1983333
   },
-  { id: "8760721", name: "Pilottown", lat: 888, lon: 888 },
-  { id: "8760736", name: "Joseph Bayou", lat: 888, lon: 888 },
-  { id: "8760551", name: "South Pass", lat: 888, lon: 888 },
-  { id: "8760579", name: "Port Eads, South Pass", lat: 888, lon: 888 },
+  { id: "8760721", name: "Pilottown", lat: 29.1783333, lon: -89.2583333 },
+  { id: "8760736", name: "Joseph Bayou", lat: 29.0583333, lon: -89.2716667 },
+  { id: "8760551", name: "South Pass", lat: 28.99, lon: -89.14 },
+  { id: "8760579", name: "Port Eads, South Pass", lat: 29.015, lon: -89.16 },
   {
     id: "8760922",
     name: "Pilots Station East, Southwest Pass",
-    lat: 888,
-    lon: 888
+    lat: 28.9316667,
+    lon: -89.4066667
   },
-  { id: "8760959", name: "Southwest Pass", lat: 888, lon: 888 },
-  { id: "8760416", name: "Southeast Pass", lat: 888, lon: 888 },
-  { id: "8760412", name: "North Pass, Pass a Loutre", lat: 888, lon: 888 },
-  { id: "8760424", name: "Lonesome Bayou (Thomasin)", lat: 888, lon: 888 },
-  { id: "8760841", name: "Jack Bay", lat: 888, lon: 888 },
+  { id: "8760959", name: "Southwest Pass", lat: 28.9316667, lon: -89.4283333 },
+  { id: "8760416", name: "Southeast Pass", lat: 29.1166667, lon: -89.045 },
+  {
+    id: "8760412",
+    name: "North Pass, Pass a Loutre",
+    lat: 29.205,
+    lon: -89.0366667
+  },
+  {
+    id: "8760424",
+    name: "Lonesome Bayou (Thomasin)",
+    lat: 29.2283333,
+    lon: -89.05
+  },
+  { id: "8760841", name: "Jack Bay", lat: 29.3666667, lon: -89.345 },
   {
     id: "8760889",
     name: "Olga Compressor Station, Grand Bay",
-    lat: 888,
-    lon: 888
+    lat: 29.3866667,
+    lon: -89.38
   },
-  { id: "8761212", name: "Empire Jetty", lat: 888, lon: 888 },
-  { id: "8761402", name: "The Rigolets", lat: 888, lon: 888 },
+  { id: "8761212", name: "Empire Jetty", lat: 29.25, lon: -89.6083333 },
+  { id: "8761402", name: "The Rigolets", lat: 30.1666667, lon: -89.7366667 },
   {
     id: "8761487",
     name: "Chef Menteur, Chef Menteur Pass",
-    lat: 888,
-    lon: 888
+    lat: 30.065,
+    lon: -89.8
   },
-  { id: "8761927", name: "New Canal Station", lat: 888, lon: 888 },
-  //
-  { id: "TEC4445", name: "Paris Road Bridge (ICWW)", lat: 888, lon: 888 },
-  { id: "8761473", name: "Route 433, Bayou Bonfouca", lat: 888, lon: 888 },
-  { id: "8761993", name: "Tchefuncta River, Lake Point", lat: 888, lon: 888 },
+  {
+    id: "8761927",
+    name: "New Canal Station",
+    lat: 30.0266667,
+    lon: -90.1133333
+  },
+  {
+    id: "TEC4445",
+    name: "Paris Road Bridge (ICWW)",
+    lat: 30.0,
+    lon: -89.9333333
+  },
+  {
+    id: "8761473",
+    name: "Route 433, Bayou Bonfouca",
+    lat: 30.2716667,
+    lon: -89.7933333
+  },
+  {
+    id: "8761993",
+    name: "Tchefuncta River, Lake Point",
+    lat: 30.3783333,
+    lon: -90.16
+  },
   {
     id: "8762372",
     name: "East Bank 1, Norco, Bayou LaBranche",
-    lat: 888,
-    lon: 888
+    lat: 30.05,
+    lon: -90.3683333
   },
   { id: "8762483", name: "I-10 Bonnet Carre Floodway", lat: 888, lon: 888 },
   {
