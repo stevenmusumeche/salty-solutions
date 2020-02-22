@@ -5,12 +5,14 @@ export default gql`
     locations: [Location!]!
     location(id: ID!): Location
     tidePreditionStation(stationId: ID!): TidePreditionStation
+    usgsSite(siteId: ID!): UsgsSite
   }
 
   type Location {
     id: ID!
     name: String!
     tidePreditionStations: [TidePreditionStation!]!
+    usgsSites: [UsgsSite!]!
     lat: Float!
     long: Float!
     sun(start: String!, end: String!): [SunDetail!]
@@ -19,7 +21,6 @@ export default gql`
     weatherForecast: [WeatherForecast!]
     hourlyWeatherForecast: [WeatherForecast!]
     marineForecast: [MarineForecast!]
-    waterHeight(numDays: Int): [WaterHeight!]
     waterTemperature(numDays: Int): WaterTemperature
     wind: Wind
     salinity(numHours: Int): Salinity
@@ -28,6 +29,13 @@ export default gql`
     dataSources: DataSources
     modisMaps(numDays: Int): [ModusMap!]!
     salinityMap: String!
+  }
+
+  type UsgsSite {
+    id: ID!
+    name: String!
+    coords: Coords!
+    waterHeight(start: String!, end: String!): [WaterHeight!]
   }
 
   type ModusMap {
@@ -100,10 +108,16 @@ export default gql`
     mostRecent: TemperatureDetail!
   }
 
+  type Coords {
+    lat: Float!
+    lon: Float!
+  }
+
   type TidePreditionStation {
     id: ID!
     name: String!
     url: String!
+    # todo move to Coords type
     lat: Float!
     long: Float!
     tides(start: String!, end: String!): [TideDetail!]

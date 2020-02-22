@@ -80,6 +80,7 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
           <Tides
             locationId={locationId}
             tideStations={selectedLocation.tidePreditionStations}
+            usgsSites={selectedLocation.usgsSites}
             date={date}
           />
         </div>

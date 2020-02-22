@@ -11,7 +11,7 @@ generates:
       withHooks: true
       withComponent: false
   server/src/generated/graphql.ts:
-    config: 
+    config:
       contextType: "../server#Context"
       defaultMapper: Partial<{T}>
       mappers:
@@ -22,6 +22,7 @@ generates:
         Maps: "Partial<{T}> & {location: LocationEntity}"
         Location: ../services/location#LocationEntity
         TidePreditionStation: ../services/tide#TideStationEntity
+        UsgsSite: ../services/location#UsgsSite
     plugins:
       - "typescript"
       - "typescript-resolvers"

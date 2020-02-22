@@ -1,9 +1,7 @@
 import { Resolvers } from "../generated/graphql";
 import { ApolloError, UserInputError } from "apollo-server-koa";
 import { notUndefined } from "../services/utils";
-import { format, subDays } from "date-fns";
 
-const DEFAULT_NUM_DAYS = 3;
 const DEFAULT_NUM_HOURS = 24;
 
 const resolvers: Resolvers = {
@@ -21,6 +19,14 @@ const resolvers: Resolvers = {
       if (!station)
         throw new ApolloError(`Unknown tide station ID ${stationId}`);
       return station;
+    },
+    usgsSite: (_, { siteId }, { services }) => {
+      const allSites = services.location
+        .getAll()
+        .flatMap(location => location.usgsSites);
+      const site = allSites.find(site => site.id === siteId);
+      if (!site) throw new ApolloError(`Unknown USGS site ID ${siteId}`);
+      return site;
     }
   },
   Location: {
@@ -31,6 +37,10 @@ const resolvers: Resolvers = {
       return location.tideStationIds
         .map(id => services.tide.getStationById(id))
         .filter(notUndefined);
+    },
+    usgsSites: (location, _, context) => {
+      context.pass = { location };
+      return location.usgsSites;
     },
     sun: async (location, args, { services }) => {
       return services.sunMoon.getSunInfo(
@@ -59,12 +69,6 @@ const resolvers: Resolvers = {
     },
     marineForecast: async (location, args, { services }) => {
       return services.marine.getForecast(location);
-    },
-    waterHeight: async (location, args, { services }) => {
-      return services.usgs.getWaterHeight(
-        location,
-        args.numDays || DEFAULT_NUM_DAYS
-      );
     },
     waterTemperature: async location => {
       return { location };
@@ -107,6 +111,15 @@ const resolvers: Resolvers = {
         new Date(args.start),
         new Date(args.end),
         station.id
+      );
+    }
+  },
+  UsgsSite: {
+    waterHeight: async (site, args, { services }) => {
+      return services.usgs.getWaterHeight(
+        site.id,
+        new Date(args.start),
+        new Date(args.end)
       );
     }
   },

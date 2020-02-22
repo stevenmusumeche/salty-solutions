@@ -5,13 +5,15 @@ import orderBy from "lodash/orderBy";
 
 axiosRetry(axios, { retries: 3, retryDelay: retryCount => retryCount * 500 });
 
+// https://waterservices.usgs.gov/rest/IV-Service.html
 // https://waterwatch.usgs.gov/?m=real&r=la
 
 export const getWaterHeight = async (
-  location: any,
-  numDays: number
+  siteId: string,
+  start: Date,
+  end: Date
 ): Promise<{ timestamp: string; height: number }[]> => {
-  return fetchAndMap(location.usgsSiteId, "00065", numDays, (v: any) => ({
+  return fetchAndMap(siteId, "00065", { start, end }, (v: any) => ({
     timestamp: new Date(v.dateTime).toISOString(),
     height: Number(v.value)
   }));
@@ -25,14 +27,22 @@ export const getWaterTemperatureLatest = async (location: LocationEntity) => {
   return orderBy(data, [x => x.timestamp], ["desc"])[0];
 };
 
-export const getWaterTemperature = async (location: any, numHours: number) => {
-  return fetchAndMap(location.usgsSiteId, "00010", numHours, (v: any) => ({
-    timestamp: new Date(v.dateTime).toISOString(),
-    temperature: {
-      degrees: ((Number(v.value) * 9) / 5 + 32).toFixed(1),
-      unit: "F"
-    }
-  }));
+export const getWaterTemperature = async (
+  location: LocationEntity,
+  numHours: number
+) => {
+  return fetchAndMap(
+    location.usgsSites[0].id,
+    "00010",
+    { numHours },
+    (v: any) => ({
+      timestamp: new Date(v.dateTime).toISOString(),
+      temperature: {
+        degrees: ((Number(v.value) * 9) / 5 + 32).toFixed(1),
+        unit: "F"
+      }
+    })
+  );
 };
 
 export const getWindLatest = async (location: LocationEntity) => {
@@ -78,34 +88,49 @@ export const getWind = async (
 };
 
 const getWindSpeed = async (
-  location: any,
+  location: LocationEntity,
   numHours: number
 ): Promise<{ timestamp: string; speed: number }[]> => {
-  return fetchAndMap(location.usgsSiteId, "00035", numHours, (v: any) => ({
-    timestamp: new Date(v.dateTime).toISOString(),
-    speed: Number(v.value)
-  }));
+  return fetchAndMap(
+    location.usgsSites[0].id,
+    "00035",
+    { numHours },
+    (v: any) => ({
+      timestamp: new Date(v.dateTime).toISOString(),
+      speed: Number(v.value)
+    })
+  );
 };
 
 const getWindDirection = async (
-  location: any,
+  location: LocationEntity,
   numHours: number
 ): Promise<{ timestamp: string; degrees: number; direction: string }[]> => {
-  return fetchAndMap(location.usgsSiteId, "00036", numHours, (v: any) => ({
-    timestamp: new Date(v.dateTime).toISOString(),
-    degrees: Number(v.value),
-    direction: degreesToCompass(Number(v.value))
-  }));
+  return fetchAndMap(
+    location.usgsSites[0].id,
+    "00036",
+    { numHours },
+    (v: any) => ({
+      timestamp: new Date(v.dateTime).toISOString(),
+      degrees: Number(v.value),
+      direction: degreesToCompass(Number(v.value))
+    })
+  );
 };
 
 export const getSalinity = (
-  location: any,
+  location: LocationEntity,
   numHours: number
 ): Promise<{ timestamp: string; salinity: number }[]> => {
-  return fetchAndMap(location.usgsSiteId, "00480", numHours, (v: any) => ({
-    timestamp: new Date(v.dateTime).toISOString(),
-    salinity: +v.value
-  }));
+  return fetchAndMap(
+    location.usgsSites[0].id,
+    "00480",
+    { numHours },
+    (v: any) => ({
+      timestamp: new Date(v.dateTime).toISOString(),
+      salinity: +v.value
+    })
+  );
 };
 
 export const getSalinityLatest = async (location: LocationEntity) => {
@@ -116,13 +141,21 @@ export const getSalinityLatest = async (location: LocationEntity) => {
   return orderBy(data, ["timestamp"], ["desc"])[0];
 };
 
+type DateInput = { numHours: number } | { start: Date; end: Date };
 async function fetchAndMap(
   siteId: string,
   parameterCode: string,
-  numHours: number,
+  dateInput: DateInput,
   mapFn: any
 ) {
-  const url = `https://waterservices.usgs.gov/nwis/iv/?format=json&sites=${siteId}&period=PT${numHours}H&parameterCd=${parameterCode}&siteStatus=all`;
+  let url;
+  if (typeof (dateInput as any).numHours !== "undefined") {
+    url = `https://waterservices.usgs.gov/nwis/iv/?format=json&sites=${siteId}&period=PT${
+      (dateInput as any).numHours
+    }H&parameterCd=${parameterCode}&siteStatus=all`;
+  } else {
+    url = `https://waterservices.usgs.gov/nwis/iv/?format=json&sites=${siteId}&startDT=${(dateInput as any).start.toISOString()}&endDT=${(dateInput as any).end.toISOString()}&parameterCd=${parameterCode}&siteStatus=all`;
+  }
 
   const { data } = await axios.get(url);
 

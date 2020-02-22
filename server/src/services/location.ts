@@ -1,3 +1,14 @@
+interface Coords {
+  lat: number;
+  lon: number;
+}
+
+export interface UsgsSite {
+  id: string;
+  name: string;
+  coords: Coords;
+}
+
 export interface LocationEntity {
   id: string;
   name: string;
@@ -5,7 +16,7 @@ export interface LocationEntity {
   marineZoneId: string;
   lat: number;
   long: number;
-  usgsSiteId: string;
+  usgsSites: UsgsSite[];
   weatherGov: {
     apiBase: string;
     stationId: string;
@@ -31,7 +42,13 @@ const locations: LocationEntity[] = [
     marineZoneId: "GMZ435",
     lat: 29.731474,
     long: -91.841371,
-    usgsSiteId: "07387040",
+    usgsSites: [
+      {
+        id: "07387040",
+        name: "Vermilion Bay near Cypremort Point",
+        coords: { lat: 29.7130556, lon: 91.8802778 }
+      }
+    ],
     weatherGov: {
       apiBase: "https://api.weather.gov/gridpoints/LCH/112,73",
       stationId: "KARA",
@@ -47,7 +64,13 @@ const locations: LocationEntity[] = [
     marineZoneId: "GMZ432",
     lat: 29.9103,
     long: -93.2785,
-    usgsSiteId: "08017095",
+    usgsSites: [
+      {
+        id: "08017095",
+        name: "N. Calcasieu Lake near Hackberry",
+        coords: { lat: 30.0316667, lon: 93.2994444 }
+      }
+    ],
     weatherGov: {
       apiBase: "https://api.weather.gov/gridpoints/LCH/57,80",
       stationId: "KLCH",
@@ -70,7 +93,13 @@ const locations: LocationEntity[] = [
     marineZoneId: "GMZ550",
     lat: 29.246742,
     long: -90.661058,
-    usgsSiteId: "073813498",
+    usgsSites: [
+      {
+        id: "073813498",
+        name: "Caillou Lake (Sister Lake)",
+        coords: { lat: 29.2491667, lon: 90.9211111 }
+      }
+    ],
     weatherGov: {
       apiBase: "https://api.weather.gov/gridpoints/LIX/47,58",
       stationId: "KHUM",
@@ -92,7 +121,21 @@ const locations: LocationEntity[] = [
     marineZoneId: "GMZ550",
     lat: 29.412207,
     long: -90.782918,
-    usgsSiteId: "07381349",
+    usgsSites: [
+      {
+        id: "073813498",
+        name: "Caillou Lake (Sister Lake)",
+        coords: { lat: 29.2491667, lon: 90.9211111 }
+      },
+      {
+        id: "07381324",
+        name: "Bayou Grand Caillou at Dulac",
+        coords: {
+          lat: 29.3827778,
+          lon: 90.7152778
+        }
+      }
+    ],
     weatherGov: {
       apiBase: "ttps://api.weather.gov/gridpoints/LIX/42,65",
       stationId: "KHUM",
@@ -108,7 +151,13 @@ const locations: LocationEntity[] = [
     marineZoneId: "GMZ536",
     lat: 29.8203972,
     long: -89.65689,
-    usgsSiteId: "073745257",
+    usgsSites: [
+      {
+        id: "073745257",
+        name: "Crooked Bayou near Delacroix",
+        coords: { lat: 29.7080556, lon: 89.7194444 }
+      }
+    ],
     weatherGov: {
       apiBase: "https://api.weather.gov/gridpoints/LIX/85,84",
       stationId: "KNBG",
@@ -131,7 +180,13 @@ const locations: LocationEntity[] = [
     marineZoneId: "gmz572",
     lat: 29.2366,
     long: -89.9873,
-    usgsSiteId: "07380249",
+    usgsSites: [
+      {
+        id: "07380249",
+        name: "Caminada Pass NW of Grand Isle",
+        coords: { lat: 29.2313611, lon: 90.0485278 }
+      }
+    ],
     weatherGov: {
       apiBase: "https://api.weather.gov/gridpoints/LIX/73,58",
       stationId: "KGAO",
@@ -161,7 +216,13 @@ const locations: LocationEntity[] = [
     marineZoneId: "GMZ555",
     lat: 29.277165,
     long: -89.3547759,
-    usgsSiteId: "292952089453800",
+    usgsSites: [
+      {
+        id: "292952089453800",
+        name: "Port Sulfer",
+        coords: { lat: 29.4977778, lon: 89.7605556 }
+      }
+    ],
     weatherGov: {
       apiBase: "https://api.weather.gov/gridpoints/LIX/97,61",
       stationId: "KMIS",
@@ -187,7 +248,13 @@ const locations: LocationEntity[] = [
     marineZoneId: "GMZ530",
     lat: 30.193165894,
     long: -90.120332852,
-    usgsSiteId: "301001089442600",
+    usgsSites: [
+      {
+        id: "301001089442600",
+        name: "Rigolets at Hwy 90 near Slidell",
+        coords: { lat: 30.1669444, lon: 89.7405556 }
+      }
+    ],
     weatherGov: {
       apiBase: "https://api.weather.gov/gridpoints/LIX/66,100",
       stationId: "KASD",
@@ -231,7 +298,7 @@ export const getById = (id: string): LocationEntity | undefined => {
 export const getDataSources = (location: LocationEntity) => ({
   tideStationIds: location.tideStationIds,
   marineZoneId: location.marineZoneId,
-  usgsSiteId: location.usgsSiteId,
+  usgsSites: location.usgsSites,
   weatherStationId: location.weatherGov.stationId,
   weatherRadarSiteId: location.weatherGov.radarSiteId
 });
