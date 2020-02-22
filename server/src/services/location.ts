@@ -46,7 +46,7 @@ const locations: LocationEntity[] = [
       {
         id: "07387040",
         name: "Vermilion Bay near Cypremort Point",
-        coords: { lat: 29.7130556, lon: 91.8802778 }
+        coords: { lat: 29.7130556, lon: -91.8802778 }
       }
     ],
     weatherGov: {
@@ -68,7 +68,7 @@ const locations: LocationEntity[] = [
       {
         id: "08017095",
         name: "N. Calcasieu Lake near Hackberry",
-        coords: { lat: 30.0316667, lon: 93.2994444 }
+        coords: { lat: 30.0316667, lon: -93.2994444 }
       }
     ],
     weatherGov: {
@@ -97,7 +97,7 @@ const locations: LocationEntity[] = [
       {
         id: "073813498",
         name: "Caillou Lake (Sister Lake)",
-        coords: { lat: 29.2491667, lon: 90.9211111 }
+        coords: { lat: 29.2491667, lon: -90.9211111 }
       }
     ],
     weatherGov: {
@@ -123,16 +123,21 @@ const locations: LocationEntity[] = [
     long: -90.782918,
     usgsSites: [
       {
-        id: "073813498",
+        id: "07381349",
         name: "Caillou Lake (Sister Lake)",
-        coords: { lat: 29.2491667, lon: 90.9211111 }
+        coords: { lat: 29.2491667, lon: -90.9211111 }
+      },
+      {
+        id: "073813498",
+        name: "Caillou Bay SW of Cocodrie",
+        coords: { lat: 29.0780556, lon: -90.8713889 }
       },
       {
         id: "07381324",
         name: "Bayou Grand Caillou at Dulac",
         coords: {
           lat: 29.3827778,
-          lon: 90.7152778
+          lon: -90.7152778
         }
       }
     ],
@@ -155,7 +160,7 @@ const locations: LocationEntity[] = [
       {
         id: "073745257",
         name: "Crooked Bayou near Delacroix",
-        coords: { lat: 29.7080556, lon: 89.7194444 }
+        coords: { lat: 29.7080556, lon: -89.7194444 }
       }
     ],
     weatherGov: {
@@ -184,7 +189,7 @@ const locations: LocationEntity[] = [
       {
         id: "07380249",
         name: "Caminada Pass NW of Grand Isle",
-        coords: { lat: 29.2313611, lon: 90.0485278 }
+        coords: { lat: 29.2313611, lon: -90.0485278 }
       }
     ],
     weatherGov: {
@@ -220,7 +225,7 @@ const locations: LocationEntity[] = [
       {
         id: "292952089453800",
         name: "Port Sulfer",
-        coords: { lat: 29.4977778, lon: 89.7605556 }
+        coords: { lat: 29.4977778, lon: -89.7605556 }
       }
     ],
     weatherGov: {
@@ -252,7 +257,7 @@ const locations: LocationEntity[] = [
       {
         id: "301001089442600",
         name: "Rigolets at Hwy 90 near Slidell",
-        coords: { lat: 30.1669444, lon: 89.7405556 }
+        coords: { lat: 30.1669444, lon: -89.7405556 }
       }
     ],
     weatherGov: {
