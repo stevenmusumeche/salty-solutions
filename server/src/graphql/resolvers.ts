@@ -4,7 +4,14 @@ import { notUndefined } from "../services/utils";
 
 const DEFAULT_NUM_HOURS = 24;
 
-const resolvers: Resolvers = {
+const resolvers: Resolvers & { UsgsParam: any } = {
+  UsgsParam: {
+    WaterTemp: "00010",
+    WindSpeed: "00035",
+    WindDirection: "00036",
+    GuageHeight: "00065",
+    Salinity: "00480"
+  },
   Query: {
     locations: (_, __, { services }) => {
       return services.location.getAll();
@@ -21,10 +28,7 @@ const resolvers: Resolvers = {
       return station;
     },
     usgsSite: (_, { siteId }, { services }) => {
-      const allSites = services.location
-        .getAll()
-        .flatMap(location => location.usgsSites);
-      const site = allSites.find(site => site.id === siteId);
+      const site = services.usgs.getSiteById(siteId);
       if (!site) throw new ApolloError(`Unknown USGS site ID ${siteId}`);
       return site;
     }
@@ -38,9 +42,10 @@ const resolvers: Resolvers = {
         .map(id => services.tide.getStationById(id))
         .filter(notUndefined);
     },
-    usgsSites: (location, _, context) => {
-      context.pass = { location };
-      return location.usgsSites;
+    usgsSites: (location, _, { services }) => {
+      return location.usgsSiteIds
+        .map(id => services.usgs.getSiteById(id))
+        .filter(notUndefined);
     },
     sun: async (location, args, { services }) => {
       return services.sunMoon.getSunInfo(

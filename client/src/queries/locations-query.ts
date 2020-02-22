@@ -21,5 +21,6 @@ const LOCATION_QUERY = gql`
   fragment UsgsSiteDetail on UsgsSite {
     id
     name
+    availableParams
   }
 `;

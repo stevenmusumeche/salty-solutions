@@ -36,6 +36,7 @@ export default gql`
     name: String!
     coords: Coords!
     waterHeight(start: String!, end: String!): [WaterHeight!]
+    availableParams: [UsgsParam!]!
   }
 
   type ModusMap {
@@ -243,5 +244,13 @@ export default gql`
     timestamp: String!
     "parts per thousand"
     salinity: Float!
+  }
+
+  enum UsgsParam {
+    WaterTemp
+    WindSpeed
+    WindDirection
+    GuageHeight
+    Salinity
   }
 `;

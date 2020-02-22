@@ -270,12 +270,21 @@ export type TidePreditionStationTidesArgs = {
   end: Scalars['String']
 };
 
+export enum UsgsParam {
+  WaterTemp = 'WaterTemp',
+  WindSpeed = 'WindSpeed',
+  WindDirection = 'WindDirection',
+  GuageHeight = 'GuageHeight',
+  Salinity = 'Salinity'
+}
+
 export type UsgsSite = {
   __typename?: 'UsgsSite',
   id: Scalars['ID'],
   name: Scalars['String'],
   coords: Coords,
   waterHeight?: Maybe<Array<WaterHeight>>,
+  availableParams: Array<UsgsParam>,
 };
 
 
@@ -397,7 +406,7 @@ export type LocationsQuery = ({ __typename?: 'Query' } & { locations: Array<({ _
 
 export type TideStationDetailFragment = ({ __typename?: 'TidePreditionStation' } & Pick<TidePreditionStation, 'id' | 'name'>);
 
-export type UsgsSiteDetailFragment = ({ __typename?: 'UsgsSite' } & Pick<UsgsSite, 'id' | 'name'>);
+export type UsgsSiteDetailFragment = ({ __typename?: 'UsgsSite' } & Pick<UsgsSite, 'id' | 'name' | 'availableParams'>);
 
 export type MapsQueryVariables = {
   locationId: Scalars['ID']
@@ -486,6 +495,7 @@ export const UsgsSiteDetailFragmentDoc = gql`
     fragment UsgsSiteDetail on UsgsSite {
   id
   name
+  availableParams
 }
     `;
 export const OverlayMapsFragmentDoc = gql`

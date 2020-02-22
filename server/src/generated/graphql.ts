@@ -271,12 +271,21 @@ export type TidePreditionStationTidesArgs = {
   end: Scalars['String']
 };
 
+export enum UsgsParam {
+  WaterTemp = 'WaterTemp',
+  WindSpeed = 'WindSpeed',
+  WindDirection = 'WindDirection',
+  GuageHeight = 'GuageHeight',
+  Salinity = 'Salinity'
+}
+
 export type UsgsSite = {
   __typename?: 'UsgsSite',
   id: Scalars['ID'],
   name: Scalars['String'],
   coords: Coords,
   waterHeight?: Maybe<Array<WaterHeight>>,
+  availableParams: Array<UsgsParam>,
 };
 
 
@@ -438,6 +447,7 @@ export type ResolversTypes = {
   UsgsSite: ResolverTypeWrapper<UsgsSite>,
   Coords: ResolverTypeWrapper<Partial<Coords>>,
   WaterHeight: ResolverTypeWrapper<Partial<WaterHeight>>,
+  UsgsParam: ResolverTypeWrapper<Partial<UsgsParam>>,
   SunDetail: ResolverTypeWrapper<Partial<SunDetail>>,
   MoonDetail: ResolverTypeWrapper<Partial<MoonDetail>>,
   Int: ResolverTypeWrapper<Partial<Scalars['Int']>>,
@@ -483,6 +493,7 @@ export type ResolversParentTypes = {
   UsgsSite: UsgsSite,
   Coords: Partial<Coords>,
   WaterHeight: Partial<WaterHeight>,
+  UsgsParam: Partial<UsgsParam>,
   SunDetail: Partial<SunDetail>,
   MoonDetail: Partial<MoonDetail>,
   Int: Partial<Scalars['Int']>,
@@ -694,6 +705,7 @@ export type UsgsSiteResolvers<ContextType = Context, ParentType = ResolversParen
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
   coords?: Resolver<ResolversTypes['Coords'], ParentType, ContextType>,
   waterHeight?: Resolver<Maybe<Array<ResolversTypes['WaterHeight']>>, ParentType, ContextType, UsgsSiteWaterHeightArgs>,
+  availableParams?: Resolver<Array<ResolversTypes['UsgsParam']>, ParentType, ContextType>,
 };
 
 export type WaterConditionResolvers<ContextType = Context, ParentType = ResolversParentTypes['WaterCondition']> = {

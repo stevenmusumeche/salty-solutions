@@ -14,7 +14,7 @@ import AppHeader from "./components/AppHeader";
 import HourlyForecast from "./components/HourlyForecast";
 import SunAndMoon from "./components/SunAndMoon";
 import Tides from "./components/Tides";
-import { useLocationsQuery } from "./generated/graphql";
+import { useLocationsQuery, UsgsParam } from "./generated/graphql";
 import Shell from "./components/Shell";
 import NotFound from "./components/NotFound";
 import { RouteComponentProps, navigate } from "@reach/router";
@@ -80,7 +80,9 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
           <Tides
             locationId={locationId}
             tideStations={selectedLocation.tidePreditionStations}
-            usgsSites={selectedLocation.usgsSites}
+            usgsSites={selectedLocation.usgsSites.filter(site =>
+              site.availableParams.includes(UsgsParam.GuageHeight)
+            )}
             date={date}
           />
         </div>

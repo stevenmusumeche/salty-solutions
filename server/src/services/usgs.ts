@@ -1,22 +1,144 @@
 import axios from "axios";
 import axiosRetry from "axios-retry";
-import { LocationEntity } from "./location";
+import { LocationEntity, Coords } from "./location";
 import orderBy from "lodash/orderBy";
 
 axiosRetry(axios, { retries: 3, retryDelay: retryCount => retryCount * 500 });
 
+enum UsgsParams {
+  WaterTemp = "00010",
+  WindSpeed = "00035",
+  WindDirection = "00036",
+  GuageHeight = "00065",
+  Salinity = "00480"
+}
+
+export interface UsgsSiteEntity {
+  id: string;
+  name: string;
+  coords: Coords;
+  availableParams: UsgsParams[];
+}
+
+const usgsSites: UsgsSiteEntity[] = [
+  {
+    id: "07387040",
+    name: "Vermilion Bay near Cypremort Point",
+    coords: { lat: 29.7130556, lon: -91.8802778 },
+    availableParams: [
+      UsgsParams.WaterTemp,
+      UsgsParams.WindSpeed,
+      UsgsParams.WindDirection,
+      UsgsParams.GuageHeight,
+      UsgsParams.Salinity
+    ]
+  },
+  {
+    id: "08017095",
+    name: "N. Calcasieu Lake near Hackberry",
+    coords: { lat: 30.0316667, lon: -93.2994444 },
+    availableParams: [
+      UsgsParams.WaterTemp,
+      UsgsParams.GuageHeight,
+      UsgsParams.Salinity
+    ]
+  },
+  {
+    id: "07381349",
+    name: "Caillou Lake (Sister Lake)",
+    coords: { lat: 29.2491667, lon: -90.9211111 },
+    availableParams: [
+      UsgsParams.WaterTemp,
+      UsgsParams.WindSpeed,
+      UsgsParams.WindDirection,
+      UsgsParams.GuageHeight,
+      UsgsParams.Salinity
+    ]
+  },
+  {
+    id: "073813498",
+    name: "Caillou Bay SW of Cocodrie",
+    coords: { lat: 29.0780556, lon: -90.8713889 },
+    availableParams: [
+      UsgsParams.WaterTemp,
+      UsgsParams.WindSpeed,
+      UsgsParams.WindDirection,
+      UsgsParams.GuageHeight,
+      UsgsParams.Salinity
+    ]
+  },
+  {
+    id: "07381324",
+    name: "Bayou Grand Caillou at Dulac",
+    coords: {
+      lat: 29.3827778,
+      lon: -90.7152778
+    },
+    availableParams: [UsgsParams.GuageHeight]
+  },
+  {
+    id: "073745257",
+    name: "Crooked Bayou near Delacroix",
+    coords: { lat: 29.7080556, lon: -89.7194444 },
+    availableParams: [
+      UsgsParams.WaterTemp,
+      UsgsParams.GuageHeight,
+      UsgsParams.Salinity
+    ]
+  },
+  {
+    id: "07380249",
+    name: "Caminada Pass NW of Grand Isle",
+    coords: { lat: 29.2313611, lon: -90.0485278 },
+    availableParams: [
+      UsgsParams.WaterTemp,
+      UsgsParams.GuageHeight,
+      UsgsParams.Salinity
+    ]
+  },
+  {
+    id: "292952089453800",
+    name: "Port Sulfer",
+    coords: { lat: 29.4977778, lon: -89.7605556 },
+    availableParams: [
+      UsgsParams.WaterTemp,
+      UsgsParams.GuageHeight,
+      UsgsParams.Salinity
+    ]
+  },
+  {
+    id: "301001089442600",
+    name: "Rigolets at Hwy 90 near Slidell",
+    coords: { lat: 30.1669444, lon: -89.7405556 },
+    availableParams: [
+      UsgsParams.WaterTemp,
+      UsgsParams.GuageHeight,
+      UsgsParams.Salinity
+    ]
+  }
+];
+
 // https://waterservices.usgs.gov/rest/IV-Service.html
 // https://waterwatch.usgs.gov/?m=real&r=la
+
+export const getSiteById = (id: string): UsgsSiteEntity | undefined => {
+  return usgsSites.find(site => site.id === id);
+};
 
 export const getWaterHeight = async (
   siteId: string,
   start: Date,
   end: Date
 ): Promise<{ timestamp: string; height: number }[]> => {
-  return fetchAndMap(siteId, "00065", { start, end }, (v: any) => ({
-    timestamp: new Date(v.dateTime).toISOString(),
-    height: Number(v.value)
-  }));
+  return fetchAndMap(
+    siteId,
+    UsgsParams.GuageHeight,
+    { start, end },
+    (v: any) => ({
+      timestamp: new Date(v.dateTime).toISOString(),
+      height: Number(v.value)
+    })
+  );
 };
 
 export const getWaterTemperatureLatest = async (location: LocationEntity) => {
@@ -32,8 +154,8 @@ export const getWaterTemperature = async (
   numHours: number
 ) => {
   return fetchAndMap(
-    location.usgsSites[0].id,
-    "00010",
+    location.usgsSiteIds[0],
+    UsgsParams.WaterTemp,
     { numHours },
     (v: any) => ({
       timestamp: new Date(v.dateTime).toISOString(),
@@ -92,8 +214,8 @@ const getWindSpeed = async (
   numHours: number
 ): Promise<{ timestamp: string; speed: number }[]> => {
   return fetchAndMap(
-    location.usgsSites[0].id,
-    "00035",
+    location.usgsSiteIds[0],
+    UsgsParams.WindSpeed,
     { numHours },
     (v: any) => ({
       timestamp: new Date(v.dateTime).toISOString(),
@@ -107,8 +229,8 @@ const getWindDirection = async (
   numHours: number
 ): Promise<{ timestamp: string; degrees: number; direction: string }[]> => {
   return fetchAndMap(
-    location.usgsSites[0].id,
-    "00036",
+    location.usgsSiteIds[0],
+    UsgsParams.WindDirection,
     { numHours },
     (v: any) => ({
       timestamp: new Date(v.dateTime).toISOString(),
@@ -123,8 +245,8 @@ export const getSalinity = (
   numHours: number
 ): Promise<{ timestamp: string; salinity: number }[]> => {
   return fetchAndMap(
-    location.usgsSites[0].id,
-    "00480",
+    location.usgsSiteIds[0],
+    UsgsParams.Salinity,
     { numHours },
     (v: any) => ({
       timestamp: new Date(v.dateTime).toISOString(),
