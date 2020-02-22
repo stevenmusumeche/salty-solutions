@@ -11,10 +11,21 @@ module.exports = {
       }
     }
   },
-  variants: {
-    opacity: ["responsive", "hover", "focus", "disabled"],
-    cursor: ["responsive", "hover", "focus", "disabled"],
-    margin: ["responsive", "hover", "focus", "disabled", "last"]
-  },
+  // enabling all variants for all plugins will result in much bigger file sizes, but we have purgecss installed
+  variants: [
+    "responsive",
+    "group-hover",
+    "focus-within",
+    "first",
+    "last",
+    "odd",
+    "even",
+    "hover",
+    "focus",
+    "active",
+    "visited",
+    "disabled"
+  ],
+
   plugins: []
 };
