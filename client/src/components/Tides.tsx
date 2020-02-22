@@ -180,7 +180,7 @@ const Tides: React.FC<Props> = ({
         </div>
       </div>
 
-      <div className="flex items-start">
+      <div className="md:flex items-start">
         <div className="flex-grow">
           <VictoryChart
             width={450}
@@ -298,48 +298,32 @@ const Tides: React.FC<Props> = ({
           </div>
         </div>
 
-        <div className="mt-8 hidden md:block uppercase leading-loose text-gray-700 text-sm">
-          <div className="" style={{ fontVariantNumeric: "tabular-nums" }}>
-            {hiLowData.map(({ x, y, type }, i) => (
-              <div key={i} className="flex items-center mb-1">
-                <div className="w-10 mr-2 rounded bg-yellow-700 text-white text-xs flex items-center justify-center">
-                  {type}
-                </div>
-                <div>
-                  {format(new Date(x), "h:mma")} ({y.toFixed(1)}ft)
-                </div>
-              </div>
-            ))}
-          </div>
+        <div className="mt-2 md:mt-8">
+          <HighLowTable hiLowData={hiLowData} />
         </div>
-      </div>
-
-      <div
-        className="md:hidden mt-8"
-        style={{ fontVariantNumeric: "tabular-nums" }}
-      >
-        {hiLowData.map(({ x, y, type }, i) => (
-          <div
-            key={i}
-            className="py-1"
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr 2fr",
-              gridColumnGap: "1rem",
-              backgroundColor: i % 2 === 0 ? "#edf2f7" : "white"
-            }}
-          >
-            <div className="text-right">{format(new Date(x), "h:mma")}</div>
-            <div>{type} tide</div>
-            <div>{y.toFixed(1)} feet</div>
-          </div>
-        ))}
       </div>
     </>
   );
 };
 
 export default Tides;
+
+const HighLowTable: React.FC<{ hiLowData: any[] }> = ({ hiLowData }) => (
+  <div className="uppercase leading-loose text-gray-700 text-sm">
+    <div className="" style={{ fontVariantNumeric: "tabular-nums" }}>
+      {hiLowData.map(({ x, y, type }, i) => (
+        <div key={i} className="flex items-center mb-1 last:mb-0">
+          <div className="w-10 mr-2 rounded bg-yellow-700 text-white text-xs flex items-center justify-center">
+            {type}
+          </div>
+          <div>
+            {format(new Date(x), "h:mma")} ({y.toFixed(1)}ft)
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+);
 
 const TideStationSelect: React.FC<{
   tideStations: TideStationDetailFragment[];
