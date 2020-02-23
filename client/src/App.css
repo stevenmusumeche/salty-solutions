@@ -1,7 +1,7 @@
 .current-conditions-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
+  grid-template-rows: 1fr;
   grid-column-gap: 1rem;
   grid-row-gap: 1rem;
   justify-items: stretch;
@@ -9,10 +9,14 @@
   margin-bottom: 1rem;
 }
 
+.current-conditions-grid select {
+  width: 100%;
+}
+
 @media (min-width: 768px) {
   .current-conditions-grid {
     grid-template-columns: 1fr 1fr 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
+    grid-template-rows: 1fr;
     grid-column-gap: 2rem;
     grid-row-gap: 2rem;
     margin-bottom: 2rem;

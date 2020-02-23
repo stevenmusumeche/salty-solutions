@@ -33,7 +33,7 @@ const Wrapper: React.FC<{ children: ReactNode; className?: string }> = ({
 };
 
 const Label: React.FC<{ label: string }> = ({ label }) => (
-  <div className="bg-gray-200 p-2 overflow-hidden rounded-lg rounded-t-none flex-grow-0 flex-shrink-0 text-xs md:text-base">
+  <div className="bg-gray-200 p-2 overflow-hidden rounded-lg rounded-b-none flex-grow-0 flex-shrink-0 text-xs md:text-base">
     {label}
   </div>
 );
@@ -53,16 +53,16 @@ const ConditionCard: React.FC<Props> = ({
   if (fetching) {
     return (
       <Wrapper>
+        <Label label={label} />
         <div className="flex justify-center mt-4">
-          <EmptyBox w={100} h={100} />
+          <EmptyBox w="40%" h={isSmall ? 60 : 100} />
         </div>
         <div className="flex justify-center mt-2">
-          <EmptyBox w={"90%"} h={180} />
+          <EmptyBox w={"90%"} h={isSmall ? 109 : 180} />
         </div>
         <div className="flex justify-center my-4">
-          <EmptyBox w={"70%"} h={24} />
+          <EmptyBox w={isSmall ? "90%" : "70%"} h={24} />
         </div>
-        <Label label={label} />
       </Wrapper>
     );
   } else if (error && !children) {
@@ -86,13 +86,13 @@ const ConditionCard: React.FC<Props> = ({
 
   return (
     <Wrapper className={className}>
+      <Label label={label} />
       <div
         className="condition-card-value text-blue-800 leading-none flex items-center justify-center flex-grow p-2 relative"
         style={{ fontSize: isSmall ? "4em" : fontSize }}
       >
         {displayValue}
       </div>
-      <Label label={label} />
     </Wrapper>
   );
 };

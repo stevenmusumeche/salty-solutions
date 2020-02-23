@@ -60,9 +60,29 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
       }
     >
       <div className="container p-4 md:p-0 md:mx-auto md:my-0">
-        <SectionTitle text="Current Conditions" />
         <div className="current-conditions-grid">
           {/* <CurrentWindSummaryCard locationId={locationId} /> */}
+          <CurrentSalinitySummaryCard
+            locationId={locationId}
+            usgsSites={selectedLocation.usgsSites.filter(site =>
+              site.availableParams.includes(UsgsParam.Salinity)
+            )}
+            date={date}
+          />
+          <CurrentSalinitySummaryCard
+            locationId={locationId}
+            usgsSites={selectedLocation.usgsSites.filter(site =>
+              site.availableParams.includes(UsgsParam.Salinity)
+            )}
+            date={date}
+          />
+          <CurrentSalinitySummaryCard
+            locationId={locationId}
+            usgsSites={selectedLocation.usgsSites.filter(site =>
+              site.availableParams.includes(UsgsParam.Salinity)
+            )}
+            date={date}
+          />
           <CurrentSalinitySummaryCard
             locationId={locationId}
             usgsSites={selectedLocation.usgsSites.filter(site =>

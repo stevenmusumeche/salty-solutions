@@ -21,7 +21,7 @@ const Shell: React.FC<{ header?: ReactNode }> = ({ children, header }) => (
         {header}
       </div>
     </HeaderWrapper>
-    <div className="flex-grow md:my-4">{children}</div>
+    <div className="flex-grow md:my-8">{children}</div>
     <footer className="bg-gray-700 text-white w-full">
       <div className="container mx-auto p-2 md:px-0 md:py-4 flex justify-between text-sm md:text-base">
         <div>

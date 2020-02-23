@@ -193,7 +193,7 @@
   font-weight: normal;
 }
 
-.wind-summary {
+/* .wind-summary {
   grid-row: 1;
   grid-column: 1;
 }
@@ -230,7 +230,7 @@
 .water-temp-graph {
   grid-row: 4;
   grid-column: 2;
-}
+} */
 
 @media (min-width: 768px) {
   .salinity-summary,
@@ -241,6 +241,7 @@
   .air-temp-graph,
   .water-temp-summary,
   .water-temp-graph {
+    min-width: 0;
     grid-row: auto;
     grid-column: auto;
   }
