@@ -18,7 +18,6 @@ generates:
         Wind: "Partial<{T}> & {location: LocationEntity}"
         WaterTemperature: "Partial<{T}> & {location: LocationEntity}"
         TemperatureResult: "Partial<{T}> & {location: LocationEntity}"
-        Salinity: "Partial<{T}> & {location: LocationEntity, numHours?: Maybe<number>}"
         Maps: "Partial<{T}> & {location: LocationEntity}"
         Location: ../services/location#LocationEntity
         TidePreditionStation: ../services/tide#TideStationEntity

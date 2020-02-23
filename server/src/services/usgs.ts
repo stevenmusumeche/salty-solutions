@@ -2,6 +2,7 @@ import axios from "axios";
 import axiosRetry from "axios-retry";
 import { LocationEntity, Coords } from "./location";
 import orderBy from "lodash/orderBy";
+import { subHours } from "date-fns";
 
 axiosRetry(axios, { retries: 3, retryDelay: retryCount => retryCount * 500 });
 
@@ -241,22 +242,18 @@ const getWindDirection = async (
 };
 
 export const getSalinity = (
-  location: LocationEntity,
-  numHours: number
+  siteId: string,
+  start: Date,
+  end: Date
 ): Promise<{ timestamp: string; salinity: number }[]> => {
-  return fetchAndMap(
-    location.usgsSiteIds[0],
-    UsgsParams.Salinity,
-    { numHours },
-    (v: any) => ({
-      timestamp: new Date(v.dateTime).toISOString(),
-      salinity: +v.value
-    })
-  );
+  return fetchAndMap(siteId, UsgsParams.Salinity, { start, end }, (v: any) => ({
+    timestamp: new Date(v.dateTime).toISOString(),
+    salinity: +v.value
+  }));
 };
 
-export const getSalinityLatest = async (location: LocationEntity) => {
-  const data = await getSalinity(location, 24);
+export const getSalinityLatest = async (siteId: string) => {
+  const data = await getSalinity(siteId, subHours(new Date(), 24), new Date());
 
   if (data.length < 1) return null;
 

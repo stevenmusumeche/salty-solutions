@@ -4,6 +4,7 @@ import SkeletonCharacter from "./SkeletonCharacter";
 import "./SkeletonCharacter.css";
 import ErrorIcon from "../assets/error.svg";
 import { WindowSizeContext } from "../providers/WindowSizeProvider";
+import EmptyBox from "./EmptyBox";
 
 interface Props {
   label: string;
@@ -52,7 +53,15 @@ const ConditionCard: React.FC<Props> = ({
   if (fetching) {
     return (
       <Wrapper>
-        <SkeletonCharacter />
+        <div className="flex justify-center mt-4">
+          <EmptyBox w={100} h={100} />
+        </div>
+        <div className="flex justify-center mt-2">
+          <EmptyBox w={"90%"} h={180} />
+        </div>
+        <div className="flex justify-center my-4">
+          <EmptyBox w={"70%"} h={24} />
+        </div>
         <Label label={label} />
       </Wrapper>
     );

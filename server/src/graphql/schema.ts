@@ -23,7 +23,6 @@ export default gql`
     marineForecast: [MarineForecast!]
     waterTemperature(numDays: Int): WaterTemperature
     wind: Wind
-    salinity(numHours: Int): Salinity
     temperature: TemperatureResult!
     maps: Maps
     dataSources: DataSources
@@ -36,6 +35,7 @@ export default gql`
     name: String!
     coords: Coords!
     waterHeight(start: String!, end: String!): [WaterHeight!]
+    salinity(start: String!, end: String!): Salinity
     availableParams: [UsgsParam!]!
   }
 

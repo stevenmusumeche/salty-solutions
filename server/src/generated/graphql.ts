@@ -69,7 +69,6 @@ export type Location = {
   marineForecast?: Maybe<Array<MarineForecast>>,
   waterTemperature?: Maybe<WaterTemperature>,
   wind?: Maybe<Wind>,
-  salinity?: Maybe<Salinity>,
   temperature: TemperatureResult,
   maps?: Maybe<Maps>,
   dataSources?: Maybe<DataSources>,
@@ -92,11 +91,6 @@ export type LocationMoonArgs = {
 
 export type LocationWaterTemperatureArgs = {
   numDays?: Maybe<Scalars['Int']>
-};
-
-
-export type LocationSalinityArgs = {
-  numHours?: Maybe<Scalars['Int']>
 };
 
 
@@ -285,11 +279,18 @@ export type UsgsSite = {
   name: Scalars['String'],
   coords: Coords,
   waterHeight?: Maybe<Array<WaterHeight>>,
+  salinity?: Maybe<Salinity>,
   availableParams: Array<UsgsParam>,
 };
 
 
 export type UsgsSiteWaterHeightArgs = {
+  start: Scalars['String'],
+  end: Scalars['String']
+};
+
+
+export type UsgsSiteSalinityArgs = {
   start: Scalars['String'],
   end: Scalars['String']
 };
@@ -447,6 +448,9 @@ export type ResolversTypes = {
   UsgsSite: ResolverTypeWrapper<UsgsSite>,
   Coords: ResolverTypeWrapper<Partial<Coords>>,
   WaterHeight: ResolverTypeWrapper<Partial<WaterHeight>>,
+  Salinity: ResolverTypeWrapper<Partial<Salinity>>,
+  SalinitySummary: ResolverTypeWrapper<Partial<SalinitySummary>>,
+  SalinityDetail: ResolverTypeWrapper<Partial<SalinityDetail>>,
   UsgsParam: ResolverTypeWrapper<Partial<UsgsParam>>,
   SunDetail: ResolverTypeWrapper<Partial<SunDetail>>,
   MoonDetail: ResolverTypeWrapper<Partial<MoonDetail>>,
@@ -467,9 +471,6 @@ export type ResolversTypes = {
   Wind: ResolverTypeWrapper<Partial<Wind> & {location: LocationEntity}>,
   WindSummary: ResolverTypeWrapper<Partial<WindSummary>>,
   WindDetail: ResolverTypeWrapper<Partial<WindDetail>>,
-  Salinity: ResolverTypeWrapper<Partial<Salinity> & {location: LocationEntity, numHours?: Maybe<number>}>,
-  SalinitySummary: ResolverTypeWrapper<Partial<SalinitySummary>>,
-  SalinityDetail: ResolverTypeWrapper<Partial<SalinityDetail>>,
   TemperatureResult: ResolverTypeWrapper<Partial<TemperatureResult> & {location: LocationEntity}>,
   TemperatureSummary: ResolverTypeWrapper<Partial<TemperatureSummary>>,
   Maps: ResolverTypeWrapper<Partial<Maps> & {location: LocationEntity}>,
@@ -493,6 +494,9 @@ export type ResolversParentTypes = {
   UsgsSite: UsgsSite,
   Coords: Partial<Coords>,
   WaterHeight: Partial<WaterHeight>,
+  Salinity: Partial<Salinity>,
+  SalinitySummary: Partial<SalinitySummary>,
+  SalinityDetail: Partial<SalinityDetail>,
   UsgsParam: Partial<UsgsParam>,
   SunDetail: Partial<SunDetail>,
   MoonDetail: Partial<MoonDetail>,
@@ -513,9 +517,6 @@ export type ResolversParentTypes = {
   Wind: Partial<Wind> & {location: LocationEntity},
   WindSummary: Partial<WindSummary>,
   WindDetail: Partial<WindDetail>,
-  Salinity: Partial<Salinity> & {location: LocationEntity, numHours?: Maybe<number>},
-  SalinitySummary: Partial<SalinitySummary>,
-  SalinityDetail: Partial<SalinityDetail>,
   TemperatureResult: Partial<TemperatureResult> & {location: LocationEntity},
   TemperatureSummary: Partial<TemperatureSummary>,
   Maps: Partial<Maps> & {location: LocationEntity},
@@ -578,7 +579,6 @@ export type LocationResolvers<ContextType = Context, ParentType = ResolversParen
   marineForecast?: Resolver<Maybe<Array<ResolversTypes['MarineForecast']>>, ParentType, ContextType>,
   waterTemperature?: Resolver<Maybe<ResolversTypes['WaterTemperature']>, ParentType, ContextType, LocationWaterTemperatureArgs>,
   wind?: Resolver<Maybe<ResolversTypes['Wind']>, ParentType, ContextType>,
-  salinity?: Resolver<Maybe<ResolversTypes['Salinity']>, ParentType, ContextType, LocationSalinityArgs>,
   temperature?: Resolver<ResolversTypes['TemperatureResult'], ParentType, ContextType>,
   maps?: Resolver<Maybe<ResolversTypes['Maps']>, ParentType, ContextType>,
   dataSources?: Resolver<Maybe<ResolversTypes['DataSources']>, ParentType, ContextType>,
@@ -705,6 +705,7 @@ export type UsgsSiteResolvers<ContextType = Context, ParentType = ResolversParen
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
   coords?: Resolver<ResolversTypes['Coords'], ParentType, ContextType>,
   waterHeight?: Resolver<Maybe<Array<ResolversTypes['WaterHeight']>>, ParentType, ContextType, UsgsSiteWaterHeightArgs>,
+  salinity?: Resolver<Maybe<ResolversTypes['Salinity']>, ParentType, ContextType, UsgsSiteSalinityArgs>,
   availableParams?: Resolver<Array<ResolversTypes['UsgsParam']>, ParentType, ContextType>,
 };
 

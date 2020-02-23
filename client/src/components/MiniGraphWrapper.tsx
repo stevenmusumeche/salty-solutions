@@ -9,7 +9,7 @@ const MiniGraphWrapper: React.FC<{
   return (
     <div
       className={`${className &&
-        className} relative bg-white w-full rounded-lg shadow-md text-center flex-col flex justify-center align-center flex-grow`}
+        className} relative bg-white w-full text-center flex-col flex justify-center align-center flex-grow`}
       style={{ minHeight: isSmall ? "8rem" : "12rem" }}
     >
       {children}

@@ -81,9 +81,6 @@ const resolvers: Resolvers & { UsgsParam: any } = {
     wind: async location => {
       return { location };
     },
-    salinity: async (location, args, { services }) => {
-      return { location, numHours: args.numHours };
-    },
     maps: async (location, args, { services }) => {
       return {
         location,
@@ -126,6 +123,20 @@ const resolvers: Resolvers & { UsgsParam: any } = {
         new Date(args.start),
         new Date(args.end)
       );
+    },
+    salinity: async (site, args, { services }) => {
+      const [mostRecent, detail] = await Promise.all([
+        services.usgs.getSalinityLatest(site.id),
+        services.usgs.getSalinity(
+          site.id,
+          new Date(args.start),
+          new Date(args.end)
+        )
+      ]);
+      return {
+        summary: { mostRecent },
+        detail
+      };
     }
   },
   Wind: {
@@ -174,19 +185,6 @@ const resolvers: Resolvers & { UsgsParam: any } = {
         args.numHours || DEFAULT_NUM_HOURS
       );
       return data.temperature;
-    }
-  },
-  Salinity: {
-    summary: async (salinity, args, { services }) => {
-      return {
-        mostRecent: await services.usgs.getSalinityLatest(salinity.location)
-      };
-    },
-    detail: async (salinity, args, { services }) => {
-      return services.usgs.getSalinity(
-        salinity.location,
-        salinity.numHours || DEFAULT_NUM_HOURS
-      );
     }
   },
   Maps: {

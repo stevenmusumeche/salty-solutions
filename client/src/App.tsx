@@ -4,7 +4,6 @@ import "./App.css";
 import CombinedForecast from "./components/CombinedForecast";
 import CurrentAirTempDetailGraph from "./components/CurrentAirTempDetailGraph";
 import CurrentAirTempSummaryCard from "./components/CurrentAirTempSummaryCard";
-import CurrentSalinityDetailGraph from "./components/CurrentSalinityDetailGraph";
 import CurrentSalinitySummaryCard from "./components/CurrentSalinitySummaryCard";
 import CurrentWaterTempDetailGraph from "./components/CurrentWaterTempDetailGraph";
 import CurrentWaterTempSummaryCard from "./components/CurrentWaterTempSummaryCard";
@@ -63,14 +62,20 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
       <div className="container p-4 md:p-0 md:mx-auto md:my-0">
         <SectionTitle text="Current Conditions" />
         <div className="current-conditions-grid">
-          <CurrentWindSummaryCard locationId={locationId} />
-          <CurrentSalinitySummaryCard locationId={locationId} />
-          <CurrentAirTempSummaryCard locationId={locationId} />
+          {/* <CurrentWindSummaryCard locationId={locationId} /> */}
+          <CurrentSalinitySummaryCard
+            locationId={locationId}
+            usgsSites={selectedLocation.usgsSites.filter(site =>
+              site.availableParams.includes(UsgsParam.Salinity)
+            )}
+            date={date}
+          />
+          {/* <CurrentAirTempSummaryCard locationId={locationId} />
           <CurrentWaterTempSummaryCard locationId={locationId} />
-          <CurrentWindDetailGraph locationId={locationId} />
-          <CurrentSalinityDetailGraph locationId={locationId} />
-          <CurrentAirTempDetailGraph locationId={locationId} />
-          <CurrentWaterTempDetailGraph locationId={locationId} />
+          <CurrentWindDetailGraph locationId={locationId} /> */}
+          {/* <CurrentSalinityDetailGraph locationId={locationId} /> */}
+          {/* <CurrentAirTempDetailGraph locationId={locationId} />
+          <CurrentWaterTempDetailGraph locationId={locationId} /> */}
         </div>
 
         <SectionTitle text="Forecast" />

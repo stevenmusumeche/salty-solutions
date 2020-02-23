@@ -34,6 +34,7 @@ import {
 import ErrorIcon from "../assets/error.svg";
 import "./SkeletonCharacter.css";
 import { WindowSizeContext } from "../providers/WindowSizeProvider";
+import UsgsSiteSelect from "./UsgsSiteSelect";
 
 interface Props {
   tideStations: TideStationDetailFragment[];
@@ -176,6 +177,7 @@ const Tides: React.FC<Props> = ({
             sites={usgsSites}
             handleChange={handleUsgsSiteChange}
             selectedId={selectedUsgsSiteId}
+            label="Observation Site:"
           />
         </div>
       </div>
@@ -343,31 +345,6 @@ const TideStationSelect: React.FC<{
         {tideStations.map(station => (
           <option key={station.id} value={station.id}>
             {station.name}
-          </option>
-        ))}
-      </select>
-    </div>
-  </div>
-);
-
-const UsgsSiteSelect: React.FC<{
-  sites: UsgsSiteDetailFragment[];
-  handleChange: ChangeEventHandler<HTMLSelectElement>;
-  selectedId: string;
-}> = ({ sites, handleChange, selectedId }) => (
-  <div className="py-2">
-    <div className="mr-2 inline-block uppercase leading-loose text-gray-700 text-sm">
-      Observation Site:
-    </div>
-    <div className="inline-block rounded border-gray-300 border">
-      <select
-        onChange={handleChange}
-        value={selectedId}
-        className="select-css pr-8 pl-2 py-1 bg-white text-gray-700 text-sm"
-      >
-        {sites.map(site => (
-          <option key={site.id} value={site.id}>
-            {site.name}
           </option>
         ))}
       </select>

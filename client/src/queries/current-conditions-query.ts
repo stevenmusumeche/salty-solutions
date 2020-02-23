@@ -1,8 +1,12 @@
 import gql from "graphql-tag";
 
-// todo: combine queries into a single one to reduce network calls
 const CURRENT_CONDITIONS_QUERY = gql`
-  query CurrentConditionsData($locationId: ID!) {
+  query CurrentConditionsData(
+    $locationId: ID!
+    $usgsSiteId: ID!
+    $startDate: String!
+    $endDate: String!
+  ) {
     location(id: $locationId) {
       wind {
         summary {
@@ -14,6 +18,7 @@ const CURRENT_CONDITIONS_QUERY = gql`
           ...WindDetailFields2
         }
       }
+
       temperature {
         summary {
           mostRecent {
@@ -26,14 +31,6 @@ const CURRENT_CONDITIONS_QUERY = gql`
           timestamp
           temperature {
             degrees
-          }
-        }
-      }
-
-      salinitySummary: salinity(numHours: 12) {
-        summary {
-          mostRecent {
-            salinity
           }
         }
       }
@@ -56,12 +53,23 @@ const CURRENT_CONDITIONS_QUERY = gql`
       }
     }
 
-    salinityDetail: location(id: $locationId) {
-      salinity(numHours: 48) {
-        detail {
-          timestamp
+    usgsSite(siteId: $usgsSiteId) {
+      ...UsgsSiteSalinityFields
+    }
+  }
+
+  fragment UsgsSiteSalinityFields on UsgsSite {
+    id
+    name
+    salinity(start: $startDate, end: $endDate) {
+      summary {
+        mostRecent {
           salinity
         }
+      }
+      detail {
+        timestamp
+        salinity
       }
     }
   }
