@@ -4,6 +4,7 @@ import "./SkeletonCharacter.css";
 import ErrorIcon from "../assets/error.svg";
 import { WindowSizeContext } from "../providers/WindowSizeProvider";
 import EmptyBox from "./EmptyBox";
+import useBreakpoints from "../hooks/useBreakpoints";
 
 interface Props {
   label: string;
@@ -13,17 +14,19 @@ interface Props {
   fontSize?: string;
   className?: string;
   refresh?: (opts?: Partial<OperationContext> | undefined) => void;
+  loadingComponent?: any;
 }
 
 const Wrapper: React.FC<{ children: ReactNode; className?: string }> = ({
   children,
   className
 }) => {
-  const { isSmall } = useContext(WindowSizeContext);
+  const { isSmall } = useBreakpoints();
   return (
     <div
-      className={`${className &&
-        className} relative bg-white w-full rounded-lg shadow-md text-center flex-col flex justify-between align-center flex-grow`}
+      className={`${
+        className ? className : ""
+      } relative bg-white w-full rounded-lg shadow-md text-center flex-col flex justify-between align-center flex-grow`}
       style={{ minHeight: isSmall ? "8rem" : "12rem" }}
     >
       {children}
@@ -44,7 +47,8 @@ const ConditionCard: React.FC<Props> = ({
   children,
   fontSize = "7em",
   className,
-  refresh
+  refresh,
+  loadingComponent: LoadingComponent
 }) => {
   let displayValue: any = null;
   const { isSmall } = useContext(WindowSizeContext);
@@ -53,15 +57,15 @@ const ConditionCard: React.FC<Props> = ({
     return (
       <Wrapper>
         <Label label={label} />
-        <div className="flex justify-center mt-4">
-          <EmptyBox w="40%" h={isSmall ? 60 : 100} />
-        </div>
-        <div className="flex justify-center mt-2">
-          <EmptyBox w={"90%"} h={isSmall ? 109 : 180} />
-        </div>
-        <div className="flex justify-center my-4">
-          <EmptyBox w={isSmall ? "90%" : "70%"} h={24} />
-        </div>
+        {LoadingComponent ? (
+          <LoadingComponent isSmall={isSmall} />
+        ) : (
+          <>
+            <div className="flex justify-center items-center flex-grow my-8">
+              <EmptyBox w={"80%"} h={isSmall ? 180 : 295} />
+            </div>
+          </>
+        )}
       </Wrapper>
     );
   } else if (error && !children) {
@@ -87,7 +91,7 @@ const ConditionCard: React.FC<Props> = ({
     <Wrapper className={className}>
       <Label label={label} />
       <div
-        className="condition-card-value text-blue-800 leading-none flex justify-center flex-grow p-2 relative"
+        className="condition-card-value text-blue-800 leading-none flex justify-center flex-grow p-2 relative items-center"
         style={{ fontSize: isSmall ? "4em" : fontSize }}
       >
         {displayValue}

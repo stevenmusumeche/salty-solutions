@@ -57,7 +57,7 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
       }
     >
       <div className="container p-4 md:p-0 md:mx-auto md:my-0">
-        <div className="current-conditions-grid">
+        {/* <div className="current-conditions-grid">
           <WindCard locationId={locationId} date={date} />
           <AirTempCard locationId={locationId} date={date} />
           <WaterTempCard
@@ -90,7 +90,7 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
         <CombinedForecast locationId={locationId} />
 
         <SectionTitle text="Solunar Data" />
-        <SunAndMoon locationId={locationId} date={date} />
+        <SunAndMoon locationId={locationId} date={date} /> */}
         <SectionTitle text="Maps" />
         <Maps locationId={locationId} />
 

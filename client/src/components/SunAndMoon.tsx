@@ -4,6 +4,7 @@ import { format, startOfDay, addDays } from "date-fns";
 import { UseQueryState } from "urql";
 import ConditionCard from "./ConditionCard";
 import MoonPhase from "./MoonPhase";
+import EmptyBox from "./EmptyBox";
 
 interface Props {
   locationId: string;
@@ -32,6 +33,7 @@ const SunAndMoon: React.FC<Props> = ({ locationId, date }) => {
         label="Nautical Dawn"
         fontSize="5rem"
         refresh={refresh}
+        loadingComponent={Loading}
       >
         {sun && format(new Date(sun.nauticalDawn), "h:mm")}
       </ConditionCard>
@@ -41,6 +43,7 @@ const SunAndMoon: React.FC<Props> = ({ locationId, date }) => {
         label="Sunrise"
         fontSize="5rem"
         refresh={refresh}
+        loadingComponent={Loading}
       >
         {sun && format(new Date(sun.sunrise), "h:mm")}
       </ConditionCard>
@@ -50,6 +53,7 @@ const SunAndMoon: React.FC<Props> = ({ locationId, date }) => {
         label="Sunset"
         fontSize="5rem"
         refresh={refresh}
+        loadingComponent={Loading}
       >
         {sun && format(new Date(sun.sunset), "h:mm")}
       </ConditionCard>
@@ -59,6 +63,7 @@ const SunAndMoon: React.FC<Props> = ({ locationId, date }) => {
         label="Nautical Dusk"
         fontSize="5rem"
         refresh={refresh}
+        loadingComponent={Loading}
       >
         {sun && format(new Date(sun.nauticalDusk), "h:mm")}
       </ConditionCard>
@@ -68,6 +73,7 @@ const SunAndMoon: React.FC<Props> = ({ locationId, date }) => {
         label={moon ? `${moon.phase} (${moon.illumination}%)` : "Moon Phase"}
         fontSize="5rem"
         refresh={refresh}
+        loadingComponent={Loading}
       >
         {moon && <MoonPhase phase={moon.phase} />}
       </ConditionCard>
@@ -93,3 +99,9 @@ const extractData = (result: UseQueryState<SunAndMoonQuery>) => {
 
   return { sun, moon };
 };
+
+const Loading: React.FC<{ isSmall: boolean }> = ({ isSmall }) => (
+  <div className="flex flex-grow items-center justify-center">
+    <EmptyBox h={isSmall ? 60 : 80} w="80%" className="" />
+  </div>
+);

@@ -1,7 +1,7 @@
 import React, { ReactNode } from "react";
 import { useForecastQuery } from "../generated/graphql";
 import ErrorIcon from "../assets/error.svg";
-import ForecastSkeleton from "./ForecastSkeleton";
+import { ForecastSkeleton } from "./ForecastSkeleton";
 
 interface Props {
   locationId: string;

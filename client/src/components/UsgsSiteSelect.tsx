@@ -17,7 +17,7 @@ const UsgsSiteSelect: React.FC<{
       <select
         onChange={handleChange}
         value={selectedId}
-        className="select-css pr-8 pl-2 py-1 bg-white text-gray-700 text-sm"
+        className="select-css pr-8 pl-2 py-1 bg-white text-gray-700 text-sm w-full"
       >
         {sites.map(site => (
           <option key={site.id} value={site.id}>

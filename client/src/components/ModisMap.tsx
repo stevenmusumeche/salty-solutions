@@ -7,6 +7,7 @@ import { format } from "date-fns";
 import BackIcon from "../assets/back.svg";
 import ForwardIcon from "../assets/forward.svg";
 import useBreakpoints from "../hooks/useBreakpoints";
+import EmptyBox from "./EmptyBox";
 
 interface Props {
   locationId: string;
@@ -40,7 +41,7 @@ const ModisMap: React.FC<Props> = ({ locationId }) => {
       );
 
     if (modisMap.fetching || !modisMap.data || !modisMap.data.location) {
-      return <div className="text-black">Loading Satellite Map</div>;
+      return <EmptyBox w="100%" h={500} />;
     }
 
     const numMaps = modisMap.data.location.modisMaps.length;
@@ -92,15 +93,17 @@ const ModisMap: React.FC<Props> = ({ locationId }) => {
             <img src={ForwardIcon} alt="forward" className="h-5" />
           </button>
         </div>
-        <Magnifier
-          className={"magnifier-image-mobile"}
-          src={curImage.small.url}
-          zoomImgSrc={curImage.large.url}
-          zoomFactor={5}
-          mgWidth={isAtLeastMedium ? 400 : window.innerWidth - 120}
-          mgHeight={isAtLeastMedium ? 275 : 200}
-          mgShape="square"
-        />
+        <div style={{ minHeight: isAtLeastMedium ? 800 : 300 }}>
+          <Magnifier
+            className={"magnifier-image-mobile"}
+            src={curImage.small.url}
+            zoomImgSrc={curImage.large.url}
+            zoomFactor={5}
+            mgWidth={isAtLeastMedium ? 400 : window.innerWidth - 120}
+            mgHeight={isAtLeastMedium ? 275 : 200}
+            mgShape="square"
+          />
+        </div>
       </span>
     );
   }

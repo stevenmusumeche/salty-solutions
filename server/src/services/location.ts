@@ -3,8 +3,7 @@ export interface Coords {
   lon: number;
 }
 
-// todo: finish adding the usgs stations to each location
-// todo: finish with the loading indicators
+// todo: finish with the loading indicators on mobile
 
 export interface LocationEntity {
   id: string;

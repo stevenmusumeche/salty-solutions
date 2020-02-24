@@ -3,6 +3,7 @@ import { useSalinityMapQuery, SalinityMapQuery } from "../generated/graphql";
 import ErrorIcon from "../assets/error.svg";
 import { UseQueryState } from "urql";
 import useBreakpoints from "../hooks/useBreakpoints";
+import EmptyBox from "./EmptyBox";
 
 interface Props {
   locationId: string;
@@ -38,7 +39,7 @@ export const SalinityMap: React.FC<Props> = ({ locationId }) => {
       !salinityMap.data ||
       !salinityMap.data.location
     ) {
-      return <div className="text-black">Loading Salinity Map</div>;
+      return <EmptyBox w="100%" h={isSmall ? 140 : 500} />;
     }
 
     const mapUrl = salinityMap.data.location.salinityMap;
@@ -75,7 +76,10 @@ export const SalinityMap: React.FC<Props> = ({ locationId }) => {
 
   return (
     <>
-      <div className="mb-8 bg-white rounded-lg shadow-md relative z-0 text-white inline-flex items-start justify-center p-8 salinity-map-wrapper">
+      <div
+        style={{ minHeight: isSmall ? 180 : 500 }}
+        className="mb-8 bg-white rounded-lg shadow-md relative z-0 text-white inline-flex items-start justify-center p-8 salinity-map-wrapper"
+      >
         {renderMap(salinityMap)}
       </div>
     </>

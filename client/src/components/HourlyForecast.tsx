@@ -4,7 +4,7 @@ import {
   useCombinedForecastQuery
 } from "../generated/graphql";
 import ErrorIcon from "../assets/error.svg";
-import ForecastSkeleton from "./ForecastSkeleton";
+import { HourlyForecastSkeleton } from "./ForecastSkeleton";
 import { format } from "date-fns";
 import { WindowSizeContext } from "../providers/WindowSizeProvider";
 
@@ -25,7 +25,7 @@ const HourlyForecast: React.FC<Props> = ({ locationId }) => {
   if (forecast.fetching) {
     return (
       <Wrapper>
-        <ForecastSkeleton />
+        <HourlyForecastSkeleton />
       </Wrapper>
     );
   } else if (forecast.error && data.length === 0) {
@@ -42,18 +42,15 @@ const HourlyForecast: React.FC<Props> = ({ locationId }) => {
   }
 
   // group into days (local time)
-  const grouped = data.reduce(
-    (acc, cur) => {
-      const localDay = format(
-        new Date(cur.startTime),
-        "yyyy-MM-dd'T'00:00:00.000xxx"
-      );
-      if (!acc[localDay]) acc[localDay] = [];
-      acc[localDay].push(cur);
-      return acc;
-    },
-    {} as { [date: string]: HourlyForecastDetailFragment[] }
-  );
+  const grouped = data.reduce((acc, cur) => {
+    const localDay = format(
+      new Date(cur.startTime),
+      "yyyy-MM-dd'T'00:00:00.000xxx"
+    );
+    if (!acc[localDay]) acc[localDay] = [];
+    acc[localDay].push(cur);
+    return acc;
+  }, {} as { [date: string]: HourlyForecastDetailFragment[] });
 
   const days = Object.keys(grouped)
     .sort()
