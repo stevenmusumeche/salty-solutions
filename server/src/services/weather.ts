@@ -118,13 +118,11 @@ export const getCurrentConditions = async (location: LocationEntity) => {
 
 export const getConditions = async (
   location: LocationEntity,
-  numHours: number
+  startDate: Date,
+  endDate: Date
 ) => {
-  const start = format(
-    subHours(new Date(), numHours),
-    "yyyy-MM-dd'T'HH:mm:ssXXX"
-  );
-  const end = format(new Date(), "yyyy-MM-dd'T'HH:mm:ssXXX");
+  const start = format(startDate, "yyyy-MM-dd'T'HH:mm:ssXXX");
+  const end = format(endDate, "yyyy-MM-dd'T'HH:mm:ssXXX");
 
   const url = `https://api.weather.gov/stations/${location.weatherGov.stationId}/observations?end=${end}&start=${start}`;
 
@@ -152,7 +150,11 @@ export const getConditions = async (
 };
 
 export const getLatestConditions = async (location: LocationEntity) => {
-  const data = await getConditions(location, 12);
+  const data = await getConditions(
+    location,
+    subHours(new Date(), 12),
+    new Date()
+  );
   return {
     temperature: orderBy(data.temperature, ["timestamp"], ["desc"])[0],
     wind: orderBy(data.wind, ["timestamp"], ["desc"])[0]

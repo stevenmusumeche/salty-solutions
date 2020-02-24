@@ -1,8 +1,12 @@
 import gql from "graphql-tag";
 
-// todo: combine queries into a single one to reduce network calls
 const CURRENT_CONDITIONS_QUERY = gql`
-  query CurrentConditionsData($locationId: ID!) {
+  query CurrentConditionsData(
+    $locationId: ID!
+    $usgsSiteId: ID
+    $startDate: String!
+    $endDate: String!
+  ) {
     location(id: $locationId) {
       wind {
         summary {
@@ -10,10 +14,11 @@ const CURRENT_CONDITIONS_QUERY = gql`
             ...WindDetailFields2
           }
         }
-        detail(numHours: 48) {
+        detail(start: $startDate, end: $endDate) {
           ...WindDetailFields2
         }
       }
+
       temperature {
         summary {
           mostRecent {
@@ -22,32 +27,7 @@ const CURRENT_CONDITIONS_QUERY = gql`
             }
           }
         }
-        detail(numHours: 48) {
-          timestamp
-          temperature {
-            degrees
-          }
-        }
-      }
-
-      salinitySummary: salinity(numHours: 12) {
-        summary {
-          mostRecent {
-            salinity
-          }
-        }
-      }
-
-      waterTemperature {
-        summary {
-          mostRecent {
-            timestamp
-            temperature {
-              degrees
-            }
-          }
-        }
-        detail(numHours: 48) {
+        detail(start: $startDate, end: $endDate) {
           timestamp
           temperature {
             degrees
@@ -56,11 +36,39 @@ const CURRENT_CONDITIONS_QUERY = gql`
       }
     }
 
-    salinityDetail: location(id: $locationId) {
-      salinity(numHours: 48) {
-        detail {
-          timestamp
+    usgsSite(siteId: $usgsSiteId) {
+      ...UsgsSiteDetailFields
+    }
+  }
+
+  fragment UsgsSiteDetailFields on UsgsSite {
+    id
+    name
+    # // todo fix this
+    salinity(start: $startDate, end: $endDate) {
+      summary {
+        mostRecent {
           salinity
+        }
+      }
+      detail {
+        timestamp
+        salinity
+      }
+    }
+    waterTemperature {
+      summary {
+        mostRecent {
+          timestamp
+          temperature {
+            degrees
+          }
+        }
+      }
+      detail(start: $startDate, end: $endDate) {
+        timestamp
+        temperature {
+          degrees
         }
       }
     }

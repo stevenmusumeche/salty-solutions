@@ -4,8 +4,18 @@ import {
 } from "../generated/graphql";
 import { UseQueryState } from "urql";
 
-export function useTemperatureData(locationId: string) {
-  const [result] = useCurrentConditionsDataQuery({ variables: { locationId } });
+export function useTemperatureData(
+  locationId: string,
+  startDate: Date,
+  endDate: Date
+) {
+  const [result] = useCurrentConditionsDataQuery({
+    variables: {
+      locationId,
+      startDate: startDate.toISOString(),
+      endDate: endDate.toISOString()
+    }
+  });
   const { curValue, curDetail } = extractData(result);
   return { curValue, curDetail, ...result };
 }

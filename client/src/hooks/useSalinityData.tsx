@@ -5,12 +5,25 @@ import {
 import { UseQueryState, CombinedError } from "urql";
 import { noDecimals } from "./utils";
 
-export function useSalinityData(locationId: string) {
-  const [result] = useCurrentConditionsDataQuery({ variables: { locationId } });
-  const { curValue, curDetail } = extractData(result);
+export function useSalinityData(
+  locationId: string,
+  usgsSiteId: string,
+  startDate: Date,
+  endDate: Date
+) {
+  const [result] = useCurrentConditionsDataQuery({
+    variables: {
+      locationId,
+      usgsSiteId,
+      startDate: startDate.toISOString(),
+      endDate: endDate.toISOString()
+    }
+  });
+  const { curValue, curDetail, stationName } = extractData(result);
   return {
     curValue,
     curDetail,
+    stationName,
     ...result,
     error:
       curValue === null
@@ -22,24 +35,25 @@ export function useSalinityData(locationId: string) {
 function extractData(data: UseQueryState<CurrentConditionsDataQuery>) {
   const curValue =
     data.data &&
-    data.data.location &&
-    data.data.location.salinitySummary &&
-    data.data.location.salinitySummary.summary &&
-    data.data.location.salinitySummary.summary.mostRecent
-      ? noDecimals(
-          data.data.location.salinitySummary.summary.mostRecent.salinity
-        )
+    data.data.usgsSite &&
+    data.data.usgsSite.salinity &&
+    data.data.usgsSite.salinity.summary &&
+    data.data.usgsSite.salinity.summary.mostRecent
+      ? noDecimals(data.data.usgsSite.salinity.summary.mostRecent.salinity)
       : null;
 
   const curDetail =
     data.data &&
-    data.data.salinityDetail &&
-    data.data.salinityDetail.salinity &&
-    data.data.salinityDetail.salinity.detail &&
-    data.data.salinityDetail.salinity.detail.map(data => ({
+    data.data.usgsSite &&
+    data.data.usgsSite.salinity &&
+    data.data.usgsSite.salinity.detail &&
+    data.data.usgsSite.salinity.detail.map(data => ({
       y: data.salinity,
       x: data.timestamp
     }));
 
-  return { curValue, curDetail };
+  const stationName =
+    data.data && data.data.usgsSite && data.data.usgsSite.name;
+
+  return { curValue, curDetail, stationName };
 }

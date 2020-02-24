@@ -9,7 +9,9 @@ import {
   useTideQuery,
   TideDetail,
   TideDetailFieldsFragment,
-  SunDetailFieldsFragment
+  SunDetailFieldsFragment,
+  WaterHeightFieldsFragment,
+  UsgsSiteDetailFragment
 } from "../generated/graphql";
 import {
   startOfDay,
@@ -19,7 +21,8 @@ import {
   addMinutes,
   subMinutes,
   isAfter,
-  addDays
+  addDays,
+  isSameDay
 } from "date-fns";
 import {
   VictoryChart,
@@ -29,11 +32,13 @@ import {
   VictoryLine
 } from "victory";
 import ErrorIcon from "../assets/error.svg";
-import "./SkeletonCharacter.css";
 import { WindowSizeContext } from "../providers/WindowSizeProvider";
+import UsgsSiteSelect from "./UsgsSiteSelect";
+import EmptyBox from "./EmptyBox";
 
 interface Props {
   tideStations: TideStationDetailFragment[];
+  usgsSites: UsgsSiteDetailFragment[];
   locationId: string;
   date: Date;
 }
@@ -41,39 +46,64 @@ interface Props {
 const ISO_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSxxx";
 const Y_PADDING = 0.3;
 
-const Tides: React.FC<Props> = ({ tideStations, locationId, date }) => {
-  const [selectedId, setSelectedId] = useState(tideStations[0].id);
+const Tides: React.FC<Props> = ({
+  tideStations,
+  usgsSites,
+  locationId,
+  date
+}) => {
+  const [selectedTideStationId, setSelectedTideStationId] = useState(
+    tideStations[0].id
+  );
+  const [selectedUsgsSiteId, setSelectedUsgsSiteId] = useState(usgsSites[0].id);
   const { isSmall } = useContext(WindowSizeContext);
 
   useEffect(() => {
     // if locationId changes, set tide station back to the default
-    setSelectedId(tideStations[0].id);
-  }, [locationId, tideStations]);
+    setSelectedTideStationId(tideStations[0].id);
+    setSelectedUsgsSiteId(usgsSites[0].id);
+  }, [locationId, tideStations, usgsSites]);
 
   const [tideResult, refresh] = useTideQuery({
     variables: {
       locationId,
-      stationId: selectedId!,
+      tideStationId: selectedTideStationId!,
+      usgsSiteId: selectedUsgsSiteId!,
       startDate: format(startOfDay(date), ISO_FORMAT),
       endDate: format(addDays(startOfDay(date), 1), ISO_FORMAT)
     },
-    pause: selectedId === undefined
+    pause: selectedTideStationId === undefined
   });
 
   const handleStationChange: ChangeEventHandler<HTMLSelectElement> = e =>
-    setSelectedId(e.target.value);
+    setSelectedTideStationId(e.target.value);
+
+  const handleUsgsSiteChange: ChangeEventHandler<HTMLSelectElement> = e =>
+    setSelectedUsgsSiteId(e.target.value);
 
   if (tideResult.fetching) {
     return (
       <div>
-        <div className="">
-          <TideStationSelect
-            tideStations={tideStations}
-            handleChange={handleStationChange}
-            selectedId={selectedId}
+        <div className="my-4 mb-6 md:flex md:items-center">
+          <EmptyBox
+            h={isSmall ? "3.2rem" : "2rem"}
+            w={isSmall ? "100%" : "20rem"}
+            className="mr-8 mb-4 md:mb-0"
+          />
+          <EmptyBox
+            h={isSmall ? "3.2rem" : "2rem"}
+            w={isSmall ? "100%" : "24rem"}
+            className="m-0"
           />
         </div>
-        <div className="skeleton-character full" />
+        <div className="md:flex justify-between">
+          <EmptyBox
+            h={isSmall ? 190 : 600}
+            w="auto"
+            style={{ flexBasis: "85%" }}
+            className="mb-4 md:mb:0"
+          />
+        </div>
       </div>
     );
   } else if (
@@ -81,7 +111,9 @@ const Tides: React.FC<Props> = ({ tideStations, locationId, date }) => {
     !tideResult.data.tidePreditionStation ||
     !tideResult.data.tidePreditionStation.tides ||
     !tideResult.data.location ||
-    !tideResult.data.location.sun
+    !tideResult.data.location.sun ||
+    !tideResult.data.usgsSite ||
+    !tideResult.data.usgsSite.waterHeight
   ) {
     return (
       <>
@@ -89,7 +121,7 @@ const Tides: React.FC<Props> = ({ tideStations, locationId, date }) => {
           <TideStationSelect
             tideStations={tideStations}
             handleChange={handleStationChange}
-            selectedId={selectedId}
+            selectedId={selectedTideStationId}
           />
         </div>
         <div className="relative w-full flex items-center justify-center py-8 flex-col">
@@ -113,6 +145,10 @@ const Tides: React.FC<Props> = ({ tideStations, locationId, date }) => {
       startOfDay(date).toISOString()
   )[0];
 
+  const waterHeight = tideResult.data.usgsSite.waterHeight.filter(x => {
+    return isSameDay(new Date(x.timestamp), date);
+  });
+
   const {
     dawn,
     dusk,
@@ -120,145 +156,185 @@ const Tides: React.FC<Props> = ({ tideStations, locationId, date }) => {
     darkMorning,
     daylight,
     tideData,
-    hiLowData
-  } = buildDatasets(sunData, tideResult.data.tidePreditionStation.tides);
+    hiLowData,
+    waterHeightData,
+    tideBoundaries
+  } = buildDatasets(
+    sunData,
+    tideResult.data.tidePreditionStation.tides,
+    waterHeight
+  );
 
   let tickValues = [];
   for (let i = 0; i <= 24; i += isSmall ? 4 : 2) {
     tickValues.push(addHours(startOfDay(date), i));
   }
 
-  const { min } = calcTideBoundaries(
-    tideResult.data.tidePreditionStation.tides
-  );
-
+  const { min } = tideBoundaries;
   return (
     <>
-      <div className="">
-        <TideStationSelect
-          tideStations={tideStations}
-          handleChange={handleStationChange}
-          selectedId={selectedId}
-        />
-      </div>
-      <VictoryChart
-        width={450}
-        height={250}
-        style={{ parent: { backgroundColor: "white", touchAction: "auto" } }}
-        padding={{
-          top: 10,
-          bottom: 30,
-          left: isSmall ? 50 : 30,
-          right: isSmall ? 30 : 10
-        }}
-      >
-        {/* background colors for time periods like night, dusk, etc */}
-        {renderBackgroundColor(darkMorning, "#4a5568", min)}
-        {renderBackgroundColor(darkEvening, "#4a5568", min)}
-        {renderBackgroundColor(daylight, "#ebf8ff", min)}
-        {renderBackgroundColor(dawn, "#a0aec0", min)}
-        {renderBackgroundColor(dusk, "#a0aec0", min)}
-
-        {/* time x-axis */}
-        <VictoryAxis
-          style={{
-            grid: {
-              strokeWidth: isSmall ? 1 : 1,
-              stroke: "#718096",
-              strokeDasharray: isSmall ? "2 4" : "2 10"
-            },
-            tickLabels: { fontSize: isSmall ? 20 : 8 }
-          }}
-          tickFormat={date => format(new Date(date), "ha").toLowerCase()}
-          tickValues={tickValues}
-          offsetY={30}
-        />
-        {/* tide height y-axis */}
-        <VictoryAxis
-          dependentAxis
-          style={{
-            grid: {
-              stroke: "718096",
-              strokeWidth: y => (isSmall ? 0 : y === 0 && min < 0 ? 2 : 1),
-              strokeDasharray: y => (y === 0 && min < 0 ? "12 6" : "2 10")
-            },
-            tickLabels: { fontSize: isSmall ? 20 : 8 }
-          }}
-          tickCount={isSmall ? 6 : 10}
-          crossAxis={false}
-        />
-        {/* actual tide line */}
-        <VictoryLine
-          data={tideData}
-          scale={{ x: "time", y: "linear" }}
-          interpolation={"natural"}
-          style={{
-            data: {
-              strokeWidth: 1,
-              stroke: "black"
-            }
-          }}
-        />
-        {/* hi and low tide labels */}
-        {!isSmall && (
-          <VictoryScatter
-            data={hiLowData}
-            size={1.5}
-            labels={data =>
-              format(new Date(data.x), "h:mma") + `\n${data.y.toFixed(1)}ft`
-            }
-            style={{
-              data: {
-                fill: "transparent"
-              },
-              labels: {
-                fontSize: 8,
-                padding: 2,
-                fill: datum => {
-                  const isNight =
-                    isAfter(datum.x, new Date(sunData.nauticalDusk)) ||
-                    isBefore(datum.x, new Date(sunData.nauticalDawn));
-
-                  return isNight ? "#a0aec0" : "#000000";
-                },
-                textShadow: datum => {
-                  const isNight =
-                    isAfter(datum.x, new Date(sunData.nauticalDusk)) ||
-                    isBefore(datum.x, new Date(sunData.nauticalDawn));
-
-                  return isNight ? "0 0 5px #000000" : "0 0 5px #ffffff";
-                }
-              }
-            }}
+      <div className="md:flex">
+        <div>
+          <TideStationSelect
+            tideStations={tideStations}
+            handleChange={handleStationChange}
+            selectedId={selectedTideStationId}
           />
-        )}
-      </VictoryChart>
-      <div
-        className="md:hidden mt-8"
-        style={{ fontVariantNumeric: "tabular-nums" }}
-      >
-        {hiLowData.map(({ x, y, type }, i) => (
-          <div
-            key={i}
-            className="py-1"
+        </div>
+        <div className="md:ml-4 mb-4 md:mb-0">
+          <UsgsSiteSelect
+            sites={usgsSites}
+            handleChange={handleUsgsSiteChange}
+            selectedId={selectedUsgsSiteId}
+            label="Observation Site:"
+          />
+        </div>
+      </div>
+
+      <div className="md:flex items-start">
+        <div className="flex-grow">
+          <VictoryChart
+            width={450}
+            height={250}
             style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr 2fr",
-              gridColumnGap: "1rem",
-              backgroundColor: i % 2 === 0 ? "#edf2f7" : "white"
+              parent: { backgroundColor: "white", touchAction: "auto" }
+            }}
+            padding={{
+              top: 10,
+              bottom: 30,
+              left: isSmall ? 50 : 30,
+              right: isSmall ? 30 : 10
             }}
           >
-            <div className="text-right">{format(new Date(x), "h:mma")}</div>
-            <div>{type} tide</div>
-            <div>{y.toFixed(1)} feet</div>
+            {/* background colors for time periods like night, dusk, etc */}
+            {renderBackgroundColor(darkMorning, "#4a5568", min)}
+            {renderBackgroundColor(darkEvening, "#4a5568", min)}
+            {renderBackgroundColor(daylight, "#ebf8ff", min)}
+            {renderBackgroundColor(dawn, "#a0aec0", min)}
+            {renderBackgroundColor(dusk, "#a0aec0", min)}
+
+            {/* time x-axis */}
+            <VictoryAxis
+              style={{
+                grid: {
+                  strokeWidth: 1,
+                  stroke: "#718096",
+                  strokeDasharray: isSmall ? "2 4" : "2 10"
+                },
+                tickLabels: { fontSize: isSmall ? 20 : 8 }
+              }}
+              tickFormat={date => format(new Date(date), "ha").toLowerCase()}
+              tickValues={tickValues}
+              offsetY={30}
+            />
+            {/* tide height y-axis */}
+            <VictoryAxis
+              dependentAxis
+              style={{
+                grid: {
+                  stroke: "718096",
+                  strokeWidth: y => (isSmall ? 0 : y === 0 && min < 0 ? 2 : 1),
+                  strokeDasharray: y => (y === 0 && min < 0 ? "12 6" : "2 10")
+                },
+                tickLabels: { fontSize: isSmall ? 20 : 8 }
+              }}
+              tickCount={isSmall ? 6 : 10}
+              crossAxis={false}
+            />
+            {/* actual tide line */}
+            <VictoryLine
+              data={tideData}
+              scale={{ x: "time", y: "linear" }}
+              interpolation={"natural"}
+              style={{
+                data: {
+                  strokeWidth: isSmall ? 2 : 1,
+                  stroke: "black"
+                }
+              }}
+            />
+            {/* observed water height */}
+            <VictoryLine
+              data={waterHeightData}
+              scale={{ x: "time", y: "linear" }}
+              interpolation={"natural"}
+              style={{
+                data: {
+                  strokeWidth: isSmall ? 2 : 1,
+                  stroke: "#3182ce"
+                }
+              }}
+            />
+            {/* hi and low tide labels */}
+            {!isSmall && (
+              <VictoryScatter
+                data={hiLowData}
+                size={1.5}
+                labels={data =>
+                  format(new Date(data.x), "h:mma") + `\n${data.y.toFixed(1)}ft`
+                }
+                style={{
+                  data: {
+                    fill: "transparent"
+                  },
+                  labels: {
+                    fontSize: 8,
+                    padding: 2,
+                    fill: datum => {
+                      const isNight =
+                        isAfter(datum.x, new Date(sunData.nauticalDusk)) ||
+                        isBefore(datum.x, new Date(sunData.nauticalDawn));
+
+                      return isNight ? "#a0aec0" : "#000000";
+                    },
+                    textShadow: datum => {
+                      const isNight =
+                        isAfter(datum.x, new Date(sunData.nauticalDusk)) ||
+                        isBefore(datum.x, new Date(sunData.nauticalDawn));
+
+                      return isNight ? "0 0 5px #000000" : "0 0 5px #ffffff";
+                    }
+                  }
+                }}
+              />
+            )}
+          </VictoryChart>
+          <div className="">
+            <div className="flex items-center justify-center mt-2">
+              <div className="w-4 h-4 md:w-6 md:h-6 mr-1 md:mr-2 rounded-sm bg-black flex-shrink-0"></div>
+              <div className="uppercase text-gray-700 text-sm">Predicted</div>
+              <div className="w-4 h-4 md:w-6 md:h-6 md:ml-4 ml-2 mr-1 md:mr-2 rounded-sm bg-blue-600 flex-shrink-0"></div>
+              <div className="uppercase text-gray-700 text-sm">Observed</div>
+            </div>
           </div>
-        ))}
+        </div>
+
+        <div className="mt-8">
+          <HighLowTable hiLowData={hiLowData} />
+        </div>
       </div>
     </>
   );
 };
 
 export default Tides;
+
+const HighLowTable: React.FC<{ hiLowData: any[] }> = ({ hiLowData }) => (
+  <div className="uppercase leading-loose text-gray-700 text-sm">
+    <div className="" style={{ fontVariantNumeric: "tabular-nums" }}>
+      {hiLowData.map(({ x, y, type }, i) => (
+        <div key={i} className="flex items-center mb-1 last:mb-0">
+          <div className="w-10 mr-2 rounded bg-yellow-700 text-white text-xs flex items-center justify-center">
+            {type}
+          </div>
+          <div>
+            {format(new Date(x), "h:mma")} ({y.toFixed(1)}ft)
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+);
 
 const TideStationSelect: React.FC<{
   tideStations: TideStationDetailFragment[];
@@ -318,7 +394,8 @@ const makeTimespanFilterer = (
 
 const buildDatasets = (
   sunData: SunDetailFieldsFragment,
-  tideDetails: TideDetailFieldsFragment[]
+  tideDetails: TideDetailFieldsFragment[],
+  waterHeight: WaterHeightFieldsFragment[]
 ) => {
   const sunrise = new Date(sunData.sunrise);
   const sunset = new Date(sunData.sunset);
@@ -339,7 +416,7 @@ const buildDatasets = (
     isAfter(new Date(tide.time), subMinutes(sunrise, 6)) &&
     isBefore(new Date(tide.time), addMinutes(sunset, 6));
 
-  const tideBoundaries = calcTideBoundaries(tideDetails);
+  const tideBoundaries = calcTideBoundaries(tideDetails, waterHeight);
 
   const timespanFilterer = makeTimespanFilterer(
     tideDetails,
@@ -357,6 +434,11 @@ const buildDatasets = (
     .filter(tide => tide.type !== "intermediate")
     .map(toVictory);
 
+  const waterHeightData = waterHeight.map(data => ({
+    x: new Date(data.timestamp),
+    y: data.height
+  }));
+
   const darkMorning = timespanFilterer(isDarkMorning);
   const darkEvening = timespanFilterer(isDarkEvening);
   const dawn = timespanFilterer(isDawn);
@@ -370,12 +452,17 @@ const buildDatasets = (
     dusk,
     daylight,
     tideData,
-    hiLowData
+    hiLowData,
+    waterHeightData,
+    tideBoundaries
   };
 };
 
-function calcTideBoundaries(tideDetails: TideDetailFieldsFragment[]) {
-  return tideDetails.reduce(
+function calcTideBoundaries(
+  tideDetails: TideDetailFieldsFragment[],
+  waterHeightData: WaterHeightFieldsFragment[]
+) {
+  const tideBoundares = tideDetails.reduce(
     (cur, tide) => {
       return {
         max: cur.max > tide.height ? cur.max : tide.height,
@@ -384,4 +471,11 @@ function calcTideBoundaries(tideDetails: TideDetailFieldsFragment[]) {
     },
     { max: 0, min: 0 }
   );
+
+  return waterHeightData.reduce((cur, waterHeight) => {
+    return {
+      max: cur.max > waterHeight.height ? cur.max : waterHeight.height,
+      min: cur.min < waterHeight.height ? cur.min : waterHeight.height
+    };
+  }, tideBoundares);
 }

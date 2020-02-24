@@ -44,6 +44,7 @@ export interface Context {
     modis: typeof modisService;
     saveOurLake: typeof saveOurLakeService;
   };
+  pass: any;
 }
 
 const formatError = (error: any, context: Context) => {
@@ -80,7 +81,8 @@ const server = new ApolloServer({
         nowcast: nowcastService,
         modis: modisService,
         saveOurLake: saveOurLakeService
-      }
+      },
+      pass: {}
     };
   },
   extensions: [() => new FormatErrorWithContextExtension(formatError)],

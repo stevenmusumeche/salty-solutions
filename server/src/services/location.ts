@@ -1,3 +1,10 @@
+export interface Coords {
+  lat: number;
+  lon: number;
+}
+
+// todo: finish with the loading indicators on mobile
+
 export interface LocationEntity {
   id: string;
   name: string;
@@ -5,7 +12,7 @@ export interface LocationEntity {
   marineZoneId: string;
   lat: number;
   long: number;
-  usgsSiteId: string;
+  usgsSiteIds: string[];
   weatherGov: {
     apiBase: string;
     stationId: string;
@@ -31,7 +38,7 @@ const locations: LocationEntity[] = [
     marineZoneId: "GMZ435",
     lat: 29.731474,
     long: -91.841371,
-    usgsSiteId: "07387040",
+    usgsSiteIds: ["07387040", "07387050", "073816525"],
     weatherGov: {
       apiBase: "https://api.weather.gov/gridpoints/LCH/112,73",
       stationId: "KARA",
@@ -47,7 +54,7 @@ const locations: LocationEntity[] = [
     marineZoneId: "GMZ432",
     lat: 29.9103,
     long: -93.2785,
-    usgsSiteId: "08017095",
+    usgsSiteIds: ["08017118", "08017095", "08017044"],
     weatherGov: {
       apiBase: "https://api.weather.gov/gridpoints/LCH/57,80",
       stationId: "KLCH",
@@ -58,7 +65,7 @@ const locations: LocationEntity[] = [
   },
   {
     id: "cocodrie",
-    name: "Cocodrie",
+    name: "Cocodrie/Dulac",
     tideStationIds: [
       "8762928",
       "8762888",
@@ -70,7 +77,7 @@ const locations: LocationEntity[] = [
     marineZoneId: "GMZ550",
     lat: 29.246742,
     long: -90.661058,
-    usgsSiteId: "073813498",
+    usgsSiteIds: ["073813498"],
     weatherGov: {
       apiBase: "https://api.weather.gov/gridpoints/LIX/47,58",
       stationId: "KHUM",
@@ -92,7 +99,7 @@ const locations: LocationEntity[] = [
     marineZoneId: "GMZ550",
     lat: 29.412207,
     long: -90.782918,
-    usgsSiteId: "07381349",
+    usgsSiteIds: ["07381349", "073813498"],
     weatherGov: {
       apiBase: "ttps://api.weather.gov/gridpoints/LIX/42,65",
       stationId: "KHUM",
@@ -108,7 +115,14 @@ const locations: LocationEntity[] = [
     marineZoneId: "GMZ536",
     lat: 29.8203972,
     long: -89.65689,
-    usgsSiteId: "073745257",
+    usgsSiteIds: [
+      "073745257",
+      "295206089402400",
+      "073745235",
+      "07374526",
+      "073745275",
+      "07374527"
+    ],
     weatherGov: {
       apiBase: "https://api.weather.gov/gridpoints/LIX/85,84",
       stationId: "KNBG",
@@ -131,7 +145,13 @@ const locations: LocationEntity[] = [
     marineZoneId: "gmz572",
     lat: 29.2366,
     long: -89.9873,
-    usgsSiteId: "07380249",
+    usgsSiteIds: [
+      "07380249",
+      "073802516",
+      "291929089562600",
+      "073802514",
+      "073802512"
+    ],
     weatherGov: {
       apiBase: "https://api.weather.gov/gridpoints/LIX/73,58",
       stationId: "KGAO",
@@ -161,7 +181,16 @@ const locations: LocationEntity[] = [
     marineZoneId: "GMZ555",
     lat: 29.277165,
     long: -89.3547759,
-    usgsSiteId: "292952089453800",
+    usgsSiteIds: [
+      "292952089453800",
+      "291042089153000",
+      "073745258",
+      "07380260",
+      "07374550",
+      "073745275",
+      "07374527",
+      "285554089242400"
+    ],
     weatherGov: {
       apiBase: "https://api.weather.gov/gridpoints/LIX/97,61",
       stationId: "KMIS",
@@ -187,7 +216,18 @@ const locations: LocationEntity[] = [
     marineZoneId: "GMZ530",
     lat: 30.193165894,
     long: -90.120332852,
-    usgsSiteId: "301001089442600",
+    usgsSiteIds: [
+      "301001089442600",
+      "301200090072400",
+      "073802332",
+      "07374581",
+      "300136090064800",
+      "300406090231600",
+      "07375230",
+      "073802339",
+      "073802341",
+      "300703089522700"
+    ],
     weatherGov: {
       apiBase: "https://api.weather.gov/gridpoints/LIX/66,100",
       stationId: "KASD",
@@ -198,6 +238,7 @@ const locations: LocationEntity[] = [
   }
 ];
 
+// lafitte
 // delacroix
 // empire
 // Port Sulphur
@@ -231,7 +272,7 @@ export const getById = (id: string): LocationEntity | undefined => {
 export const getDataSources = (location: LocationEntity) => ({
   tideStationIds: location.tideStationIds,
   marineZoneId: location.marineZoneId,
-  usgsSiteId: location.usgsSiteId,
+  usgsSiteIds: location.usgsSiteIds,
   weatherStationId: location.weatherGov.stationId,
   weatherRadarSiteId: location.weatherGov.radarSiteId
 });

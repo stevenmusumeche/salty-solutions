@@ -5,9 +5,17 @@ import {
 import { noDecimals } from "./utils";
 import { UseQueryState } from "urql";
 
-export function useCurrentWindData(locationId: string) {
+export function useCurrentWindData(
+  locationId: string,
+  startDate: Date,
+  endDate: Date
+) {
   const [result, executeQuery] = useCurrentConditionsDataQuery({
-    variables: { locationId }
+    variables: {
+      locationId,
+      startDate: startDate.toISOString(),
+      endDate: endDate.toISOString()
+    }
   });
 
   const { curValue, curDirectionValue, curDetail } = extractData(result);

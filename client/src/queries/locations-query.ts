@@ -8,10 +8,19 @@ const LOCATION_QUERY = gql`
       tidePreditionStations {
         ...TideStationDetail
       }
+      usgsSites {
+        ...UsgsSiteDetail
+      }
     }
   }
   fragment TideStationDetail on TidePreditionStation {
     id
     name
+  }
+
+  fragment UsgsSiteDetail on UsgsSite {
+    id
+    name
+    availableParams
   }
 `;

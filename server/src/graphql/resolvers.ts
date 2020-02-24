@@ -1,12 +1,15 @@
 import { Resolvers } from "../generated/graphql";
 import { ApolloError, UserInputError } from "apollo-server-koa";
 import { notUndefined } from "../services/utils";
-import { format, subDays } from "date-fns";
 
-const DEFAULT_NUM_DAYS = 3;
-const DEFAULT_NUM_HOURS = 24;
-
-const resolvers: Resolvers = {
+const resolvers: Resolvers & { UsgsParam: Object } = {
+  UsgsParam: {
+    WaterTemp: "00010",
+    WindSpeed: "00035",
+    WindDirection: "00036",
+    GuageHeight: "00065",
+    Salinity: "00480"
+  },
   Query: {
     locations: (_, __, { services }) => {
       return services.location.getAll();
@@ -21,6 +24,12 @@ const resolvers: Resolvers = {
       if (!station)
         throw new ApolloError(`Unknown tide station ID ${stationId}`);
       return station;
+    },
+    usgsSite: (_, { siteId }, { services }) => {
+      if (!siteId) return null;
+      const site = services.usgs.getSiteById(siteId);
+      if (!site) throw new ApolloError(`Unknown USGS site ID ${siteId}`);
+      return site;
     }
   },
   Location: {
@@ -30,6 +39,11 @@ const resolvers: Resolvers = {
     tidePreditionStations: (location, __, { services }) => {
       return location.tideStationIds
         .map(id => services.tide.getStationById(id))
+        .filter(notUndefined);
+    },
+    usgsSites: (location, _, { services }) => {
+      return location.usgsSiteIds
+        .map(id => services.usgs.getSiteById(id))
         .filter(notUndefined);
     },
     sun: async (location, args, { services }) => {
@@ -60,20 +74,8 @@ const resolvers: Resolvers = {
     marineForecast: async (location, args, { services }) => {
       return services.marine.getForecast(location);
     },
-    waterHeight: async (location, args, { services }) => {
-      return services.usgs.getWaterHeight(
-        location,
-        args.numDays || DEFAULT_NUM_DAYS
-      );
-    },
-    waterTemperature: async location => {
-      return { location };
-    },
     wind: async location => {
       return { location };
-    },
-    salinity: async (location, args, { services }) => {
-      return { location, numHours: args.numHours };
     },
     maps: async (location, args, { services }) => {
       return {
@@ -110,11 +112,39 @@ const resolvers: Resolvers = {
       );
     }
   },
+  UsgsSite: {
+    waterHeight: async (site, args, { services }) => {
+      return services.usgs.getWaterHeight(
+        site.id,
+        new Date(args.start),
+        new Date(args.end)
+      );
+    },
+    salinity: async (site, args, { services }) => {
+      const [mostRecent, detail] = await Promise.all([
+        services.usgs.getSalinityLatest(site.id),
+        services.usgs.getSalinity(
+          site.id,
+          new Date(args.start),
+          new Date(args.end)
+        )
+      ]);
+      return {
+        summary: { mostRecent },
+        detail
+      };
+    },
+    waterTemperature: async (site, args, ctx) => {
+      ctx.pass.site = site;
+      return {};
+    }
+  },
   Wind: {
     detail: async (wind, args, { services }) => {
       const result = await services.weather.getConditions(
         wind.location,
-        args.numHours || DEFAULT_NUM_HOURS
+        new Date(args.start),
+        new Date(args.end)
       );
       return result.wind;
     },
@@ -126,17 +156,16 @@ const resolvers: Resolvers = {
     }
   },
   WaterTemperature: {
-    detail: async (waterTemperature, args, { services }) => {
+    detail: async (_, args, { services, pass }) => {
       return services.usgs.getWaterTemperature(
-        waterTemperature.location,
-        args.numHours || DEFAULT_NUM_HOURS
+        pass.site.id,
+        new Date(args.start),
+        new Date(args.end)
       );
     },
-    summary: async (waterTemperature, args, { services }) => {
+    summary: async (_, args, { services, pass }) => {
       return {
-        mostRecent: await services.usgs.getWaterTemperatureLatest(
-          waterTemperature.location
-        )
+        mostRecent: await services.usgs.getWaterTemperatureLatest(pass.site.id)
       };
     }
   },
@@ -153,22 +182,10 @@ const resolvers: Resolvers = {
     detail: async (temperature, args, { services }) => {
       const data = await services.weather.getConditions(
         temperature.location,
-        args.numHours || DEFAULT_NUM_HOURS
+        new Date(args.start),
+        new Date(args.end)
       );
       return data.temperature;
-    }
-  },
-  Salinity: {
-    summary: async (salinity, args, { services }) => {
-      return {
-        mostRecent: await services.usgs.getSalinityLatest(salinity.location)
-      };
-    },
-    detail: async (salinity, args, { services }) => {
-      return services.usgs.getSalinity(
-        salinity.location,
-        salinity.numHours || DEFAULT_NUM_HOURS
-      );
     }
   },
   Maps: {

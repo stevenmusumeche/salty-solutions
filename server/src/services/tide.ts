@@ -41,7 +41,7 @@ const tideStations: TideStationEntity[] = [
   },
   {
     id: "8767961",
-    name: "Bulk Terminal",
+    name: "Bulk Terminal near Prien Lake",
     lat: 30.19,
     lon: -93.3
   },

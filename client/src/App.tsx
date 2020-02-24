@@ -2,19 +2,15 @@ import { startOfDay } from "date-fns";
 import React, { useState } from "react";
 import "./App.css";
 import CombinedForecast from "./components/CombinedForecast";
-import CurrentAirTempDetailGraph from "./components/CurrentAirTempDetailGraph";
-import CurrentAirTempSummaryCard from "./components/CurrentAirTempSummaryCard";
-import CurrentSalinityDetailGraph from "./components/CurrentSalinityDetailGraph";
-import CurrentSalinitySummaryCard from "./components/CurrentSalinitySummaryCard";
-import CurrentWaterTempDetailGraph from "./components/CurrentWaterTempDetailGraph";
-import CurrentWaterTempSummaryCard from "./components/CurrentWaterTempSummaryCard";
-import CurrentWindDetailGraph from "./components/CurrentWindDetailGraph";
-import CurrentWindSummaryCard from "./components/CurrentWindSummaryCard";
+import AirTempCard from "./components/AirTempCard";
+import SalinityCard from "./components/SalinityCard";
+import WaterTempCard from "./components/WaterTempCard";
+import WindCard from "./components/WindCard";
 import AppHeader from "./components/AppHeader";
 import HourlyForecast from "./components/HourlyForecast";
 import SunAndMoon from "./components/SunAndMoon";
 import Tides from "./components/Tides";
-import { useLocationsQuery } from "./generated/graphql";
+import { useLocationsQuery, UsgsParam } from "./generated/graphql";
 import Shell from "./components/Shell";
 import NotFound from "./components/NotFound";
 import { RouteComponentProps, navigate } from "@reach/router";
@@ -61,28 +57,38 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
       }
     >
       <div className="container p-4 md:p-0 md:mx-auto md:my-0">
-        <SectionTitle text="Current Conditions" />
         <div className="current-conditions-grid">
-          <CurrentWindSummaryCard locationId={locationId} />
-          <CurrentSalinitySummaryCard locationId={locationId} />
-          <CurrentAirTempSummaryCard locationId={locationId} />
-          <CurrentWaterTempSummaryCard locationId={locationId} />
-          <CurrentWindDetailGraph locationId={locationId} />
-          <CurrentSalinityDetailGraph locationId={locationId} />
-          <CurrentAirTempDetailGraph locationId={locationId} />
-          <CurrentWaterTempDetailGraph locationId={locationId} />
+          <WindCard locationId={locationId} date={date} />
+          <AirTempCard locationId={locationId} date={date} />
+          <WaterTempCard
+            locationId={locationId}
+            usgsSites={selectedLocation.usgsSites.filter(site =>
+              site.availableParams.includes(UsgsParam.WaterTemp)
+            )}
+            date={date}
+          />
+          <SalinityCard
+            locationId={locationId}
+            usgsSites={selectedLocation.usgsSites.filter(site =>
+              site.availableParams.includes(UsgsParam.Salinity)
+            )}
+            date={date}
+          />
         </div>
-
-        <SectionTitle text="Forecast" />
-        <CombinedForecast locationId={locationId} />
-        <SectionTitle text="Tides" />
         <div className="bg-white rounded-lg shadow-md p-4 mb-4 md:mb-8">
           <Tides
             locationId={locationId}
             tideStations={selectedLocation.tidePreditionStations}
+            usgsSites={selectedLocation.usgsSites.filter(site =>
+              site.availableParams.includes(UsgsParam.GuageHeight)
+            )}
             date={date}
           />
         </div>
+
+        <SectionTitle text="Forecast" />
+        <CombinedForecast locationId={locationId} />
+
         <SectionTitle text="Solunar Data" />
         <SunAndMoon locationId={locationId} date={date} />
         <SectionTitle text="Maps" />

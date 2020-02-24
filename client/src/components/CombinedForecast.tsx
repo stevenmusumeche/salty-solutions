@@ -1,7 +1,7 @@
 import React, { ReactNode, useContext } from "react";
 import { useCombinedForecastQuery } from "../generated/graphql";
 import ErrorIcon from "../assets/error.svg";
-import ForecastSkeleton from "./ForecastSkeleton";
+import { ForecastSkeleton } from "./ForecastSkeleton";
 import Compass from "../assets/compass.svg";
 import Smooth from "../assets/water-conditions/smooth.svg";
 import LightChop from "../assets/water-conditions/light-chop.svg";

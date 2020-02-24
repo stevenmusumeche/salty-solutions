@@ -1,38 +1,389 @@
 import axios from "axios";
 import axiosRetry from "axios-retry";
-import { LocationEntity } from "./location";
+import { LocationEntity, Coords } from "./location";
 import orderBy from "lodash/orderBy";
+import { subHours } from "date-fns";
 
 axiosRetry(axios, { retries: 3, retryDelay: retryCount => retryCount * 500 });
 
+enum UsgsParams {
+  WaterTemp = "00010",
+  WindSpeed = "00035",
+  WindDirection = "00036",
+  GuageHeight = "00065",
+  Salinity = "00480"
+}
+
+export interface UsgsSiteEntity {
+  id: string;
+  name: string;
+  coords?: Coords;
+  availableParams: UsgsParams[];
+}
+
+const usgsSites: UsgsSiteEntity[] = [
+  {
+    id: "07387040",
+    name: "Vermilion Bay near Cypremort Point",
+    coords: { lat: 29.7130556, lon: -91.8802778 },
+    availableParams: [
+      UsgsParams.WaterTemp,
+      UsgsParams.WindSpeed,
+      UsgsParams.WindDirection,
+      UsgsParams.GuageHeight,
+      UsgsParams.Salinity
+    ]
+  },
+  {
+    id: "08017095",
+    name: "N. Calcasieu Lake near Hackberry",
+    coords: { lat: 30.0316667, lon: -93.2994444 },
+    availableParams: [
+      UsgsParams.WaterTemp,
+      UsgsParams.GuageHeight,
+      UsgsParams.Salinity
+    ]
+  },
+  {
+    id: "07381349",
+    name: "Caillou Lake (Sister Lake)",
+    coords: { lat: 29.2491667, lon: -90.9211111 },
+    availableParams: [
+      UsgsParams.WaterTemp,
+      UsgsParams.WindSpeed,
+      UsgsParams.WindDirection,
+      UsgsParams.GuageHeight,
+      UsgsParams.Salinity
+    ]
+  },
+  {
+    id: "073813498",
+    name: "Caillou Bay SW of Cocodrie",
+    coords: { lat: 29.0780556, lon: -90.8713889 },
+    availableParams: [
+      UsgsParams.WaterTemp,
+      UsgsParams.WindSpeed,
+      UsgsParams.WindDirection,
+      UsgsParams.GuageHeight,
+      UsgsParams.Salinity
+    ]
+  },
+  {
+    id: "07381324",
+    name: "Bayou Grand Caillou at Dulac",
+    coords: {
+      lat: 29.3827778,
+      lon: -90.7152778
+    },
+    // not current reporting
+    availableParams: []
+  },
+  {
+    id: "073745257",
+    name: "Crooked Bayou near Delacroix",
+    coords: { lat: 29.7080556, lon: -89.7194444 },
+    availableParams: [
+      UsgsParams.WaterTemp,
+      UsgsParams.GuageHeight,
+      UsgsParams.Salinity
+    ]
+  },
+  {
+    id: "07380249",
+    name: "Caminada Pass NW of Grand Isle",
+    coords: { lat: 29.2313611, lon: -90.0485278 },
+    availableParams: [
+      UsgsParams.WaterTemp,
+      UsgsParams.GuageHeight,
+      UsgsParams.Salinity
+    ]
+  },
+  {
+    id: "292952089453800",
+    name: "Port Sulfer",
+    coords: { lat: 29.4977778, lon: -89.7605556 },
+    availableParams: [
+      UsgsParams.WaterTemp,
+      UsgsParams.GuageHeight,
+      UsgsParams.Salinity
+    ]
+  },
+  {
+    id: "301001089442600",
+    name: "Rigolets at Hwy 90 near Slidell",
+    coords: { lat: 30.1669444, lon: -89.7405556 },
+    availableParams: [
+      UsgsParams.WaterTemp,
+      UsgsParams.GuageHeight,
+      UsgsParams.Salinity
+    ]
+  },
+  {
+    id: "07387050",
+    name: "Vermilion Bay at Bayou Fearman near Intracoastal City",
+    coords: { lat: 29.6744444, lon: -92.1355556 },
+    availableParams: [
+      UsgsParams.WaterTemp,
+      UsgsParams.GuageHeight,
+      UsgsParams.Salinity
+    ]
+  },
+  {
+    id: "073816525",
+    name: "Mouth of Atchafalaya River at Atchafalaya Bay",
+    coords: { lat: 29.43025, lon: -91.3338889 },
+    availableParams: [UsgsParams.GuageHeight]
+  },
+  {
+    id: "08017044",
+    name: "Calcasieu River at I-10 at Lake Charles",
+    availableParams: [
+      UsgsParams.WaterTemp,
+      UsgsParams.GuageHeight,
+      UsgsParams.Salinity
+    ]
+  },
+  {
+    id: "08017118",
+    name: "Calcasieu River at Cameron",
+    availableParams: [
+      UsgsParams.WaterTemp,
+      UsgsParams.GuageHeight,
+      UsgsParams.Salinity
+    ]
+  },
+  {
+    id: "07381331",
+    name: "Intracoastal at Houma",
+    // not reporting anymore
+    availableParams: []
+  },
+  {
+    id: "07381328",
+    name: "Houma Navigation Canal at Dulac",
+    // not currently reporting
+    availableParams: []
+  },
+  {
+    id: "073802516",
+    name: "Barataria Pass at Grand Isle",
+    availableParams: [
+      UsgsParams.WaterTemp,
+      UsgsParams.GuageHeight,
+      UsgsParams.Salinity
+    ]
+  },
+  {
+    id: "291929089562600",
+    name: "Barataria Bay near Grand Terre Island",
+    availableParams: [
+      UsgsParams.WaterTemp,
+      UsgsParams.GuageHeight,
+      UsgsParams.Salinity
+    ]
+  },
+  {
+    id: "073802514",
+    name: "Barataria Waterway at Champagne Bay",
+    availableParams: [UsgsParams.WaterTemp, UsgsParams.GuageHeight]
+  },
+  {
+    id: "073802512",
+    name: "Hackberry Bay Northwest of Grand Isle",
+    availableParams: [
+      UsgsParams.WaterTemp,
+      UsgsParams.GuageHeight,
+      UsgsParams.Salinity
+    ]
+  },
+  {
+    id: "295206089402400",
+    name: "Shell Beach, LA",
+    availableParams: [UsgsParams.GuageHeight]
+  },
+  {
+    id: "073745235",
+    name: "Bayou Dupre Sector Gate near Violet",
+    availableParams: [UsgsParams.GuageHeight]
+  },
+  {
+    id: "07374526",
+    name: "Black Bay near Snake Island",
+    availableParams: [
+      UsgsParams.WaterTemp,
+      UsgsParams.GuageHeight,
+      UsgsParams.Salinity
+    ]
+  },
+  {
+    id: "07374526",
+    name: "Black Bay near Stone Island",
+    availableParams: [
+      UsgsParams.WaterTemp,
+      UsgsParams.GuageHeight,
+      UsgsParams.Salinity
+    ]
+  },
+  {
+    id: "07374527",
+    name: "Northeast Bay Gardene",
+    availableParams: [
+      UsgsParams.WindSpeed,
+      UsgsParams.WindDirection,
+      UsgsParams.WaterTemp,
+      UsgsParams.GuageHeight,
+      UsgsParams.Salinity
+    ]
+  },
+  {
+    id: "073802332",
+    name: "Inner Harbor Navigation Canal near Seabrook Bridge",
+    availableParams: [
+      UsgsParams.WindSpeed,
+      UsgsParams.WindDirection,
+      UsgsParams.GuageHeight
+    ]
+  },
+  {
+    id: "301200090072400",
+    name: "Lake Pontchartrain at Causeway",
+    availableParams: [UsgsParams.GuageHeight]
+  },
+  {
+    id: "300136090064800",
+    name: "Lake Pontchartrain at Metairie",
+    availableParams: [UsgsParams.GuageHeight]
+  },
+  {
+    id: "300406090231600",
+    name: "I-10 at Bonnne Carre Spillway",
+    availableParams: [UsgsParams.GuageHeight]
+  },
+  {
+    id: "07374581",
+    name: "Bayou Liberty near Slidell",
+    availableParams: [UsgsParams.GuageHeight]
+  },
+  {
+    id: "07375230",
+    name: "Tchefuncte River at Madisonville",
+    availableParams: [UsgsParams.GuageHeight]
+  },
+  {
+    id: "073802341",
+    name: "Bayou Bienvenue Floodgate near Chalmette",
+    availableParams: [UsgsParams.GuageHeight]
+  },
+  {
+    id: "073802339",
+    name: "Intracoastal East Storm Surge Barrier",
+    availableParams: [
+      UsgsParams.GuageHeight,
+      UsgsParams.WindDirection,
+      UsgsParams.WindSpeed
+    ]
+  },
+  {
+    id: "300703089522700",
+    name: "Pipeline Canal in Bayou Sauvage NWR",
+    availableParams: [UsgsParams.GuageHeight]
+  },
+  {
+    id: "291042089153000",
+    name: "Pilottown",
+    availableParams: [UsgsParams.GuageHeight]
+  },
+  {
+    id: "073745258",
+    name: "Cow Bayou at American Bay near Pointe-A-La-Hache",
+    availableParams: [
+      UsgsParams.WaterTemp,
+      UsgsParams.GuageHeight,
+      UsgsParams.Salinity
+    ]
+  },
+  {
+    id: "07380260",
+    name: "Empire Waterway south of Empire",
+    availableParams: [
+      UsgsParams.WaterTemp,
+      UsgsParams.GuageHeight,
+      UsgsParams.Salinity
+    ]
+  },
+  {
+    id: "07374550",
+    name: "Mississippi River at Venice",
+    availableParams: [UsgsParams.GuageHeight]
+  },
+  {
+    id: "073745275",
+    name: "Black Bay near Stone Island near Pointe-A-La-Hache",
+    availableParams: [
+      UsgsParams.WaterTemp,
+      UsgsParams.GuageHeight,
+      UsgsParams.Salinity
+    ]
+  },
+  {
+    id: "285554089242400",
+    name: "Pilots Station E, SW Pass",
+    availableParams: [UsgsParams.GuageHeight]
+  }
+];
+
+// https://waterservices.usgs.gov/rest/IV-Service.html
 // https://waterwatch.usgs.gov/?m=real&r=la
 
-export const getWaterHeight = async (
-  location: any,
-  numDays: number
-): Promise<{ timestamp: string; height: number }[]> => {
-  return fetchAndMap(location.usgsSiteId, "00065", numDays, (v: any) => ({
-    timestamp: new Date(v.dateTime).toISOString(),
-    height: Number(v.value)
-  }));
+export const getSiteById = (id: string): UsgsSiteEntity | undefined => {
+  return usgsSites.find(site => site.id === id);
 };
 
-export const getWaterTemperatureLatest = async (location: LocationEntity) => {
-  const data = await getWaterTemperature(location, 24);
+export const getWaterHeight = async (
+  siteId: string,
+  start: Date,
+  end: Date
+): Promise<{ timestamp: string; height: number }[]> => {
+  return fetchAndMap(
+    siteId,
+    UsgsParams.GuageHeight,
+    { start, end },
+    (v: any) => ({
+      timestamp: new Date(v.dateTime).toISOString(),
+      height: Number(v.value)
+    })
+  );
+};
+
+export const getWaterTemperatureLatest = async (siteId: string) => {
+  const data = await getWaterTemperature(
+    siteId,
+    subHours(new Date(), 24),
+    new Date()
+  );
 
   if (data.length < 1) return null;
 
   return orderBy(data, [x => x.timestamp], ["desc"])[0];
 };
 
-export const getWaterTemperature = async (location: any, numHours: number) => {
-  return fetchAndMap(location.usgsSiteId, "00010", numHours, (v: any) => ({
-    timestamp: new Date(v.dateTime).toISOString(),
-    temperature: {
-      degrees: ((Number(v.value) * 9) / 5 + 32).toFixed(1),
-      unit: "F"
-    }
-  }));
+export const getWaterTemperature = async (
+  siteId: string,
+  start: Date,
+  end: Date
+) => {
+  return fetchAndMap(
+    siteId,
+    UsgsParams.WaterTemp,
+    { start, end },
+    (v: any) => ({
+      timestamp: new Date(v.dateTime).toISOString(),
+      temperature: {
+        degrees: ((Number(v.value) * 9) / 5 + 32).toFixed(1),
+        unit: "F"
+      }
+    })
+  );
 };
 
 export const getWindLatest = async (location: LocationEntity) => {
@@ -78,51 +429,70 @@ export const getWind = async (
 };
 
 const getWindSpeed = async (
-  location: any,
+  location: LocationEntity,
   numHours: number
 ): Promise<{ timestamp: string; speed: number }[]> => {
-  return fetchAndMap(location.usgsSiteId, "00035", numHours, (v: any) => ({
-    timestamp: new Date(v.dateTime).toISOString(),
-    speed: Number(v.value)
-  }));
+  return fetchAndMap(
+    location.usgsSiteIds[0],
+    UsgsParams.WindSpeed,
+    { numHours },
+    (v: any) => ({
+      timestamp: new Date(v.dateTime).toISOString(),
+      speed: Number(v.value)
+    })
+  );
 };
 
 const getWindDirection = async (
-  location: any,
+  location: LocationEntity,
   numHours: number
 ): Promise<{ timestamp: string; degrees: number; direction: string }[]> => {
-  return fetchAndMap(location.usgsSiteId, "00036", numHours, (v: any) => ({
-    timestamp: new Date(v.dateTime).toISOString(),
-    degrees: Number(v.value),
-    direction: degreesToCompass(Number(v.value))
-  }));
+  return fetchAndMap(
+    location.usgsSiteIds[0],
+    UsgsParams.WindDirection,
+    { numHours },
+    (v: any) => ({
+      timestamp: new Date(v.dateTime).toISOString(),
+      degrees: Number(v.value),
+      direction: degreesToCompass(Number(v.value))
+    })
+  );
 };
 
 export const getSalinity = (
-  location: any,
-  numHours: number
+  siteId: string,
+  start: Date,
+  end: Date
 ): Promise<{ timestamp: string; salinity: number }[]> => {
-  return fetchAndMap(location.usgsSiteId, "00480", numHours, (v: any) => ({
+  return fetchAndMap(siteId, UsgsParams.Salinity, { start, end }, (v: any) => ({
     timestamp: new Date(v.dateTime).toISOString(),
     salinity: +v.value
   }));
 };
 
-export const getSalinityLatest = async (location: LocationEntity) => {
-  const data = await getSalinity(location, 24);
+export const getSalinityLatest = async (siteId: string) => {
+  const data = await getSalinity(siteId, subHours(new Date(), 24), new Date());
 
   if (data.length < 1) return null;
 
   return orderBy(data, ["timestamp"], ["desc"])[0];
 };
 
+type DateInput = { numHours: number } | { start: Date; end: Date };
 async function fetchAndMap(
   siteId: string,
   parameterCode: string,
-  numHours: number,
+  dateInput: DateInput,
   mapFn: any
 ) {
-  const url = `https://waterservices.usgs.gov/nwis/iv/?format=json&sites=${siteId}&period=PT${numHours}H&parameterCd=${parameterCode}&siteStatus=all`;
+  let url;
+  if (typeof (dateInput as any).numHours !== "undefined") {
+    url = `https://waterservices.usgs.gov/nwis/iv/?format=json&sites=${siteId}&period=PT${
+      (dateInput as any).numHours
+    }H&parameterCd=${parameterCode}&siteStatus=all`;
+  } else {
+    url = `https://waterservices.usgs.gov/nwis/iv/?format=json&sites=${siteId}&startDT=${(dateInput as any).start.toISOString()}&endDT=${(dateInput as any).end.toISOString()}&parameterCd=${parameterCode}&siteStatus=all`;
+  }
 
   const { data } = await axios.get(url);
 
