@@ -29,8 +29,6 @@ const CurrentWindSummaryCard: React.FC<Props> = ({ locationId, date }) => {
 
   let graphDisplayVal = buildGraphDisplayVal(fetching, error, curDetail);
 
-  console.log(curDetail);
-
   return (
     <ConditionCard
       fetching={fetching}

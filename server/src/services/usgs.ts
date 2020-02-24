@@ -142,8 +142,12 @@ export const getWaterHeight = async (
   );
 };
 
-export const getWaterTemperatureLatest = async (location: LocationEntity) => {
-  const data = await getWaterTemperature(location, 24);
+export const getWaterTemperatureLatest = async (siteId: string) => {
+  const data = await getWaterTemperature(
+    siteId,
+    subHours(new Date(), 24),
+    new Date()
+  );
 
   if (data.length < 1) return null;
 
@@ -151,13 +155,14 @@ export const getWaterTemperatureLatest = async (location: LocationEntity) => {
 };
 
 export const getWaterTemperature = async (
-  location: LocationEntity,
-  numHours: number
+  siteId: string,
+  start: Date,
+  end: Date
 ) => {
   return fetchAndMap(
-    location.usgsSiteIds[0],
+    siteId,
     UsgsParams.WaterTemp,
-    { numHours },
+    { start, end },
     (v: any) => ({
       timestamp: new Date(v.dateTime).toISOString(),
       temperature: {

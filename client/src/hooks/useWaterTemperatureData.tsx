@@ -4,14 +4,18 @@ import {
 } from "../generated/graphql";
 import { UseQueryState } from "urql";
 
-export function useWaterTemperatureData(locationId: string) {
-  // todo
+export function useWaterTemperatureData(
+  locationId: string,
+  usgsSiteId: string,
+  startDate: Date,
+  endDate: Date
+) {
   const [result, refresh] = useCurrentConditionsDataQuery({
     variables: {
       locationId,
-      usgsSiteId: "07381349",
-      startDate: "2020-01-11",
-      endDate: "2020-01-12"
+      usgsSiteId,
+      startDate: startDate.toISOString(),
+      endDate: endDate.toISOString()
     }
   });
 
@@ -22,20 +26,20 @@ export function useWaterTemperatureData(locationId: string) {
 function extractData(data: UseQueryState<CurrentConditionsDataQuery>) {
   const curValue =
     data.data &&
-    data.data.location &&
-    data.data.location.waterTemperature &&
-    data.data.location.waterTemperature.summary &&
-    data.data.location.waterTemperature.summary.mostRecent &&
+    data.data.usgsSite &&
+    data.data.usgsSite.waterTemperature &&
+    data.data.usgsSite.waterTemperature.summary &&
+    data.data.usgsSite.waterTemperature.summary.mostRecent &&
     `${Math.round(
-      data.data.location.waterTemperature.summary.mostRecent.temperature.degrees
+      data.data.usgsSite.waterTemperature.summary.mostRecent.temperature.degrees
     )}°`;
 
   const curDetail =
     data.data &&
-    data.data.location &&
-    data.data.location.waterTemperature &&
-    data.data.location.waterTemperature.detail &&
-    data.data.location.waterTemperature.detail.map(data => ({
+    data.data.usgsSite &&
+    data.data.usgsSite.waterTemperature &&
+    data.data.usgsSite.waterTemperature.detail &&
+    data.data.usgsSite.waterTemperature.detail.map(data => ({
       y: data.temperature.degrees,
       x: data.timestamp
     }));

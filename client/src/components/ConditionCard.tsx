@@ -1,6 +1,5 @@
 import React, { ReactNode, useContext } from "react";
 import { CombinedError, OperationContext } from "urql";
-import SkeletonCharacter from "./SkeletonCharacter";
 import "./SkeletonCharacter.css";
 import ErrorIcon from "../assets/error.svg";
 import { WindowSizeContext } from "../providers/WindowSizeProvider";

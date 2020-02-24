@@ -2,8 +2,6 @@ import { Resolvers } from "../generated/graphql";
 import { ApolloError, UserInputError } from "apollo-server-koa";
 import { notUndefined } from "../services/utils";
 
-const DEFAULT_NUM_HOURS = 24;
-
 const resolvers: Resolvers & { UsgsParam: Object } = {
   UsgsParam: {
     WaterTemp: "00010",
@@ -76,9 +74,6 @@ const resolvers: Resolvers & { UsgsParam: Object } = {
     marineForecast: async (location, args, { services }) => {
       return services.marine.getForecast(location);
     },
-    waterTemperature: async location => {
-      return { location };
-    },
     wind: async location => {
       return { location };
     },
@@ -138,6 +133,10 @@ const resolvers: Resolvers & { UsgsParam: Object } = {
         summary: { mostRecent },
         detail
       };
+    },
+    waterTemperature: async (site, args, ctx) => {
+      ctx.pass.site = site;
+      return {};
     }
   },
   Wind: {
@@ -157,17 +156,16 @@ const resolvers: Resolvers & { UsgsParam: Object } = {
     }
   },
   WaterTemperature: {
-    detail: async (waterTemperature, args, { services }) => {
+    detail: async (_, args, { services, pass }) => {
       return services.usgs.getWaterTemperature(
-        waterTemperature.location,
-        args.numHours || DEFAULT_NUM_HOURS
+        pass.site.id,
+        new Date(args.start),
+        new Date(args.end)
       );
     },
-    summary: async (waterTemperature, args, { services }) => {
+    summary: async (_, args, { services, pass }) => {
       return {
-        mostRecent: await services.usgs.getWaterTemperatureLatest(
-          waterTemperature.location
-        )
+        mostRecent: await services.usgs.getWaterTemperatureLatest(pass.site.id)
       };
     }
   },

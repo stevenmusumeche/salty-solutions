@@ -4,7 +4,6 @@ import "./App.css";
 import CombinedForecast from "./components/CombinedForecast";
 import CurrentAirTempSummaryCard from "./components/CurrentAirTempSummaryCard";
 import CurrentSalinitySummaryCard from "./components/CurrentSalinitySummaryCard";
-import CurrentWaterTempDetailGraph from "./components/CurrentWaterTempDetailGraph";
 import CurrentWaterTempSummaryCard from "./components/CurrentWaterTempSummaryCard";
 import CurrentWindSummaryCard from "./components/CurrentWindSummaryCard";
 import AppHeader from "./components/AppHeader";
@@ -60,6 +59,14 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
       <div className="container p-4 md:p-0 md:mx-auto md:my-0">
         <div className="current-conditions-grid">
           <CurrentWindSummaryCard locationId={locationId} date={date} />
+          <CurrentAirTempSummaryCard locationId={locationId} date={date} />
+          <CurrentWaterTempSummaryCard
+            locationId={locationId}
+            usgsSites={selectedLocation.usgsSites.filter(site =>
+              site.availableParams.includes(UsgsParam.WaterTemp)
+            )}
+            date={date}
+          />
           <CurrentSalinitySummaryCard
             locationId={locationId}
             usgsSites={selectedLocation.usgsSites.filter(site =>
@@ -67,14 +74,6 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
             )}
             date={date}
           />
-          <CurrentAirTempSummaryCard locationId={locationId} date={date} />
-          <CurrentAirTempSummaryCard locationId={locationId} date={date} />
-          {/* 
-          <CurrentWaterTempSummaryCard locationId={locationId} />
-          <CurrentWindDetailGraph locationId={locationId} /> */}
-          {/* <CurrentSalinityDetailGraph locationId={locationId} /> */}
-          {/* <CurrentAirTempDetailGraph locationId={locationId} />
-          <CurrentWaterTempDetailGraph locationId={locationId} /> */}
         </div>
 
         <SectionTitle text="Forecast" />

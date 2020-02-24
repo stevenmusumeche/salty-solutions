@@ -34,33 +34,17 @@ const CURRENT_CONDITIONS_QUERY = gql`
           }
         }
       }
-
-      waterTemperature {
-        summary {
-          mostRecent {
-            timestamp
-            temperature {
-              degrees
-            }
-          }
-        }
-        detail(numHours: 48) {
-          timestamp
-          temperature {
-            degrees
-          }
-        }
-      }
     }
 
     usgsSite(siteId: $usgsSiteId) {
-      ...UsgsSiteSalinityFields
+      ...UsgsSiteDetailFields
     }
   }
 
-  fragment UsgsSiteSalinityFields on UsgsSite {
+  fragment UsgsSiteDetailFields on UsgsSite {
     id
     name
+    # // todo fix this
     salinity(start: $startDate, end: $endDate) {
       summary {
         mostRecent {
@@ -70,6 +54,22 @@ const CURRENT_CONDITIONS_QUERY = gql`
       detail {
         timestamp
         salinity
+      }
+    }
+    waterTemperature {
+      summary {
+        mostRecent {
+          timestamp
+          temperature {
+            degrees
+          }
+        }
+      }
+      detail(start: $startDate, end: $endDate) {
+        timestamp
+        temperature {
+          degrees
+        }
       }
     }
   }

@@ -16,12 +16,12 @@ generates:
       defaultMapper: Partial<{T}>
       mappers:
         Wind: "Partial<{T}> & {location: LocationEntity}"
-        WaterTemperature: "Partial<{T}> & {location: LocationEntity}"
         TemperatureResult: "Partial<{T}> & {location: LocationEntity}"
         Maps: "Partial<{T}> & {location: LocationEntity}"
         Location: ../services/location#LocationEntity
         TidePreditionStation: ../services/tide#TideStationEntity
         UsgsSite: ../services/location#UsgsSite
+        WaterTemperature: "Object"
     plugins:
       - "typescript"
       - "typescript-resolvers"
