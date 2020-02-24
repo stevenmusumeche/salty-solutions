@@ -1,9 +1,10 @@
-import { UsgsSiteEntity } from "./usgs";
-
 export interface Coords {
   lat: number;
   lon: number;
 }
+
+// todo: finish adding the usgs stations to each location
+// todo: finish with the loading indicators
 
 export interface LocationEntity {
   id: string;
@@ -38,7 +39,7 @@ const locations: LocationEntity[] = [
     marineZoneId: "GMZ435",
     lat: 29.731474,
     long: -91.841371,
-    usgsSiteIds: ["07387040"],
+    usgsSiteIds: ["07387040", "07387050", "073816525"],
     weatherGov: {
       apiBase: "https://api.weather.gov/gridpoints/LCH/112,73",
       stationId: "KARA",
@@ -54,7 +55,7 @@ const locations: LocationEntity[] = [
     marineZoneId: "GMZ432",
     lat: 29.9103,
     long: -93.2785,
-    usgsSiteIds: ["08017095"],
+    usgsSiteIds: ["08017118", "08017095", "08017044"],
     weatherGov: {
       apiBase: "https://api.weather.gov/gridpoints/LCH/57,80",
       stationId: "KLCH",

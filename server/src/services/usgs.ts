@@ -17,7 +17,7 @@ enum UsgsParams {
 export interface UsgsSiteEntity {
   id: string;
   name: string;
-  coords: Coords;
+  coords?: Coords;
   availableParams: UsgsParams[];
 }
 
@@ -111,6 +111,40 @@ const usgsSites: UsgsSiteEntity[] = [
     id: "301001089442600",
     name: "Rigolets at Hwy 90 near Slidell",
     coords: { lat: 30.1669444, lon: -89.7405556 },
+    availableParams: [
+      UsgsParams.WaterTemp,
+      UsgsParams.GuageHeight,
+      UsgsParams.Salinity
+    ]
+  },
+  {
+    id: "07387050",
+    name: "Vermilion Bay at Bayou Fearman near Intracoastal City",
+    coords: { lat: 29.6744444, lon: -92.1355556 },
+    availableParams: [
+      UsgsParams.WaterTemp,
+      UsgsParams.GuageHeight,
+      UsgsParams.Salinity
+    ]
+  },
+  {
+    id: "073816525",
+    name: "Mouth of Atchafalaya River at Atchafalaya Bay",
+    coords: { lat: 29.43025, lon: -91.3338889 },
+    availableParams: [UsgsParams.GuageHeight]
+  },
+  {
+    id: "08017044",
+    name: "Calcasieu River at I-10 at Lake Charles",
+    availableParams: [
+      UsgsParams.WaterTemp,
+      UsgsParams.GuageHeight,
+      UsgsParams.Salinity
+    ]
+  },
+  {
+    id: "08017118",
+    name: "Calcasieu River at Cameron",
     availableParams: [
       UsgsParams.WaterTemp,
       UsgsParams.GuageHeight,

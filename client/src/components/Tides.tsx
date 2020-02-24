@@ -35,6 +35,7 @@ import ErrorIcon from "../assets/error.svg";
 import "./SkeletonCharacter.css";
 import { WindowSizeContext } from "../providers/WindowSizeProvider";
 import UsgsSiteSelect from "./UsgsSiteSelect";
+import EmptyBox from "./EmptyBox";
 
 interface Props {
   tideStations: TideStationDetailFragment[];
@@ -85,16 +86,31 @@ const Tides: React.FC<Props> = ({
     return (
       <div>
         <div className="my-4 mb-6 md:flex md:items-center">
-          <div
-            className="skeleton-character sentence h-12 md:h-8 mr-8 mb-4 md:mb-0"
-            style={{ width: isSmall ? "100%" : "20rem" }}
+          <EmptyBox
+            h={isSmall ? "3.2rem" : "2rem"}
+            w={isSmall ? "100%" : "20rem"}
+            className="mr-8 mb-4 md:mb-0"
           />
-          <div
-            className="skeleton-character sentence m-0 h-12 md:h-8"
-            style={{ width: isSmall ? "100%" : "24rem" }}
+          <EmptyBox
+            h={isSmall ? "3.2rem" : "2rem"}
+            w={isSmall ? "100%" : "24rem"}
+            className="m-0"
           />
         </div>
-        <div className="skeleton-character full" />
+        <div className="md:flex justify-between">
+          <EmptyBox
+            h={isSmall ? 170 : 600}
+            w="auto"
+            style={{ flexBasis: "85%" }}
+            className="mb-4 md:mb:0"
+          />
+          <EmptyBox
+            h={isSmall ? 60 : 150}
+            w="auto"
+            className="md:ml-4"
+            style={{ flexBasis: 162 }}
+          />
+        </div>
       </div>
     );
   } else if (
