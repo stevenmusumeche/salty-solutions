@@ -1,6 +1,7 @@
 import { GraphQLResolveInfo } from 'graphql';
-import { LocationEntity, UsgsSite } from '../services/location';
+import { LocationEntity } from '../services/location';
 import { TideStationEntity } from '../services/tide';
+import { UsgsSiteEntity } from '../services/usgs';
 import { Context } from '../server';
 export type Maybe<T> = T | null;
 /** All built-in and custom scalars, mapped to their actual values */
@@ -443,7 +444,7 @@ export type ResolversTypes = {
   TidePreditionStation: ResolverTypeWrapper<TideStationEntity>,
   Float: ResolverTypeWrapper<Partial<Scalars['Float']>>,
   TideDetail: ResolverTypeWrapper<Partial<TideDetail>>,
-  UsgsSite: ResolverTypeWrapper<UsgsSite>,
+  UsgsSite: ResolverTypeWrapper<UsgsSiteEntity>,
   Coords: ResolverTypeWrapper<Partial<Coords>>,
   WaterHeight: ResolverTypeWrapper<Partial<WaterHeight>>,
   WaterTemperature: ResolverTypeWrapper<Object>,
@@ -489,7 +490,7 @@ export type ResolversParentTypes = {
   TidePreditionStation: TideStationEntity,
   Float: Partial<Scalars['Float']>,
   TideDetail: Partial<TideDetail>,
-  UsgsSite: UsgsSite,
+  UsgsSite: UsgsSiteEntity,
   Coords: Partial<Coords>,
   WaterHeight: Partial<WaterHeight>,
   WaterTemperature: Object,
