@@ -45,9 +45,7 @@ export default function useBreakpoints(
     // unsubscribe from even listeners
     return () =>
       sizes.forEach(size => {
-        if (matches[size]) {
-          matches[size].removeEventListener("change", callback);
-        }
+        matches[size].removeListener(callback);
       });
   }, [callback, sizes, matches]);
 
