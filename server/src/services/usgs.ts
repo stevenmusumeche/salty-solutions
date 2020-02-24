@@ -75,7 +75,8 @@ const usgsSites: UsgsSiteEntity[] = [
       lat: 29.3827778,
       lon: -90.7152778
     },
-    availableParams: [UsgsParams.GuageHeight]
+    // not current reporting
+    availableParams: []
   },
   {
     id: "073745257",
@@ -150,6 +151,184 @@ const usgsSites: UsgsSiteEntity[] = [
       UsgsParams.GuageHeight,
       UsgsParams.Salinity
     ]
+  },
+  {
+    id: "07381331",
+    name: "Intracoastal at Houma",
+    // not reporting anymore
+    availableParams: []
+  },
+  {
+    id: "07381328",
+    name: "Houma Navigation Canal at Dulac",
+    // not currently reporting
+    availableParams: []
+  },
+  {
+    id: "073802516",
+    name: "Barataria Pass at Grand Isle",
+    availableParams: [
+      UsgsParams.WaterTemp,
+      UsgsParams.GuageHeight,
+      UsgsParams.Salinity
+    ]
+  },
+  {
+    id: "291929089562600",
+    name: "Barataria Bay near Grand Terre Island",
+    availableParams: [
+      UsgsParams.WaterTemp,
+      UsgsParams.GuageHeight,
+      UsgsParams.Salinity
+    ]
+  },
+  {
+    id: "073802514",
+    name: "Barataria Waterway at Champagne Bay",
+    availableParams: [UsgsParams.WaterTemp, UsgsParams.GuageHeight]
+  },
+  {
+    id: "073802512",
+    name: "Hackberry Bay Northwest of Grand Isle",
+    availableParams: [
+      UsgsParams.WaterTemp,
+      UsgsParams.GuageHeight,
+      UsgsParams.Salinity
+    ]
+  },
+  {
+    id: "295206089402400",
+    name: "Shell Beach, LA",
+    availableParams: [UsgsParams.GuageHeight]
+  },
+  {
+    id: "073745235",
+    name: "Bayou Dupre Sector Gate near Violet",
+    availableParams: [UsgsParams.GuageHeight]
+  },
+  {
+    id: "07374526",
+    name: "Black Bay near Snake Island",
+    availableParams: [
+      UsgsParams.WaterTemp,
+      UsgsParams.GuageHeight,
+      UsgsParams.Salinity
+    ]
+  },
+  {
+    id: "07374526",
+    name: "Black Bay near Stone Island",
+    availableParams: [
+      UsgsParams.WaterTemp,
+      UsgsParams.GuageHeight,
+      UsgsParams.Salinity
+    ]
+  },
+  {
+    id: "07374527",
+    name: "Northeast Bay Gardene",
+    availableParams: [
+      UsgsParams.WindSpeed,
+      UsgsParams.WindDirection,
+      UsgsParams.WaterTemp,
+      UsgsParams.GuageHeight,
+      UsgsParams.Salinity
+    ]
+  },
+  {
+    id: "073802332",
+    name: "Inner Harbor Navigation Canal near Seabrook Bridge",
+    availableParams: [
+      UsgsParams.WindSpeed,
+      UsgsParams.WindDirection,
+      UsgsParams.GuageHeight
+    ]
+  },
+  {
+    id: "301200090072400",
+    name: "Lake Pontchartrain at Causeway",
+    availableParams: [UsgsParams.GuageHeight]
+  },
+  {
+    id: "300136090064800",
+    name: "Lake Pontchartrain at Metairie",
+    availableParams: [UsgsParams.GuageHeight]
+  },
+  {
+    id: "300406090231600",
+    name: "I-10 at Bonnne Carre Spillway",
+    availableParams: [UsgsParams.GuageHeight]
+  },
+  {
+    id: "07374581",
+    name: "Bayou Liberty near Slidell",
+    availableParams: [UsgsParams.GuageHeight]
+  },
+  {
+    id: "07375230",
+    name: "Tchefuncte River at Madisonville",
+    availableParams: [UsgsParams.GuageHeight]
+  },
+  {
+    id: "073802341",
+    name: "Bayou Bienvenue Floodgate near Chalmette",
+    availableParams: [UsgsParams.GuageHeight]
+  },
+  {
+    id: "073802339",
+    name: "Intracoastal East Storm Surge Barrier",
+    availableParams: [
+      UsgsParams.GuageHeight,
+      UsgsParams.WindDirection,
+      UsgsParams.WindSpeed
+    ]
+  },
+  {
+    id: "300703089522700",
+    name: "Pipeline Canal in Bayou Sauvage NWR",
+    availableParams: [UsgsParams.GuageHeight]
+  },
+  {
+    id: "291042089153000",
+    name: "Pilottown",
+    availableParams: [UsgsParams.GuageHeight]
+  },
+  {
+    id: "073745258",
+    name: "Cow Bayou at American Bay near Pointe-A-La-Hache",
+    availableParams: [
+      UsgsParams.WaterTemp,
+      UsgsParams.GuageHeight,
+      UsgsParams.Salinity
+    ]
+  },
+  {
+    id: "07380260",
+    name: "Empire Waterway south of Empire",
+    availableParams: [
+      UsgsParams.WaterTemp,
+      UsgsParams.GuageHeight,
+      UsgsParams.Salinity
+    ]
+  },
+  {
+    id: "07374550",
+    name: "Mississippi River at Venice",
+    availableParams: [UsgsParams.GuageHeight]
+  },
+  {
+    id: "073745275",
+    name: "Black Bay near Stone Island near Pointe-A-La-Hache",
+    availableParams: [
+      UsgsParams.WaterTemp,
+      UsgsParams.GuageHeight,
+      UsgsParams.Salinity
+    ]
+  },
+  {
+    id: "285554089242400",
+    name: "Pilots Station E, SW Pass",
+    availableParams: [UsgsParams.GuageHeight]
   }
 ];
 
