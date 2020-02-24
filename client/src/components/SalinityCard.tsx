@@ -13,11 +13,7 @@ interface Props {
   date: Date;
 }
 
-const CurrentSalinitySummaryCard: React.FC<Props> = ({
-  locationId,
-  usgsSites,
-  date
-}) => {
+const SalinityCard: React.FC<Props> = ({ locationId, usgsSites, date }) => {
   const [selectedUsgsSiteId, setSelectedUsgsSiteId] = useState(usgsSites[0].id);
 
   const { curValue, curDetail, fetching, error } = useSalinityData(
@@ -57,4 +53,4 @@ const CurrentSalinitySummaryCard: React.FC<Props> = ({
   );
 };
 
-export default CurrentSalinitySummaryCard;
+export default SalinityCard;

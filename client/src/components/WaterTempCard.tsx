@@ -13,11 +13,7 @@ interface Props {
   date: Date;
 }
 
-const CurrentWaterTempSummaryCard: React.FC<Props> = ({
-  locationId,
-  usgsSites,
-  date
-}) => {
+const WaterTempCard: React.FC<Props> = ({ locationId, usgsSites, date }) => {
   const [selectedUsgsSiteId, setSelectedUsgsSiteId] = useState(usgsSites[0].id);
 
   const {
@@ -65,4 +61,4 @@ const CurrentWaterTempSummaryCard: React.FC<Props> = ({
   );
 };
 
-export default CurrentWaterTempSummaryCard;
+export default WaterTempCard;

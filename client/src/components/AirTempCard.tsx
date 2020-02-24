@@ -10,7 +10,7 @@ interface Props {
   date: Date;
 }
 
-const CurrentAirTempSummaryCard: React.FC<Props> = ({ locationId, date }) => {
+const AirTempCard: React.FC<Props> = ({ locationId, date }) => {
   const { curValue, curDetail, fetching, error } = useTemperatureData(
     locationId,
     subHours(date, 48),
@@ -38,4 +38,4 @@ const CurrentAirTempSummaryCard: React.FC<Props> = ({ locationId, date }) => {
   );
 };
 
-export default CurrentAirTempSummaryCard;
+export default AirTempCard;

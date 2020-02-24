@@ -2,10 +2,10 @@ import { startOfDay } from "date-fns";
 import React, { useState } from "react";
 import "./App.css";
 import CombinedForecast from "./components/CombinedForecast";
-import CurrentAirTempSummaryCard from "./components/CurrentAirTempSummaryCard";
-import CurrentSalinitySummaryCard from "./components/CurrentSalinitySummaryCard";
-import CurrentWaterTempSummaryCard from "./components/CurrentWaterTempSummaryCard";
-import CurrentWindSummaryCard from "./components/CurrentWindSummaryCard";
+import AirTempCard from "./components/AirTempCard";
+import SalinityCard from "./components/SalinityCard";
+import WaterTempCard from "./components/WaterTempCard";
+import WindCard from "./components/WindCard";
 import AppHeader from "./components/AppHeader";
 import HourlyForecast from "./components/HourlyForecast";
 import SunAndMoon from "./components/SunAndMoon";
@@ -58,16 +58,16 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
     >
       <div className="container p-4 md:p-0 md:mx-auto md:my-0">
         <div className="current-conditions-grid">
-          <CurrentWindSummaryCard locationId={locationId} date={date} />
-          <CurrentAirTempSummaryCard locationId={locationId} date={date} />
-          <CurrentWaterTempSummaryCard
+          <WindCard locationId={locationId} date={date} />
+          <AirTempCard locationId={locationId} date={date} />
+          <WaterTempCard
             locationId={locationId}
             usgsSites={selectedLocation.usgsSites.filter(site =>
               site.availableParams.includes(UsgsParam.WaterTemp)
             )}
             date={date}
           />
-          <CurrentSalinitySummaryCard
+          <SalinityCard
             locationId={locationId}
             usgsSites={selectedLocation.usgsSites.filter(site =>
               site.availableParams.includes(UsgsParam.Salinity)
@@ -75,10 +75,6 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
             date={date}
           />
         </div>
-
-        <SectionTitle text="Forecast" />
-        <CombinedForecast locationId={locationId} />
-        <SectionTitle text="Tides" />
         <div className="bg-white rounded-lg shadow-md p-4 mb-4 md:mb-8">
           <Tides
             locationId={locationId}
@@ -89,6 +85,10 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
             date={date}
           />
         </div>
+
+        <SectionTitle text="Forecast" />
+        <CombinedForecast locationId={locationId} />
+
         <SectionTitle text="Solunar Data" />
         <SunAndMoon locationId={locationId} date={date} />
         <SectionTitle text="Maps" />

@@ -18,7 +18,7 @@ interface Props {
   locationId: string;
   date: Date;
 }
-const CurrentWindSummaryCard: React.FC<Props> = ({ locationId, date }) => {
+const WindCard: React.FC<Props> = ({ locationId, date }) => {
   const {
     curValue,
     curDetail,
@@ -51,7 +51,7 @@ const CurrentWindSummaryCard: React.FC<Props> = ({ locationId, date }) => {
   );
 };
 
-export default CurrentWindSummaryCard;
+export default WindCard;
 
 const ArrowPoint: React.FC<any> = ({ x, y, datum, index, ...props }) => {
   if (index % 3 !== 0) return null;
