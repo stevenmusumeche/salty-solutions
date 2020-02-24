@@ -179,7 +179,7 @@ export type QueryTidePreditionStationArgs = {
 
 
 export type QueryUsgsSiteArgs = {
-  siteId: Scalars['ID']
+  siteId?: Maybe<Scalars['ID']>
 };
 
 export type Salinity = {
@@ -232,7 +232,8 @@ export type TemperatureResult = {
 
 
 export type TemperatureResultDetailArgs = {
-  numHours?: Maybe<Scalars['Int']>
+  start: Scalars['String'],
+  end: Scalars['String']
 };
 
 export type TemperatureSummary = {
@@ -386,7 +387,7 @@ export type HourlyForecastDetailFragment = ({ __typename?: 'WeatherForecast' } &
 
 export type CurrentConditionsDataQueryVariables = {
   locationId: Scalars['ID'],
-  usgsSiteId: Scalars['ID'],
+  usgsSiteId?: Maybe<Scalars['ID']>,
   startDate: Scalars['String'],
   endDate: Scalars['String']
 };
@@ -602,7 +603,7 @@ export function useCombinedForecastQuery(options: Omit<Urql.UseQueryArgs<Combine
   return Urql.useQuery<CombinedForecastQuery>({ query: CombinedForecastDocument, ...options });
 };
 export const CurrentConditionsDataDocument = gql`
-    query CurrentConditionsData($locationId: ID!, $usgsSiteId: ID!, $startDate: String!, $endDate: String!) {
+    query CurrentConditionsData($locationId: ID!, $usgsSiteId: ID, $startDate: String!, $endDate: String!) {
   location(id: $locationId) {
     wind {
       summary {
@@ -622,7 +623,7 @@ export const CurrentConditionsDataDocument = gql`
           }
         }
       }
-      detail(numHours: 48) {
+      detail(start: $startDate, end: $endDate) {
         timestamp
         temperature {
           degrees

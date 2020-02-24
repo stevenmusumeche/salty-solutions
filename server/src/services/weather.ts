@@ -118,6 +118,39 @@ export const getCurrentConditions = async (location: LocationEntity) => {
 
 export const getConditions = async (
   location: LocationEntity,
+  startDate: Date,
+  endDate: Date
+) => {
+  const start = format(startDate, "yyyy-MM-dd'T'HH:mm:ssXXX");
+  const end = format(endDate, "yyyy-MM-dd'T'HH:mm:ssXXX");
+
+  const url = `https://api.weather.gov/stations/${location.weatherGov.stationId}/observations?end=${end}&start=${start}`;
+
+  const { data } = await axios.get<any>(url);
+
+  let temperature = data.features.map((x: any) => ({
+    timestamp: x.properties.timestamp,
+    temperature: {
+      degrees: parseFloat(celciusToFahrenheit(x.properties.temperature.value)),
+      unit: "F"
+    }
+  }));
+  temperature = orderBy(temperature, ["timestamp"], ["asc"]);
+
+  let wind = data.features
+    .filter((x: any) => !!x.properties.windDirection.value)
+    .map((x: any) => ({
+      timestamp: x.properties.timestamp,
+      speed: metersPerSecondToMph(x.properties.windSpeed.value),
+      directionDegrees: x.properties.windDirection.value,
+      direction: degreesToCompass(x.properties.windDirection.value)
+    }));
+
+  return { temperature, wind };
+};
+
+export const getConditionsDONOTUSE = async (
+  location: LocationEntity,
   numHours: number
 ) => {
   const start = format(
@@ -152,7 +185,7 @@ export const getConditions = async (
 };
 
 export const getLatestConditions = async (location: LocationEntity) => {
-  const data = await getConditions(location, 12);
+  const data = await getConditionsDONOTUSE(location, 12);
   return {
     temperature: orderBy(data.temperature, ["timestamp"], ["desc"])[0],
     wind: orderBy(data.wind, ["timestamp"], ["desc"])[0]

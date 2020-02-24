@@ -5,7 +5,7 @@ export default gql`
     locations: [Location!]!
     location(id: ID!): Location
     tidePreditionStation(stationId: ID!): TidePreditionStation
-    usgsSite(siteId: ID!): UsgsSite
+    usgsSite(siteId: ID): UsgsSite
   }
 
   type Location {
@@ -102,7 +102,7 @@ export default gql`
 
   type TemperatureResult {
     summary: TemperatureSummary!
-    detail(numHours: Int): [TemperatureDetail!]
+    detail(start: String!, end: String!): [TemperatureDetail!]
   }
 
   type TemperatureSummary {

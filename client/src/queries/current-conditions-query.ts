@@ -3,7 +3,7 @@ import gql from "graphql-tag";
 const CURRENT_CONDITIONS_QUERY = gql`
   query CurrentConditionsData(
     $locationId: ID!
-    $usgsSiteId: ID!
+    $usgsSiteId: ID
     $startDate: String!
     $endDate: String!
   ) {
@@ -27,7 +27,7 @@ const CURRENT_CONDITIONS_QUERY = gql`
             }
           }
         }
-        detail(numHours: 48) {
+        detail(start: $startDate, end: $endDate) {
           timestamp
           temperature {
             degrees

@@ -4,7 +4,7 @@ import { notUndefined } from "../services/utils";
 
 const DEFAULT_NUM_HOURS = 24;
 
-const resolvers: Resolvers & { UsgsParam: any } = {
+const resolvers: Resolvers & { UsgsParam: Object } = {
   UsgsParam: {
     WaterTemp: "00010",
     WindSpeed: "00035",
@@ -28,6 +28,7 @@ const resolvers: Resolvers & { UsgsParam: any } = {
       return station;
     },
     usgsSite: (_, { siteId }, { services }) => {
+      if (!siteId) return null;
       const site = services.usgs.getSiteById(siteId);
       if (!site) throw new ApolloError(`Unknown USGS site ID ${siteId}`);
       return site;
@@ -141,7 +142,7 @@ const resolvers: Resolvers & { UsgsParam: any } = {
   },
   Wind: {
     detail: async (wind, args, { services }) => {
-      const result = await services.weather.getConditions(
+      const result = await services.weather.getConditionsDONOTUSE(
         wind.location,
         args.numHours || DEFAULT_NUM_HOURS
       );
@@ -182,7 +183,8 @@ const resolvers: Resolvers & { UsgsParam: any } = {
     detail: async (temperature, args, { services }) => {
       const data = await services.weather.getConditions(
         temperature.location,
-        args.numHours || DEFAULT_NUM_HOURS
+        new Date(args.start),
+        new Date(args.end)
       );
       return data.temperature;
     }

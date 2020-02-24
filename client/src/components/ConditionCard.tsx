@@ -88,7 +88,7 @@ const ConditionCard: React.FC<Props> = ({
     <Wrapper className={className}>
       <Label label={label} />
       <div
-        className="condition-card-value text-blue-800 leading-none flex items-center justify-center flex-grow p-2 relative"
+        className="condition-card-value text-blue-800 leading-none flex justify-center flex-grow p-2 relative"
         style={{ fontSize: isSmall ? "4em" : fontSize }}
       >
         {displayValue}

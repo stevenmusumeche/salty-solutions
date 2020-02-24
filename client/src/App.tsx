@@ -7,7 +7,6 @@ import CurrentAirTempSummaryCard from "./components/CurrentAirTempSummaryCard";
 import CurrentSalinitySummaryCard from "./components/CurrentSalinitySummaryCard";
 import CurrentWaterTempDetailGraph from "./components/CurrentWaterTempDetailGraph";
 import CurrentWaterTempSummaryCard from "./components/CurrentWaterTempSummaryCard";
-import CurrentWindDetailGraph from "./components/CurrentWindDetailGraph";
 import CurrentWindSummaryCard from "./components/CurrentWindSummaryCard";
 import AppHeader from "./components/AppHeader";
 import HourlyForecast from "./components/HourlyForecast";
@@ -61,14 +60,7 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
     >
       <div className="container p-4 md:p-0 md:mx-auto md:my-0">
         <div className="current-conditions-grid">
-          {/* <CurrentWindSummaryCard locationId={locationId} /> */}
-          <CurrentSalinitySummaryCard
-            locationId={locationId}
-            usgsSites={selectedLocation.usgsSites.filter(site =>
-              site.availableParams.includes(UsgsParam.Salinity)
-            )}
-            date={date}
-          />
+          <CurrentWindSummaryCard locationId={locationId} date={date} />
           <CurrentSalinitySummaryCard
             locationId={locationId}
             usgsSites={selectedLocation.usgsSites.filter(site =>

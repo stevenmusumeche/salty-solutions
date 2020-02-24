@@ -180,7 +180,7 @@ export type QueryTidePreditionStationArgs = {
 
 
 export type QueryUsgsSiteArgs = {
-  siteId: Scalars['ID']
+  siteId?: Maybe<Scalars['ID']>
 };
 
 export type Salinity = {
@@ -233,7 +233,8 @@ export type TemperatureResult = {
 
 
 export type TemperatureResultDetailArgs = {
-  numHours?: Maybe<Scalars['Int']>
+  start: Scalars['String'],
+  end: Scalars['String']
 };
 
 export type TemperatureSummary = {
