@@ -1,7 +1,6 @@
 import React from "react";
 import { VictoryChart, VictoryLine, VictoryAxis } from "victory";
 import { differenceInDays } from "date-fns";
-import SkeletonCharacter from "./SkeletonCharacter";
 import { CombinedError, OperationContext } from "urql";
 import ErrorIcon from "../assets/error.svg";
 import MiniGraphWrapper from "./MiniGraphWrapper";
@@ -27,7 +26,7 @@ const MiniGraph: React.FC<Props> = ({
 }) => {
   let displayVal = null;
   if (fetching) {
-    displayVal = <SkeletonCharacter />;
+    displayVal = null;
   } else if (error && !data) {
     displayVal = (
       <div className="flex flex-col">

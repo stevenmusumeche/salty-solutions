@@ -32,7 +32,6 @@ import {
   VictoryLine
 } from "victory";
 import ErrorIcon from "../assets/error.svg";
-import "./SkeletonCharacter.css";
 import { WindowSizeContext } from "../providers/WindowSizeProvider";
 import UsgsSiteSelect from "./UsgsSiteSelect";
 import EmptyBox from "./EmptyBox";
@@ -99,16 +98,10 @@ const Tides: React.FC<Props> = ({
         </div>
         <div className="md:flex justify-between">
           <EmptyBox
-            h={isSmall ? 170 : 600}
+            h={isSmall ? 190 : 600}
             w="auto"
             style={{ flexBasis: "85%" }}
             className="mb-4 md:mb:0"
-          />
-          <EmptyBox
-            h={isSmall ? 60 : 150}
-            w="auto"
-            className="md:ml-4"
-            style={{ flexBasis: 162 }}
           />
         </div>
       </div>
@@ -188,7 +181,7 @@ const Tides: React.FC<Props> = ({
             selectedId={selectedTideStationId}
           />
         </div>
-        <div className="md:ml-4">
+        <div className="md:ml-4 mb-4 md:mb-0">
           <UsgsSiteSelect
             sites={usgsSites}
             handleChange={handleUsgsSiteChange}
@@ -316,7 +309,7 @@ const Tides: React.FC<Props> = ({
           </div>
         </div>
 
-        <div className="mt-2 md:mt-8">
+        <div className="mt-8">
           <HighLowTable hiLowData={hiLowData} />
         </div>
       </div>
