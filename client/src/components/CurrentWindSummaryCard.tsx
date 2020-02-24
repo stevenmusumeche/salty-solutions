@@ -1,7 +1,7 @@
 import React from "react";
 import ConditionCard from "./ConditionCard";
 import { useCurrentWindData } from "../hooks/useWindData";
-import { subHours, differenceInCalendarDays } from "date-fns";
+import { subHours, differenceInDays } from "date-fns";
 import {
   VictoryChart,
   VictoryLine,
@@ -12,6 +12,7 @@ import {
 import ErrorIcon from "../assets/error.svg";
 import { CombinedError } from "urql";
 import MiniGraphWrapper from "./MiniGraphWrapper";
+import { noDecimals } from "../hooks/utils";
 
 interface Props {
   locationId: string;
@@ -102,7 +103,7 @@ function buildGraphDisplayVal(
     graphDisplayVal = (
       <MiniGraphWrapper>
         <VictoryChart
-          padding={{ left: 50, top: 20, right: 30, bottom: 50 }}
+          padding={{ left: 55, top: 20, right: 30, bottom: 50 }}
           domainPadding={{ y: [30, 30] }}
           style={{ parent: { touchAction: "auto" } }}
         >
@@ -110,10 +111,7 @@ function buildGraphDisplayVal(
             fixLabelOverlap={false}
             tickCount={2}
             tickFormat={date => {
-              const dayDiff = differenceInCalendarDays(
-                new Date(date),
-                new Date()
-              );
+              const dayDiff = differenceInDays(new Date(date), new Date());
               return dayDiff === 0 ? "now" : `${dayDiff}d`;
             }}
             style={{
@@ -125,6 +123,7 @@ function buildGraphDisplayVal(
             scale={{ x: "time" }}
             dependentAxis
             style={{ tickLabels: { fontSize: 24 } }}
+            tickFormat={noDecimals}
           />
           <VictoryGroup data={curDetail}>
             <VictoryLine

@@ -1,6 +1,6 @@
 import React from "react";
 import { VictoryChart, VictoryLine, VictoryAxis } from "victory";
-import { differenceInCalendarDays } from "date-fns";
+import { differenceInDays } from "date-fns";
 import SkeletonCharacter from "./SkeletonCharacter";
 import { CombinedError, OperationContext } from "urql";
 import ErrorIcon from "../assets/error.svg";
@@ -54,10 +54,7 @@ const MiniGraph: React.FC<Props> = ({
           fixLabelOverlap={false}
           tickCount={2}
           tickFormat={date => {
-            const dayDiff = differenceInCalendarDays(
-              new Date(date),
-              new Date()
-            );
+            const dayDiff = differenceInDays(new Date(date), new Date());
             return dayDiff === 0 ? "now" : `${dayDiff}d`;
           }}
           style={{

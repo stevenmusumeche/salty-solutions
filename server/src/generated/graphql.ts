@@ -348,7 +348,8 @@ export type Wind = {
 
 
 export type WindDetailArgs = {
-  numHours?: Maybe<Scalars['Int']>
+  start: Scalars['String'],
+  end: Scalars['String']
 };
 
 export type WindDetail = {

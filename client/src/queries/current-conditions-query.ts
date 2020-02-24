@@ -14,7 +14,7 @@ const CURRENT_CONDITIONS_QUERY = gql`
             ...WindDetailFields2
           }
         }
-        detail(numHours: 48) {
+        detail(start: $startDate, end: $endDate) {
           ...WindDetailFields2
         }
       }

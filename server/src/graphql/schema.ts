@@ -217,7 +217,7 @@ export default gql`
 
   type Wind {
     summary: WindSummary!
-    detail(numHours: Int): [WindDetail!]
+    detail(start: String!, end: String!): [WindDetail!]
   }
 
   type WindSummary {

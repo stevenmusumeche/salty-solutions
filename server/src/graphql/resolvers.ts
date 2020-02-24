@@ -142,9 +142,10 @@ const resolvers: Resolvers & { UsgsParam: Object } = {
   },
   Wind: {
     detail: async (wind, args, { services }) => {
-      const result = await services.weather.getConditionsDONOTUSE(
+      const result = await services.weather.getConditions(
         wind.location,
-        args.numHours || DEFAULT_NUM_HOURS
+        new Date(args.start),
+        new Date(args.end)
       );
       return result.wind;
     },

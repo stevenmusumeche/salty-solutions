@@ -2,7 +2,6 @@ import { startOfDay } from "date-fns";
 import React, { useState } from "react";
 import "./App.css";
 import CombinedForecast from "./components/CombinedForecast";
-import CurrentAirTempDetailGraph from "./components/CurrentAirTempDetailGraph";
 import CurrentAirTempSummaryCard from "./components/CurrentAirTempSummaryCard";
 import CurrentSalinitySummaryCard from "./components/CurrentSalinitySummaryCard";
 import CurrentWaterTempDetailGraph from "./components/CurrentWaterTempDetailGraph";
@@ -68,21 +67,9 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
             )}
             date={date}
           />
-          <CurrentSalinitySummaryCard
-            locationId={locationId}
-            usgsSites={selectedLocation.usgsSites.filter(site =>
-              site.availableParams.includes(UsgsParam.Salinity)
-            )}
-            date={date}
-          />
-          <CurrentSalinitySummaryCard
-            locationId={locationId}
-            usgsSites={selectedLocation.usgsSites.filter(site =>
-              site.availableParams.includes(UsgsParam.Salinity)
-            )}
-            date={date}
-          />
-          {/* <CurrentAirTempSummaryCard locationId={locationId} />
+          <CurrentAirTempSummaryCard locationId={locationId} date={date} />
+          <CurrentAirTempSummaryCard locationId={locationId} date={date} />
+          {/* 
           <CurrentWaterTempSummaryCard locationId={locationId} />
           <CurrentWindDetailGraph locationId={locationId} /> */}
           {/* <CurrentSalinityDetailGraph locationId={locationId} /> */}

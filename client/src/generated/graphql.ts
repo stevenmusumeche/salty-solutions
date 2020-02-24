@@ -347,7 +347,8 @@ export type Wind = {
 
 
 export type WindDetailArgs = {
-  numHours?: Maybe<Scalars['Int']>
+  start: Scalars['String'],
+  end: Scalars['String']
 };
 
 export type WindDetail = {
@@ -611,7 +612,7 @@ export const CurrentConditionsDataDocument = gql`
           ...WindDetailFields2
         }
       }
-      detail(numHours: 48) {
+      detail(start: $startDate, end: $endDate) {
         ...WindDetailFields2
       }
     }

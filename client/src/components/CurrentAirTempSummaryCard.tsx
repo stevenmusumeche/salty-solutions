@@ -1,13 +1,21 @@
 import React from "react";
 import ConditionCard from "./ConditionCard";
 import { useTemperatureData } from "../hooks/useTemperatureData";
+import { subHours } from "date-fns";
+import MiniGraph from "./MiniGraph";
+import { noDecimals } from "../hooks/utils";
 
 interface Props {
   locationId: string;
+  date: Date;
 }
 
-const CurrentAirTempSummaryCard: React.FC<Props> = ({ locationId }) => {
-  const { curValue, fetching, error } = useTemperatureData(locationId);
+const CurrentAirTempSummaryCard: React.FC<Props> = ({ locationId, date }) => {
+  const { curValue, curDetail, fetching, error } = useTemperatureData(
+    locationId,
+    subHours(date, 48),
+    date
+  );
 
   return (
     <ConditionCard
@@ -16,7 +24,16 @@ const CurrentAirTempSummaryCard: React.FC<Props> = ({ locationId }) => {
       error={error}
       className="air-temp-summary"
     >
-      {curValue}
+      <div>
+        <div>{curValue}</div>
+        <MiniGraph
+          fetching={fetching}
+          error={error}
+          data={curDetail}
+          dependentAxisTickFormat={noDecimals}
+          className="air-temp-graph"
+        />
+      </div>
     </ConditionCard>
   );
 };
