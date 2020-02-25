@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { startOfDay } from "date-fns";
 import React, { useState } from "react";
 import "./App.css";
