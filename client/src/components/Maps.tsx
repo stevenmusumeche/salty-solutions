@@ -75,11 +75,6 @@ const Maps: React.FC<Props> = ({ locationId }) => {
   return (
     <div>
       <div className="flex flex-col md:flex-row">
-        <RadarButton
-          showRadar={state.showRadar}
-          toggleRadar={() => dispatch({ type: "TOGGLE_RADAR" })}
-        />
-        {state.showRadar && isSmall && <RadarMap locationId={locationId} />}
         <SalinityButton
           showSalinity={state.showSalinity}
           toggle={() => dispatch({ type: "TOGGLE_SALINITY" })}
@@ -92,15 +87,21 @@ const Maps: React.FC<Props> = ({ locationId }) => {
           toggle={() => dispatch({ type: "TOGGLE_MODIS" })}
         />
         {state.showModis && isSmall && <ModisMap locationId={locationId} />}
+        <RadarButton
+          showRadar={state.showRadar}
+          toggleRadar={() => dispatch({ type: "TOGGLE_RADAR" })}
+        />
+        {state.showRadar && isSmall && <RadarMap locationId={locationId} />}
       </div>
-      {state.showRadar && isAtLeastMedium && (
-        <RadarMap locationId={locationId} />
-      )}
+
       {state.showSalinity && isAtLeastMedium && (
         <SalinityMap locationId={locationId} />
       )}
       {state.showModis && isAtLeastMedium && (
         <ModisMap locationId={locationId} />
+      )}
+      {state.showRadar && isAtLeastMedium && (
+        <RadarMap locationId={locationId} />
       )}
     </div>
   );

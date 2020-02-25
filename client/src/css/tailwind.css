@@ -23,6 +23,10 @@
   * .form-input { ... }
   */
 
+html {
+  scroll-behavior: smooth;
+}
+
 .hourly-row {
   @apply text-sm text-center rounded;
   display: grid;
@@ -273,4 +277,12 @@
   margin-left: -1rem;
   margin-right: -1rem;
   margin-bottom: -1rem;
+}
+
+/* fix anchor links so they ignore the header */
+:target::before {
+  content: "";
+  display: block;
+  height: 152px; /* fixed header height*/
+  margin: -152px 0 0; /* negative fixed header height */
 }

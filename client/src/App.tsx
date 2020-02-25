@@ -15,6 +15,7 @@ import Shell from "./components/Shell";
 import NotFound from "./components/NotFound";
 import { RouteComponentProps, navigate } from "@reach/router";
 import Maps from "./components/Maps";
+import MobileJumpNav from "./components/MobileJumpNav";
 
 const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
   locationSlug
@@ -56,7 +57,9 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
         />
       }
     >
+      <MobileJumpNav />
       <div className="container p-4 md:p-0 md:mx-auto md:my-0">
+        <a id="current-conditions"></a>
         <div className="current-conditions-grid">
           <WindCard locationId={locationId} date={date} />
           <AirTempCard locationId={locationId} date={date} />
@@ -75,6 +78,8 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
             date={date}
           />
         </div>
+
+        <a id="tides"></a>
         <div className="bg-white rounded-lg shadow-md p-4 mb-4 md:mb-8">
           <Tides
             locationId={locationId}
@@ -86,14 +91,19 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
           />
         </div>
 
+        <a id="forecast"></a>
         <SectionTitle text="Forecast" />
         <CombinedForecast locationId={locationId} />
 
+        <a id="solunar"></a>
         <SectionTitle text="Solunar Data" />
         <SunAndMoon locationId={locationId} date={date} />
+
+        <a id="maps"></a>
         <SectionTitle text="Maps" />
         <Maps locationId={locationId} />
 
+        <a id="hourly-forecast"></a>
         <SectionTitle text="Hourly Forecast" />
         <HourlyForecast locationId={locationId} />
       </div>

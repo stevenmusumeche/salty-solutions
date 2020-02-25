@@ -8,7 +8,7 @@ export const ForecastSkeleton: React.FC = () => {
   return (
     <>
       {[...Array(7)].map((x, i) => (
-        <div className={`mb-2 ${isSmall && "forecast-wrapper mb-4"}`}>
+        <div key={i} className={`mb-2 ${isSmall && "forecast-wrapper mb-4"}`}>
           <EmptyBox w={titleWidth} h="2rem" className="mb-2" />
           <EmptyBox w={"100%"} h={140} className="mb-0 md:mb-10" />
         </div>
@@ -20,7 +20,7 @@ export const ForecastSkeleton: React.FC = () => {
 export const HourlyForecastSkeleton: React.FC = () => {
   const titleWidth = useMemo(() => getRandomInt(110, 220), []);
   const lines = [...Array(7)].map((x, i) => (
-    <div className="mb-4 flex last:mb-0">
+    <div key={i} className="mb-4 flex last:mb-0">
       <div className="flex-grow">
         <EmptyBox w={"100%"} h={"2rem"} />
       </div>
@@ -29,7 +29,7 @@ export const HourlyForecastSkeleton: React.FC = () => {
   return (
     <>
       {[...Array(2)].map((x, i) => (
-        <>
+        <div key={i}>
           <div className="mb-6">
             <EmptyBox w={titleWidth} h={"2rem"} className="my-6" />
             {lines}
@@ -38,7 +38,7 @@ export const HourlyForecastSkeleton: React.FC = () => {
             <EmptyBox w={titleWidth} h={"2rem"} className="my-6" />
             {lines}
           </div>
-        </>
+        </div>
       ))}
     </>
   );
