@@ -2,7 +2,6 @@ import React from "react";
 import RightArrow from "../assets/arrow-right.svg";
 
 // todo: make arrow invisible if we're at the edge of the front or back
-
 const MobileJumpNav = () => (
   <div
     className="sticky z-50 md:hidden flex justify-between"
