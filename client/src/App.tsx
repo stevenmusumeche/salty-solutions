@@ -65,7 +65,7 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
       }
     >
       <MobileJumpNav />
-      <div className="container p-4 md:p-0 md:mx-auto md:my-0">
+      <div className="container p-4 md:p-0 md:mx-auto md:my-0 md:mt-8">
         <span id="current-conditions"></span>
         <div className="current-conditions-grid">
           <WindCard locationId={locationId} date={date} />
