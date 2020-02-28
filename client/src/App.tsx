@@ -1,5 +1,5 @@
 import { startOfDay } from "date-fns";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import CombinedForecast from "./components/CombinedForecast";
 import AirTempCard from "./components/AirTempCard";
@@ -15,12 +15,20 @@ import Shell from "./components/Shell";
 import NotFound from "./components/NotFound";
 import { RouteComponentProps, navigate } from "@reach/router";
 import Maps from "./components/Maps";
+import MobileJumpNav from "./components/MobileJumpNav";
+import Donate from "./components/Donate";
 
 const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
   locationSlug
 }) => {
   const [locations] = useLocationsQuery();
   const [locationId, setLocationId] = useState(locationSlug!);
+  useEffect(() => {
+    const $el = document.getElementById("pre-app-loader");
+    if ($el) {
+      $el.remove();
+    }
+  }, []);
 
   const selectedLocation = locations.data
     ? locations.data.locations.find(location => location.id === locationId)
@@ -56,7 +64,9 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
         />
       }
     >
-      <div className="container p-4 md:p-0 md:mx-auto md:my-0">
+      <MobileJumpNav />
+      <div className="container p-4 md:p-0 md:mx-auto md:my-0 md:mt-8">
+        <span id="current-conditions"></span>
         <div className="current-conditions-grid">
           <WindCard locationId={locationId} date={date} />
           <AirTempCard locationId={locationId} date={date} />
@@ -75,6 +85,8 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
             date={date}
           />
         </div>
+
+        <span id="tides"></span>
         <div className="bg-white rounded-lg shadow-md p-4 mb-4 md:mb-8">
           <Tides
             locationId={locationId}
@@ -86,14 +98,21 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
           />
         </div>
 
+        <Donate />
+
+        <span id="forecast"></span>
         <SectionTitle text="Forecast" />
         <CombinedForecast locationId={locationId} />
 
+        <span id="solunar"></span>
         <SectionTitle text="Solunar Data" />
         <SunAndMoon locationId={locationId} date={date} />
+
+        <span id="maps"></span>
         <SectionTitle text="Maps" />
         <Maps locationId={locationId} />
 
+        <span id="hourly-forecast"></span>
         <SectionTitle text="Hourly Forecast" />
         <HourlyForecast locationId={locationId} />
       </div>
