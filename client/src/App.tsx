@@ -16,6 +16,7 @@ import NotFound from "./components/NotFound";
 import { RouteComponentProps, navigate } from "@reach/router";
 import Maps from "./components/Maps";
 import MobileJumpNav from "./components/MobileJumpNav";
+import Donate from "./components/Donate";
 
 const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
   locationSlug
@@ -96,6 +97,8 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
             date={date}
           />
         </div>
+
+        <Donate />
 
         <span id="forecast"></span>
         <SectionTitle text="Forecast" />
