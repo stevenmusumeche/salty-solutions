@@ -15,9 +15,11 @@ import {
 } from "../generated/graphql";
 import {
   startOfDay,
+  endOfDay,
   format,
   addHours,
   isBefore,
+  subDays,
   addMinutes,
   subMinutes,
   isAfter,
@@ -69,8 +71,8 @@ const Tides: React.FC<Props> = ({
       locationId,
       tideStationId: selectedTideStationId!,
       usgsSiteId: selectedUsgsSiteId!,
-      startDate: format(startOfDay(date), ISO_FORMAT),
-      endDate: format(addDays(startOfDay(date), 1), ISO_FORMAT)
+      startDate: format(subDays(startOfDay(date), 3), ISO_FORMAT),
+      endDate: format(addDays(startOfDay(date), 4), ISO_FORMAT)
     },
     pause: selectedTideStationId === undefined
   });
@@ -138,16 +140,20 @@ const Tides: React.FC<Props> = ({
     );
   }
 
-  // we get an array of sun data with the various dates. use the one that matches the selected date
+  // filter data for current date
   const sunData = tideResult.data.location.sun.filter(
     x =>
       startOfDay(new Date(x.sunrise)).toISOString() ===
       startOfDay(date).toISOString()
   )[0];
 
-  const waterHeight = tideResult.data.usgsSite.waterHeight.filter(x => {
+  const curDayWaterHeight = tideResult.data.usgsSite.waterHeight.filter(x => {
     return isSameDay(new Date(x.timestamp), date);
   });
+
+  const curDayTides = tideResult.data.tidePreditionStation.tides.filter(x =>
+    isSameDay(new Date(x.time), date)
+  );
 
   const {
     dawn,
@@ -159,11 +165,7 @@ const Tides: React.FC<Props> = ({
     hiLowData,
     waterHeightData,
     tideBoundaries
-  } = buildDatasets(
-    sunData,
-    tideResult.data.tidePreditionStation.tides,
-    waterHeight
-  );
+  } = buildDatasets(sunData, curDayTides, curDayWaterHeight);
 
   let tickValues = [];
   for (let i = 0; i <= 24; i += isSmall ? 4 : 2) {
@@ -397,18 +399,23 @@ const buildDatasets = (
   tideDetails: TideDetailFieldsFragment[],
   waterHeight: WaterHeightFieldsFragment[]
 ) => {
+  const dayStart = subMinutes(startOfDay(new Date(sunData.sunrise)), 10);
+  const dayEnd = addMinutes(endOfDay(new Date(sunData.sunrise)), 10);
   const sunrise = new Date(sunData.sunrise);
   const sunset = new Date(sunData.sunset);
   const nauticalDusk = new Date(sunData.nauticalDusk);
   const nauticalDawn = new Date(sunData.nauticalDawn);
+
   type Filterer = (tide: TideDetailFieldsFragment) => boolean;
   const isDarkMorning: Filterer = tide =>
+    isAfter(new Date(tide.time), dayStart) &&
     isBefore(new Date(tide.time), addMinutes(nauticalDawn, 10));
   const isDarkEvening: Filterer = tide =>
-    isAfter(new Date(tide.time), subMinutes(nauticalDusk, 10));
+    isAfter(new Date(tide.time), subMinutes(nauticalDusk, 10)) &&
+    isBefore(new Date(tide.time), dayEnd);
   const isDawn: Filterer = tide =>
-    isBefore(new Date(tide.time), sunrise) &&
-    isAfter(new Date(tide.time), nauticalDawn);
+    isAfter(new Date(tide.time), nauticalDawn) &&
+    isBefore(new Date(tide.time), sunrise);
   const isDusk: Filterer = tide =>
     isAfter(new Date(tide.time), sunset) &&
     isBefore(new Date(tide.time), nauticalDusk);
