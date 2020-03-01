@@ -3,7 +3,7 @@ import BeerIcon from "../assets/beer.svg";
 
 const Donate = () => (
   <div
-    className="bg-orange-100 border-l-4 border-orange-500 text-orange-700 rounded-r-lg shadow-md p-4 mt-8 mb-4 md:mt-12 md:mb-8"
+    className="bg-orange-100 border-l-8 border-orange-500 text-orange-700 rounded-lg shadow-md p-4 mt-8 mb-4 md:mb-8"
     role="alert"
   >
     <div className="md:flex md:items-center">

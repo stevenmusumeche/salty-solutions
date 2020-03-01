@@ -203,22 +203,22 @@ export default Tides;
 
 const HighLowTable: React.FC<{ hiLowData: any[] }> = ({ hiLowData }) => (
   <div
-    className="mb-4 md:mb-2 leading-loose text-gray-700 text-sm flex flex-wrap items-center justify-center"
+    className="mb-4 md:mb-2 text-gray-700 text-sm flex flex-wrap items-center justify-center"
     style={{ fontVariantNumeric: "tabular-nums" }}
   >
     {hiLowData.map(({ x, y, type }, i) => (
       <div
         key={i}
-        className="flex items-center mr-2 last:mr-0 flex-grow-0 flex-shrink-0"
-        style={{ flexBasis: 1 }}
+        className="flex items-stretch mr-2 last:mr-0 border border-yellow-700 rounded mb-2 md:mb-0"
+        style={{ flexBasis: "1" }}
       >
         <div
-          className="w-10 mr-1 rounded bg-yellow-700 text-white flex items-center justify-center uppercase"
+          className="w-10 bg-yellow-700 text-white flex items-center justify-center uppercase"
           style={{ fontSize: ".7rem" }}
         >
           {type}
         </div>
-        <div>{format(new Date(x), "h:mma").toLowerCase()}</div>
+        <div className="px-2">{format(new Date(x), "h:mma").toLowerCase()}</div>
       </div>
     ))}
   </div>

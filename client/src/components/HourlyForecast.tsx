@@ -79,7 +79,7 @@ const HourlyForecast: React.FC<Props> = ({ locationId }) => {
             {grouped[day].map((hour, i) => {
               if (hour === null) {
                 return (
-                  <div className="hourly-row" key={i}>
+                  <div className="hourly-row empty" key={i}>
                     &nbsp;
                   </div>
                 );

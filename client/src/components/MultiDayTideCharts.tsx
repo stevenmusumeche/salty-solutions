@@ -193,7 +193,7 @@ const MultiDayTideCharts: React.FC<Props> = ({
           interpolation={"natural"}
           style={{
             data: {
-              strokeWidth: isSmall ? 4 : 3,
+              strokeWidth: isSmall ? 4 : 2,
               stroke: "black"
             }
           }}
@@ -205,7 +205,7 @@ const MultiDayTideCharts: React.FC<Props> = ({
           interpolation={"natural"}
           style={{
             data: {
-              strokeWidth: isSmall ? 4 : 3,
+              strokeWidth: isSmall ? 4 : 2,
               stroke: "#3182ce"
             }
           }}

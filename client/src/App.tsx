@@ -66,7 +66,7 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
     >
       <MobileJumpNav />
       <div className="container p-4 md:p-0 md:mx-auto md:my-0 md:mt-8">
-        {/* <span id="current-conditions"></span>
+        <span id="current-conditions"></span>
         <div className="current-conditions-grid">
           <WindCard locationId={locationId} date={date} />
           <AirTempCard locationId={locationId} date={date} />
@@ -84,7 +84,7 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
             )}
             date={date}
           />
-        </div> */}
+        </div>
 
         <span id="tides"></span>
         <div className="bg-white rounded-lg shadow-md p-4 mb-4 md:mb-8">
@@ -99,14 +99,14 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
           />
         </div>
 
-        {/* <Donate />
+        <Donate />
 
         <span id="forecast"></span>
-        <SectionTitle text="Forecast" />
+        {/* <SectionTitle text="Forecast" /> */}
         <CombinedForecast locationId={locationId} />
 
         <span id="solunar"></span>
-        <SectionTitle text="Solunar Data" />
+        {/* <SectionTitle text="Solunar Data" /> */}
         <SunAndMoon locationId={locationId} date={date} />
 
         <span id="maps"></span>
@@ -115,7 +115,7 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
 
         <span id="hourly-forecast"></span>
         <SectionTitle text="Hourly Forecast" />
-        <HourlyForecast locationId={locationId} /> */}
+        <HourlyForecast locationId={locationId} />
       </div>
     </Shell>
   );
