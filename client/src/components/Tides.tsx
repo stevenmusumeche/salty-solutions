@@ -136,11 +136,7 @@ const Tides: React.FC<Props> = ({
     isSameDay(new Date(x.time), date)
   );
 
-  const { hiLowData, tideBoundaries } = buildDatasets(
-    sunData,
-    curDayTides,
-    curDayWaterHeight
-  );
+  const { hiLowData } = buildDatasets(sunData, curDayTides, curDayWaterHeight);
 
   let tickValues = [];
   for (let i = 0; i <= 24; i += isSmall ? 4 : 2) {
