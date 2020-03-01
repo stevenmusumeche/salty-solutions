@@ -1,31 +1,30 @@
+import {
+  addHours,
+  endOfDay,
+  format,
+  isAfter,
+  isBefore,
+  startOfDay
+} from "date-fns";
 import React from "react";
 import {
-  VictoryChart,
+  VictoryArea,
   VictoryAxis,
-  VictoryScatter,
+  VictoryChart,
   VictoryLine,
-  VictoryArea
+  VictoryScatter
 } from "victory";
-import {
-  renderBackgroundColor,
-  buildDatasets,
-  Y_PADDING
-} from "./tide/tide-helpers";
-import useBreakpoints from "../hooks/useBreakpoints";
 import {
   SunDetailFieldsFragment,
   TideDetailFieldsFragment,
   WaterHeightFieldsFragment
 } from "../generated/graphql";
+import useBreakpoints from "../hooks/useBreakpoints";
 import {
-  addHours,
-  startOfDay,
-  format,
-  isAfter,
-  isBefore,
-  subDays,
-  endOfDay
-} from "date-fns";
+  buildDatasets,
+  renderBackgroundColor,
+  Y_PADDING
+} from "./tide/tide-helpers";
 
 interface Props {
   sunData: SunDetailFieldsFragment;

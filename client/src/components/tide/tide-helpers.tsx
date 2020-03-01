@@ -1,29 +1,18 @@
-import React from "react";
 import {
-  VictoryChart,
-  VictoryAxis,
-  VictoryArea,
-  VictoryScatter,
-  VictoryLine
-} from "victory";
-import {
-  startOfDay,
-  endOfDay,
-  format,
-  addHours,
-  isBefore,
-  subDays,
   addMinutes,
-  subMinutes,
+  endOfDay,
   isAfter,
-  addDays,
-  isSameDay
+  isBefore,
+  startOfDay,
+  subMinutes
 } from "date-fns";
+import React from "react";
+import { VictoryArea } from "victory";
 import {
   SunDetailFieldsFragment,
+  TideDetail,
   TideDetailFieldsFragment,
-  WaterHeightFieldsFragment,
-  TideDetail
+  WaterHeightFieldsFragment
 } from "../../generated/graphql";
 
 const ISO_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSxxx";

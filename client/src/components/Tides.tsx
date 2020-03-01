@@ -1,29 +1,24 @@
-import React, {
-  useState,
-  ChangeEventHandler,
-  useEffect,
-  useContext
-} from "react";
+import {
+  addDays,
+  addHours,
+  format,
+  isSameDay,
+  startOfDay,
+  subDays
+} from "date-fns";
+import React, { ChangeEventHandler, useEffect, useState } from "react";
+import ErrorIcon from "../assets/error.svg";
 import {
   TideStationDetailFragment,
   useTideQuery,
   UsgsSiteDetailFragment
 } from "../generated/graphql";
-import {
-  startOfDay,
-  format,
-  addHours,
-  subDays,
-  addDays,
-  isSameDay
-} from "date-fns";
-import ErrorIcon from "../assets/error.svg";
-import UsgsSiteSelect from "./UsgsSiteSelect";
+import useBreakpoints from "../hooks/useBreakpoints";
 import EmptyBox from "./EmptyBox";
-import { buildDatasets } from "./tide/tide-helpers";
 import MainTideChart from "./MainTideChart";
 import MultiDayTideCharts from "./MultiDayTideCharts";
-import useBreakpoints from "../hooks/useBreakpoints";
+import { buildDatasets } from "./tide/tide-helpers";
+import UsgsSiteSelect from "./UsgsSiteSelect";
 
 interface Props {
   tideStations: TideStationDetailFragment[];

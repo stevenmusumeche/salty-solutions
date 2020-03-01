@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  VictoryChart,
-  VictoryAxis,
-  VictoryScatter,
-  VictoryLine,
-  VictoryArea
-} from "victory";
+import { VictoryChart, VictoryAxis, VictoryLine, VictoryArea } from "victory";
 import {
   renderBackgroundColor,
   buildDatasets,
