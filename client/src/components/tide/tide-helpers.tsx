@@ -15,7 +15,6 @@ import {
   WaterHeightFieldsFragment
 } from "../../generated/graphql";
 
-const ISO_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSxxx";
 export const Y_PADDING = 0.3;
 
 export const renderBackgroundColor = (

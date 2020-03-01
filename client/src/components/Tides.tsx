@@ -147,7 +147,6 @@ const Tides: React.FC<Props> = ({
     tickValues.push(addHours(startOfDay(date), i));
   }
 
-  const { min } = tideBoundaries;
   return (
     <>
       <div className="md:flex">
