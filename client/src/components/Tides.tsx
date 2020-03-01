@@ -74,26 +74,24 @@ const Tides: React.FC<Props> = ({
   if (tideResult.fetching) {
     return (
       <div>
-        <div className="my-4 mb-6 md:flex md:items-center">
+        <div className="my-4 mb-4 md:flex md:items-center">
           <EmptyBox
-            h={isSmall ? "3.2rem" : "2rem"}
+            h={isSmall ? "3.2rem" : "2.2rem"}
             w={isSmall ? "100%" : "20rem"}
             className="mr-8 mb-4 md:mb-0"
           />
           <EmptyBox
-            h={isSmall ? "3.2rem" : "2rem"}
+            h={isSmall ? "3.2rem" : "2.2rem"}
             w={isSmall ? "100%" : "24rem"}
             className="m-0"
           />
         </div>
-        <div className="md:flex justify-between">
-          <EmptyBox
-            h={isSmall ? 190 : 600}
-            w="auto"
-            style={{ flexBasis: "85%" }}
-            className="mb-4 md:mb:0"
-          />
+        <div className="my-4 mb-4 flex justify-center">
+          <EmptyBox h="2.5rem" w="7rem" className="mr-2" />
+          <EmptyBox h="2.5rem" w="7rem" className="" />
         </div>
+        <EmptyBox h={isSmall ? 190 : 500} w="100%" className="mb-4 md:mb:0" />
+        <EmptyBox h={isSmall ? 100 : 200} w="100%" className="" />
       </div>
     );
   } else if (
