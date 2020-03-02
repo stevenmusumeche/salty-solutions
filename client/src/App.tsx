@@ -30,6 +30,11 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
     }
   }, []);
 
+  useEffect(() => {
+    if (!locationSlug) return;
+    localStorage.setItem("locationId", locationSlug);
+  }, [locationSlug]);
+
   const selectedLocation = locations.data
     ? locations.data.locations.find(location => location.id === locationId)
     : null;

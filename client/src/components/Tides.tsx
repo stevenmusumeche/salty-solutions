@@ -197,7 +197,7 @@ const HighLowTable: React.FC<{ hiLowData: any[] }> = ({ hiLowData }) => (
     {hiLowData.map(({ x, y, type }, i) => (
       <div
         key={i}
-        className="flex items-stretch mr-2 last:mr-0 border border-yellow-700 rounded mb-2 md:mb-0"
+        className="flex items-stretch mr-2 border border-yellow-700 rounded mb-2 md:mb-0"
         style={{ flexBasis: "1" }}
       >
         <div
