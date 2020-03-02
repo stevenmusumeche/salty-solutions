@@ -73,21 +73,19 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
       <div className="container p-4 md:p-0 md:mx-auto md:my-0 md:mt-8">
         <span id="current-conditions"></span>
         <div className="current-conditions-grid">
-          <WindCard locationId={locationId} date={date} />
-          <AirTempCard locationId={locationId} date={date} />
+          <WindCard locationId={locationId} />
+          <AirTempCard locationId={locationId} />
           <WaterTempCard
             locationId={locationId}
             usgsSites={selectedLocation.usgsSites.filter(site =>
               site.availableParams.includes(UsgsParam.WaterTemp)
             )}
-            date={date}
           />
           <SalinityCard
             locationId={locationId}
             usgsSites={selectedLocation.usgsSites.filter(site =>
               site.availableParams.includes(UsgsParam.Salinity)
             )}
-            date={date}
           />
         </div>
 
