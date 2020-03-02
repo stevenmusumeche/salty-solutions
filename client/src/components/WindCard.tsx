@@ -1,7 +1,7 @@
 import React from "react";
 import ConditionCard from "./ConditionCard";
 import { useCurrentWindData } from "../hooks/useWindData";
-import { subHours, differenceInDays } from "date-fns";
+import { subHours, differenceInDays, startOfDay } from "date-fns";
 import {
   VictoryChart,
   VictoryLine,
@@ -16,9 +16,9 @@ import { noDecimals } from "../hooks/utils";
 
 interface Props {
   locationId: string;
-  date: Date;
 }
-const WindCard: React.FC<Props> = ({ locationId, date }) => {
+const WindCard: React.FC<Props> = ({ locationId }) => {
+  const date = startOfDay(new Date());
   const {
     curValue,
     curDetail,

@@ -3,7 +3,7 @@ import BeerIcon from "../assets/beer.svg";
 
 const Donate = () => (
   <div
-    className="bg-orange-100 border-l-4 border-orange-500 text-orange-700 rounded-r-lg shadow-md p-4 mt-8 mb-4 md:mt-12 md:mb-8"
+    className="bg-orange-100 border-l-8 border-orange-500 text-orange-700 rounded-lg shadow-md p-4 mt-4 md:mt-8 mb-4 md:mb-8"
     role="alert"
   >
     <div className="md:flex md:items-center">
@@ -15,13 +15,13 @@ const Donate = () => (
         />
       </div>
       <div>
-        <p className="font-bold mb-2">Like Salty Solutions?</p>
-        <p className="text-sm">
-          <form
-            action="https://www.paypal.com/cgi-bin/webscr"
-            method="post"
-            target="_blank"
-          >
+        <form
+          action="https://www.paypal.com/cgi-bin/webscr"
+          method="post"
+          target="_blank"
+        >
+          <p className="font-bold mb-2">Like Salty Solutions?</p>
+          <p className="text-sm">
             <input type="hidden" name="cmd" value="_s-xclick" />
             <input
               type="hidden"
@@ -43,8 +43,8 @@ const Donate = () => (
               your top-secret fishing spots
             </a>
             . Totally optional, but very much appreciated.
-          </form>
-        </p>
+          </p>
+        </form>
       </div>
     </div>
   </div>

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import ConditionCard from "./ConditionCard";
 import { useWaterTemperatureData } from "../hooks/useWaterTemperatureData";
 import { UsgsSiteDetailFragment } from "../generated/graphql";
-import { subHours } from "date-fns";
+import { subHours, startOfDay } from "date-fns";
 import UsgsSiteSelect from "./UsgsSiteSelect";
 import MiniGraph from "./MiniGraph";
 import { noDecimals } from "../hooks/utils";
@@ -10,12 +10,12 @@ import { noDecimals } from "../hooks/utils";
 interface Props {
   locationId: string;
   usgsSites: UsgsSiteDetailFragment[];
-  date: Date;
 }
 
-const WaterTempCard: React.FC<Props> = ({ locationId, usgsSites, date }) => {
+const WaterTempCard: React.FC<Props> = ({ locationId, usgsSites }) => {
   const [selectedUsgsSiteId, setSelectedUsgsSiteId] = useState(usgsSites[0].id);
 
+  const date = startOfDay(new Date());
   const {
     curValue,
     curDetail,

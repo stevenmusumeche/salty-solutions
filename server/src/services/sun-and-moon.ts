@@ -1,5 +1,5 @@
 import suncalc from "suncalc";
-import { addDays } from "date-fns";
+import { addDays, startOfDay } from "date-fns";
 
 export const getSunInfo = (
   start: Date,
@@ -16,7 +16,7 @@ export const getSunInfo = (
   nauticalDusk: string;
 }[] => {
   let results = [];
-  let cur = start;
+  let cur = startOfDay(start);
 
   while (cur <= end) {
     const result = suncalc.getTimes(cur, lat, long);

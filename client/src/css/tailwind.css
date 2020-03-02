@@ -39,8 +39,8 @@ html {
   overflow: hidden;
 }
 
-.hourly-row:nth-child(even) {
-  background: #edf2f7;
+.hourly-row:nth-child(even):not(.empty) {
+  background-color: #edf2f7;
 }
 
 @media (min-width: 768px) {
