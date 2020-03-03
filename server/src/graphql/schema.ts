@@ -13,8 +13,7 @@ export default gql`
     name: String!
     tidePreditionStations: [TidePreditionStation!]!
     usgsSites: [UsgsSite!]!
-    lat: Float!
-    long: Float!
+    coords: Coords!
     sun(start: String!, end: String!): [SunDetail!]
     moon(start: String!, end: String!): [MoonDetail!]
     combinedForecast: [CombinedForecast!]

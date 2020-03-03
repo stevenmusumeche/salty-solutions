@@ -9,7 +9,7 @@ import WindCard from "./components/WindCard";
 import AppHeader from "./components/AppHeader";
 import HourlyForecast from "./components/HourlyForecast";
 import SunAndMoon from "./components/SunAndMoon";
-import Tides from "./components/Tides";
+import Tides from "./components/tide/Tides";
 import { useLocationsQuery, UsgsParam } from "./generated/graphql";
 import Shell from "./components/Shell";
 import NotFound from "./components/NotFound";
@@ -114,7 +114,7 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
 
         <span id="maps"></span>
         <SectionTitle text="Maps" />
-        <Maps locationId={locationId} />
+        <Maps locationId={locationId} coords={selectedLocation.coords} />
 
         <span id="hourly-forecast"></span>
         <SectionTitle text="Hourly Forecast" />

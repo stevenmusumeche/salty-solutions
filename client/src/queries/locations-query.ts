@@ -5,6 +5,10 @@ const LOCATION_QUERY = gql`
     locations {
       id
       name
+      coords {
+        lat
+        lon
+      }
       tidePreditionStations {
         ...TideStationDetail
       }

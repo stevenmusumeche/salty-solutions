@@ -10,8 +10,10 @@ export interface LocationEntity {
   name: string;
   tideStationIds: string[];
   marineZoneId: string;
-  lat: number;
-  long: number;
+  coords: {
+    lat: number;
+    lon: number;
+  };
   usgsSiteIds: string[];
   weatherGov: {
     apiBase: string;
@@ -36,8 +38,10 @@ const locations: LocationEntity[] = [
       "8765026"
     ],
     marineZoneId: "GMZ435",
-    lat: 29.731474,
-    long: -91.841371,
+    coords: {
+      lat: 29.731474,
+      lon: -91.841371
+    },
     usgsSiteIds: ["07387040", "07387050", "073816525"],
     weatherGov: {
       apiBase: "https://api.weather.gov/gridpoints/LCH/112,73",
@@ -52,8 +56,10 @@ const locations: LocationEntity[] = [
     name: "Calcasieu Lake",
     tideStationIds: ["8768094", "8767961", "8767816"],
     marineZoneId: "GMZ432",
-    lat: 29.9103,
-    long: -93.2785,
+    coords: {
+      lat: 29.9103,
+      lon: -93.2785
+    },
     usgsSiteIds: ["08017118", "08017095", "08017044"],
     weatherGov: {
       apiBase: "https://api.weather.gov/gridpoints/LCH/57,80",
@@ -75,8 +81,10 @@ const locations: LocationEntity[] = [
       "8762675"
     ],
     marineZoneId: "GMZ550",
-    lat: 29.246742,
-    long: -90.661058,
+    coords: {
+      lat: 29.246742,
+      lon: -90.661058
+    },
     usgsSiteIds: ["073813498"],
     weatherGov: {
       apiBase: "https://api.weather.gov/gridpoints/LIX/47,58",
@@ -97,8 +105,10 @@ const locations: LocationEntity[] = [
       "8762928" // cocodrie
     ],
     marineZoneId: "GMZ550",
-    lat: 29.412207,
-    long: -90.782918,
+    coords: {
+      lat: 29.412207,
+      lon: -90.782918
+    },
     usgsSiteIds: ["07381349", "073813498"],
     weatherGov: {
       apiBase: "ttps://api.weather.gov/gridpoints/LIX/42,65",
@@ -113,8 +123,10 @@ const locations: LocationEntity[] = [
     name: "Hopedale/Shell Beach",
     tideStationIds: ["8761305", "8761529", "8760742", "8761108", "8760595"],
     marineZoneId: "GMZ536",
-    lat: 29.8203972,
-    long: -89.65689,
+    coords: {
+      lat: 29.8203972,
+      lon: -89.65689
+    },
     usgsSiteIds: [
       "073745257",
       "295206089402400",
@@ -143,8 +155,10 @@ const locations: LocationEntity[] = [
       "8762075"
     ],
     marineZoneId: "gmz572",
-    lat: 29.2366,
-    long: -89.9873,
+    coords: {
+      lat: 29.2366,
+      lon: -89.9873
+    },
     usgsSiteIds: [
       "07380249",
       "073802516",
@@ -179,8 +193,10 @@ const locations: LocationEntity[] = [
       "8760595"
     ],
     marineZoneId: "GMZ555",
-    lat: 29.277165,
-    long: -89.3547759,
+    coords: {
+      lat: 29.277165,
+      lon: -89.3547759
+    },
     usgsSiteIds: [
       "292952089453800",
       "291042089153000",
@@ -214,8 +230,10 @@ const locations: LocationEntity[] = [
       "8762483"
     ],
     marineZoneId: "GMZ530",
-    lat: 30.193165894,
-    long: -90.120332852,
+    coords: {
+      lat: 30.193165894,
+      lon: -90.120332852
+    },
     usgsSiteIds: [
       "301001089442600",
       "301200090072400",

@@ -58,8 +58,7 @@ export type Location = {
   name: Scalars['String'],
   tidePreditionStations: Array<TidePreditionStation>,
   usgsSites: Array<UsgsSite>,
-  lat: Scalars['Float'],
-  long: Scalars['Float'],
+  coords: Coords,
   sun?: Maybe<Array<SunDetail>>,
   moon?: Maybe<Array<MoonDetail>>,
   combinedForecast?: Maybe<Array<CombinedForecast>>,
@@ -406,7 +405,7 @@ export type ForecastQuery = ({ __typename?: 'Query' } & { location: Maybe<({ __t
 export type LocationsQueryVariables = {};
 
 
-export type LocationsQuery = ({ __typename?: 'Query' } & { locations: Array<({ __typename?: 'Location' } & Pick<Location, 'id' | 'name'> & { tidePreditionStations: Array<({ __typename?: 'TidePreditionStation' } & TideStationDetailFragment)>, usgsSites: Array<({ __typename?: 'UsgsSite' } & UsgsSiteDetailFragment)> })> });
+export type LocationsQuery = ({ __typename?: 'Query' } & { locations: Array<({ __typename?: 'Location' } & Pick<Location, 'id' | 'name'> & { coords: ({ __typename?: 'Coords' } & Pick<Coords, 'lat' | 'lon'>), tidePreditionStations: Array<({ __typename?: 'TidePreditionStation' } & TideStationDetailFragment)>, usgsSites: Array<({ __typename?: 'UsgsSite' } & UsgsSiteDetailFragment)> })> });
 
 export type TideStationDetailFragment = ({ __typename?: 'TidePreditionStation' } & Pick<TidePreditionStation, 'id' | 'name'>);
 
@@ -692,6 +691,10 @@ export const LocationsDocument = gql`
   locations {
     id
     name
+    coords {
+      lat
+      lon
+    }
     tidePreditionStations {
       ...TideStationDetail
     }

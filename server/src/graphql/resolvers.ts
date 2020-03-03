@@ -50,16 +50,16 @@ const resolvers: Resolvers & { UsgsParam: Object } = {
       return services.sunMoon.getSunInfo(
         new Date(args.start),
         new Date(args.end),
-        location.lat,
-        location.long
+        location.coords.lat,
+        location.coords.lon
       );
     },
     moon: async (location, args, { services }) => {
       return services.sunMoon.getMoonInfo(
         new Date(args.start),
         new Date(args.end),
-        location.lat,
-        location.long
+        location.coords.lat,
+        location.coords.lon
       );
     },
     combinedForecast: async (location, args, { services }) => {

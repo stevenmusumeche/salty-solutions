@@ -1,14 +1,16 @@
 import React, { useReducer, useEffect } from "react";
 import Button from "./Button";
 import SalinityMap from "./SalinityMap";
-import RadarMap from "./RadarMap";
 import MinusIcon from "../assets/minus-icon.svg";
 import PlusIcon from "../assets/plus-icon.svg";
 import ModisMap from "./ModisMap";
 import useBreakpoints from "../hooks/useBreakpoints";
+import { Coords } from "../generated/graphql";
+import DarkSkyRadar from "./DarkSkyRadar";
 
 interface Props {
   locationId: string;
+  coords: Coords;
 }
 
 interface State {
@@ -63,7 +65,7 @@ const reducer = (state: State, action: Action) => {
   }
 };
 
-const Maps: React.FC<Props> = ({ locationId }) => {
+const Maps: React.FC<Props> = ({ locationId, coords }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const { isSmall, isAtLeastMedium } = useBreakpoints();
@@ -91,7 +93,7 @@ const Maps: React.FC<Props> = ({ locationId }) => {
           showRadar={state.showRadar}
           toggleRadar={() => dispatch({ type: "TOGGLE_RADAR" })}
         />
-        {state.showRadar && isSmall && <RadarMap locationId={locationId} />}
+        {state.showRadar && isSmall && <DarkSkyRadar coords={coords} />}
       </div>
 
       {state.showSalinity && isAtLeastMedium && (
@@ -101,7 +103,8 @@ const Maps: React.FC<Props> = ({ locationId }) => {
         <ModisMap locationId={locationId} />
       )}
       {state.showRadar && isAtLeastMedium && (
-        <RadarMap locationId={locationId} />
+        // <RadarMap locationId={locationId} />
+        <DarkSkyRadar coords={coords} />
       )}
     </div>
   );

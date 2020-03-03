@@ -7,18 +7,18 @@ import {
   subDays
 } from "date-fns";
 import React, { ChangeEventHandler, useEffect, useState } from "react";
-import ErrorIcon from "../assets/error.svg";
+import ErrorIcon from "../../assets/error.svg";
 import {
   TideStationDetailFragment,
   useTideQuery,
   UsgsSiteDetailFragment
-} from "../generated/graphql";
-import useBreakpoints from "../hooks/useBreakpoints";
-import EmptyBox from "./EmptyBox";
+} from "../../generated/graphql";
+import useBreakpoints from "../../hooks/useBreakpoints";
+import EmptyBox from "../EmptyBox";
 import MainTideChart from "./MainTideChart";
 import MultiDayTideCharts from "./MultiDayTideCharts";
-import { buildDatasets } from "./tide/tide-helpers";
-import UsgsSiteSelect from "./UsgsSiteSelect";
+import { buildDatasets } from "./tide-helpers";
+import UsgsSiteSelect from "../UsgsSiteSelect";
 
 interface Props {
   tideStations: TideStationDetailFragment[];
