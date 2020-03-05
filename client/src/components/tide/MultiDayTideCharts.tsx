@@ -4,13 +4,13 @@ import {
   renderBackgroundColor,
   buildDatasets,
   Y_PADDING
-} from "./tide/tide-helpers";
-import useBreakpoints from "../hooks/useBreakpoints";
+} from "./tide-helpers";
+import useBreakpoints from "../../hooks/useBreakpoints";
 import {
   SunDetailFieldsFragment,
   TideDetailFieldsFragment,
   WaterHeightFieldsFragment
-} from "../generated/graphql";
+} from "../../generated/graphql";
 import {
   addHours,
   startOfDay,

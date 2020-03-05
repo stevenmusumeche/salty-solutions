@@ -54,6 +54,7 @@ export function parseForecast(
     retVal.windSpeed = matches.groups.speed
       ? {
           from:
+            !matches.groups.qualifier ||
             matches.groups.qualifier.trim() === "up to"
               ? 0
               : Number(matches.groups.speed),

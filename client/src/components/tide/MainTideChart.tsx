@@ -18,13 +18,13 @@ import {
   SunDetailFieldsFragment,
   TideDetailFieldsFragment,
   WaterHeightFieldsFragment
-} from "../generated/graphql";
-import useBreakpoints from "../hooks/useBreakpoints";
+} from "../../generated/graphql";
+import useBreakpoints from "../../hooks/useBreakpoints";
 import {
   buildDatasets,
   renderBackgroundColor,
   Y_PADDING
-} from "./tide/tide-helpers";
+} from "./tide-helpers";
 
 interface Props {
   sunData: SunDetailFieldsFragment;
