@@ -146,20 +146,12 @@ html {
   top: 100% !important;
 }
 
-.react-date-picker {
-  @apply w-full;
-}
-
 .react-date-picker__wrapper {
-  @apply bg-white rounded border-0 shadow-md h-8 px-2 w-full;
-  border: none !important;
+  @apply bg-white rounded border border-gray-300 h-8 px-2 w-auto;
 }
 
-@media (min-width: 768px) {
-  .react-date-picker__wrapper {
-    @apply text-3xl h-12 w-auto;
-    border: none !important;
-  }
+.react-date-picker__inputGroup {
+  @apply text-gray-700;
 }
 
 .react-date-picker__calendar-button__icon {

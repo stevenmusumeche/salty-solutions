@@ -22,13 +22,14 @@ import MultiDayTideCharts from "./MultiDayTideCharts";
 import { buildDatasets } from "./tide-helpers";
 import UsgsSiteSelect from "../UsgsSiteSelect";
 import MoonPhase from "../MoonPhase";
+import DatePicker from "react-date-picker";
 
 interface Props {
   tideStations: TideStationDetailFragment[];
   usgsSites: UsgsSiteDetailFragment[];
   locationId: string;
   date: Date;
-  setActiveDate: (date: Date) => void;
+  setActiveDate: (date: Date | Date[]) => void;
 }
 
 const ISO_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSxxx";
@@ -157,15 +158,27 @@ const Tides: React.FC<Props> = ({
 
   return (
     <>
-      <div className="md:flex">
-        <div>
+      <div className="md:flex md:items-center">
+        <div className="md:mb-4">
+          <label className="mr-2 uppercase leading-loose text-gray-700 text-sm block md:inline-block">
+            Date:
+          </label>
+          <DatePicker
+            aria-label="select date"
+            onChange={setActiveDate}
+            value={date}
+            clearIcon={null}
+            className="inline-block"
+          />
+        </div>
+        <div className="md:ml-4 md:mb-4">
           <TideStationSelect
             tideStations={tideStations}
             handleChange={handleStationChange}
             selectedId={selectedTideStationId}
           />
         </div>
-        <div className="md:ml-4 mb-4">
+        <div className="md:ml-4 md:mb-4">
           <UsgsSiteSelect
             sites={usgsSites}
             handleChange={handleUsgsSiteChange}
@@ -224,10 +237,7 @@ const HighLowTable: React.FC<{
   );
 
   return (
-    <div
-      className="mt-4 md:mb-2 md:mt-0 text-gray-700 text-xs flex flex-wrap items-center justify-center"
-      style={{}}
-    >
+    <div className="mt-4 md:mt-0 text-gray-700 text-xs flex flex-wrap items-center justify-center">
       {hiLowData.map(({ x, y, type }, i) => (
         <Pill key={i} label={`${type} Tide`}>
           {formatDate(x)}
@@ -271,7 +281,7 @@ const Pill: React.FC<{ label: string; color?: string }> = ({
 }) => {
   return (
     <div
-      className={`flex items-stretch mr-2 border border-${color} rounded mb-2 md:mb-0`}
+      className={`flex items-stretch mr-2 border border-${color} rounded mb-2`}
       style={{ flexBasis: "1" }}
     >
       <div
@@ -292,9 +302,9 @@ const TideStationSelect: React.FC<{
   selectedId: string;
 }> = ({ tideStations, handleChange, selectedId }) => (
   <div className="py-2">
-    <div className="mr-2 inline-block uppercase leading-loose text-gray-700 text-sm">
+    <label className="mr-2 inline-block uppercase leading-loose text-gray-700 text-sm">
       Tide Station:
-    </div>
+    </label>
     <div className="inline-block rounded border-gray-300 border">
       <select
         onChange={handleChange}
