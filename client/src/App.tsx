@@ -8,7 +8,6 @@ import WaterTempCard from "./components/WaterTempCard";
 import WindCard from "./components/WindCard";
 import AppHeader from "./components/AppHeader";
 import HourlyForecast from "./components/HourlyForecast";
-import SunAndMoon from "./components/SunAndMoon";
 import Tides from "./components/tide/Tides";
 import { useLocationsQuery, UsgsParam } from "./generated/graphql";
 import Shell from "./components/Shell";
@@ -152,12 +151,7 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
         <Donate />
 
         <span id="forecast"></span>
-        {/* <SectionTitle text="Forecast" /> */}
         <CombinedForecast locationId={locationId} />
-
-        <span id="solunar"></span>
-        {/* <SectionTitle text="Solunar Data" /> */}
-        <SunAndMoon locationId={locationId} date={date} />
 
         <span id="radar"></span>
         <CollapsibleSection
@@ -189,10 +183,6 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
         >
           <SalinityMap locationId={locationId} />
         </CollapsibleSection>
-
-        {/* <span id="maps"></span>
-        <SectionTitle text="Maps" />
-        <Maps locationId={locationId} coords={selectedLocation.coords} /> */}
 
         <span id="hourly-forecast"></span>
         <CollapsibleSection

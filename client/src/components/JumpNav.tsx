@@ -56,7 +56,7 @@ const JumpNav: React.FC<Props> = ({ dispatch }) => {
             targetId="current-conditions"
             onClick={() => dispatch({ type: "collapse-all" })}
           >
-            Conditions
+            Right Now
           </NavButton>
           <NavButton
             targetId="tides"
@@ -69,12 +69,6 @@ const JumpNav: React.FC<Props> = ({ dispatch }) => {
             onClick={() => dispatch({ type: "collapse-all" })}
           >
             Forecast
-          </NavButton>
-          <NavButton
-            targetId="solunar"
-            onClick={() => dispatch({ type: "collapse-all" })}
-          >
-            Solunar
           </NavButton>
           <NavButton
             targetId="radar"

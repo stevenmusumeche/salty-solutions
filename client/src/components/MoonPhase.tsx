@@ -11,8 +11,8 @@ import WaxingGibbous from "../assets/moon-phases/waxing-gibbous.svg";
 const MoonPhase: React.FC<{
   phase?: string | null;
 }> = ({ phase }) => (
-  <div>
-    <div className="w-16 h-16 md:w-22 md:h-22 mx-auto">
+  <div className="inline-block">
+    <div className="w-4 h-4 mx-auto ml-1">
       <img src={getImageForPhase(phase || "")} alt={phase || undefined} />
     </div>
   </div>
