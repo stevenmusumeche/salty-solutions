@@ -7,7 +7,7 @@ const purgeCss = new Purgecss({
   defaultExtractor: content => content.match(/[\w-/:]+(?<!:)/g) || [],
   whitelist: [
     "bg-orange-700",
-    "order-orange-700",
+    "border-orange-700",
     "bg-blue-800",
     "border-blue-800",
     "bg-blue-600",
