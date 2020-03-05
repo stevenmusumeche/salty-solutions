@@ -14,13 +14,60 @@ import { useLocationsQuery, UsgsParam } from "./generated/graphql";
 import Shell from "./components/Shell";
 import NotFound from "./components/NotFound";
 import { RouteComponentProps, navigate } from "@reach/router";
-import Maps from "./components/Maps";
-import MobileJumpNav from "./components/MobileJumpNav";
+import JumpNav from "./components/JumpNav";
 import Donate from "./components/Donate";
+import CollapsibleSection from "./components/CollapsibleSection";
+import DarkSkyRadar from "./components/DarkSkyRadar";
+import { SalinityMap } from "./components/SalinityMap";
+import ModisMap from "./components/ModisMap";
+import { useReducer } from "react";
+
+export interface Action {
+  type: string;
+  payload?: string;
+}
+
+interface State {
+  [section: string]: boolean;
+}
+
+const initialState = {
+  radar: false,
+  satellite: false,
+  salinity: false,
+  hourlyForecast: false
+};
+
+const sectionReducer = (state: State, action: Action) => {
+  switch (action.type) {
+    case "toggle":
+      if (!action.payload) return state;
+      return { ...state, [action.payload]: !state[action.payload] };
+    case "nav-clicked":
+      if (!action.payload) return state;
+      return {
+        radar: false,
+        satellite: false,
+        salinity: false,
+        hourlyForecast: false,
+        [action.payload]: true
+      };
+    case "collapse-all":
+      return {
+        radar: false,
+        satellite: false,
+        salinity: false,
+        hourlyForecast: false
+      };
+    default:
+      return state;
+  }
+};
 
 const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
   locationSlug
 }) => {
+  const [sections, dispatch] = useReducer(sectionReducer, initialState);
   const [locations] = useLocationsQuery();
   const [locationId, setLocationId] = useState(locationSlug!);
   useEffect(() => {
@@ -69,7 +116,7 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
         />
       }
     >
-      <MobileJumpNav />
+      <JumpNav dispatch={dispatch} />
       <div className="container p-4 md:p-0 md:mx-auto md:my-0 md:mt-8">
         <span id="current-conditions"></span>
         <div className="current-conditions-grid">
@@ -112,22 +159,54 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
         {/* <SectionTitle text="Solunar Data" /> */}
         <SunAndMoon locationId={locationId} date={date} />
 
-        <span id="maps"></span>
+        <span id="radar"></span>
+        <CollapsibleSection
+          title="Radar Map"
+          visible={sections.radar}
+          toggleVisible={() => dispatch({ type: "toggle", payload: "radar" })}
+        >
+          <DarkSkyRadar coords={selectedLocation.coords} />
+        </CollapsibleSection>
+
+        <span id="satellite"></span>
+        <CollapsibleSection
+          title="Satellite Imagery"
+          visible={sections.satellite}
+          toggleVisible={() =>
+            dispatch({ type: "toggle", payload: "satellite" })
+          }
+        >
+          <ModisMap locationId={locationId} />
+        </CollapsibleSection>
+
+        <span id="salinity-map"></span>
+        <CollapsibleSection
+          title="Salinity Map"
+          visible={sections.salinity}
+          toggleVisible={() =>
+            dispatch({ type: "toggle", payload: "salinity" })
+          }
+        >
+          <SalinityMap locationId={locationId} />
+        </CollapsibleSection>
+
+        {/* <span id="maps"></span>
         <SectionTitle text="Maps" />
-        <Maps locationId={locationId} coords={selectedLocation.coords} />
+        <Maps locationId={locationId} coords={selectedLocation.coords} /> */}
 
         <span id="hourly-forecast"></span>
-        <SectionTitle text="Hourly Forecast" />
-        <HourlyForecast locationId={locationId} />
+        <CollapsibleSection
+          title="Hourly Forecast"
+          visible={sections.hourlyForecast}
+          toggleVisible={() =>
+            dispatch({ type: "toggle", payload: "hourlyForecast" })
+          }
+        >
+          <HourlyForecast locationId={locationId} />
+        </CollapsibleSection>
       </div>
     </Shell>
   );
 };
 
 export default App;
-
-const SectionTitle: React.FC<{ text: string }> = ({ text }) => (
-  <h2 className="text-2xl md:text-4xl mb-4 md:mb-8 text-center md:text-left">
-    {text}
-  </h2>
-);
