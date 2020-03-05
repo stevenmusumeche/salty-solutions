@@ -11,7 +11,9 @@ import ErrorIcon from "../../assets/error.svg";
 import {
   TideStationDetailFragment,
   useTideQuery,
-  UsgsSiteDetailFragment
+  UsgsSiteDetailFragment,
+  SunDetailFieldsFragment,
+  MoonDetailFieldsFragment
 } from "../../generated/graphql";
 import useBreakpoints from "../../hooks/useBreakpoints";
 import EmptyBox from "../EmptyBox";
@@ -19,13 +21,15 @@ import MainTideChart from "./MainTideChart";
 import MultiDayTideCharts from "./MultiDayTideCharts";
 import { buildDatasets } from "./tide-helpers";
 import UsgsSiteSelect from "../UsgsSiteSelect";
+import MoonPhase from "../MoonPhase";
+import DatePicker from "react-date-picker";
 
 interface Props {
   tideStations: TideStationDetailFragment[];
   usgsSites: UsgsSiteDetailFragment[];
   locationId: string;
   date: Date;
-  setActiveDate: (date: Date) => void;
+  setActiveDate: (date: Date | Date[]) => void;
 }
 
 const ISO_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSxxx";
@@ -59,6 +63,8 @@ const Tides: React.FC<Props> = ({
     },
     pause: selectedTideStationId === undefined
   });
+
+  console.log(tideResult.data);
 
   const handleStationChange: ChangeEventHandler<HTMLSelectElement> = e =>
     setSelectedTideStationId(e.target.value);
@@ -95,6 +101,7 @@ const Tides: React.FC<Props> = ({
     !tideResult.data.tidePreditionStation.tides ||
     !tideResult.data.location ||
     !tideResult.data.location.sun ||
+    !tideResult.data.location.moon ||
     !tideResult.data.usgsSite ||
     !tideResult.data.usgsSite.waterHeight
   ) {
@@ -128,6 +135,12 @@ const Tides: React.FC<Props> = ({
       startOfDay(date).toISOString()
   )[0];
 
+  const moonData = tideResult.data.location.moon.filter(
+    x =>
+      startOfDay(new Date(x.date)).toISOString() ===
+      startOfDay(date).toISOString()
+  )[0];
+
   const curDayWaterHeight = tideResult.data.usgsSite.waterHeight.filter(x => {
     return isSameDay(new Date(x.timestamp), date);
   });
@@ -145,15 +158,27 @@ const Tides: React.FC<Props> = ({
 
   return (
     <>
-      <div className="md:flex">
-        <div>
+      <div className="md:flex md:items-center">
+        <div className="md:mb-4">
+          <label className="mr-2 uppercase leading-loose text-gray-700 text-sm block md:inline-block">
+            Date:
+          </label>
+          <DatePicker
+            aria-label="select date"
+            onChange={setActiveDate}
+            value={date}
+            clearIcon={null}
+            className="inline-block"
+          />
+        </div>
+        <div className="md:ml-4 md:mb-4">
           <TideStationSelect
             tideStations={tideStations}
             handleChange={handleStationChange}
             selectedId={selectedTideStationId}
           />
         </div>
-        <div className="md:ml-4 mb-4">
+        <div className="md:ml-4 md:mb-4">
           <UsgsSiteSelect
             sites={usgsSites}
             handleChange={handleUsgsSiteChange}
@@ -162,7 +187,13 @@ const Tides: React.FC<Props> = ({
           />
         </div>
       </div>
-      <HighLowTable hiLowData={hiLowData} />
+      {!isSmall && (
+        <HighLowTable
+          hiLowData={hiLowData}
+          sunData={sunData}
+          moonData={moonData}
+        />
+      )}
       <MainTideChart
         sunData={sunData}
         tideData={curDayTides}
@@ -183,34 +214,87 @@ const Tides: React.FC<Props> = ({
         <div className="w-4 h-4 md:w-6 md:h-6 md:ml-4 ml-2 mr-1 md:mr-2 rounded-sm bg-blue-600 flex-shrink-0"></div>
         <div className="uppercase text-gray-700 text-sm">Observed</div>
       </div>
+      {isSmall && (
+        <HighLowTable
+          hiLowData={hiLowData}
+          sunData={sunData}
+          moonData={moonData}
+        />
+      )}
     </>
   );
 };
 
 export default Tides;
 
-const HighLowTable: React.FC<{ hiLowData: any[] }> = ({ hiLowData }) => (
-  <div
-    className="mb-4 md:mb-2 text-gray-700 text-sm flex flex-wrap items-center justify-center"
-    style={{ fontVariantNumeric: "tabular-nums" }}
-  >
-    {hiLowData.map(({ x, y, type }, i) => (
+const HighLowTable: React.FC<{
+  hiLowData: any[];
+  sunData?: SunDetailFieldsFragment;
+  moonData: MoonDetailFieldsFragment;
+}> = ({ hiLowData, sunData, moonData }) => {
+  const formatDate = (x: string) => (
+    <div className="lowercase">{format(new Date(x), "h:mma")}</div>
+  );
+
+  return (
+    <div className="mt-4 md:mt-0 text-gray-700 text-xs flex flex-wrap items-center justify-center">
+      {hiLowData.map(({ x, y, type }, i) => (
+        <Pill key={i} label={`${type} Tide`}>
+          {formatDate(x)}
+        </Pill>
+      ))}
+      {moonData && moonData.phase && (
+        <Pill label="Moon" color="blue-800">
+          <div className="flex items-center">
+            {moonData.phase} <MoonPhase phase={moonData.phase} />
+          </div>
+        </Pill>
+      )}
+      {sunData && sunData.dawn && (
+        <Pill label="Dawn" color="orange-700">
+          {formatDate(sunData.dawn)}
+        </Pill>
+      )}
+      {sunData && sunData.sunrise && (
+        <Pill label="Sunrise" color="orange-700">
+          {formatDate(sunData.sunrise)}
+        </Pill>
+      )}
+      {sunData && sunData.sunset && (
+        <Pill label="Sunset" color="orange-700">
+          {formatDate(sunData.sunset)}
+        </Pill>
+      )}
+      {sunData && sunData.dusk && (
+        <Pill label="Dusk" color="orange-700">
+          {formatDate(sunData.dusk)}
+        </Pill>
+      )}
+    </div>
+  );
+};
+
+const Pill: React.FC<{ label: string; color?: string }> = ({
+  label,
+  children,
+  color = "blue-600"
+}) => {
+  return (
+    <div
+      className={`flex items-stretch mr-2 border border-${color} rounded mb-2`}
+      style={{ flexBasis: "1" }}
+    >
       <div
-        key={i}
-        className="flex items-stretch mr-2 border border-yellow-700 rounded mb-2 md:mb-0"
-        style={{ flexBasis: "1" }}
+        className={`py-1 px-2 bg-${color} text-white flex items-center justify-center uppercase`}
       >
-        <div
-          className="w-10 bg-yellow-700 text-white flex items-center justify-center uppercase"
-          style={{ fontSize: ".7rem" }}
-        >
-          {type}
-        </div>
-        <div className="px-2">{format(new Date(x), "h:mma").toLowerCase()}</div>
+        {label}
       </div>
-    ))}
-  </div>
-);
+      <div className="py-1 px-2 text-center leading-none self-center">
+        {children}
+      </div>
+    </div>
+  );
+};
 
 const TideStationSelect: React.FC<{
   tideStations: TideStationDetailFragment[];
@@ -218,9 +302,9 @@ const TideStationSelect: React.FC<{
   selectedId: string;
 }> = ({ tideStations, handleChange, selectedId }) => (
   <div className="py-2">
-    <div className="mr-2 inline-block uppercase leading-loose text-gray-700 text-sm">
+    <label className="mr-2 inline-block uppercase leading-loose text-gray-700 text-sm">
       Tide Station:
-    </div>
+    </label>
     <div className="inline-block rounded border-gray-300 border">
       <select
         onChange={handleChange}

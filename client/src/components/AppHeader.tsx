@@ -1,5 +1,4 @@
 import React, { ChangeEventHandler } from "react";
-import DatePicker from "react-date-picker";
 import { UseQueryState } from "urql";
 import { LocationsQuery, useLocationsQuery } from "../generated/graphql";
 
@@ -19,17 +18,11 @@ const AppHeader: React.FC<Props> = ({
   const [locations] = useLocationsQuery();
 
   return (
-    <div className="md:flex ml-2 md:ml-0">
+    <div className="ml-3 md:ml-0">
       <LocationSelect
         locations={locations}
         onChange={e => setLocationId(e.target.value)}
         value={activeLocationId}
-      />
-      <DatePicker
-        aria-label="select date"
-        onChange={setActiveDate}
-        value={activeDate}
-        clearIcon={null}
       />
     </div>
   );
@@ -48,7 +41,7 @@ const LocationSelect: React.FC<LocationSelectProps> = ({
   value,
   onChange
 }) => (
-  <div className="md:mr-6 mb-2 md:mb-0">
+  <div className="">
     <select
       aria-label="select location"
       onChange={onChange}

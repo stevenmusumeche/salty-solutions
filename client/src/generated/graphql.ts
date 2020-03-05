@@ -452,7 +452,7 @@ export type TideQueryVariables = {
 };
 
 
-export type TideQuery = ({ __typename?: 'Query' } & { tidePreditionStation: Maybe<({ __typename?: 'TidePreditionStation' } & { tides: Maybe<Array<({ __typename?: 'TideDetail' } & TideDetailFieldsFragment)>> })>, usgsSite: Maybe<({ __typename?: 'UsgsSite' } & UsgsSiteFieldsFragment)>, location: Maybe<({ __typename?: 'Location' } & { sun: Maybe<Array<({ __typename?: 'SunDetail' } & SunDetailFieldsFragment)>> })> });
+export type TideQuery = ({ __typename?: 'Query' } & { tidePreditionStation: Maybe<({ __typename?: 'TidePreditionStation' } & { tides: Maybe<Array<({ __typename?: 'TideDetail' } & TideDetailFieldsFragment)>> })>, usgsSite: Maybe<({ __typename?: 'UsgsSite' } & UsgsSiteFieldsFragment)>, location: Maybe<({ __typename?: 'Location' } & { sun: Maybe<Array<({ __typename?: 'SunDetail' } & SunDetailFieldsFragment)>>, moon: Maybe<Array<({ __typename?: 'MoonDetail' } & MoonDetailFieldsFragment)>> })> });
 
 export type TideDetailFieldsFragment = ({ __typename?: 'TideDetail' } & Pick<TideDetail, 'time' | 'height' | 'type'>);
 
@@ -461,6 +461,8 @@ export type UsgsSiteFieldsFragment = ({ __typename?: 'UsgsSite' } & Pick<UsgsSit
 export type WaterHeightFieldsFragment = ({ __typename?: 'WaterHeight' } & Pick<WaterHeight, 'timestamp' | 'height'>);
 
 export type SunDetailFieldsFragment = ({ __typename?: 'SunDetail' } & Pick<SunDetail, 'sunrise' | 'sunset' | 'dawn' | 'dusk' | 'nauticalDawn' | 'nauticalDusk'>);
+
+export type MoonDetailFieldsFragment = ({ __typename?: 'MoonDetail' } & Pick<MoonDetail, 'date' | 'phase' | 'illumination'>);
 
 export const HourlyForecastDetailFragmentDoc = gql`
     fragment HourlyForecastDetail on WeatherForecast {
@@ -573,6 +575,13 @@ export const SunDetailFieldsFragmentDoc = gql`
   dusk
   nauticalDawn
   nauticalDusk
+}
+    `;
+export const MoonDetailFieldsFragmentDoc = gql`
+    fragment MoonDetailFields on MoonDetail {
+  date
+  phase
+  illumination
 }
     `;
 export const CombinedForecastDocument = gql`
@@ -796,11 +805,15 @@ export const TideDocument = gql`
     sun(start: $startDate, end: $endDate) {
       ...SunDetailFields
     }
+    moon(start: $startDate, end: $endDate) {
+      ...MoonDetailFields
+    }
   }
 }
     ${TideDetailFieldsFragmentDoc}
 ${UsgsSiteFieldsFragmentDoc}
-${SunDetailFieldsFragmentDoc}`;
+${SunDetailFieldsFragmentDoc}
+${MoonDetailFieldsFragmentDoc}`;
 
 export function useTideQuery(options: Omit<Urql.UseQueryArgs<TideQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<TideQuery>({ query: TideDocument, ...options });

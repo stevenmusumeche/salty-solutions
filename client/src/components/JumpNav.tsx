@@ -35,7 +35,7 @@ const JumpNav: React.FC<Props> = ({ dispatch }) => {
   );
 
   return (
-    <div className="sticky z-50 bg-gray-800" style={{ top: isSmall ? 95 : 80 }}>
+    <div className="sticky z-50 bg-gray-800" style={{ top: isSmall ? 56 : 80 }}>
       <div className="container mx-auto flex justify-between">
         <div className="w-6 bg-gray-800 flex items-center justify-center md:hidden">
           <img
@@ -56,7 +56,7 @@ const JumpNav: React.FC<Props> = ({ dispatch }) => {
             targetId="current-conditions"
             onClick={() => dispatch({ type: "collapse-all" })}
           >
-            Conditions
+            Right Now
           </NavButton>
           <NavButton
             targetId="tides"
@@ -69,12 +69,6 @@ const JumpNav: React.FC<Props> = ({ dispatch }) => {
             onClick={() => dispatch({ type: "collapse-all" })}
           >
             Forecast
-          </NavButton>
-          <NavButton
-            targetId="solunar"
-            onClick={() => dispatch({ type: "collapse-all" })}
-          >
-            Solunar
           </NavButton>
           <NavButton
             targetId="radar"
@@ -128,6 +122,7 @@ const NavButton: React.FC<{
   targetId: string;
   onClick?: () => void;
 }> = ({ children, onClick, targetId }) => {
+  const { isSmall } = useBreakpoints();
   return (
     <button
       onClick={e => {
@@ -137,7 +132,7 @@ const NavButton: React.FC<{
         setTimeout(() => {
           const el = document.getElementById(targetId);
           if (!el) return;
-          const yOffset = -150;
+          const yOffset = isSmall ? -113 : -150;
           const y =
             el.getBoundingClientRect().top + window.pageYOffset + yOffset;
           window.scrollTo({ top: y, behavior: "smooth" });

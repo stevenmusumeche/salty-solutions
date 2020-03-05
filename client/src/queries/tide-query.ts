@@ -20,6 +20,9 @@ const TIDE_QUERY = gql`
       sun(start: $startDate, end: $endDate) {
         ...SunDetailFields
       }
+      moon(start: $startDate, end: $endDate) {
+        ...MoonDetailFields
+      }
     }
   }
 
@@ -49,5 +52,11 @@ const TIDE_QUERY = gql`
     dusk
     nauticalDawn
     nauticalDusk
+  }
+
+  fragment MoonDetailFields on MoonDetail {
+    date
+    phase
+    illumination
   }
 `;

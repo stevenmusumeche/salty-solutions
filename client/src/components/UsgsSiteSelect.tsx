@@ -9,9 +9,9 @@ const UsgsSiteSelect: React.FC<{
 }> = ({ sites, handleChange, selectedId, label }) => (
   <div className="py-2 text-sm">
     {label && (
-      <div className="mr-2 inline-block uppercase leading-loose text-gray-700 text-sm">
+      <label className="mr-2 inline-block uppercase leading-loose text-gray-700 text-sm">
         {label}
-      </div>
+      </label>
     )}
     <div className="inline-block rounded border-gray-300 border">
       <select
