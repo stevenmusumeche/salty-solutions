@@ -64,8 +64,6 @@ const Tides: React.FC<Props> = ({
     pause: selectedTideStationId === undefined
   });
 
-  console.log(tideResult.data);
-
   const handleStationChange: ChangeEventHandler<HTMLSelectElement> = e =>
     setSelectedTideStationId(e.target.value);
 
@@ -237,19 +235,13 @@ const HighLowTable: React.FC<{
   );
 
   return (
-    <div className="mt-4 md:mt-0 text-gray-700 text-xs flex flex-wrap items-center justify-center">
+    <div className="mt-4 md:mt-0 text-gray-700 grid grid-cols-2 md:flex md:flex-wrap md:items-center md:justify-center">
       {hiLowData.map(({ x, y, type }, i) => (
         <Pill key={i} label={`${type} Tide`}>
           {formatDate(x)}
         </Pill>
       ))}
-      {moonData && moonData.phase && (
-        <Pill label="Moon" color="blue-800">
-          <div className="flex items-center">
-            {moonData.phase} <MoonPhase phase={moonData.phase} />
-          </div>
-        </Pill>
-      )}
+
       {sunData && sunData.dawn && (
         <Pill label="Dawn" color="orange-700">
           {formatDate(sunData.dawn)}
@@ -270,26 +262,39 @@ const HighLowTable: React.FC<{
           {formatDate(sunData.dusk)}
         </Pill>
       )}
+      {moonData && moonData.phase && (
+        <Pill
+          label="Moon Phase"
+          color="blue-800"
+          className="col-span-2 moon-pill"
+        >
+          <div className="flex items-center justify-center">
+            {moonData.phase} <MoonPhase phase={moonData.phase} />
+          </div>
+        </Pill>
+      )}
     </div>
   );
 };
 
-const Pill: React.FC<{ label: string; color?: string }> = ({
+const Pill: React.FC<{ label: string; color?: string; className?: string }> = ({
   label,
   children,
-  color = "blue-600"
+  color = "blue-600",
+  className = ""
 }) => {
   return (
     <div
-      className={`flex items-stretch mr-2 border border-${color} rounded mb-2`}
+      className={`flex items-stretch mr-2 border border-${color} rounded mb-2 ${className}`}
       style={{ flexBasis: "1" }}
     >
       <div
-        className={`py-1 px-2 bg-${color} text-white flex items-center justify-center uppercase`}
+        className={`py-1 px-2 bg-${color} text-white flex items-center justify-center uppercase flex-shrink-0 w-1/2 md:w-auto`}
+        style={{ fontSize: ".6rem" }}
       >
         {label}
       </div>
-      <div className="py-1 px-2 text-center leading-none self-center">
+      <div className="py-1 px-2 text-center leading-none self-center w-1/2 md:w-auto text-xs">
         {children}
       </div>
     </div>

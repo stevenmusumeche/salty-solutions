@@ -5,16 +5,9 @@ import { LocationsQuery, useLocationsQuery } from "../generated/graphql";
 interface Props {
   setLocationId: (id: string) => void;
   activeLocationId: string;
-  setActiveDate: (date: Date | Date[]) => void;
-  activeDate: Date;
 }
 
-const AppHeader: React.FC<Props> = ({
-  setLocationId,
-  activeLocationId,
-  activeDate,
-  setActiveDate
-}) => {
+const AppHeader: React.FC<Props> = ({ setLocationId, activeLocationId }) => {
   const [locations] = useLocationsQuery();
 
   return (

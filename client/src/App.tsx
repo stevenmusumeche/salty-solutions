@@ -110,8 +110,6 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
             navigate(`/${id}`);
           }}
           activeLocationId={locationId}
-          setActiveDate={handleDateChange}
-          activeDate={date}
         />
       }
     >
