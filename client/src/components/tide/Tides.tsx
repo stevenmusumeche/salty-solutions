@@ -71,28 +71,7 @@ const Tides: React.FC<Props> = ({
     setSelectedUsgsSiteId(e.target.value);
 
   if (tideResult.fetching) {
-    return (
-      <div>
-        <div className="my-4 mb-4 md:flex md:items-center">
-          <EmptyBox
-            h={isSmall ? "3.2rem" : "2.2rem"}
-            w={isSmall ? "100%" : "20rem"}
-            className="mr-8 mb-4 md:mb-0"
-          />
-          <EmptyBox
-            h={isSmall ? "3.2rem" : "2.2rem"}
-            w={isSmall ? "100%" : "24rem"}
-            className="m-0"
-          />
-        </div>
-        <div className="my-4 mb-4 flex justify-center">
-          <EmptyBox h="2.5rem" w="7rem" className="mr-2" />
-          <EmptyBox h="2.5rem" w="7rem" className="" />
-        </div>
-        <EmptyBox h={isSmall ? 190 : 500} w="100%" className="mb-4 md:mb:0" />
-        <EmptyBox h={isSmall ? 100 : 200} w="100%" className="" />
-      </div>
-    );
+    return <Fetching />;
   } else if (
     !tideResult.data ||
     !tideResult.data.tidePreditionStation ||
@@ -132,6 +111,8 @@ const Tides: React.FC<Props> = ({
       startOfDay(new Date(x.sunrise)).toISOString() ===
       startOfDay(date).toISOString()
   )[0];
+
+  if (!sunData) return <Fetching />;
 
   const moonData = tideResult.data.location.moon.filter(
     x =>
@@ -325,3 +306,29 @@ const TideStationSelect: React.FC<{
     </div>
   </div>
 );
+
+const Fetching = () => {
+  const { isSmall } = useBreakpoints();
+  return (
+    <div>
+      <div className="my-4 mb-4 md:flex md:items-center">
+        <EmptyBox
+          h={isSmall ? "3.2rem" : "2.2rem"}
+          w={isSmall ? "100%" : "20rem"}
+          className="mr-8 mb-4 md:mb-0"
+        />
+        <EmptyBox
+          h={isSmall ? "3.2rem" : "2.2rem"}
+          w={isSmall ? "100%" : "24rem"}
+          className="m-0"
+        />
+      </div>
+      <div className="my-4 mb-4 flex justify-center">
+        <EmptyBox h="2.5rem" w="7rem" className="mr-2" />
+        <EmptyBox h="2.5rem" w="7rem" className="" />
+      </div>
+      <EmptyBox h={isSmall ? 190 : 500} w="100%" className="mb-4 md:mb:0" />
+      <EmptyBox h={isSmall ? 100 : 200} w="100%" className="" />
+    </div>
+  );
+};
