@@ -80,6 +80,8 @@ const MultiDayTideCharts: React.FC<Props> = ({
         startOfDay(curDate).toISOString()
     )[0];
 
+    if (!curSunData) continue;
+
     const curDayWaterHeight = rawWaterHeightData.filter(x => {
       return isSameDay(new Date(x.timestamp), curDate);
     });
