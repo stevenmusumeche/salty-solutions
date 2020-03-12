@@ -27,7 +27,7 @@ functions:
     events:
       - schedule:
           name: "ForecastPreloader"
-          enabled: true
+          enabled: false
           rate: rate(5 minutes)
 
 resources:
