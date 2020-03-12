@@ -8,5 +8,5 @@ export const forecast: ScheduledHandler = async (event, ctx, cb) => {
     await getForecast(location);
   }
 
-  cb(null);
+  return;
 };
