@@ -38,7 +38,7 @@ functions:
       - schedule:
           name: "ForecastPreloader"
           enabled: true
-          rate: rate(1 minute)
+          rate: rate(3 hours)
 
 resources:
   Resources:

@@ -28,9 +28,6 @@ export const getForecast = async (
       const url = `https://marine.weather.gov/MapClick.php?zoneid=${location.marineZoneId}&zflg=1`;
       const result = await axios.get(url);
       data = await setCacheVal(cacheKey, result.data);
-      console.log("marine forecast fetched");
-    } else {
-      console.log("marine forecast used cache!");
     }
     const $ = cheerio.load(data);
     return $(".row-forecast", "#detailed-forecast-body")

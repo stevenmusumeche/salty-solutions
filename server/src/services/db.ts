@@ -23,9 +23,9 @@ export const getCacheVal = async <T extends MapAttributeValue>(
         ScanIndexForward: false
       })
       .promise();
-    if (result.Count === 0) return;
 
-    return result.Items![0] as T;
+    if (result.Count === 0) return;
+    return result.Items![0].data as T;
   } catch (e) {
     console.log("Error fetching cached value", e);
 
