@@ -44,6 +44,6 @@ resources:
           - AttributeName: sk
             KeyType: RANGE
 
-  custom:
+custom:
   serverless-offline:
     port: 4000
