@@ -9,6 +9,9 @@ provider:
   name: aws
   runtime: nodejs12.x
   stage: ${opt:stage, 'dev'}
+  environment:
+    SERVERLESS_STAGE: ${self:provider.stage}
+    ROLLBAR_KEY: ${env:ROLLBAR_KEY}
 
 functions:
   graphql:
@@ -18,13 +21,14 @@ functions:
           cors: true
           method: any
           path: api
-    environment:
-      SERVERLESS_STAGE: ${self:provider.stage}
-      ROLLBAR_KEY: ${env:ROLLBAR_KEY}
-  # preload-forecast:
-  #   handler: src/preloaders.forecast
-  #   events:
-  #     - schedule: rate(1 hours)
+
+  preload-forecast:
+    handler: src/preloaders.forecast
+    events:
+      - schedule:
+          name: "Forecast Preloader"
+          enabled: true
+          rate: rate(5 minutes)
 
 resources:
   Resources:

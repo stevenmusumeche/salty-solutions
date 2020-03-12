@@ -1,7 +1,9 @@
 import axios from "axios";
 import axiosRetry from "axios-retry";
 import { parseWindDirection } from "./utils";
+import { getCacheVal, setCacheVal } from "./db";
 import cheerio from "cheerio";
+import { LocationEntity, makeCacheKey } from "./location";
 
 axiosRetry(axios, { retries: 3, retryDelay: retryCount => retryCount * 500 });
 
@@ -14,11 +16,23 @@ export interface MarineForecast {
     windSpeed?: { from: number; to: number };
   };
 }
-export const getForecast = async (location: any): Promise<MarineForecast[]> => {
+
+export const getForecast = async (
+  location: LocationEntity
+): Promise<MarineForecast[]> => {
   try {
-    const url = `https://marine.weather.gov/MapClick.php?zoneid=${location.marineZoneId}&zflg=1`;
-    const result = await axios.get(url);
-    const $ = cheerio.load(result.data);
+    const cacheKey = makeCacheKey(location, "marine-forecast");
+    let data: any;
+    data = await getCacheVal(cacheKey, 3 * 60); // fresh for 3 hours
+    if (!data) {
+      const url = `https://marine.weather.gov/MapClick.php?zoneid=${location.marineZoneId}&zflg=1`;
+      const result = await axios.get(url);
+      data = await setCacheVal(cacheKey, result.data);
+      console.log("marine forecast fetched");
+    } else {
+      console.log("marine forecast used cache!");
+    }
+    const $ = cheerio.load(data);
     return $(".row-forecast", "#detailed-forecast-body")
       .map((i, el) => {
         return {
