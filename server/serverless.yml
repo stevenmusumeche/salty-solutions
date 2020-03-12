@@ -28,7 +28,7 @@ functions:
 
 resources:
   Resources:
-    mainTable:
+    main_ddb_table:
       Type: AWS::DynamoDB::Table
       Properties:
         BillingMode: PAY_PER_REQUEST
