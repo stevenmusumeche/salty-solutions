@@ -57,6 +57,9 @@ resources:
             KeyType: HASH
           - AttributeName: sk
             KeyType: RANGE
+        TimeToLiveSpecification:
+          AttributeName: ttl
+          Enabled: true
 
 custom:
   serverless-offline:

@@ -1,7 +1,7 @@
 import { DynamoDB } from "aws-sdk";
 import { MapAttributeValue } from "aws-sdk/clients/dynamodb";
 const client = new DynamoDB.DocumentClient();
-import { subMinutes } from "date-fns";
+import { subMinutes, addDays } from "date-fns";
 
 const tableName = `salty-solutions-${process.env.SERVERLESS_STAGE}`;
 
@@ -43,6 +43,7 @@ export const setCacheVal = async <T extends MapAttributeValue>(
       Item: {
         pk: key,
         sk: Date.now(),
+        ttl: addDays(new Date(), 30).getTime(),
         data
       }
     })
