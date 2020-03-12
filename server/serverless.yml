@@ -26,7 +26,7 @@ functions:
     handler: src/preloaders.forecast
     events:
       - schedule:
-          name: "Forecast Preloader"
+          name: "ForecastPreloader"
           enabled: true
           rate: rate(5 minutes)
 
