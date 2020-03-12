@@ -18,6 +18,7 @@ provider:
         - dynamodb:PutItem
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
+        - dynamodb:DescribeTimeToLive
       Resource: "arn:aws:dynamodb:us-east-1:*:*"
   environment:
     SERVERLESS_STAGE: ${self:provider.stage}
