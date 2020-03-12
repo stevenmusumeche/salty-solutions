@@ -3,8 +3,6 @@ export interface Coords {
   lon: number;
 }
 
-// todo: finish with the loading indicators on mobile
-
 export interface LocationEntity {
   id: string;
   name: string;
@@ -294,3 +292,7 @@ export const getDataSources = (location: LocationEntity) => ({
   weatherStationId: location.weatherGov.stationId,
   weatherRadarSiteId: location.weatherGov.radarSiteId
 });
+
+export const makeCacheKey = (location: LocationEntity, key: string) => {
+  return `${location.id}-${key}`;
+};
