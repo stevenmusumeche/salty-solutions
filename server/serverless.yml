@@ -37,7 +37,8 @@ functions:
     handler: src/preloaders.forecast
     events:
       - schedule:
-          name: "ForecastPreloader"
+          name: ForecastPreloader-${self:provider.stage}
+          # todo: disable in dev
           enabled: true
           rate: rate(3 hours)
 
