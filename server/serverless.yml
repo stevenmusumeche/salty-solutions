@@ -38,8 +38,7 @@ functions:
     events:
       - schedule:
           name: ForecastPreloader-${self:provider.stage}
-          # todo: disable in dev
-          enabled: true
+          enabled: ${self:custom.schedule_enabled.${opt:stage}, false}
           rate: rate(3 hours)
 
 resources:
@@ -66,3 +65,6 @@ resources:
 custom:
   serverless-offline:
     port: 4000
+  schedule_enabled:
+    prod: true
+    dev: false
