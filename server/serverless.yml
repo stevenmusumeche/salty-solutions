@@ -38,7 +38,7 @@ functions:
     events:
       - schedule:
           name: ForecastPreloader-${self:provider.stage}
-          enabled: false
+          enabled: ${self:custom.schedule_enabled.${self:provider.stage}, false}
           rate: rate(3 hours)
 
 resources:
