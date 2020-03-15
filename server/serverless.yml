@@ -9,6 +9,7 @@ provider:
   name: aws
   runtime: nodejs12.x
   stage: ${opt:stage, 'dev'}
+  timeout: 20
   iamRoleStatements:
     - Effect: Allow
       Action:
