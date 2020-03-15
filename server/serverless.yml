@@ -34,15 +34,18 @@ functions:
           method: any
           path: api
 
-  preload-forecast:
-    handler: src/preloaders.forecast
+  preload-forecast-producer:
+    handler: src/preloaders/producers.forecast
     events:
       - schedule:
           name: ForecastPreloader-${self:provider.stage}
           enabled: ${self:custom.schedule_enabled.${self:provider.stage}, false}
           rate: rate(3 hours)
-  foo:
-    handler: src/preloaders.foo
+    environment:
+      QUEUE_URL:
+        Ref: ForecastPreloaderQueue
+  preload-forecast-consumer:
+    handler: src/preloaders/consumers.forecast
     events:
       - sqs:
           arn:
