@@ -33,25 +33,24 @@ functions:
           cors: true
           method: any
           path: api
-
-  preload-forecast-producer:
-    handler: src/preloaders/producers.forecast
-    events:
-      - schedule:
-          name: ForecastPreloader-${self:provider.stage}
-          enabled: ${self:custom.schedule_enabled.${self:provider.stage}, false}
-          rate: rate(3 hours)
-    environment:
-      QUEUE_URL:
-        Ref: ForecastPreloaderQueue
-  preload-forecast-consumer:
-    handler: src/preloaders/consumers.forecast
-    events:
-      - sqs:
-          arn:
-            Fn::GetAtt:
-              - ForecastPreloaderQueue
-              - Arn
+  # preload-forecast-producer:
+  #   handler: src/preloaders/producers.forecast
+  #   events:
+  #     - schedule:
+  #         name: ForecastPreloader-${self:provider.stage}
+  #         enabled: ${self:custom.schedule_enabled.${self:provider.stage}, false}
+  #         rate: rate(3 hours)
+  #   environment:
+  #     QUEUE_URL:
+  #       Ref: ForecastPreloaderQueue
+  # preload-forecast-consumer:
+  #   handler: src/preloaders/consumers.forecast
+  #   events:
+  #     - sqs:
+  #         arn:
+  #           Fn::GetAtt:
+  #             - ForecastPreloaderQueue
+  #             - Arn
 
 resources:
   Resources:
