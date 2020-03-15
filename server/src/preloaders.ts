@@ -1,4 +1,4 @@
-import { ScheduledHandler } from "aws-lambda";
+import { ScheduledHandler, SQSHandler } from "aws-lambda";
 import { getAll } from "./services/location";
 import { getForecast as getMarineForecast } from "./services/marine";
 import { getForecast } from "./services/weather";
@@ -10,4 +10,11 @@ export const forecast: ScheduledHandler = async (event, ctx, cb) => {
   }
 
   return;
+};
+
+export const foo: SQSHandler = async (event, ctx, cb) => {
+  console.log(
+    "received SQS event",
+    event.Records.map(x => x.body)
+  );
 };

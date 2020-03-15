@@ -41,6 +41,14 @@ functions:
           name: ForecastPreloader-${self:provider.stage}
           enabled: ${self:custom.schedule_enabled.${self:provider.stage}, false}
           rate: rate(3 hours)
+  foo:
+    handler: src/preloaders.foo
+    events:
+      - sqs:
+          arn:
+            Fn::GetAtt:
+              - ForecastPreloaderQueue
+              - Arn
 
 resources:
   Resources:
@@ -62,6 +70,10 @@ resources:
         TimeToLiveSpecification:
           AttributeName: ttl
           Enabled: true
+    ForecastPreloaderQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: ForecastPreloader
 
 custom:
   serverless-offline:
