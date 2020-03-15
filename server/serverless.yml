@@ -73,7 +73,7 @@ resources:
     ForecastPreloaderQueue:
       Type: AWS::SQS::Queue
       Properties:
-        QueueName: ForecastPreloader
+        QueueName: forecast-preloader-${self:provider.stage}
 
 custom:
   serverless-offline:
