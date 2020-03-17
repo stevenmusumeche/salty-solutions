@@ -26,6 +26,7 @@ provider:
         - sqs:SendMessage
         - sqs:SendMessageBatch
         - sqs:DeleteMessage
+        - sqs:SetQueueAttributes
         - sqs:GetQueueAttributes
         - sqs:ReceiveMessage
       Resource: "arn:aws:sqs:us-east-1:*:*"
