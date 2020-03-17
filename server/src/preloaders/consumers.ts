@@ -1,15 +1,13 @@
 import { SQSHandler } from "aws-lambda";
+import { getForecast as getMarineForecast } from "../services/marine";
+import { getForecast } from "../services/weather";
+import { getById } from "../services/location";
 
 export const forecast: SQSHandler = async (event, ctx, cb) => {
-  console.log(
-    "received sqs event with this many records",
-    event.Records.length
-  );
-
-  event.Records.forEach(record => {
+  event.Records.forEach(async record => {
     const payload = JSON.parse(record.body);
-    console.log("received SQS forecast event", payload);
+    const location = getById(payload.locationId);
+    if (!location) throw new Error(`Unknown location ${payload.locationId}`);
+    await Promise.all([getMarineForecast(location), getForecast(location)]);
   });
-
-  // cb("test error");
 };

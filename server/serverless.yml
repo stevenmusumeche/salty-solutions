@@ -49,7 +49,8 @@ functions:
     events:
       - schedule:
           name: ForecastPreloader-${self:provider.stage}
-          enabled: ${self:custom.schedule_enabled.${self:provider.stage}, false}
+          # enabled: ${self:custom.schedule_enabled.${self:provider.stage}, false}
+          enabled: true
           rate: rate(3 hours)
     environment:
       QUEUE_URL:
@@ -59,7 +60,7 @@ functions:
     timeout: 120
     events:
       - sqs:
-          batchSize: 10
+          batchSize: 1
           arn:
             Fn::GetAtt:
               - ForecastPreloaderQueue
