@@ -20,7 +20,8 @@ provider:
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
         - dynamodb:DescribeTimeToLive
-      Resource: ${self.custom.database-arn}
+      Resource:
+        Fn::GetAtt: [MainTable, Arn]
     - Effect: Allow
       Action:
         - sqs:SendMessage
@@ -114,5 +115,3 @@ custom:
   schedule_enabled:
     prod: true
     dev: false
-  database-arn:
-    Fn::GetAtt: [MainTable, Arn]
