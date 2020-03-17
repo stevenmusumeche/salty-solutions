@@ -6,6 +6,7 @@ import { getById } from "../services/location";
 export const forecast: SQSHandler = async (event, ctx, cb) => {
   event.Records.forEach(async record => {
     const payload = JSON.parse(record.body);
+    console.log("Processing forecast for ", payload.locationId);
     const location = getById(payload.locationId);
     if (!location) throw new Error(`Unknown location ${payload.locationId}`);
     await Promise.all([getMarineForecast(location), getForecast(location)]);
