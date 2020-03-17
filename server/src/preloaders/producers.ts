@@ -1,16 +1,14 @@
 import { ScheduledHandler } from "aws-lambda";
-import { SQS } from "aws-sdk";
 import { getAll } from "../services/location";
+import { sendMessage } from "../services/queue";
 
-const sqs = new SQS();
+export const PRODUCER_NAMES = {
+  forecast: "forecast-preloader"
+};
 
 export const forecast: ScheduledHandler = async () => {
   for (const location of getAll()) {
-    const params: SQS.Types.SendMessageRequest = {
-      QueueUrl: process.env.QUEUE_URL!,
-      MessageBody: JSON.stringify({ locationId: location.id })
-    };
-
-    await sqs.sendMessage(params).promise();
+    const body = { locationId: location.id };
+    await sendMessage(process.env.QUEUE_URL!, PRODUCER_NAMES.forecast, body);
   }
 };
