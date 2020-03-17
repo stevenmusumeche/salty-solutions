@@ -55,6 +55,7 @@ functions:
         Ref: ForecastPreloaderQueue
   preload-forecast-consumer:
     handler: src/preloaders/consumers.forecast
+    timeout: 120
     events:
       - sqs:
           batchSize: 10
@@ -88,6 +89,7 @@ resources:
       Type: AWS::SQS::Queue
       Properties:
         QueueName: forecast-preloader-${self:provider.stage}
+        VisibilityTimeout: 120
 
 custom:
   serverless-offline:
