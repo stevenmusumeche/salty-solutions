@@ -50,8 +50,10 @@ functions:
     events:
       - schedule:
           name: ForecastPreloader-${self:provider.stage}
-          enabled: ${self:custom.schedule_enabled.${self:provider.stage}, false}
-          rate: rate(3 hours)
+          # enabled: ${self:custom.schedule_enabled.${self:provider.stage}, false}
+          # rate: rate(3 hours)
+          enabled: true
+          rate: rate(3 minutes)
     environment:
       QUEUE_URL:
         Ref: ForecastPreloaderQueue
