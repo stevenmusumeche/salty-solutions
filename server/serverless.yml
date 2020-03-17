@@ -45,27 +45,26 @@ functions:
           cors: true
           method: any
           path: api
-
-  preload-forecast-producer:
-    handler: src/preloaders/producers.forecast
-    events:
-      - schedule:
-          name: ForecastPreloader-${self:provider.stage}
-          enabled: ${self:custom.schedule_enabled.${self:provider.stage}, false}
-          rate: rate(3 hours)
-    environment:
-      QUEUE_URL:
-        Ref: ForecastPreloaderQueue
-  preload-forecast-consumer:
-    handler: src/preloaders/consumers.forecast
-    timeout: 120
-    events:
-      - sqs:
-          batchSize: 1
-          arn:
-            Fn::GetAtt:
-              - ForecastPreloaderQueue
-              - Arn
+  # preload-forecast-producer:
+  #   handler: src/preloaders/producers.forecast
+  #   events:
+  #     - schedule:
+  #         name: ForecastPreloader-${self:provider.stage}
+  #         enabled: ${self:custom.schedule_enabled.${self:provider.stage}, false}
+  #         rate: rate(3 hours)
+  #   environment:
+  #     QUEUE_URL:
+  #       Ref: ForecastPreloaderQueue
+  # preload-forecast-consumer:
+  #   handler: src/preloaders/consumers.forecast
+  #   timeout: 120
+  #   events:
+  #     - sqs:
+  #         batchSize: 1
+  #         arn:
+  #           Fn::GetAtt:
+  #             - ForecastPreloaderQueue
+  #             - Arn
 
 resources:
   - ${file(./dynamodb.yml)}
