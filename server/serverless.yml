@@ -21,6 +21,11 @@ provider:
         - dynamodb:DeleteItem
         - dynamodb:DescribeTimeToLive
       Resource: "arn:aws:dynamodb:us-east-1:*:*"
+    - Effect: Allow
+      Action:
+        - sqs:SendMessage
+        - sqs:SendMessageBatch
+      Resource: "arn:aws:sqs:us-east-1:*:*"
   environment:
     SERVERLESS_STAGE: ${self:provider.stage}
     ROLLBAR_KEY: ${env:ROLLBAR_KEY}
@@ -39,8 +44,10 @@ functions:
     events:
       - schedule:
           name: ForecastPreloader-${self:provider.stage}
-          enabled: ${self:custom.schedule_enabled.${self:provider.stage}, false}
-          rate: rate(3 hours)
+          # enabled: ${self:custom.schedule_enabled.${self:provider.stage}, false}
+          # rate: rate(3 hours)
+          enabled: true
+          rate: rate(1 minutes)
     environment:
       QUEUE_URL:
         Ref: ForecastPreloaderQueue
