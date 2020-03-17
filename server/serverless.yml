@@ -9,7 +9,7 @@ provider:
   name: aws
   runtime: nodejs12.x
   stage: ${opt:stage, 'dev'}
-  timeout: 20
+  timeout: 500
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -44,14 +44,14 @@ functions:
     environment:
       QUEUE_URL:
         Ref: ForecastPreloaderQueue
-  preload-forecast-consumer:
-    handler: src/preloaders/consumers.forecast
-    events:
-      - sqs:
-          arn:
-            Fn::GetAtt:
-              - ForecastPreloaderQueue
-              - Arn
+  # preload-forecast-consumer:
+  #   handler: src/preloaders/consumers.forecast
+  #   events:
+  #     - sqs:
+  #         arn:
+  #           Fn::GetAtt:
+  #             - ForecastPreloaderQueue
+  #             - Arn
 
 resources:
   Resources:
@@ -73,6 +73,7 @@ resources:
         TimeToLiveSpecification:
           AttributeName: ttl
           Enabled: true
+
     ForecastPreloaderQueue:
       Type: AWS::SQS::Queue
       Properties:
