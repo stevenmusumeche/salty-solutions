@@ -20,7 +20,8 @@ provider:
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
         - dynamodb:DescribeTimeToLive
-      Resource: "arn:aws:dynamodb:us-east-1:*:*"
+      Resource:
+        Fn::GetAtt: [MainTable, Arn]
     - Effect: Allow
       Action:
         - sqs:SendMessage
@@ -29,7 +30,8 @@ provider:
         - sqs:SetQueueAttributes
         - sqs:GetQueueAttributes
         - sqs:ReceiveMessage
-      Resource: "arn:aws:sqs:us-east-1:*:*"
+      Resource:
+        Fn::GetAtt: [ForecastPreloaderQueue, Arn]
   environment:
     SERVERLESS_STAGE: ${self:provider.stage}
     ROLLBAR_KEY: ${env:ROLLBAR_KEY}
@@ -49,8 +51,9 @@ functions:
     events:
       - schedule:
           name: ForecastPreloader-${self:provider.stage}
-          enabled: ${self:custom.schedule_enabled.${self:provider.stage}, false}
-          rate: rate(3 hours)
+          # enabled: ${self:custom.schedule_enabled.${self:provider.stage}, false}
+          enabled: true
+          rate: rate(3 minutes)
     environment:
       QUEUE_URL:
         Ref: ForecastPreloaderQueue
@@ -86,11 +89,24 @@ resources:
           AttributeName: ttl
           Enabled: true
 
+    DeadLetterQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: dead-letter-${self:provider.stage}
+        MessageRetentionPeriod: 1209600 # 14 days
+
     ForecastPreloaderQueue:
       Type: AWS::SQS::Queue
       Properties:
         QueueName: forecast-preloader-${self:provider.stage}
         VisibilityTimeout: 120
+        MessageRetentionPeriod: 43200 # 12 hours
+        RedrivePolicy:
+          deadLetterTargetArn:
+            Fn::GetAtt:
+              - DeadLetterQueue
+              - Arn
+          maxReceiveCount: 10
 
 custom:
   serverless-offline:
