@@ -47,7 +47,7 @@ functions:
           # enabled: ${self:custom.schedule_enabled.${self:provider.stage}, false}
           # rate: rate(3 hours)
           enabled: true
-          rate: rate(1 minutes)
+          rate: rate(1 minute)
     environment:
       QUEUE_URL:
         Ref: ForecastPreloaderQueue
