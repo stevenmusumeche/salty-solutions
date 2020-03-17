@@ -25,6 +25,9 @@ provider:
       Action:
         - sqs:SendMessage
         - sqs:SendMessageBatch
+        - sqs:DeleteMessage
+        - sqs:GetQueueAttributes
+        - sqs:ReceiveMessage
       Resource: "arn:aws:sqs:us-east-1:*:*"
   environment:
     SERVERLESS_STAGE: ${self:provider.stage}
@@ -33,6 +36,7 @@ provider:
 functions:
   graphql:
     handler: ./src/server.graphql
+    timeout: 10
     events:
       - http:
           cors: true
@@ -44,21 +48,20 @@ functions:
     events:
       - schedule:
           name: ForecastPreloader-${self:provider.stage}
-          # enabled: ${self:custom.schedule_enabled.${self:provider.stage}, false}
-          # rate: rate(3 hours)
-          enabled: true
-          rate: rate(1 minute)
+          enabled: ${self:custom.schedule_enabled.${self:provider.stage}, false}
+          rate: rate(3 hours)
     environment:
       QUEUE_URL:
         Ref: ForecastPreloaderQueue
-  # preload-forecast-consumer:
-  #   handler: src/preloaders/consumers.forecast
-  #   events:
-  #     - sqs:
-  #         arn:
-  #           Fn::GetAtt:
-  #             - ForecastPreloaderQueue
-  #             - Arn
+  preload-forecast-consumer:
+    handler: src/preloaders/consumers.forecast
+    events:
+      - sqs:
+          batchSize: 10
+          arn:
+            Fn::GetAtt:
+              - ForecastPreloaderQueue
+              - Arn
 
 resources:
   Resources:
