@@ -1,0 +1,19 @@
+Resources:
+  DeadLetterQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: dead-letter-${self:provider.stage}
+      MessageRetentionPeriod: 1209600 # 14 days
+
+  ForecastPreloaderQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: forecast-preloader-${self:provider.stage}
+      VisibilityTimeout: 120
+      MessageRetentionPeriod: 43200 # 12 hours
+      RedrivePolicy:
+        deadLetterTargetArn:
+          Fn::GetAtt:
+            - DeadLetterQueue
+            - Arn
+        maxReceiveCount: 3
