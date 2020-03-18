@@ -35,6 +35,7 @@ provider:
   environment:
     SERVERLESS_STAGE: ${self:provider.stage}
     ROLLBAR_KEY: ${env:ROLLBAR_KEY}
+    DATABASE_TABLE_NAME: ${cf:main-table-name-${self:provider.stage}}
 
 functions:
   graphql:
