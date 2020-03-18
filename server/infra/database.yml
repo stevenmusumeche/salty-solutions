@@ -28,4 +28,4 @@ Outputs:
   MainTableName:
     Value: !Ref MainTable
     Export:
-      Name: !Join ["", ["main-table-name-", !Ref StageParam]]
+      Name: MainTableName
