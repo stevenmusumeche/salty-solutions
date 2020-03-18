@@ -10,7 +10,7 @@ Resources:
     Type: AWS::DynamoDB::Table
     Properties:
       BillingMode: PAY_PER_REQUEST
-      TableName: !Join ["", ["salty-solutions-", Ref: StageParam]]
+      TableName: !Join ["", ["ss-", Ref: StageParam]]
       AttributeDefinitions:
         - AttributeName: pk
           AttributeType: S
@@ -28,8 +28,8 @@ Outputs:
   MainTableName:
     Value: !Ref MainTable
     Export:
-      Name: MainTableName
+      Name: !Join ["-", [MainTableName, Ref: StageParam]]
   MainTableArn:
     Value: !GetAtt MainTable.Arn
     Export:
-      Name: MainTableArn
+      Name: !Join ["-", [MainTableArn, Ref: StageParam]]
