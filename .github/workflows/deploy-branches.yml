@@ -13,6 +13,10 @@ jobs:
         with:
           node-version: "12.x"
       - run: yarn install
+      - run: yarn cf:update-db
+        working-directory: ./server
+        env:
+          STAGE: dev
       - run: ./node_modules/.bin/sls deploy --stage dev
         working-directory: ./server
         env:

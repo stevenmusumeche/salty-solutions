@@ -1,5 +1,4 @@
 import { DynamoDB } from "aws-sdk";
-import { MapAttributeValue } from "aws-sdk/clients/dynamodb";
 const client = new DynamoDB.DocumentClient();
 import { subMinutes, addDays } from "date-fns";
 
