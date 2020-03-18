@@ -7,6 +7,12 @@ jobs:
   backend-other-branch:
     name: "Deploy other branch of backend"
     runs-on: ubuntu-latest
+    env:
+      ROLLBAR_KEY: ${{ secrets.ROLLBAR_KEY }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_SERVERLESS }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY_SERVERLESS }}
+      STAGE: dev
+      AWS_REGION: "us-east-1"
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
@@ -15,11 +21,5 @@ jobs:
       - run: yarn install
       - run: yarn cf:update-db
         working-directory: ./server
-        env:
-          STAGE: dev
       - run: ./node_modules/.bin/sls deploy --stage dev
         working-directory: ./server
-        env:
-          ROLLBAR_KEY: ${{ secrets.ROLLBAR_KEY }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_SERVERLESS }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY_SERVERLESS }}
