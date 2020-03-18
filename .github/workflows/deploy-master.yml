@@ -19,7 +19,7 @@ jobs:
         with:
           node-version: "12.x"
       - run: yarn install
-      - run: yarn cf:update-db
+      - run: yarn cf:update-db && yarn cf:update-queue
         working-directory: ./server
       - run: ./node_modules/.bin/sls deploy --stage ${{ env.STAGE }}
         working-directory: ./server

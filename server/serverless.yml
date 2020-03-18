@@ -29,8 +29,7 @@ provider:
         - sqs:SetQueueAttributes
         - sqs:GetQueueAttributes
         - sqs:ReceiveMessage
-      Resource:
-        Fn::GetAtt: [ForecastPreloaderQueue, Arn]
+      Resource: ${cf:ss-queue-${self:provider.stage}.ForecastPreloaderQueueArn}
   environment:
     SERVERLESS_STAGE: ${self:provider.stage}
     ROLLBAR_KEY: ${env:ROLLBAR_KEY}
@@ -45,7 +44,6 @@ functions:
           cors: true
           method: any
           path: api
-
   preload-forecast-producer:
     handler: src/preloaders/producers.forecast
     events:
@@ -54,21 +52,14 @@ functions:
           enabled: ${self:custom.schedule_enabled.${self:provider.stage}, false}
           rate: rate(3 hours)
     environment:
-      QUEUE_URL:
-        Ref: ForecastPreloaderQueue
+      QUEUE_URL: ${cf:ss-queue-${self:provider.stage}.ForecastPreloaderQueueUrl}
   preload-forecast-consumer:
     handler: src/preloaders/consumers.forecast
     timeout: 120
     events:
       - sqs:
           batchSize: 1
-          arn:
-            Fn::GetAtt:
-              - ForecastPreloaderQueue
-              - Arn
-
-resources:
-  - ${file(./sqs.yml)}
+          arn: ${cf:ss-queue-${self:provider.stage}.ForecastPreloaderQueueArn}
 
 custom:
   serverless-offline:
