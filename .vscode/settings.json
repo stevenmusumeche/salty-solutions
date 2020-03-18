@@ -17,5 +17,25 @@
     "statusBarItem.hoverBackground": "#299be4",
     "statusBar.foreground": "#15202b"
   },
-  "peacock.color": "#56b0ea"
+  "peacock.color": "#56b0ea",
+  // Custom tags for the parser to use
+  "yaml.customTags": [
+    "!And",
+    "!If",
+    "!Not",
+    "!Equals",
+    "!Or",
+    "!FindInMap sequence",
+    "!Base64",
+    "!Cidr",
+    "!Ref",
+    "!Sub",
+    "!GetAtt",
+    "!GetAZs",
+    "!ImportValue",
+    "!Select",
+    "!Select sequence",
+    "!Split",
+    "!Join sequence"
+  ]
 }

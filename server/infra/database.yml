@@ -1,9 +1,16 @@
+Parameters:
+  StageParam:
+    Type: String
+    Default: dev
+    AllowedValues:
+      - dev
+      - prod
 Resources:
   MainTable:
     Type: AWS::DynamoDB::Table
     Properties:
       BillingMode: PAY_PER_REQUEST
-      TableName: salty-solutions-${self:provider.stage}
+      TableName: !Join ["", ["ss-", Ref: StageParam]]
       AttributeDefinitions:
         - AttributeName: pk
           AttributeType: S
@@ -17,3 +24,12 @@ Resources:
       TimeToLiveSpecification:
         AttributeName: ttl
         Enabled: true
+Outputs:
+  MainTableName:
+    Value: !Ref MainTable
+    Export:
+      Name: !Join ["-", [MainTableName, Ref: StageParam]]
+  MainTableArn:
+    Value: !GetAtt MainTable.Arn
+    Export:
+      Name: !Join ["-", [MainTableArn, Ref: StageParam]]

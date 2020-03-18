@@ -20,8 +20,7 @@ provider:
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
         - dynamodb:DescribeTimeToLive
-      Resource:
-        Fn::GetAtt: [MainTable, Arn]
+      Resource: ${cf:ss-database-${self:provider.stage}.MainTableArn}
     - Effect: Allow
       Action:
         - sqs:SendMessage
@@ -35,6 +34,7 @@ provider:
   environment:
     SERVERLESS_STAGE: ${self:provider.stage}
     ROLLBAR_KEY: ${env:ROLLBAR_KEY}
+    DATABASE_TABLE_NAME: ${cf:ss-database-${self:provider.stage}.MainTableName}
 
 functions:
   graphql:
@@ -68,7 +68,6 @@ functions:
               - Arn
 
 resources:
-  - ${file(./dynamodb.yml)}
   - ${file(./sqs.yml)}
 
 custom:

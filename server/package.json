@@ -36,5 +36,10 @@
     "serverless-webpack": "^5.3.1",
     "ts-loader": "^6.0.4",
     "webpack": "^4.39.2"
+  },
+  "scripts": {
+    "cf:delete-db": "aws cloudformation delete-stack --stack-name ss-database-\"$STAGE\"",
+    "cf:create-db": "aws cloudformation create-stack --stack-name ss-database-\"$STAGE\" --template-body file://infra/database.yml --parameters ParameterKey=StageParam,ParameterValue=\"$STAGE\"",
+    "cf:update-db": "aws cloudformation update-stack --stack-name ss-database-\"$STAGE\" --template-body file://infra/database.yml --parameters ParameterKey=StageParam,ParameterValue=\"$STAGE\""
   }
 }
