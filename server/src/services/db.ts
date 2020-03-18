@@ -3,7 +3,7 @@ import { MapAttributeValue } from "aws-sdk/clients/dynamodb";
 const client = new DynamoDB.DocumentClient();
 import { subMinutes, addDays } from "date-fns";
 
-const tableName = `salty-solutions-${process.env.SERVERLESS_STAGE}`;
+const tableName = process.env.DATABASE_TABLE_NAME!;
 
 export const getCacheVal = async <T>(
   key: string,
