@@ -5,7 +5,7 @@ import { subMinutes, addDays } from "date-fns";
 
 const tableName = `salty-solutions-${process.env.SERVERLESS_STAGE}`;
 
-export const getCacheVal = async <T extends MapAttributeValue>(
+export const getCacheVal = async <T>(
   key: string,
   maxAgeMins: number
 ): Promise<T | void> => {
@@ -33,10 +33,7 @@ export const getCacheVal = async <T extends MapAttributeValue>(
   }
 };
 
-export const setCacheVal = async <T extends MapAttributeValue>(
-  key: string,
-  data: T
-): Promise<T> => {
+export const setCacheVal = async <T>(key: string, data: T): Promise<T> => {
   await client
     .put({
       TableName: tableName,

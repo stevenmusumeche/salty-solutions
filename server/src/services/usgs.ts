@@ -2,7 +2,8 @@ import axios from "axios";
 import axiosRetry from "axios-retry";
 import { LocationEntity, Coords } from "./location";
 import orderBy from "lodash/orderBy";
-import { subHours } from "date-fns";
+import { subHours, format } from "date-fns";
+import { getCacheVal, setCacheVal } from "./db";
 
 axiosRetry(axios, { retries: 3, retryDelay: retryCount => retryCount * 500 });
 
@@ -344,7 +345,18 @@ export const getWaterHeight = async (
   start: Date,
   end: Date
 ): Promise<{ timestamp: string; height: number }[]> => {
-  return fetchAndMap(
+  const cacheKey = `water-height-${siteId}-${format(
+    start,
+    "yyyy-MM-dd"
+  )}-${format(end, "yyyy-MM-dd")}`;
+
+  let data: any;
+  data = await getCacheVal(cacheKey, 1 * 60); // fresh for 1 hour
+  if (data) {
+    return data;
+  }
+
+  data = await fetchAndMap(
     siteId,
     UsgsParams.GuageHeight,
     { start, end },
@@ -353,6 +365,8 @@ export const getWaterHeight = async (
       height: Number(v.value)
     })
   );
+
+  return setCacheVal(cacheKey, data);
 };
 
 export const getWaterTemperatureLatest = async (siteId: string) => {

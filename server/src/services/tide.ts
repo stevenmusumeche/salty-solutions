@@ -6,10 +6,12 @@ import {
   differenceInMinutes,
   isAfter,
   isBefore,
-  subDays
+  subDays,
+  format
 } from "date-fns";
 import { formatToTimeZone } from "date-fns-timezone";
 import querystring from "querystring";
+import { getCacheVal, setCacheVal } from "./db";
 
 axiosRetry(axios, { retries: 3, retryDelay: retryCount => retryCount * 500 });
 
@@ -306,13 +308,26 @@ async function fetchTideData(
   stationId: string,
   onlyHighLow: boolean
 ): Promise<NoaaPrediction[]> {
+  const cacheKey = `tide-${stationId}-${format(start, "yyyy-MM-dd")}-${format(
+    end,
+    "yyyy-MM-dd"
+  )}-${onlyHighLow ? "hilo" : "all"}`;
+
+  let data: any;
+  data = await getCacheVal(cacheKey, 3 * 60 * 24 * 7); // fresh for 7 days
+  if (data) {
+    return data.predictions || [];
+  }
+
   const params = {
     product: "predictions",
     application: "fishing",
     begin_date: formatToTimeZone(start, "YYYYMMDD HH:mm", {
       timeZone: "Etc/UTC"
     }),
-    end_date: formatToTimeZone(end, "YYYYMMDD HH:mm", { timeZone: "Etc/UTC" }),
+    end_date: formatToTimeZone(end, "YYYYMMDD HH:mm", {
+      timeZone: "Etc/UTC"
+    }),
     datum: "MLLW",
     station: stationId,
     time_zone: "gmt",
@@ -325,7 +340,9 @@ async function fetchTideData(
     `https://tidesandcurrents.noaa.gov/api/datagetter?` +
     querystring.stringify(params);
 
-  const { data } = await axios.get<{ predictions: NoaaPrediction[] }>(url);
+  const result = await axios.get<{ predictions: NoaaPrediction[] }>(url);
+
+  data = await setCacheVal(cacheKey, result.data);
 
   return data.predictions || [];
 }
