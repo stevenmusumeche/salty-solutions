@@ -39,6 +39,8 @@
   },
   "scripts": {
     "cf:delete-db": "aws cloudformation delete-stack --stack-name ss-database-\"$STAGE\"",
-    "cf:update-db": "aws cloudformation deploy --stack-name ss-database-\"$STAGE\" --template-file infra/database.yml --parameter-overrides StageParam=\"$STAGE\" --no-fail-on-empty-changeset"
+    "cf:update-db": "aws cloudformation deploy --stack-name ss-database-\"$STAGE\" --template-file infra/database.yml --parameter-overrides StageParam=\"$STAGE\" --no-fail-on-empty-changeset",
+    "cf:delete-queue": "aws cloudformation delete-stack --stack-name ss-queue-\"$STAGE\"",
+    "cf:update-queue": "aws cloudformation deploy --stack-name ss-queue-\"$STAGE\" --template-file infra/queue.yml --parameter-overrides StageParam=\"$STAGE\" --no-fail-on-empty-changeset"
   }
 }

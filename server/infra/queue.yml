@@ -1,0 +1,35 @@
+Parameters:
+  StageParam:
+    Type: String
+    Default: dev
+    AllowedValues:
+      - dev
+      - prod
+Resources:
+  DeadLetterQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Join ["", ["dead-letter-", Ref: StageParam]]
+      MessageRetentionPeriod: 1209600 # 14 days
+
+  ForecastPreloaderQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Join ["", ["forecast-preloader-", Ref: StageParam]]
+      VisibilityTimeout: 120
+      MessageRetentionPeriod: 43200 # 12 hours
+      RedrivePolicy:
+        deadLetterTargetArn:
+          Fn::GetAtt:
+            - DeadLetterQueue
+            - Arn
+        maxReceiveCount: 3
+Outputs:
+  ForecastPreloaderQueueUrl:
+    Value: !Ref ForecastPreloaderQueue
+    Export:
+      Name: !Join ["-", [ForecastPreloaderQueueUrl, Ref: StageParam]]
+  ForecastPreloaderQueueArn:
+    Value: !GetAtt ForecastPreloaderQueue.Arn
+    Export:
+      Name: !Join ["-", [ForecastPreloaderQueueArn, Ref: StageParam]]
