@@ -21,5 +21,5 @@ jobs:
       - run: yarn install
       - run: yarn cf:update-db
         working-directory: ./server
-      - run: ./node_modules/.bin/sls deploy --stage dev
+      - run: ./node_modules/.bin/sls deploy --stage ${{ env.STAGE }}
         working-directory: ./server
