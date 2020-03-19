@@ -1,6 +1,5 @@
 import axios from "axios";
 import axiosRetry from "axios-retry";
-import { getCacheVal, setCacheVal } from "./db";
 import { LocationEntity, makeCacheKey } from "./location";
 import { format, subHours } from "date-fns";
 import orderBy from "lodash/orderBy";
@@ -28,16 +27,8 @@ axiosRetry(axios, { retries: 3, retryDelay: retryCount => retryCount * 500 });
 export const getForecast = async (
   location: LocationEntity
 ): Promise<WeatherForecast[]> => {
-  const cacheKey = makeCacheKey(location, "weather-forecast");
-  let data: any;
-  data = await getCacheVal(cacheKey, 3 * 60); // fresh for 3 hours
-
-  if (!data) {
-    let url = `${location.weatherGov.apiBase}/forecast`;
-    const result = await axios.get(url);
-    data = await setCacheVal(cacheKey, result.data);
-  }
-
+  let url = `${location.weatherGov.apiBase}/forecast`;
+  const { data } = await axios.get(url);
   return data.properties.periods.map(parseForecast);
 };
 

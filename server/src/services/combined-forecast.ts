@@ -1,17 +1,22 @@
-import { LocationEntity } from "./location";
+import { LocationEntity, makeCacheKey } from "./location";
 import { getForecast as getMarineForecast, MarineForecast } from "./marine";
 import { getForecast as getWeatherForecast } from "./weather";
 import { CombinedForecast } from "../generated/graphql";
+import { getCacheVal, setCacheVal } from "./db";
 
 export const getCombinedForecast = async (
   location: LocationEntity
 ): Promise<CombinedForecast[]> => {
+  const cacheKey = makeCacheKey(location, "combined-forecast");
+  const cachedData = await getCacheVal<CombinedForecast[]>(cacheKey, 3 * 60); // fresh for 3 hours
+  if (cachedData) return cachedData;
+
   const [marine, weather] = await Promise.all([
     getMarineForecast(location),
     getWeatherForecast(location)
   ]);
 
-  return weather.map(w => {
+  const result = weather.map(w => {
     const timePeriod = getNormalizedName(w.name);
     const matchedMarine = marine.find(
       x => getNormalizedName(x.timePeriod) === timePeriod
@@ -48,6 +53,8 @@ export const getCombinedForecast = async (
       icon: w.icon
     };
   });
+
+  return setCacheVal(cacheKey, result);
 };
 
 // these should be considered the same time period and normalized to the first entry
