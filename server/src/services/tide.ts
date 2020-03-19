@@ -254,7 +254,15 @@ export async function getTidePredictions(
   start: Date,
   end: Date,
   stationId: string
-): Promise<{ time: string; height: number; type: string }[]> {
+): Promise<Normalized[]> {
+  const cacheKey = `tide-${stationId}-${format(start, "yyyy-MM-dd")}-${format(
+    end,
+    "yyyy-MM-dd"
+  )}`;
+
+  const cachedData = await getCacheVal<Normalized[]>(cacheKey, 3 * 60 * 24 * 7); // fresh for 7 days
+  if (cachedData) return cachedData;
+
   const [hiLoData, allData] = await Promise.all([
     fetchTideData(subDays(start, 1), addDays(end, 1), stationId, true),
     fetchTideData(start, end, stationId, false)
@@ -274,7 +282,7 @@ export async function getTidePredictions(
     normalized = await extrapolateFromHiLow(normalized);
   }
 
-  return normalized
+  const result = normalized
     .filter(entry => {
       const entryTime = new Date(entry.time);
       if (isBefore(entryTime, start) || isAfter(entryTime, end)) {
@@ -291,6 +299,8 @@ export async function getTidePredictions(
 
       return 0;
     });
+
+  return setCacheVal(cacheKey, result);
 }
 
 interface NoaaPrediction {
@@ -308,17 +318,6 @@ async function fetchTideData(
   stationId: string,
   onlyHighLow: boolean
 ): Promise<NoaaPrediction[]> {
-  const cacheKey = `tide-${stationId}-${format(start, "yyyy-MM-dd")}-${format(
-    end,
-    "yyyy-MM-dd"
-  )}-${onlyHighLow ? "hilo" : "all"}`;
-
-  let data: any;
-  data = await getCacheVal(cacheKey, 3 * 60 * 24 * 7); // fresh for 7 days
-  if (data) {
-    return data.predictions || [];
-  }
-
   const params = {
     product: "predictions",
     application: "fishing",
@@ -340,9 +339,7 @@ async function fetchTideData(
     `https://tidesandcurrents.noaa.gov/api/datagetter?` +
     querystring.stringify(params);
 
-  const result = await axios.get<{ predictions: NoaaPrediction[] }>(url);
-
-  data = await setCacheVal(cacheKey, result.data);
+  const { data } = await axios.get<{ predictions: NoaaPrediction[] }>(url);
 
   return data.predictions || [];
 }
