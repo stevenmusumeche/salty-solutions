@@ -29,7 +29,9 @@ provider:
         - sqs:SetQueueAttributes
         - sqs:GetQueueAttributes
         - sqs:ReceiveMessage
-      Resource: ${cf:ss-queue-${self:provider.stage}.ForecastPreloaderQueueArn}
+      Resource:
+        - ${cf:ss-queue-${self:provider.stage}.ForecastPreloaderQueueArn}
+        - ${cf:ss-queue-${self:provider.stage}.TidePreloaderQueueArn}
   environment:
     SERVERLESS_STAGE: ${self:provider.stage}
     ROLLBAR_KEY: ${env:ROLLBAR_KEY}
