@@ -17,6 +17,8 @@ export const forecast: ScheduledHandler = async () => {
 };
 
 export const tide: ScheduledHandler = async () => {
+  console.log("Preloading tides", process.env.QUEUE_URL);
+
   const curDate = new Date();
   const startDate = subDays(startOfDay(curDate), 3).toISOString();
   const endDate = addDays(startOfDay(curDate), 4).toISOString();
