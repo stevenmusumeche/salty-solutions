@@ -6,8 +6,9 @@ import orderBy from "lodash/orderBy";
 import { degreesToCompass } from "./usgs";
 import { WeatherForecast } from "../generated/graphql";
 import { parseWindDirection } from "./utils";
+import { getCacheVal, setCacheVal } from "./db";
 
-axiosRetry(axios, { retries: 3, retryDelay: retryCount => retryCount * 500 });
+axiosRetry(axios, { retries: 3, retryDelay: (retryCount) => retryCount * 500 });
 
 // https://w1.weather.gov/xml/current_obs/seek.php?state=la&Find=Find
 
@@ -45,14 +46,14 @@ const parseForecast = (x: any) => {
     chanceOfPrecipitation,
     windSpeed,
     windDirection,
-    temperature
+    temperature,
   } = extractForecast(x);
   return {
     ...x,
     windSpeed,
     windDirection,
     chanceOfPrecipitation,
-    temperature
+    temperature,
   };
 };
 
@@ -61,10 +62,10 @@ const extractForecast = ({
   windSpeed,
   windDirection,
   temperature,
-  temperatureUnit
+  temperatureUnit,
 }: any) => {
   let extracted = {
-    temperature: { degrees: temperature, unit: temperatureUnit }
+    temperature: { degrees: temperature, unit: temperatureUnit },
   } as Partial<WeatherForecast>;
 
   let matches;
@@ -92,7 +93,7 @@ const extractForecast = ({
       from: matches.groups.from
         ? Number(matches.groups.from)
         : Number(matches.groups.to),
-      to: Number(matches.groups.to)
+      to: Number(matches.groups.to),
     };
   }
 
@@ -110,8 +111,8 @@ export const getCurrentConditions = async (location: LocationEntity) => {
       degrees: parseFloat(
         celciusToFahrenheit(data.properties.temperature.value)
       ),
-      unit: "F"
-    }
+      unit: "F",
+    },
   };
 };
 
@@ -131,8 +132,8 @@ export const getConditions = async (
     timestamp: x.properties.timestamp,
     temperature: {
       degrees: parseFloat(celciusToFahrenheit(x.properties.temperature.value)),
-      unit: "F"
-    }
+      unit: "F",
+    },
   }));
   temperature = orderBy(temperature, ["timestamp"], ["asc"]);
 
@@ -142,22 +143,30 @@ export const getConditions = async (
       timestamp: x.properties.timestamp,
       speed: metersPerSecondToMph(x.properties.windSpeed.value),
       directionDegrees: x.properties.windDirection.value,
-      direction: degreesToCompass(x.properties.windDirection.value)
+      direction: degreesToCompass(x.properties.windDirection.value),
     }));
 
   return { temperature, wind };
 };
 
-export const getLatestConditions = async (location: LocationEntity) => {
+export const getLatestConditions = async (
+  location: LocationEntity
+): Promise<any> => {
+  const cacheKey = makeCacheKey(location, "latest-conditions");
+  const cachedData = await getCacheVal(cacheKey, 15); // fresh for 15 minutes
+  if (cachedData) return cachedData;
+
   const data = await getConditions(
     location,
     subHours(new Date(), 12),
     new Date()
   );
-  return {
+  const result = {
     temperature: orderBy(data.temperature, ["timestamp"], ["desc"])[0],
-    wind: orderBy(data.wind, ["timestamp"], ["desc"])[0]
+    wind: orderBy(data.wind, ["timestamp"], ["desc"])[0],
   };
+
+  return setCacheVal(cacheKey, result);
 };
 
 interface NWSLatestObservations {

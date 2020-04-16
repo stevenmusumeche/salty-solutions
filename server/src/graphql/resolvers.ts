@@ -139,22 +139,6 @@ const resolvers: Resolvers & { UsgsParam: Object } = {
       return {};
     }
   },
-  Wind: {
-    detail: async (wind, args, { services }) => {
-      const result = await services.weather.getConditions(
-        wind.location,
-        new Date(args.start),
-        new Date(args.end)
-      );
-      return result.wind;
-    },
-    summary: async (wind, args, { services }) => {
-      const result = await services.weather.getLatestConditions(wind.location);
-      return {
-        mostRecent: result.wind
-      };
-    }
-  },
   WaterTemperature: {
     detail: async (_, args, { services, pass }) => {
       return services.usgs.getWaterTemperature(
@@ -169,7 +153,32 @@ const resolvers: Resolvers & { UsgsParam: Object } = {
       };
     }
   },
+  Wind: {
+    detail: async (wind, args, { services }) => {
+      const result = await services.weather.getConditions(
+        wind.location,
+        new Date(args.start),
+        new Date(args.end)
+      );
+      return result.wind;
+    },
+    summary: async (wind, args, { services }) => {
+      // todo: switch to "getCurrentConditions"
+      const result = await services.weather.getLatestConditions(wind.location);
+      return {
+        mostRecent: result.wind
+      };
+    }
+  },
   TemperatureResult: {
+    detail: async (temperature, args, { services }) => {
+      const data = await services.weather.getConditions(
+        temperature.location,
+        new Date(args.start),
+        new Date(args.end)
+      );
+      return data.temperature;
+    },
     summary: async (temperature, __, { services }) => {
       const data = await services.weather.getCurrentConditions(
         temperature.location
@@ -178,14 +187,6 @@ const resolvers: Resolvers & { UsgsParam: Object } = {
       return {
         mostRecent: data
       };
-    },
-    detail: async (temperature, args, { services }) => {
-      const data = await services.weather.getConditions(
-        temperature.location,
-        new Date(args.start),
-        new Date(args.end)
-      );
-      return data.temperature;
     }
   },
   Maps: {

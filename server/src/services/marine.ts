@@ -4,7 +4,7 @@ import { parseWindDirection } from "./utils";
 import cheerio from "cheerio";
 import { LocationEntity, makeCacheKey } from "./location";
 
-axiosRetry(axios, { retries: 3, retryDelay: retryCount => retryCount * 500 });
+axiosRetry(axios, { retries: 3, retryDelay: (retryCount) => retryCount * 500 });
 
 export interface MarineForecast {
   timePeriod: string;
@@ -34,8 +34,8 @@ export const getForecast = async (
               $(".forecast-text", el)
                 .text()
                 .trim()
-            )
-          }
+            ),
+          },
         };
       })
       .get();
@@ -53,25 +53,28 @@ export function parseForecast(
 
   const windRegex = /^(?<direction>[\w]+) winds(?<qualifier> around| up to| near| rising to| building to)? ((?<speed>[\d]+)|((?<speedStart>[\d]+) to (?<speedEnd>[\d]+))) knots( becoming)?/im;
   let matches = forecastText.match(windRegex);
+
   if (matches && matches.groups) {
     retVal.windDirection = parseWindDirection(matches.groups.direction);
     retVal.windSpeed = matches.groups.speed
       ? {
           from:
-            !matches.groups.qualifier ||
-            matches.groups.qualifier.trim() === "up to"
+            matches.groups.qualifier &&
+            (matches.groups.qualifier.trim() === "up to" ||
+              matches.groups.qualifier.trim() === "rising to" ||
+              matches.groups.qualifier.trim() === "building to")
               ? 0
               : Number(matches.groups.speed),
-          to: Number(matches.groups.speed)
+          to: Number(matches.groups.speed),
         }
       : {
           from: Number(matches.groups.speedStart),
-          to: Number(matches.groups.speedEnd)
+          to: Number(matches.groups.speedEnd),
         };
   } else {
     console.error({
       message: "Unable to parse wind speed/direction from marine forecast",
-      forecastText
+      forecastText,
     });
   }
   return retVal;

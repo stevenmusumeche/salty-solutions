@@ -63,22 +63,23 @@ functions:
           batchSize: 1
           arn: ${cf:ss-queue-${self:provider.stage}.ForecastPreloaderQueueArn}
 
-  preload-tide-producer:
-    handler: src/preloaders/producers.tide
-    events:
-      - schedule:
-          name: TidePreloader-${self:provider.stage}
-          enabled: ${self:custom.schedule_enabled.${self:provider.stage}, false}
-          rate: cron(5 6 * * ? *) # 6:05 UTC = 1:05 CST
-    environment:
-      QUEUE_URL: ${cf:ss-queue-${self:provider.stage}.TidePreloaderQueueUrl}
-  preload-tide-consumer:
-    handler: src/preloaders/consumers.tide
-    timeout: 120
-    events:
-      - sqs:
-          batchSize: 1
-          arn: ${cf:ss-queue-${self:provider.stage}.TidePreloaderQueueArn}
+  # todo re-enable this if we can get past dynamodb limits
+  # preload-tide-producer:
+  #   handler: src/preloaders/producers.tide
+  #   events:
+  #     - schedule:
+  #         name: TidePreloader-${self:provider.stage}
+  #         enabled: ${self:custom.schedule_enabled.${self:provider.stage}, false}
+  #         rate: cron(5 6 * * ? *) # 6:05 UTC = 1:05 CST
+  #   environment:
+  #     QUEUE_URL: ${cf:ss-queue-${self:provider.stage}.TidePreloaderQueueUrl}
+  # preload-tide-consumer:
+  #   handler: src/preloaders/consumers.tide
+  #   timeout: 120
+  #   events:
+  #     - sqs:
+  #         batchSize: 1
+  #         arn: ${cf:ss-queue-${self:provider.stage}.TidePreloaderQueueArn}
 
 custom:
   serverless-offline:
