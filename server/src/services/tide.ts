@@ -7,13 +7,13 @@ import {
   isAfter,
   isBefore,
   subDays,
-  format
+  format,
 } from "date-fns";
 import { formatToTimeZone } from "date-fns-timezone";
 import querystring from "querystring";
 import { getCacheVal, setCacheVal } from "./db";
 
-axiosRetry(axios, { retries: 3, retryDelay: retryCount => retryCount * 500 });
+axiosRetry(axios, { retries: 3, retryDelay: (retryCount) => retryCount * 500 });
 
 export interface TideStationEntity {
   id: string;
@@ -27,111 +27,111 @@ const tideStations: TideStationEntity[] = [
     id: "8765551",
     name: "Southwest Pass, Vermilion Bay",
     lat: 29.58,
-    lon: -92.035
+    lon: -92.035,
   },
   {
     id: "8765148",
     name: "Weeks Bay, LA",
     lat: 29.837,
-    lon: -91.837
+    lon: -91.837,
   },
   {
     id: "8768094",
     name: "Calcasieu Pass",
     lat: 29.7683,
-    lon: -93.3433
+    lon: -93.3433,
   },
   {
     id: "8767961",
     name: "Bulk Terminal near Prien Lake",
     lat: 30.19,
-    lon: -93.3
+    lon: -93.3,
   },
   {
     id: "8767816",
     name: "Lake Charles",
     lat: 30.223333,
-    lon: -93.221667
+    lon: -93.221667,
   },
   {
     id: "8765251",
     name: "Cypremort Point",
     lat: 29.7133,
-    lon: -91.88
+    lon: -91.88,
   },
   {
     id: "8764931",
     name: "Cote Blanche Island",
     lat: 29.735,
-    lon: -91.7133
+    lon: -91.7133,
   },
   { id: "8763206", name: "Caillou Boca", lat: 29.0633333, lon: -90.8066667 },
   {
     id: "8763506",
     name: "Raccoon Point, Isle Dernieres",
     lat: 29.0633333,
-    lon: -90.9616667
+    lon: -90.9616667,
   },
   {
     id: "8762888",
     name: "E. Isle Dernieres, Lake Pelto",
     lat: 29.0716667,
-    lon: -90.64
+    lon: -90.64,
   },
   {
     id: "8762928",
     name: "Cocodrie, Terrebonne Bay",
     lat: 29.245,
-    lon: -90.6616667
+    lon: -90.6616667,
   },
   {
     id: "8762850",
     name: "Wine Island, Terrebonne Bay",
     lat: 29.0783333,
-    lon: -90.5866667
+    lon: -90.5866667,
   },
   {
     id: "8762481",
     name: "Pelican Islands, Timbalier Bay",
     lat: 29.1283333,
-    lon: -90.4233333
+    lon: -90.4233333,
   },
   {
     id: "8765568",
     name: "Lighthouse Point",
     lat: 29.5233333,
-    lon: -92.0433333
+    lon: -92.0433333,
   },
   {
     id: "8764931",
     name: "Cote Blanche Island, West Cote Blanche Bay",
     lat: 29.735,
-    lon: -91.7133333
+    lon: -91.7133333,
   },
   {
     id: "8765026",
     name: "Marsh Island, Atchafalaya Bay",
     lat: 29.485,
-    lon: -91.7633333
+    lon: -91.7633333,
   },
   {
     id: "8761819",
     name: "Texaco Dock, Hackberry",
     lat: 29.4016667,
-    lon: -90.0383333
+    lon: -90.0383333,
   },
   {
     id: "8762675",
     name: "Timbalier Island, Timbalier Bay",
     lat: 29.0866667,
-    lon: -90.5266667
+    lon: -90.5266667,
   },
   { id: "8761305", name: "Shell Beach", lat: 29.8683333, lon: -89.6733333 },
   {
     id: "8761529",
     name: "Martello Castle, Lake Borgne",
     lat: 29.945,
-    lon: -89.835
+    lon: -89.835,
   },
   { id: "8760742", name: "Comfort Island", lat: 29.8233333, lon: -89.27 },
   { id: "8761108", name: "Bay Gardene", lat: 29.5983333, lon: -89.6183333 },
@@ -144,13 +144,13 @@ const tideStations: TideStationEntity[] = [
     id: "8761742",
     name: "Mendicant Island, Barataria Bay",
     lat: 29.3183333,
-    lon: -89.98
+    lon: -89.98,
   },
   {
     id: "8762075",
     name: "Port Fourchon, Belle Pass",
     lat: 29.1133333,
-    lon: -90.1983333
+    lon: -90.1983333,
   },
   { id: "8760721", name: "Pilottown", lat: 29.1783333, lon: -89.2583333 },
   { id: "8760736", name: "Joseph Bayou", lat: 29.0583333, lon: -89.2716667 },
@@ -160,7 +160,7 @@ const tideStations: TideStationEntity[] = [
     id: "8760922",
     name: "Pilots Station East, Southwest Pass",
     lat: 28.9316667,
-    lon: -89.4066667
+    lon: -89.4066667,
   },
   { id: "8760959", name: "Southwest Pass", lat: 28.9316667, lon: -89.4283333 },
   { id: "8760416", name: "Southeast Pass", lat: 29.1166667, lon: -89.045 },
@@ -168,20 +168,20 @@ const tideStations: TideStationEntity[] = [
     id: "8760412",
     name: "North Pass, Pass a Loutre",
     lat: 29.205,
-    lon: -89.0366667
+    lon: -89.0366667,
   },
   {
     id: "8760424",
     name: "Lonesome Bayou (Thomasin)",
     lat: 29.2283333,
-    lon: -89.05
+    lon: -89.05,
   },
   { id: "8760841", name: "Jack Bay", lat: 29.3666667, lon: -89.345 },
   {
     id: "8760889",
     name: "Olga Compressor Station, Grand Bay",
     lat: 29.3866667,
-    lon: -89.38
+    lon: -89.38,
   },
   { id: "8761212", name: "Empire Jetty", lat: 29.25, lon: -89.6083333 },
   { id: "8761402", name: "The Rigolets", lat: 30.1666667, lon: -89.7366667 },
@@ -189,51 +189,51 @@ const tideStations: TideStationEntity[] = [
     id: "8761487",
     name: "Chef Menteur, Chef Menteur Pass",
     lat: 30.065,
-    lon: -89.8
+    lon: -89.8,
   },
   {
     id: "8761927",
     name: "New Canal Station",
     lat: 30.0266667,
-    lon: -90.1133333
+    lon: -90.1133333,
   },
   {
     id: "TEC4445",
     name: "Paris Road Bridge (ICWW)",
     lat: 30.0,
-    lon: -89.9333333
+    lon: -89.9333333,
   },
   {
     id: "8761473",
     name: "Route 433, Bayou Bonfouca",
     lat: 30.2716667,
-    lon: -89.7933333
+    lon: -89.7933333,
   },
   {
     id: "8761993",
     name: "Tchefuncta River, Lake Point",
     lat: 30.3783333,
-    lon: -90.16
+    lon: -90.16,
   },
   {
     id: "8762372",
     name: "East Bank 1, Norco, Bayou LaBranche",
     lat: 30.05,
-    lon: -90.3683333
+    lon: -90.3683333,
   },
   { id: "8762483", name: "I-10 Bonnet Carre Floodway", lat: 888, lon: 888 },
   {
     id: "8763535",
     name: "Texas Gas Platform, Caillou Bay",
     lat: 29.175,
-    lon: -90.9766667
+    lon: -90.9766667,
   },
   {
     id: "8763719",
     name: "Ship Shoal Light",
     lat: 28.915,
-    lon: -91.0716667
-  }
+    lon: -91.0716667,
+  },
 ];
 
 // tide stations in LA: https://tidesandcurrents.noaa.gov/tide_predictions.html?gid=1400
@@ -241,7 +241,7 @@ const tideStations: TideStationEntity[] = [
 // better map: https://tidesandcurrents.noaa.gov/map/index.html?type=TidePredictions&region=
 
 export const getStationById = (id: string): TideStationEntity | undefined => {
-  return tideStations.find(tideStation => tideStation.id === id);
+  return tideStations.find((tideStation) => tideStation.id === id);
 };
 
 interface Normalized {
@@ -260,21 +260,22 @@ export async function getTidePredictions(
     "yyyy-MM-dd"
   )}`;
 
-  const cachedData = await getCacheVal<Normalized[]>(cacheKey, 3 * 60 * 24 * 7); // fresh for 7 days
-  if (cachedData) return cachedData;
+  // todo: figure out a way to cache tide data without hitting dynamodb limits
+  //const cachedData = await getCacheVal<Normalized[]>(cacheKey, 3 * 60 * 24 * 7); // fresh for 7 days
+  //if (cachedData) return cachedData;
 
   const [hiLoData, allData] = await Promise.all([
     fetchTideData(subDays(start, 1), addDays(end, 1), stationId, true),
-    fetchTideData(start, end, stationId, false)
+    fetchTideData(start, end, stationId, false),
   ]);
 
   let data = allData.concat(hiLoData);
 
-  let normalized: Normalized[] = data.map(data => ({
+  let normalized: Normalized[] = data.map((data) => ({
     time: new Date(`${data.t}:00+00:00`).toISOString(),
     height: Number(data.v),
     type:
-      data.type === "L" ? "low" : data.type === "H" ? "high" : "intermediate"
+      data.type === "L" ? "low" : data.type === "H" ? "high" : "intermediate",
   }));
 
   // is this a tide station with only hi/lo values?
@@ -283,7 +284,7 @@ export async function getTidePredictions(
   }
 
   const result = normalized
-    .filter(entry => {
+    .filter((entry) => {
       const entryTime = new Date(entry.time);
       if (isBefore(entryTime, start) || isAfter(entryTime, end)) {
         return false;
@@ -300,7 +301,9 @@ export async function getTidePredictions(
       return 0;
     });
 
-  return setCacheVal(cacheKey, result);
+  return result;
+
+  // return setCacheVal(cacheKey, result);
 }
 
 interface NoaaPrediction {
@@ -322,17 +325,17 @@ async function fetchTideData(
     product: "predictions",
     application: "fishing",
     begin_date: formatToTimeZone(start, "YYYYMMDD HH:mm", {
-      timeZone: "Etc/UTC"
+      timeZone: "Etc/UTC",
     }),
     end_date: formatToTimeZone(end, "YYYYMMDD HH:mm", {
-      timeZone: "Etc/UTC"
+      timeZone: "Etc/UTC",
     }),
     datum: "MLLW",
     station: stationId,
     time_zone: "gmt",
     units: "english",
     interval: onlyHighLow ? "hilo" : undefined, // only High/Low tide predictions vs 6-minute intervals
-    format: "json"
+    format: "json",
   };
 
   const url =
@@ -361,7 +364,7 @@ async function extrapolateFromHiLow(data: Normalized[]) {
       final.push({
         time: time.toISOString(),
         height: lerp(a.height, b.height, inOutQuad(percentDone)),
-        type: "intermediate"
+        type: "intermediate",
       });
     }
 

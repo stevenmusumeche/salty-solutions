@@ -15,7 +15,9 @@
     "titleBar.inactiveForeground": "#15202b99",
     "statusBar.background": "#56b0ea",
     "statusBarItem.hoverBackground": "#299be4",
-    "statusBar.foreground": "#15202b"
+    "statusBar.foreground": "#15202b",
+    "statusBar.border": "#56b0ea",
+    "titleBar.border": "#56b0ea"
   },
   "peacock.color": "#56b0ea",
   // Custom tags for the parser to use
