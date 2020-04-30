@@ -1,7 +1,7 @@
 import {
   useCurrentConditionsDataQuery,
-  CurrentConditionsDataQuery
-} from "../generated/graphql";
+  CurrentConditionsDataQuery,
+} from "../graphql";
 import { noDecimals } from "./utils";
 import { UseQueryState } from "urql";
 
@@ -14,8 +14,8 @@ export function useCurrentWindData(
     variables: {
       locationId,
       startDate: startDate.toISOString(),
-      endDate: endDate.toISOString()
-    }
+      endDate: endDate.toISOString(),
+    },
   });
 
   const { curValue, curDirectionValue, curDetail } = extractData(result);
@@ -25,7 +25,7 @@ export function useCurrentWindData(
     curDirectionValue,
     curDetail,
     refresh: executeQuery,
-    ...result
+    ...result,
   };
 }
 
@@ -52,11 +52,11 @@ function extractData(windData: UseQueryState<CurrentConditionsDataQuery>) {
     windData.data.location.wind &&
     windData.data.location.wind.detail &&
     windData.data.location.wind.detail
-      .map(data => ({
+      .map((data) => ({
         y: data.speed,
         x: data.timestamp,
         directionDegrees: data.directionDegrees,
-        direction: data.direction
+        direction: data.direction,
       }))
       .sort((a, b) => {
         return new Date(a.x).getTime() - new Date(b.x).getTime();

@@ -1,20 +1,9 @@
 import gql from "graphql-tag";
 
-const LOCATION_QUERY = gql`
+export const LOCATION_QUERY = gql`
   query Locations {
     locations {
-      id
-      name
-      coords {
-        lat
-        lon
-      }
-      tidePreditionStations {
-        ...TideStationDetail
-      }
-      usgsSites {
-        ...UsgsSiteDetail
-      }
+      ...LocationDetail
     }
   }
   fragment TideStationDetail on TidePreditionStation {
@@ -26,5 +15,20 @@ const LOCATION_QUERY = gql`
     id
     name
     availableParams
+  }
+
+  fragment LocationDetail on Location {
+    id
+    name
+    coords {
+      lat
+      lon
+    }
+    tidePreditionStations {
+      ...TideStationDetail
+    }
+    usgsSites {
+      ...UsgsSiteDetail
+    }
   }
 `;

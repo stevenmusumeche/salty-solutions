@@ -1,7 +1,7 @@
 import {
   useCurrentConditionsDataQuery,
-  CurrentConditionsDataQuery
-} from "../generated/graphql";
+  CurrentConditionsDataQuery,
+} from "../graphql";
 import { UseQueryState } from "urql";
 
 export function useTemperatureData(
@@ -13,8 +13,8 @@ export function useTemperatureData(
     variables: {
       locationId,
       startDate: startDate.toISOString(),
-      endDate: endDate.toISOString()
-    }
+      endDate: endDate.toISOString(),
+    },
   });
   const { curValue, curDetail } = extractData(result);
   return { curValue, curDetail, ...result };
@@ -34,9 +34,9 @@ function extractData(data: UseQueryState<CurrentConditionsDataQuery>) {
     data.data.location &&
     data.data.location.temperature &&
     data.data.location.temperature.detail &&
-    data.data.location.temperature.detail.map(data => ({
+    data.data.location.temperature.detail.map((data) => ({
       y: data.temperature.degrees,
-      x: data.timestamp
+      x: data.timestamp,
     }));
 
   return { curValue, curDetail };
