@@ -1,6 +1,6 @@
 {
   "name": "@stevenmusumeche/salty-solutions-shared",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -18,5 +18,8 @@
   },
   "devDependencies": {
     "typescript": "^3.8.3"
+  },
+  "peerDependencies": {
+    "urql": "^1.9.7"
   }
 }
