@@ -13,6 +13,7 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY_SERVERLESS }}
       STAGE: prod
       AWS_DEFAULT_REGION: "us-east-1"
+      NPM_GITHUB_PACKAGE_TOKEN: ${{ secrets.NPM_GITHUB_PACKAGE_TOKEN }}
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
