@@ -1,0 +1,12 @@
+overwrite: true
+schema: https://o2hlpsp9ac.execute-api.us-east-1.amazonaws.com/prod/api
+documents: "./graphql/**/*.ts"
+generates:
+  components/graphql-generated.ts:
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-urql
+    config:
+      withHooks: true
+      withComponent: false
