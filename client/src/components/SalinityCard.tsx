@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ConditionCard from "./ConditionCard";
-import { useSalinityData } from "../hooks/useSalinityData";
+import { hooks } from "@stevenmusumeche/salty-solutions-shared";
 import { UsgsSiteDetailFragment } from "../generated/graphql";
 import UsgsSiteSelect from "./UsgsSiteSelect";
 import { subHours, startOfDay } from "date-fns/esm";
@@ -16,7 +16,7 @@ const SalinityCard: React.FC<Props> = ({ locationId, usgsSites }) => {
   const [selectedUsgsSiteId, setSelectedUsgsSiteId] = useState(usgsSites[0].id);
 
   const date = startOfDay(new Date());
-  const { curValue, curDetail, fetching, error } = useSalinityData(
+  const { curValue, curDetail, fetching, error } = hooks.useSalinityData(
     locationId,
     selectedUsgsSiteId,
     subHours(date, 48),
@@ -45,7 +45,7 @@ const SalinityCard: React.FC<Props> = ({ locationId, usgsSites }) => {
         />
         <UsgsSiteSelect
           sites={usgsSites}
-          handleChange={e => setSelectedUsgsSiteId(e.target.value)}
+          handleChange={(e) => setSelectedUsgsSiteId(e.target.value)}
           selectedId={selectedUsgsSiteId}
         />
       </div>

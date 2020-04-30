@@ -1,0 +1,26 @@
+{
+  "name": "@stevenmusumeche/salty-solutions-shared",
+  "version": "1.0.16",
+  "description": "",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "compile": "tsc",
+    "prepack": "yarn compile"
+  },
+  "author": "",
+  "license": "ISC",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/stevenmusumeche/salty-solutions.git"
+  },
+  "devDependencies": {
+    "typescript": "^3.8.3"
+  },
+  "peerDependencies": {
+    "urql": "^1.9.7"
+  }
+}

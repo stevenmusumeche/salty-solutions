@@ -1,6 +1,6 @@
 import React from "react";
 import ConditionCard from "./ConditionCard";
-import { useTemperatureData } from "../hooks/useTemperatureData";
+import { hooks } from "@stevenmusumeche/salty-solutions-shared";
 import { subHours, startOfDay } from "date-fns";
 import MiniGraph from "./MiniGraph";
 import { noDecimals } from "../hooks/utils";
@@ -11,7 +11,7 @@ interface Props {
 
 const AirTempCard: React.FC<Props> = ({ locationId }) => {
   const date = startOfDay(new Date());
-  const { curValue, curDetail, fetching, error } = useTemperatureData(
+  const { curValue, curDetail, fetching, error } = hooks.useTemperatureData(
     locationId,
     subHours(date, 48),
     date

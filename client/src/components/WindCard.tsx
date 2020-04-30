@@ -1,13 +1,13 @@
 import React from "react";
 import ConditionCard from "./ConditionCard";
-import { useCurrentWindData } from "../hooks/useWindData";
+import { hooks } from "@stevenmusumeche/salty-solutions-shared";
 import { subHours, differenceInDays, startOfDay } from "date-fns";
 import {
   VictoryChart,
   VictoryLine,
   VictoryAxis,
   VictoryGroup,
-  VictoryScatter
+  VictoryScatter,
 } from "victory";
 import ErrorIcon from "../assets/error.svg";
 import { CombinedError } from "urql";
@@ -24,8 +24,8 @@ const WindCard: React.FC<Props> = ({ locationId }) => {
     curDetail,
     curDirectionValue,
     fetching,
-    error
-  } = useCurrentWindData(locationId, subHours(date, 48), date);
+    error,
+  } = hooks.useCurrentWindData(locationId, subHours(date, 48), date);
 
   let graphDisplayVal = buildGraphDisplayVal(fetching, error, curDetail);
 
@@ -71,7 +71,7 @@ const ArrowPoint: React.FC<any> = ({ x, y, datum, index, ...props }) => {
         d="M412.6 227.1L278.6 89c-5.8-6-13.7-9-22.4-9h-.4c-8.7 0-16.6 3-22.4 9l-134 138.1c-12.5 12-12.5 31.3 0 43.2 12.5 11.9 32.7 11.9 45.2 0l79.4-83v214c0 16.9 14.3 30.6 32 30.6 18 0 32-13.7 32-30.6v-214l79.4 83c12.5 11.9 32.7 11.9 45.2 0s12.5-31.2 0-43.2z"
         style={{
           transformOrigin: "center",
-          transform: `rotate(${Math.abs(datum.directionDegrees + 180)}deg)`
+          transform: `rotate(${Math.abs(datum.directionDegrees + 180)}deg)`,
         }}
       />
     </svg>
@@ -108,13 +108,13 @@ function buildGraphDisplayVal(
           <VictoryAxis
             fixLabelOverlap={false}
             tickCount={2}
-            tickFormat={date => {
+            tickFormat={(date) => {
               const dayDiff = differenceInDays(new Date(date), new Date());
               return dayDiff === 0 ? "now" : `${dayDiff}d`;
             }}
             style={{
               tickLabels: { fontSize: 24 },
-              grid: { stroke: "#a0aec0", strokeDasharray: "6, 6" }
+              grid: { stroke: "#a0aec0", strokeDasharray: "6, 6" },
             }}
           />
           <VictoryAxis
@@ -128,7 +128,7 @@ function buildGraphDisplayVal(
               interpolation="natural"
               style={{
                 data: { stroke: "#C68E37" },
-                parent: { border: "1px solid #ccc" }
+                parent: { border: "1px solid #ccc" },
               }}
             />
             <VictoryScatter

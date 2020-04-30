@@ -1,7 +1,7 @@
 import {
   useCurrentConditionsDataQuery,
-  CurrentConditionsDataQuery
-} from "../generated/graphql";
+  CurrentConditionsDataQuery,
+} from "../graphql";
 import { UseQueryState, CombinedError } from "urql";
 import { noDecimals } from "./utils";
 
@@ -16,8 +16,8 @@ export function useSalinityData(
       locationId,
       usgsSiteId,
       startDate: startDate.toISOString(),
-      endDate: endDate.toISOString()
-    }
+      endDate: endDate.toISOString(),
+    },
   });
   const { curValue, curDetail, stationName } = extractData(result);
   return {
@@ -28,7 +28,7 @@ export function useSalinityData(
     error:
       curValue === null
         ? new CombinedError({ graphQLErrors: ["no value"] })
-        : result.error
+        : result.error,
   };
 }
 
@@ -47,9 +47,9 @@ function extractData(data: UseQueryState<CurrentConditionsDataQuery>) {
     data.data.usgsSite &&
     data.data.usgsSite.salinity &&
     data.data.usgsSite.salinity.detail &&
-    data.data.usgsSite.salinity.detail.map(data => ({
+    data.data.usgsSite.salinity.detail.map((data) => ({
       y: data.salinity,
-      x: data.timestamp
+      x: data.timestamp,
     }));
 
   const stationName =

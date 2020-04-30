@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ConditionCard from "./ConditionCard";
-import { useWaterTemperatureData } from "../hooks/useWaterTemperatureData";
+import { hooks } from "@stevenmusumeche/salty-solutions-shared";
 import { UsgsSiteDetailFragment } from "../generated/graphql";
 import { subHours, startOfDay } from "date-fns";
 import UsgsSiteSelect from "./UsgsSiteSelect";
@@ -21,8 +21,8 @@ const WaterTempCard: React.FC<Props> = ({ locationId, usgsSites }) => {
     curDetail,
     fetching,
     error,
-    refresh
-  } = useWaterTemperatureData(
+    refresh,
+  } = hooks.useWaterTemperatureData(
     locationId,
     selectedUsgsSiteId,
     subHours(date, 48),
@@ -53,7 +53,7 @@ const WaterTempCard: React.FC<Props> = ({ locationId, usgsSites }) => {
         />
         <UsgsSiteSelect
           sites={usgsSites}
-          handleChange={e => setSelectedUsgsSiteId(e.target.value)}
+          handleChange={(e) => setSelectedUsgsSiteId(e.target.value)}
           selectedId={selectedUsgsSiteId}
         />
       </div>
