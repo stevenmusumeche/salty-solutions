@@ -9,7 +9,7 @@ export function useTemperatureData(
   startDate: Date,
   endDate: Date
 ) {
-  const [result] = useCurrentConditionsDataQuery({
+  const [result, refresh] = useCurrentConditionsDataQuery({
     variables: {
       locationId,
       startDate: startDate.toISOString(),
@@ -17,7 +17,7 @@ export function useTemperatureData(
     },
   });
   const { curValue, curDetail } = extractData(result);
-  return { curValue, curDetail, ...result };
+  return { curValue, curDetail, refresh, ...result };
 }
 
 function extractData(data: UseQueryState<CurrentConditionsDataQuery>) {

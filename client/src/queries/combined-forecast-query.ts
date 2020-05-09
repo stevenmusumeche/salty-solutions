@@ -4,30 +4,7 @@ export const COMBINED_FORECAST_QUERY = gql`
   query CombinedForecast($locationId: ID!) {
     location(id: $locationId) {
       combinedForecast {
-        timePeriod
-        wind {
-          speed {
-            from
-            to
-          }
-          direction {
-            text
-            degrees
-          }
-        }
-        waterCondition {
-          text
-          icon
-        }
-        temperature {
-          degrees
-          unit
-        }
-        chanceOfPrecipitation
-        icon
-        marine
-        short
-        detailed
+        ...CombinedForecastDetail
       }
 
       hourlyWeatherForecast {
@@ -51,5 +28,32 @@ export const COMBINED_FORECAST_QUERY = gql`
     }
     icon
     shortForecast
+  }
+
+  fragment CombinedForecastDetail on CombinedForecast {
+    timePeriod
+    wind {
+      speed {
+        from
+        to
+      }
+      direction {
+        text
+        degrees
+      }
+    }
+    waterCondition {
+      text
+      icon
+    }
+    temperature {
+      degrees
+      unit
+    }
+    chanceOfPrecipitation
+    icon
+    marine
+    short
+    detailed
   }
 `;

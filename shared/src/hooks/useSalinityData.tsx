@@ -11,7 +11,7 @@ export function useSalinityData(
   startDate: Date,
   endDate: Date
 ) {
-  const [result] = useCurrentConditionsDataQuery({
+  const [result, refresh] = useCurrentConditionsDataQuery({
     variables: {
       locationId,
       usgsSiteId,
@@ -24,6 +24,7 @@ export function useSalinityData(
     curValue,
     curDetail,
     stationName,
+    refresh,
     ...result,
     error:
       curValue === null

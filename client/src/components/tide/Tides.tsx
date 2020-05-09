@@ -4,7 +4,7 @@ import {
   format,
   isSameDay,
   startOfDay,
-  subDays
+  subDays,
 } from "date-fns";
 import React, { ChangeEventHandler, useEffect, useState } from "react";
 import ErrorIcon from "../../assets/error.svg";
@@ -13,16 +13,16 @@ import {
   useTideQuery,
   UsgsSiteDetailFragment,
   SunDetailFieldsFragment,
-  MoonDetailFieldsFragment
+  MoonDetailFieldsFragment,
 } from "../../generated/graphql";
 import useBreakpoints from "../../hooks/useBreakpoints";
 import EmptyBox from "../EmptyBox";
 import MainTideChart from "./MainTideChart";
 import MultiDayTideCharts from "./MultiDayTideCharts";
-import { buildDatasets } from "./tide-helpers";
 import UsgsSiteSelect from "../UsgsSiteSelect";
 import MoonPhase from "../MoonPhase";
 import DatePicker from "react-date-picker";
+import { buildDatasets } from "@stevenmusumeche/salty-solutions-shared/dist/tide-helpers";
 
 interface Props {
   tideStations: TideStationDetailFragment[];
@@ -39,7 +39,7 @@ const Tides: React.FC<Props> = ({
   usgsSites,
   locationId,
   date,
-  setActiveDate
+  setActiveDate,
 }) => {
   const [selectedTideStationId, setSelectedTideStationId] = useState(
     tideStations[0].id
@@ -59,15 +59,15 @@ const Tides: React.FC<Props> = ({
       tideStationId: selectedTideStationId!,
       usgsSiteId: selectedUsgsSiteId!,
       startDate: format(subDays(startOfDay(date), 3), ISO_FORMAT),
-      endDate: format(addDays(startOfDay(date), 4), ISO_FORMAT)
+      endDate: format(addDays(startOfDay(date), 4), ISO_FORMAT),
     },
-    pause: selectedTideStationId === undefined
+    pause: selectedTideStationId === undefined,
   });
 
-  const handleStationChange: ChangeEventHandler<HTMLSelectElement> = e =>
+  const handleStationChange: ChangeEventHandler<HTMLSelectElement> = (e) =>
     setSelectedTideStationId(e.target.value);
 
-  const handleUsgsSiteChange: ChangeEventHandler<HTMLSelectElement> = e =>
+  const handleUsgsSiteChange: ChangeEventHandler<HTMLSelectElement> = (e) =>
     setSelectedUsgsSiteId(e.target.value);
 
   if (tideResult.fetching) {
@@ -107,7 +107,7 @@ const Tides: React.FC<Props> = ({
 
   // filter data for current date
   const sunData = tideResult.data.location.sun.filter(
-    x =>
+    (x) =>
       startOfDay(new Date(x.sunrise)).toISOString() ===
       startOfDay(date).toISOString()
   )[0];
@@ -115,16 +115,16 @@ const Tides: React.FC<Props> = ({
   if (!sunData) return <Fetching />;
 
   const moonData = tideResult.data.location.moon.filter(
-    x =>
+    (x) =>
       startOfDay(new Date(x.date)).toISOString() ===
       startOfDay(date).toISOString()
   )[0];
 
-  const curDayWaterHeight = tideResult.data.usgsSite.waterHeight.filter(x => {
+  const curDayWaterHeight = tideResult.data.usgsSite.waterHeight.filter((x) => {
     return isSameDay(new Date(x.timestamp), date);
   });
 
-  const curDayTides = tideResult.data.tidePreditionStation.tides.filter(x =>
+  const curDayTides = tideResult.data.tidePreditionStation.tides.filter((x) =>
     isSameDay(new Date(x.time), date)
   );
 
@@ -262,7 +262,7 @@ const Pill: React.FC<{ label: string; color?: string; className?: string }> = ({
   label,
   children,
   color = "blue-600",
-  className = ""
+  className = "",
 }) => {
   return (
     <div
@@ -297,7 +297,7 @@ const TideStationSelect: React.FC<{
         value={selectedId}
         className="select-css pr-8 pl-2 py-1 bg-white text-gray-700 text-sm"
       >
-        {tideStations.map(station => (
+        {tideStations.map((station) => (
           <option key={station.id} value={station.id}>
             {station.name}
           </option>

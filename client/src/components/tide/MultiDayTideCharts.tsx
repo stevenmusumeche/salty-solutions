@@ -1,15 +1,11 @@
 import React from "react";
 import { VictoryChart, VictoryAxis, VictoryLine, VictoryArea } from "victory";
-import {
-  renderBackgroundColor,
-  buildDatasets,
-  Y_PADDING
-} from "./tide-helpers";
+import { renderBackgroundColor, Y_PADDING } from "./tide-helpers";
 import useBreakpoints from "../../hooks/useBreakpoints";
 import {
   SunDetailFieldsFragment,
   TideDetailFieldsFragment,
-  WaterHeightFieldsFragment
+  WaterHeightFieldsFragment,
 } from "../../generated/graphql";
 import {
   addHours,
@@ -21,8 +17,9 @@ import {
   endOfDay,
   getHours,
   isAfter,
-  isBefore
+  isBefore,
 } from "date-fns";
+import { buildDatasets } from "@stevenmusumeche/salty-solutions-shared/dist/tide-helpers";
 
 interface Props {
   sunData: SunDetailFieldsFragment[];
@@ -44,7 +41,7 @@ const MultiDayTideCharts: React.FC<Props> = ({
   waterHeightData: rawWaterHeightData,
   activeDate,
   setActiveDate,
-  numDays
+  numDays,
 }) => {
   const { isSmall } = useBreakpoints();
 
@@ -53,12 +50,12 @@ const MultiDayTideCharts: React.FC<Props> = ({
   const { tideData, waterHeightData, tideBoundaries } = buildDatasets(
     sunData[0], // not actually used here
     rawTideData.filter(
-      x =>
+      (x) =>
         isAfter(new Date(x.time), subDays(activeDate, dayPadding)) &&
         isBefore(new Date(x.time), endOfDay(addDays(activeDate, dayPadding)))
     ),
     rawWaterHeightData.filter(
-      x =>
+      (x) =>
         isAfter(new Date(x.timestamp), subDays(activeDate, dayPadding)) &&
         isBefore(
           new Date(x.timestamp),
@@ -75,18 +72,18 @@ const MultiDayTideCharts: React.FC<Props> = ({
 
     // filter data for current date
     const curSunData = sunData.filter(
-      x =>
+      (x) =>
         startOfDay(new Date(x.sunrise)).toISOString() ===
         startOfDay(curDate).toISOString()
     )[0];
 
     if (!curSunData) continue;
 
-    const curDayWaterHeight = rawWaterHeightData.filter(x => {
+    const curDayWaterHeight = rawWaterHeightData.filter((x) => {
       return isSameDay(new Date(x.timestamp), curDate);
     });
 
-    const curDayTides = rawTideData.filter(x =>
+    const curDayTides = rawTideData.filter((x) =>
       isSameDay(new Date(x.time), curDate)
     );
 
@@ -119,13 +116,13 @@ const MultiDayTideCharts: React.FC<Props> = ({
         width={1000}
         height={isSmall ? 280 : 160}
         style={{
-          parent: { backgroundColor: "white", touchAction: "auto" }
+          parent: { backgroundColor: "white", touchAction: "auto" },
         }}
         padding={{
           top: 5,
           bottom: isSmall ? 50 : 30,
           left: isSmall ? 65 : 30,
-          right: isSmall ? 30 : 10
+          right: isSmall ? 30 : 10,
         }}
       >
         {/* background colors for night */}
@@ -133,16 +130,19 @@ const MultiDayTideCharts: React.FC<Props> = ({
           data={[
             {
               x: startOfDay(subDays(activeDate, dayPadding)),
-              y: max + Y_PADDING
+              y: max + Y_PADDING,
             },
-            { x: endOfDay(addDays(activeDate, dayPadding)), y: max + Y_PADDING }
+            {
+              x: endOfDay(addDays(activeDate, dayPadding)),
+              y: max + Y_PADDING,
+            },
           ]}
           scale={{ x: "time", y: "linear" }}
           style={{
             data: {
               strokeWidth: 0,
-              fill: "#4a5568"
-            }
+              fill: "#4a5568",
+            },
           }}
           y0={() => (min < 0 ? min - Y_PADDING : 0)}
         />
@@ -157,13 +157,13 @@ const MultiDayTideCharts: React.FC<Props> = ({
           style={{
             grid: {
               // only show gridlines on midnight
-              strokeWidth: date => (getHours(new Date(date)) === 0 ? 1 : 0),
-              stroke: "white"
+              strokeWidth: (date) => (getHours(new Date(date)) === 0 ? 1 : 0),
+              stroke: "white",
             },
-            tickLabels: { fontSize: isSmall ? 42 : 12 }
+            tickLabels: { fontSize: isSmall ? 42 : 12 },
           }}
           // only show label at noon (center of the day block)
-          tickFormat={date =>
+          tickFormat={(date) =>
             getHours(new Date(date)) === 12
               ? format(new Date(date), "EEEE (M/d)")
               : ""
@@ -176,7 +176,7 @@ const MultiDayTideCharts: React.FC<Props> = ({
         <VictoryAxis
           dependentAxis
           style={{
-            tickLabels: { fontSize: isSmall ? 42 : 12 }
+            tickLabels: { fontSize: isSmall ? 42 : 12 },
           }}
           tickCount={isSmall ? 3 : 4}
           crossAxis={false}
@@ -190,8 +190,8 @@ const MultiDayTideCharts: React.FC<Props> = ({
           style={{
             data: {
               strokeWidth: isSmall ? 4 : 2,
-              stroke: "black"
-            }
+              stroke: "black",
+            },
           }}
         />
         {/* observed water height */}
@@ -202,8 +202,8 @@ const MultiDayTideCharts: React.FC<Props> = ({
           style={{
             data: {
               strokeWidth: isSmall ? 4 : 2,
-              stroke: "#3182ce"
-            }
+              stroke: "#3182ce",
+            },
           }}
         />
       </VictoryChart>

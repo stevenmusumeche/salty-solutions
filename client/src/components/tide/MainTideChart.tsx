@@ -4,7 +4,7 @@ import {
   format,
   isAfter,
   isBefore,
-  startOfDay
+  startOfDay,
 } from "date-fns";
 import React from "react";
 import {
@@ -12,19 +12,19 @@ import {
   VictoryAxis,
   VictoryChart,
   VictoryLine,
-  VictoryScatter
+  VictoryScatter,
 } from "victory";
 import {
   SunDetailFieldsFragment,
   TideDetailFieldsFragment,
-  WaterHeightFieldsFragment
+  WaterHeightFieldsFragment,
 } from "../../generated/graphql";
 import useBreakpoints from "../../hooks/useBreakpoints";
 import {
   buildDatasets,
-  renderBackgroundColor,
-  Y_PADDING
-} from "./tide-helpers";
+  Y_PADDING,
+} from "@stevenmusumeche/salty-solutions-shared/dist/tide-helpers";
+import { renderBackgroundColor } from "./tide-helpers";
 
 interface Props {
   sunData: SunDetailFieldsFragment;
@@ -37,7 +37,7 @@ const MainTideChart: React.FC<Props> = ({
   sunData,
   tideData: rawTideData,
   waterHeightData: rawWaterHeightData,
-  date
+  date,
 }) => {
   const { isSmall } = useBreakpoints();
 
@@ -48,7 +48,7 @@ const MainTideChart: React.FC<Props> = ({
     tideData,
     hiLowData,
     waterHeightData,
-    tideBoundaries
+    tideBoundaries,
   } = buildDatasets(sunData, rawTideData, rawWaterHeightData);
   const { min, max } = tideBoundaries;
 
@@ -62,13 +62,13 @@ const MainTideChart: React.FC<Props> = ({
       width={450}
       height={isSmall ? 250 : 200}
       style={{
-        parent: { backgroundColor: "white", touchAction: "auto" }
+        parent: { backgroundColor: "white", touchAction: "auto" },
       }}
       padding={{
         top: 5,
         bottom: 30,
         left: isSmall ? 50 : 30,
-        right: isSmall ? 30 : 10
+        right: isSmall ? 30 : 10,
       }}
     >
       {/* background colors for night */}
@@ -76,16 +76,16 @@ const MainTideChart: React.FC<Props> = ({
         data={[
           {
             x: startOfDay(date),
-            y: max + Y_PADDING
+            y: max + Y_PADDING,
           },
-          { x: endOfDay(date), y: max + Y_PADDING }
+          { x: endOfDay(date), y: max + Y_PADDING },
         ]}
         scale={{ x: "time", y: "linear" }}
         style={{
           data: {
             strokeWidth: 0,
-            fill: "#4a5568"
-          }
+            fill: "#4a5568",
+          },
         }}
         y0={() => (min < 0 ? min - Y_PADDING : 0)}
       />
@@ -101,11 +101,11 @@ const MainTideChart: React.FC<Props> = ({
           grid: {
             strokeWidth: 1,
             stroke: "#718096",
-            strokeDasharray: isSmall ? "2 4" : "2 10"
+            strokeDasharray: isSmall ? "2 4" : "2 10",
           },
-          tickLabels: { fontSize: isSmall ? 20 : 8 }
+          tickLabels: { fontSize: isSmall ? 20 : 8 },
         }}
-        tickFormat={date => format(new Date(date), "ha").toLowerCase()}
+        tickFormat={(date) => format(new Date(date), "ha").toLowerCase()}
         tickValues={timeTickValues}
         offsetY={30}
       />
@@ -115,10 +115,10 @@ const MainTideChart: React.FC<Props> = ({
         style={{
           grid: {
             stroke: "718096",
-            strokeWidth: y => (isSmall ? 0 : y === 0 && min < 0 ? 2 : 1),
-            strokeDasharray: y => (y === 0 && min < 0 ? "12 6" : "2 10")
+            strokeWidth: (y) => (isSmall ? 0 : y === 0 && min < 0 ? 2 : 1),
+            strokeDasharray: (y) => (y === 0 && min < 0 ? "12 6" : "2 10"),
           },
-          tickLabels: { fontSize: isSmall ? 20 : 8 }
+          tickLabels: { fontSize: isSmall ? 20 : 8 },
         }}
         tickCount={isSmall ? 6 : 10}
         crossAxis={false}
@@ -131,8 +131,8 @@ const MainTideChart: React.FC<Props> = ({
         style={{
           data: {
             strokeWidth: isSmall ? 2 : 1,
-            stroke: "black"
-          }
+            stroke: "black",
+          },
         }}
       />
       {/* observed water height */}
@@ -143,8 +143,8 @@ const MainTideChart: React.FC<Props> = ({
         style={{
           data: {
             strokeWidth: isSmall ? 2 : 1,
-            stroke: "#3182ce"
-          }
+            stroke: "#3182ce",
+          },
         }}
       />
       {/* hi and low tide labels */}
@@ -152,31 +152,31 @@ const MainTideChart: React.FC<Props> = ({
         <VictoryScatter
           data={hiLowData}
           size={1.5}
-          labels={data =>
+          labels={(data) =>
             format(new Date(data.x), "h:mma") + `\n${data.y.toFixed(1)}ft`
           }
           style={{
             data: {
-              fill: "transparent"
+              fill: "transparent",
             },
             labels: {
               fontSize: 8,
               padding: 2,
-              fill: datum => {
+              fill: (datum) => {
                 const isNight =
                   isAfter(datum.x, new Date(sunData.nauticalDusk)) ||
                   isBefore(datum.x, new Date(sunData.nauticalDawn));
 
                 return isNight ? "#a0aec0" : "#000000";
               },
-              textShadow: datum => {
+              textShadow: (datum) => {
                 const isNight =
                   isAfter(datum.x, new Date(sunData.nauticalDusk)) ||
                   isBefore(datum.x, new Date(sunData.nauticalDawn));
 
                 return isNight ? "0 0 5px #000000" : "0 0 5px #ffffff";
-              }
-            }
+              },
+            },
           }}
         />
       )}
