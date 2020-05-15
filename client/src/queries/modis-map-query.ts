@@ -5,6 +5,7 @@ const MODIS_MAP_QUERY = gql`
     location(id: $locationId) {
       modisMaps(numDays: 8) {
         date
+        satellite
         small {
           url
           width

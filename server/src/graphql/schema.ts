@@ -24,7 +24,7 @@ export default gql`
     temperature: TemperatureResult!
     maps: Maps
     dataSources: DataSources
-    modisMaps(numDays: Int): [ModusMap!]!
+    modisMaps(numDays: Int): [ModisMap!]!
     salinityMap: String!
   }
 
@@ -38,11 +38,17 @@ export default gql`
     availableParams: [UsgsParam!]!
   }
 
-  type ModusMap {
+  type ModisMap {
     date: String!
+    satellite: ModisSatellite!
     small: ModisMapEntry!
     medium: ModisMapEntry!
     large: ModisMapEntry!
+  }
+
+  enum ModisSatellite {
+    TERRA
+    AQUA
   }
 
   type ModisMapEntry {

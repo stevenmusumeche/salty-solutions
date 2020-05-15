@@ -69,7 +69,7 @@ export type Location = {
   temperature: TemperatureResult,
   maps?: Maybe<Maps>,
   dataSources?: Maybe<DataSources>,
-  modisMaps: Array<ModusMap>,
+  modisMaps: Array<ModisMap>,
   salinityMap: Scalars['String'],
 };
 
@@ -121,6 +121,15 @@ export type MarineForecastDetail = {
   windDirection?: Maybe<WindDirection>,
 };
 
+export type ModisMap = {
+  __typename?: 'ModisMap',
+  date: Scalars['String'],
+  satellite: ModisSatellite,
+  small: ModisMapEntry,
+  medium: ModisMapEntry,
+  large: ModisMapEntry,
+};
+
 export type ModisMapEntry = {
   __typename?: 'ModisMapEntry',
   url: Scalars['String'],
@@ -128,13 +137,10 @@ export type ModisMapEntry = {
   height: Scalars['Int'],
 };
 
-export type ModusMap = {
-  __typename?: 'ModusMap',
-  date: Scalars['String'],
-  small: ModisMapEntry,
-  medium: ModisMapEntry,
-  large: ModisMapEntry,
-};
+export enum ModisSatellite {
+  Terra = 'TERRA',
+  Aqua = 'AQUA'
+}
 
 export type MoonDetail = {
   __typename?: 'MoonDetail',
@@ -429,7 +435,7 @@ export type ModisMapQueryVariables = {
 };
 
 
-export type ModisMapQuery = ({ __typename?: 'Query' } & { location: Maybe<({ __typename?: 'Location' } & { modisMaps: Array<({ __typename?: 'ModusMap' } & Pick<ModusMap, 'date'> & { small: ({ __typename?: 'ModisMapEntry' } & Pick<ModisMapEntry, 'url' | 'width' | 'height'>), large: ({ __typename?: 'ModisMapEntry' } & Pick<ModisMapEntry, 'url' | 'width' | 'height'>) })> })> });
+export type ModisMapQuery = ({ __typename?: 'Query' } & { location: Maybe<({ __typename?: 'Location' } & { modisMaps: Array<({ __typename?: 'ModisMap' } & Pick<ModisMap, 'date' | 'satellite'> & { small: ({ __typename?: 'ModisMapEntry' } & Pick<ModisMapEntry, 'url' | 'width' | 'height'>), large: ({ __typename?: 'ModisMapEntry' } & Pick<ModisMapEntry, 'url' | 'width' | 'height'>) })> })> });
 
 export type SalinityMapQueryVariables = {
   locationId: Scalars['ID']
@@ -748,6 +754,7 @@ export const ModisMapDocument = gql`
   location(id: $locationId) {
     modisMaps(numDays: 8) {
       date
+      satellite
       small {
         url
         width

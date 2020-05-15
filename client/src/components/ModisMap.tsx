@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { useModisMapQuery, ModisMapQuery } from "../generated/graphql";
+import { graphql } from "@stevenmusumeche/salty-solutions-shared";
 import ErrorIcon from "../assets/error.svg";
 import { UseQueryState } from "urql";
 import Magnifier from "react-magnifier";
-import { format } from "date-fns";
+import { format, differenceInDays } from "date-fns";
 import BackIcon from "../assets/back.svg";
 import ForwardIcon from "../assets/forward.svg";
 import useBreakpoints from "../hooks/useBreakpoints";
 import EmptyBox from "./EmptyBox";
+import startCase from "lodash/startCase";
 
 interface Props {
   locationId: string;
@@ -15,7 +16,9 @@ interface Props {
 
 const ModisMap: React.FC<Props> = ({ locationId }) => {
   const { isAtLeastMedium } = useBreakpoints();
-  const [modisMap, refresh] = useModisMapQuery({ variables: { locationId } });
+  const [modisMap, refresh] = graphql.useModisMapQuery({
+    variables: { locationId },
+  });
   const [curIndex, setCurIndex] = useState(0);
 
   // preload the large image
@@ -25,7 +28,7 @@ const ModisMap: React.FC<Props> = ({ locationId }) => {
     }
   }, [curIndex, modisMap]);
 
-  function renderMap(modisMap: UseQueryState<ModisMapQuery>) {
+  function renderMap(modisMap: UseQueryState<graphql.ModisMapQuery>) {
     if (modisMap.error)
       return (
         <div className="flex flex-col h-full justify-center items-center">
@@ -46,9 +49,10 @@ const ModisMap: React.FC<Props> = ({ locationId }) => {
 
     const numMaps = modisMap.data.location.modisMaps.length;
     const curImage = modisMap.data.location.modisMaps[curIndex];
+    const dayDiff = differenceInDays(new Date(), new Date(curImage.date));
 
     const goBack = () => {
-      setCurIndex(i => {
+      setCurIndex((i) => {
         if (i === numMaps - 1) {
           return 0;
         }
@@ -57,7 +61,7 @@ const ModisMap: React.FC<Props> = ({ locationId }) => {
     };
 
     const goForward = () => {
-      setCurIndex(i => {
+      setCurIndex((i) => {
         if (i === 0) {
           return numMaps - 1;
         }
@@ -82,8 +86,14 @@ const ModisMap: React.FC<Props> = ({ locationId }) => {
           >
             <img src={BackIcon} alt="back" className="h-5" />
           </button>
-          <div className="mx-4 w-48">
-            {format(new Date(curImage.date), "EEEE, LLL d")}
+          <div className="mx-4 w-84 text-lg">
+            <div>{format(new Date(curImage.date), "EEEE, LLL d")}</div>
+            <div className="text-sm">
+              {dayDiff === 0
+                ? "Today "
+                : `${dayDiff} day${dayDiff > 1 ? "s" : ""} ago `}
+              ({startCase(curImage.satellite.toLowerCase())} Satellite)
+            </div>
           </div>
           <button
             onClick={goForward}

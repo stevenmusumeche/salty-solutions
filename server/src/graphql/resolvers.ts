@@ -8,7 +8,7 @@ const resolvers: Resolvers & { UsgsParam: Object } = {
     WindSpeed: "00035",
     WindDirection: "00036",
     GuageHeight: "00065",
-    Salinity: "00480"
+    Salinity: "00480",
   },
   Query: {
     locations: (_, __, { services }) => {
@@ -30,20 +30,20 @@ const resolvers: Resolvers & { UsgsParam: Object } = {
       const site = services.usgs.getSiteById(siteId);
       if (!site) throw new ApolloError(`Unknown USGS site ID ${siteId}`);
       return site;
-    }
+    },
   },
   Location: {
-    temperature: async location => {
+    temperature: async (location) => {
       return { location };
     },
     tidePreditionStations: (location, __, { services }) => {
       return location.tideStationIds
-        .map(id => services.tide.getStationById(id))
+        .map((id) => services.tide.getStationById(id))
         .filter(notUndefined);
     },
     usgsSites: (location, _, { services }) => {
       return location.usgsSiteIds
-        .map(id => services.usgs.getSiteById(id))
+        .map((id) => services.usgs.getSiteById(id))
         .filter(notUndefined);
     },
     sun: async (location, args, { services }) => {
@@ -74,14 +74,14 @@ const resolvers: Resolvers & { UsgsParam: Object } = {
     marineForecast: async (location, args, { services }) => {
       return services.marine.getForecast(location);
     },
-    wind: async location => {
+    wind: async (location) => {
       return { location };
     },
     maps: async (location, args, { services }) => {
       return {
         location,
 
-        overlays: services.radar.getOverlays(location)
+        overlays: services.radar.getOverlays(location),
       };
     },
     dataSources: async (location, args, { services }) => {
@@ -98,10 +98,10 @@ const resolvers: Resolvers & { UsgsParam: Object } = {
       }
 
       return "";
-    }
+    },
   },
   TidePreditionStation: {
-    url: station => {
+    url: (station) => {
       return `https://tidesandcurrents.noaa.gov/stationhome.html?id=${station.id}`;
     },
     tides: async (station, args, { services }) => {
@@ -110,7 +110,7 @@ const resolvers: Resolvers & { UsgsParam: Object } = {
         new Date(args.end),
         station.id
       );
-    }
+    },
   },
   UsgsSite: {
     waterHeight: async (site, args, { services }) => {
@@ -127,17 +127,17 @@ const resolvers: Resolvers & { UsgsParam: Object } = {
           site.id,
           new Date(args.start),
           new Date(args.end)
-        )
+        ),
       ]);
       return {
         summary: { mostRecent },
-        detail
+        detail,
       };
     },
     waterTemperature: async (site, args, ctx) => {
       ctx.pass.site = site;
       return {};
-    }
+    },
   },
   WaterTemperature: {
     detail: async (_, args, { services, pass }) => {
@@ -149,9 +149,9 @@ const resolvers: Resolvers & { UsgsParam: Object } = {
     },
     summary: async (_, args, { services, pass }) => {
       return {
-        mostRecent: await services.usgs.getWaterTemperatureLatest(pass.site.id)
+        mostRecent: await services.usgs.getWaterTemperatureLatest(pass.site.id),
       };
-    }
+    },
   },
   Wind: {
     detail: async (wind, args, { services }) => {
@@ -166,9 +166,9 @@ const resolvers: Resolvers & { UsgsParam: Object } = {
       // todo: switch to "getCurrentConditions"
       const result = await services.weather.getLatestConditions(wind.location);
       return {
-        mostRecent: result.wind
+        mostRecent: result.wind,
       };
-    }
+    },
   },
   TemperatureResult: {
     detail: async (temperature, args, { services }) => {
@@ -185,15 +185,15 @@ const resolvers: Resolvers & { UsgsParam: Object } = {
       );
 
       return {
-        mostRecent: data
+        mostRecent: data,
       };
-    }
+    },
   },
   Maps: {
     radar: (maps, args, { services }) => {
       return services.radar.getRadarImages(maps.location, args.numImages);
-    }
-  }
+    },
+  },
 };
 
 export default resolvers;

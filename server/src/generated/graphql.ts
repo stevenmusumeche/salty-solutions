@@ -71,7 +71,7 @@ export type Location = {
   temperature: TemperatureResult,
   maps?: Maybe<Maps>,
   dataSources?: Maybe<DataSources>,
-  modisMaps: Array<ModusMap>,
+  modisMaps: Array<ModisMap>,
   salinityMap: Scalars['String'],
 };
 
@@ -123,6 +123,15 @@ export type MarineForecastDetail = {
   windDirection?: Maybe<WindDirection>,
 };
 
+export type ModisMap = {
+  __typename?: 'ModisMap',
+  date: Scalars['String'],
+  satellite: ModisSatellite,
+  small: ModisMapEntry,
+  medium: ModisMapEntry,
+  large: ModisMapEntry,
+};
+
 export type ModisMapEntry = {
   __typename?: 'ModisMapEntry',
   url: Scalars['String'],
@@ -130,13 +139,10 @@ export type ModisMapEntry = {
   height: Scalars['Int'],
 };
 
-export type ModusMap = {
-  __typename?: 'ModusMap',
-  date: Scalars['String'],
-  small: ModisMapEntry,
-  medium: ModisMapEntry,
-  large: ModisMapEntry,
-};
+export enum ModisSatellite {
+  Terra = 'TERRA',
+  Aqua = 'AQUA'
+}
 
 export type MoonDetail = {
   __typename?: 'MoonDetail',
@@ -475,7 +481,8 @@ export type ResolversTypes = {
   Map: ResolverTypeWrapper<Partial<Map>>,
   Overlays: ResolverTypeWrapper<Partial<Overlays>>,
   DataSources: ResolverTypeWrapper<Partial<DataSources>>,
-  ModusMap: ResolverTypeWrapper<Partial<ModusMap>>,
+  ModisMap: ResolverTypeWrapper<Partial<ModisMap>>,
+  ModisSatellite: ResolverTypeWrapper<Partial<ModisSatellite>>,
   ModisMapEntry: ResolverTypeWrapper<Partial<ModisMapEntry>>,
   CurrentWind: ResolverTypeWrapper<Partial<CurrentWind>>,
 };
@@ -521,7 +528,8 @@ export type ResolversParentTypes = {
   Map: Partial<Map>,
   Overlays: Partial<Overlays>,
   DataSources: Partial<DataSources>,
-  ModusMap: Partial<ModusMap>,
+  ModisMap: Partial<ModisMap>,
+  ModisSatellite: Partial<ModisSatellite>,
   ModisMapEntry: Partial<ModisMapEntry>,
   CurrentWind: Partial<CurrentWind>,
 };
@@ -578,7 +586,7 @@ export type LocationResolvers<ContextType = Context, ParentType = ResolversParen
   temperature?: Resolver<ResolversTypes['TemperatureResult'], ParentType, ContextType>,
   maps?: Resolver<Maybe<ResolversTypes['Maps']>, ParentType, ContextType>,
   dataSources?: Resolver<Maybe<ResolversTypes['DataSources']>, ParentType, ContextType>,
-  modisMaps?: Resolver<Array<ResolversTypes['ModusMap']>, ParentType, ContextType, LocationModisMapsArgs>,
+  modisMaps?: Resolver<Array<ResolversTypes['ModisMap']>, ParentType, ContextType, LocationModisMapsArgs>,
   salinityMap?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
 };
 
@@ -604,17 +612,18 @@ export type MarineForecastDetailResolvers<ContextType = Context, ParentType = Re
   windDirection?: Resolver<Maybe<ResolversTypes['WindDirection']>, ParentType, ContextType>,
 };
 
+export type ModisMapResolvers<ContextType = Context, ParentType = ResolversParentTypes['ModisMap']> = {
+  date?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
+  satellite?: Resolver<ResolversTypes['ModisSatellite'], ParentType, ContextType>,
+  small?: Resolver<ResolversTypes['ModisMapEntry'], ParentType, ContextType>,
+  medium?: Resolver<ResolversTypes['ModisMapEntry'], ParentType, ContextType>,
+  large?: Resolver<ResolversTypes['ModisMapEntry'], ParentType, ContextType>,
+};
+
 export type ModisMapEntryResolvers<ContextType = Context, ParentType = ResolversParentTypes['ModisMapEntry']> = {
   url?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
   width?: Resolver<ResolversTypes['Int'], ParentType, ContextType>,
   height?: Resolver<ResolversTypes['Int'], ParentType, ContextType>,
-};
-
-export type ModusMapResolvers<ContextType = Context, ParentType = ResolversParentTypes['ModusMap']> = {
-  date?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
-  small?: Resolver<ResolversTypes['ModisMapEntry'], ParentType, ContextType>,
-  medium?: Resolver<ResolversTypes['ModisMapEntry'], ParentType, ContextType>,
-  large?: Resolver<ResolversTypes['ModisMapEntry'], ParentType, ContextType>,
 };
 
 export type MoonDetailResolvers<ContextType = Context, ParentType = ResolversParentTypes['MoonDetail']> = {
@@ -776,8 +785,8 @@ export type Resolvers<ContextType = Context> = {
   Maps?: MapsResolvers<ContextType>,
   MarineForecast?: MarineForecastResolvers<ContextType>,
   MarineForecastDetail?: MarineForecastDetailResolvers<ContextType>,
+  ModisMap?: ModisMapResolvers<ContextType>,
   ModisMapEntry?: ModisMapEntryResolvers<ContextType>,
-  ModusMap?: ModusMapResolvers<ContextType>,
   MoonDetail?: MoonDetailResolvers<ContextType>,
   Overlays?: OverlaysResolvers<ContextType>,
   Query?: QueryResolvers<ContextType>,
