@@ -1,6 +1,6 @@
 {
   "name": "@stevenmusumeche/salty-solutions-shared",
-  "version": "1.0.23",
+  "version": "1.0.24",
   "description": "",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -18,9 +18,12 @@
     "url": "https://github.com/stevenmusumeche/salty-solutions.git"
   },
   "devDependencies": {
-    "typescript": "^3.8.3"
+    "typescript": "3.9"
   },
   "peerDependencies": {
+    "urql": "^1.9.7"
+  },
+  "dependencies": {
     "urql": "^1.9.7"
   }
 }
