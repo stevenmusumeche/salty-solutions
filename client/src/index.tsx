@@ -12,11 +12,11 @@ import { useState } from "react";
 export const INITIAL_LOCATION = "calcasieu-lake";
 
 const client = createClient({
-  url: (process.env.REACT_APP_API_URL as string) || "http://localhost:4000/api"
+  url: (process.env.REACT_APP_API_URL as string) || "http://localhost:4000/api",
 });
 
 const Home: React.FC<RouteComponentProps> = () => {
-  const [locationId, setLocationId] = useState();
+  const [locationId, setLocationId] = useState<string>("");
   useEffect(() => {
     setLocationId(localStorage.getItem("locationId") || INITIAL_LOCATION);
   }, []);

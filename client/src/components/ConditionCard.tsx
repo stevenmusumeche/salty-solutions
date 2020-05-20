@@ -18,7 +18,7 @@ interface Props {
 
 const Wrapper: React.FC<{ children: ReactNode; className?: string }> = ({
   children,
-  className
+  className,
 }) => {
   const { isSmall } = useBreakpoints();
   return (
@@ -47,7 +47,7 @@ const ConditionCard: React.FC<Props> = ({
   fontSize = "7em",
   className,
   refresh,
-  loadingComponent: LoadingComponent
+  loadingComponent: LoadingComponent,
 }) => {
   let displayValue: any = null;
   const { isSmall } = useContext(WindowSizeContext);
@@ -90,7 +90,7 @@ const ConditionCard: React.FC<Props> = ({
     <Wrapper className={className}>
       <Label label={label} />
       <div
-        className="condition-card-value text-blue-800 leading-none flex justify-center flex-grow p-2 relative items-center"
+        className="condition-card-value text-blue-800 leading-none flex justify-center flex-grow p-2 relative items-start"
         style={{ fontSize: isSmall ? "4em" : fontSize }}
       >
         {displayValue}

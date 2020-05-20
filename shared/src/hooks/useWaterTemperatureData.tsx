@@ -25,24 +25,17 @@ export function useWaterTemperatureData(
 
 function extractData(data: UseQueryState<CurrentConditionsDataQuery>) {
   const curValue =
-    data.data &&
-    data.data.usgsSite &&
-    data.data.usgsSite.waterTemperature &&
-    data.data.usgsSite.waterTemperature.summary &&
-    data.data.usgsSite.waterTemperature.summary.mostRecent &&
+    data?.data?.usgsSite?.waterTemperature?.summary?.mostRecent &&
     `${Math.round(
       data.data.usgsSite.waterTemperature.summary.mostRecent.temperature.degrees
     )}°`;
 
-  const curDetail =
-    data.data &&
-    data.data.usgsSite &&
-    data.data.usgsSite.waterTemperature &&
-    data.data.usgsSite.waterTemperature.detail &&
-    data.data.usgsSite.waterTemperature.detail.map((data) => ({
+  const curDetail = data?.data?.usgsSite?.waterTemperature?.detail?.map(
+    (data) => ({
       y: data.temperature.degrees,
       x: data.timestamp,
-    }));
+    })
+  );
 
   return { curValue, curDetail };
 }
