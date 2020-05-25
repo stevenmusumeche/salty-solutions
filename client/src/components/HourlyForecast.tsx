@@ -1,11 +1,11 @@
 import React, { ReactNode, useContext } from "react";
 import {
   HourlyForecastDetailFragment,
-  useCombinedForecastQuery
+  useCombinedForecastQuery,
 } from "../generated/graphql";
 import ErrorIcon from "../assets/error.svg";
 import { HourlyForecastSkeleton } from "./ForecastSkeleton";
-import { format } from "date-fns";
+import { format, getHours } from "date-fns";
 import { WindowSizeContext } from "../providers/WindowSizeProvider";
 
 interface Props {
@@ -58,13 +58,13 @@ const HourlyForecast: React.FC<Props> = ({ locationId }) => {
 
   return (
     <Wrapper>
-      {days.map(day => {
+      {days.map((day) => {
         const numHours = grouped[day].length;
         if (numHours < 24 && !isSmall) {
           // @ts-ignore
           grouped[day] = [
             ...Array.from({ length: 24 - numHours }, (v, i) => null),
-            ...grouped[day]
+            ...grouped[day],
           ];
         }
 
@@ -76,16 +76,18 @@ const HourlyForecast: React.FC<Props> = ({ locationId }) => {
             <div className="forecast-header mb-4">
               {format(new Date(day), "cccc")}
             </div>
-            {grouped[day].map((hour, i) => {
-              if (hour === null) {
-                return (
-                  <div className="hourly-row empty" key={i}>
-                    &nbsp;
-                  </div>
-                );
-              }
-              return <Hour key={`${day}${hour.startTime}`} hour={hour} />;
-            })}
+            {grouped[day]
+              .filter((hour, i) => i % 3 === 0)
+              .map((hour, i) => {
+                if (hour === null) {
+                  return (
+                    <div className="hourly-row empty" key={i}>
+                      &nbsp;
+                    </div>
+                  );
+                }
+                return <Hour key={`${day}${hour.startTime}`} hour={hour} />;
+              })}
           </div>
         );
       })}
@@ -142,7 +144,7 @@ const Wrapper: React.FC<{
       style={{
         display: "grid",
         gridTemplateColumns: isSmall || isError ? "1fr" : "1fr 1fr",
-        gridColumnGap: isSmall ? "1rem" : "2rem"
+        gridColumnGap: isSmall ? "1rem" : "2rem",
       }}
     >
       {children}
