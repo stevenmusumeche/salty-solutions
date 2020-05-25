@@ -13,13 +13,13 @@ export const getCombinedForecast = async (
 
   const [marine, weather] = await Promise.all([
     getMarineForecast(location),
-    getWeatherForecast(location)
+    getWeatherForecast(location),
   ]);
 
-  const result = weather.map(w => {
+  const result = weather.map((w) => {
     const timePeriod = getNormalizedName(w.name);
     const matchedMarine = marine.find(
-      x => getNormalizedName(x.timePeriod) === timePeriod
+      (x) => getNormalizedName(x.timePeriod) === timePeriod
     );
 
     const windSpeed =
@@ -36,13 +36,13 @@ export const getCombinedForecast = async (
       timePeriod,
       wind: {
         speed: windSpeed,
-        direction: windDirection
+        direction: windDirection,
       },
       waterCondition:
         matchedMarine && matchedMarine.forecast.waterCondition
           ? {
               text: matchedMarine.forecast.waterCondition,
-              icon: "todo.jpg"
+              icon: "todo.jpg",
             }
           : null,
       temperature: w.temperature,
@@ -50,7 +50,7 @@ export const getCombinedForecast = async (
       short: w.shortForecast,
       detailed: w.detailedForecast,
       chanceOfPrecipitation: w.chanceOfPrecipitation,
-      icon: w.icon
+      icon: w.icon,
     };
   });
 
@@ -61,13 +61,13 @@ export const getCombinedForecast = async (
 const timePeriodMappers = [
   ["today", "this afternoon", "rest of today"],
   ["tonight", "overnight", "rest of tonight"],
-  ["monday", "labor day"]
+  ["monday", "labor day", "memorial day"],
 ];
 
 const getNormalizedName = (name: string) => {
   let normalized = name.toLowerCase();
 
-  const matched = timePeriodMappers.find(names => names.includes(normalized));
+  const matched = timePeriodMappers.find((names) => names.includes(normalized));
 
   return matched ? matched[0] : normalized;
 };

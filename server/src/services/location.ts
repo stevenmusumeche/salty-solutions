@@ -33,21 +33,21 @@ const locations: LocationEntity[] = [
       "8765551",
       "8765568",
       "8764931",
-      "8765026"
+      "8765026",
     ],
     marineZoneId: "GMZ435",
     coords: {
       lat: 29.731474,
-      lon: -91.841371
+      lon: -91.841371,
     },
     usgsSiteIds: ["07387040", "07387050", "073816525"],
     weatherGov: {
       apiBase: "https://api.weather.gov/gridpoints/LCH/112,73",
       stationId: "KARA",
-      radarSiteId: "LCH"
+      radarSiteId: "LCH",
     },
     nowcastSubdomain: "0",
-    modisArea: "USA7"
+    modisArea: "USA7",
   },
   {
     id: "calcasieu-lake",
@@ -56,16 +56,16 @@ const locations: LocationEntity[] = [
     marineZoneId: "GMZ432",
     coords: {
       lat: 29.9103,
-      lon: -93.2785
+      lon: -93.2785,
     },
     usgsSiteIds: ["08017118", "08017095", "08017044"],
     weatherGov: {
       apiBase: "https://api.weather.gov/gridpoints/LCH/57,80",
       stationId: "KLCH",
-      radarSiteId: "LCH"
+      radarSiteId: "LCH",
     },
     nowcastSubdomain: "cc",
-    modisArea: "USA7"
+    modisArea: "USA7",
   },
   {
     id: "cocodrie",
@@ -76,21 +76,21 @@ const locations: LocationEntity[] = [
       "8762850",
       "8763206",
       "8763506",
-      "8762675"
+      "8762675",
     ],
     marineZoneId: "GMZ550",
     coords: {
       lat: 29.246742,
-      lon: -90.661058
+      lon: -90.661058,
     },
     usgsSiteIds: ["073813498"],
     weatherGov: {
       apiBase: "https://api.weather.gov/gridpoints/LIX/47,58",
       stationId: "KHUM",
-      radarSiteId: "LIX"
+      radarSiteId: "LIX",
     },
     nowcastSubdomain: "0",
-    modisArea: "USA7"
+    modisArea: "USA7",
   },
   {
     id: "dularge",
@@ -100,21 +100,21 @@ const locations: LocationEntity[] = [
       "8763506", // raccoon
       "8763206", // calliou boca
       "8763719", // ship shoal
-      "8762928" // cocodrie
+      "8762928", // cocodrie
     ],
     marineZoneId: "GMZ550",
     coords: {
       lat: 29.412207,
-      lon: -90.782918
+      lon: -90.782918,
     },
     usgsSiteIds: ["07381349", "073813498"],
     weatherGov: {
       apiBase: "ttps://api.weather.gov/gridpoints/LIX/42,65",
       stationId: "KHUM",
-      radarSiteId: "LIX"
+      radarSiteId: "LIX",
     },
     nowcastSubdomain: "0",
-    modisArea: "USA7"
+    modisArea: "USA7",
   },
   {
     id: "hopedale",
@@ -123,7 +123,7 @@ const locations: LocationEntity[] = [
     marineZoneId: "GMZ536",
     coords: {
       lat: 29.8203972,
-      lon: -89.65689
+      lon: -89.65689,
     },
     usgsSiteIds: [
       "073745257",
@@ -131,15 +131,15 @@ const locations: LocationEntity[] = [
       "073745235",
       "07374526",
       "073745275",
-      "07374527"
+      "07374527",
     ],
     weatherGov: {
       apiBase: "https://api.weather.gov/gridpoints/LIX/85,84",
       stationId: "KNBG",
-      radarSiteId: "LIX"
+      radarSiteId: "LIX",
     },
     saveOurLake: true,
-    modisArea: "USA7"
+    modisArea: "USA7",
   },
   {
     id: "grand-isle",
@@ -150,27 +150,27 @@ const locations: LocationEntity[] = [
       "8761687",
       "8761677",
       "8761742",
-      "8762075"
+      "8762075",
     ],
     marineZoneId: "gmz572",
     coords: {
       lat: 29.2366,
-      lon: -89.9873
+      lon: -89.9873,
     },
     usgsSiteIds: [
       "07380249",
       "073802516",
       "291929089562600",
       "073802514",
-      "073802512"
+      "073802512",
     ],
     weatherGov: {
       apiBase: "https://api.weather.gov/gridpoints/LIX/73,58",
       stationId: "KGAO",
-      radarSiteId: "LIX"
+      radarSiteId: "LIX",
     },
     nowcastSubdomain: "0",
-    modisArea: "USA7"
+    modisArea: "USA7",
   },
   {
     id: "venice",
@@ -188,12 +188,12 @@ const locations: LocationEntity[] = [
       "8760841",
       "8760889",
       "8761212",
-      "8760595"
+      "8760595",
     ],
     marineZoneId: "GMZ555",
     coords: {
       lat: 29.277165,
-      lon: -89.3547759
+      lon: -89.3547759,
     },
     usgsSiteIds: [
       "292952089453800",
@@ -203,15 +203,15 @@ const locations: LocationEntity[] = [
       "07374550",
       "073745275",
       "07374527",
-      "285554089242400"
+      "285554089242400",
     ],
     weatherGov: {
       apiBase: "https://api.weather.gov/gridpoints/LIX/97,61",
       stationId: "KMIS",
-      radarSiteId: "LIX"
+      radarSiteId: "LIX",
     },
     modisArea: "USA7",
-    saveOurLake: true
+    saveOurLake: true,
   },
   {
     id: "lake-ponchartrain",
@@ -225,12 +225,12 @@ const locations: LocationEntity[] = [
       "8761473",
       "8761993",
       "8762372",
-      "8762483"
+      "8762483",
     ],
     marineZoneId: "GMZ530",
     coords: {
       lat: 30.193165894,
-      lon: -90.120332852
+      lon: -90.120332852,
     },
     usgsSiteIds: [
       "301001089442600",
@@ -242,16 +242,39 @@ const locations: LocationEntity[] = [
       "07375230",
       "073802339",
       "073802341",
-      "300703089522700"
+      "300703089522700",
     ],
     weatherGov: {
       apiBase: "https://api.weather.gov/gridpoints/LIX/66,100",
       stationId: "KASD",
-      radarSiteId: "LIX"
+      radarSiteId: "LIX",
     },
     modisArea: "USA7",
-    saveOurLake: true
-  }
+    saveOurLake: true,
+  },
+  {
+    id: "rigolets",
+    name: "Rigolets",
+    tideStationIds: ["8761402", "8761487", "8761473"],
+    marineZoneId: "GMZ534",
+    coords: {
+      lat: 30.1652143,
+      lon: -89.7281603,
+    },
+    usgsSiteIds: [
+      "301001089442600",
+      "07374581",
+      "073802332",
+      "300703089522700",
+    ],
+    weatherGov: {
+      apiBase: "https://api.weather.gov/gridpoints/LIX/66,100",
+      stationId: "KASD",
+      radarSiteId: "LIX",
+    },
+    modisArea: "USA7",
+    saveOurLake: true,
+  },
 ];
 
 // lafitte
@@ -282,7 +305,7 @@ export const getAll = (): LocationEntity[] =>
   locations.sort((a, b) => a.name.localeCompare(b.name));
 
 export const getById = (id: string): LocationEntity | undefined => {
-  return locations.find(location => location.id === id);
+  return locations.find((location) => location.id === id);
 };
 
 export const getDataSources = (location: LocationEntity) => ({
@@ -290,7 +313,7 @@ export const getDataSources = (location: LocationEntity) => ({
   marineZoneId: location.marineZoneId,
   usgsSiteIds: location.usgsSiteIds,
   weatherStationId: location.weatherGov.stationId,
-  weatherRadarSiteId: location.weatherGov.radarSiteId
+  weatherRadarSiteId: location.weatherGov.radarSiteId,
 });
 
 export const makeCacheKey = (location: LocationEntity, key: string) => {

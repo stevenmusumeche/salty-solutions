@@ -34,7 +34,7 @@ const initialState = {
   radar: false,
   satellite: false,
   salinity: false,
-  hourlyForecast: false
+  hourlyForecast: false,
 };
 
 const sectionReducer = (state: State, action: Action) => {
@@ -49,14 +49,14 @@ const sectionReducer = (state: State, action: Action) => {
         satellite: false,
         salinity: false,
         hourlyForecast: false,
-        [action.payload]: true
+        [action.payload]: true,
       };
     case "collapse-all":
       return {
         radar: false,
         satellite: false,
         salinity: false,
-        hourlyForecast: false
+        hourlyForecast: false,
       };
     default:
       return state;
@@ -64,7 +64,7 @@ const sectionReducer = (state: State, action: Action) => {
 };
 
 const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
-  locationSlug
+  locationSlug,
 }) => {
   const [sections, dispatch] = useReducer(sectionReducer, initialState);
   const [locations] = useLocationsQuery();
@@ -82,7 +82,7 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
   }, [locationSlug]);
 
   const selectedLocation = locations.data
-    ? locations.data.locations.find(location => location.id === locationId)
+    ? locations.data.locations.find((location) => location.id === locationId)
     : null;
 
   const [date, setDate] = useState(() => startOfDay(new Date()));
@@ -104,7 +104,7 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
     <Shell
       header={
         <AppHeader
-          setLocationId={id => {
+          setLocationId={(id) => {
             setLocationId(id);
             window.scrollTo({ top: 0 });
             navigate(`/${id}`);
@@ -121,13 +121,13 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
           <AirTempCard locationId={locationId} />
           <WaterTempCard
             locationId={locationId}
-            usgsSites={selectedLocation.usgsSites.filter(site =>
+            usgsSites={selectedLocation.usgsSites.filter((site) =>
               site.availableParams.includes(UsgsParam.WaterTemp)
             )}
           />
           <SalinityCard
             locationId={locationId}
-            usgsSites={selectedLocation.usgsSites.filter(site =>
+            usgsSites={selectedLocation.usgsSites.filter((site) =>
               site.availableParams.includes(UsgsParam.Salinity)
             )}
           />
@@ -138,7 +138,7 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
           <Tides
             locationId={locationId}
             tideStations={selectedLocation.tidePreditionStations}
-            usgsSites={selectedLocation.usgsSites.filter(site =>
+            usgsSites={selectedLocation.usgsSites.filter((site) =>
               site.availableParams.includes(UsgsParam.GuageHeight)
             )}
             date={date}
@@ -153,7 +153,7 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
 
         <span id="radar"></span>
         <CollapsibleSection
-          title="Radar Map"
+          title="Radar"
           visible={sections.radar}
           toggleVisible={() => dispatch({ type: "toggle", payload: "radar" })}
         >
