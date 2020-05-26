@@ -5,14 +5,14 @@ import orderBy from "lodash/orderBy";
 import { subHours, format } from "date-fns";
 import { getCacheVal, setCacheVal } from "./db";
 
-axiosRetry(axios, { retries: 3, retryDelay: retryCount => retryCount * 500 });
+axiosRetry(axios, { retries: 3, retryDelay: (retryCount) => retryCount * 500 });
 
 enum UsgsParams {
   WaterTemp = "00010",
   WindSpeed = "00035",
   WindDirection = "00036",
   GuageHeight = "00065",
-  Salinity = "00480"
+  Salinity = "00480",
 }
 
 export interface UsgsSiteEntity {
@@ -32,8 +32,8 @@ const usgsSites: UsgsSiteEntity[] = [
       UsgsParams.WindSpeed,
       UsgsParams.WindDirection,
       UsgsParams.GuageHeight,
-      UsgsParams.Salinity
-    ]
+      UsgsParams.Salinity,
+    ],
   },
   {
     id: "08017095",
@@ -42,8 +42,8 @@ const usgsSites: UsgsSiteEntity[] = [
     availableParams: [
       UsgsParams.WaterTemp,
       UsgsParams.GuageHeight,
-      UsgsParams.Salinity
-    ]
+      UsgsParams.Salinity,
+    ],
   },
   {
     id: "07381349",
@@ -54,8 +54,8 @@ const usgsSites: UsgsSiteEntity[] = [
       UsgsParams.WindSpeed,
       UsgsParams.WindDirection,
       UsgsParams.GuageHeight,
-      UsgsParams.Salinity
-    ]
+      UsgsParams.Salinity,
+    ],
   },
   {
     id: "073813498",
@@ -66,18 +66,18 @@ const usgsSites: UsgsSiteEntity[] = [
       UsgsParams.WindSpeed,
       UsgsParams.WindDirection,
       UsgsParams.GuageHeight,
-      UsgsParams.Salinity
-    ]
+      UsgsParams.Salinity,
+    ],
   },
   {
     id: "07381324",
     name: "Bayou Grand Caillou at Dulac",
     coords: {
       lat: 29.3827778,
-      lon: -90.7152778
+      lon: -90.7152778,
     },
     // not current reporting
-    availableParams: []
+    availableParams: [],
   },
   {
     id: "073745257",
@@ -86,8 +86,8 @@ const usgsSites: UsgsSiteEntity[] = [
     availableParams: [
       UsgsParams.WaterTemp,
       UsgsParams.GuageHeight,
-      UsgsParams.Salinity
-    ]
+      UsgsParams.Salinity,
+    ],
   },
   {
     id: "07380249",
@@ -96,18 +96,18 @@ const usgsSites: UsgsSiteEntity[] = [
     availableParams: [
       UsgsParams.WaterTemp,
       UsgsParams.GuageHeight,
-      UsgsParams.Salinity
-    ]
+      UsgsParams.Salinity,
+    ],
   },
   {
     id: "292952089453800",
-    name: "Port Sulfer",
+    name: "Port Sulphur",
     coords: { lat: 29.4977778, lon: -89.7605556 },
     availableParams: [
       UsgsParams.WaterTemp,
       UsgsParams.GuageHeight,
-      UsgsParams.Salinity
-    ]
+      UsgsParams.Salinity,
+    ],
   },
   {
     id: "301001089442600",
@@ -116,8 +116,8 @@ const usgsSites: UsgsSiteEntity[] = [
     availableParams: [
       UsgsParams.WaterTemp,
       UsgsParams.GuageHeight,
-      UsgsParams.Salinity
-    ]
+      UsgsParams.Salinity,
+    ],
   },
   {
     id: "07387050",
@@ -126,14 +126,14 @@ const usgsSites: UsgsSiteEntity[] = [
     availableParams: [
       UsgsParams.WaterTemp,
       UsgsParams.GuageHeight,
-      UsgsParams.Salinity
-    ]
+      UsgsParams.Salinity,
+    ],
   },
   {
     id: "073816525",
     name: "Mouth of Atchafalaya River at Atchafalaya Bay",
     coords: { lat: 29.43025, lon: -91.3338889 },
-    availableParams: [UsgsParams.GuageHeight]
+    availableParams: [UsgsParams.GuageHeight],
   },
   {
     id: "08017044",
@@ -141,8 +141,8 @@ const usgsSites: UsgsSiteEntity[] = [
     availableParams: [
       UsgsParams.WaterTemp,
       UsgsParams.GuageHeight,
-      UsgsParams.Salinity
-    ]
+      UsgsParams.Salinity,
+    ],
   },
   {
     id: "08017118",
@@ -150,20 +150,20 @@ const usgsSites: UsgsSiteEntity[] = [
     availableParams: [
       UsgsParams.WaterTemp,
       UsgsParams.GuageHeight,
-      UsgsParams.Salinity
-    ]
+      UsgsParams.Salinity,
+    ],
   },
   {
     id: "07381331",
     name: "Intracoastal at Houma",
     // not reporting anymore
-    availableParams: []
+    availableParams: [],
   },
   {
     id: "07381328",
     name: "Houma Navigation Canal at Dulac",
     // not currently reporting
-    availableParams: []
+    availableParams: [],
   },
   {
     id: "073802516",
@@ -171,8 +171,8 @@ const usgsSites: UsgsSiteEntity[] = [
     availableParams: [
       UsgsParams.WaterTemp,
       UsgsParams.GuageHeight,
-      UsgsParams.Salinity
-    ]
+      UsgsParams.Salinity,
+    ],
   },
   {
     id: "291929089562600",
@@ -180,13 +180,13 @@ const usgsSites: UsgsSiteEntity[] = [
     availableParams: [
       UsgsParams.WaterTemp,
       UsgsParams.GuageHeight,
-      UsgsParams.Salinity
-    ]
+      UsgsParams.Salinity,
+    ],
   },
   {
     id: "073802514",
     name: "Barataria Waterway at Champagne Bay",
-    availableParams: [UsgsParams.WaterTemp, UsgsParams.GuageHeight]
+    availableParams: [UsgsParams.WaterTemp, UsgsParams.GuageHeight],
   },
   {
     id: "073802512",
@@ -194,18 +194,18 @@ const usgsSites: UsgsSiteEntity[] = [
     availableParams: [
       UsgsParams.WaterTemp,
       UsgsParams.GuageHeight,
-      UsgsParams.Salinity
-    ]
+      UsgsParams.Salinity,
+    ],
   },
   {
     id: "295206089402400",
     name: "Shell Beach, LA",
-    availableParams: [UsgsParams.GuageHeight]
+    availableParams: [UsgsParams.GuageHeight],
   },
   {
     id: "073745235",
     name: "Bayou Dupre Sector Gate near Violet",
-    availableParams: [UsgsParams.GuageHeight]
+    availableParams: [UsgsParams.GuageHeight],
   },
   {
     id: "07374526",
@@ -213,8 +213,8 @@ const usgsSites: UsgsSiteEntity[] = [
     availableParams: [
       UsgsParams.WaterTemp,
       UsgsParams.GuageHeight,
-      UsgsParams.Salinity
-    ]
+      UsgsParams.Salinity,
+    ],
   },
   {
     id: "07374526",
@@ -222,8 +222,8 @@ const usgsSites: UsgsSiteEntity[] = [
     availableParams: [
       UsgsParams.WaterTemp,
       UsgsParams.GuageHeight,
-      UsgsParams.Salinity
-    ]
+      UsgsParams.Salinity,
+    ],
   },
   {
     id: "07374527",
@@ -233,8 +233,8 @@ const usgsSites: UsgsSiteEntity[] = [
       UsgsParams.WindDirection,
       UsgsParams.WaterTemp,
       UsgsParams.GuageHeight,
-      UsgsParams.Salinity
-    ]
+      UsgsParams.Salinity,
+    ],
   },
   {
     id: "073802332",
@@ -242,38 +242,38 @@ const usgsSites: UsgsSiteEntity[] = [
     availableParams: [
       UsgsParams.WindSpeed,
       UsgsParams.WindDirection,
-      UsgsParams.GuageHeight
-    ]
+      UsgsParams.GuageHeight,
+    ],
   },
   {
     id: "301200090072400",
     name: "Lake Pontchartrain at Causeway",
-    availableParams: [UsgsParams.GuageHeight]
+    availableParams: [UsgsParams.GuageHeight],
   },
   {
     id: "300136090064800",
     name: "Lake Pontchartrain at Metairie",
-    availableParams: [UsgsParams.GuageHeight]
+    availableParams: [UsgsParams.GuageHeight],
   },
   {
     id: "300406090231600",
     name: "I-10 at Bonnne Carre Spillway",
-    availableParams: [UsgsParams.GuageHeight]
+    availableParams: [UsgsParams.GuageHeight],
   },
   {
     id: "07374581",
     name: "Bayou Liberty near Slidell",
-    availableParams: [UsgsParams.GuageHeight]
+    availableParams: [UsgsParams.GuageHeight],
   },
   {
     id: "07375230",
     name: "Tchefuncte River at Madisonville",
-    availableParams: [UsgsParams.GuageHeight]
+    availableParams: [UsgsParams.GuageHeight],
   },
   {
     id: "073802341",
     name: "Bayou Bienvenue Floodgate near Chalmette",
-    availableParams: [UsgsParams.GuageHeight]
+    availableParams: [UsgsParams.GuageHeight],
   },
   {
     id: "073802339",
@@ -281,18 +281,18 @@ const usgsSites: UsgsSiteEntity[] = [
     availableParams: [
       UsgsParams.GuageHeight,
       UsgsParams.WindDirection,
-      UsgsParams.WindSpeed
-    ]
+      UsgsParams.WindSpeed,
+    ],
   },
   {
     id: "300703089522700",
     name: "Pipeline Canal in Bayou Sauvage NWR",
-    availableParams: [UsgsParams.GuageHeight]
+    availableParams: [UsgsParams.GuageHeight],
   },
   {
     id: "291042089153000",
     name: "Pilottown",
-    availableParams: [UsgsParams.GuageHeight]
+    availableParams: [UsgsParams.GuageHeight],
   },
   {
     id: "073745258",
@@ -300,8 +300,8 @@ const usgsSites: UsgsSiteEntity[] = [
     availableParams: [
       UsgsParams.WaterTemp,
       UsgsParams.GuageHeight,
-      UsgsParams.Salinity
-    ]
+      UsgsParams.Salinity,
+    ],
   },
   {
     id: "07380260",
@@ -309,13 +309,13 @@ const usgsSites: UsgsSiteEntity[] = [
     availableParams: [
       UsgsParams.WaterTemp,
       UsgsParams.GuageHeight,
-      UsgsParams.Salinity
-    ]
+      UsgsParams.Salinity,
+    ],
   },
   {
     id: "07374550",
     name: "Mississippi River at Venice",
-    availableParams: [UsgsParams.GuageHeight]
+    availableParams: [UsgsParams.GuageHeight],
   },
   {
     id: "073745275",
@@ -323,21 +323,21 @@ const usgsSites: UsgsSiteEntity[] = [
     availableParams: [
       UsgsParams.WaterTemp,
       UsgsParams.GuageHeight,
-      UsgsParams.Salinity
-    ]
+      UsgsParams.Salinity,
+    ],
   },
   {
     id: "285554089242400",
     name: "Pilots Station E, SW Pass",
-    availableParams: [UsgsParams.GuageHeight]
-  }
+    availableParams: [UsgsParams.GuageHeight],
+  },
 ];
 
 // https://waterservices.usgs.gov/rest/IV-Service.html
 // https://waterwatch.usgs.gov/?m=real&r=la
 
 export const getSiteById = (id: string): UsgsSiteEntity | undefined => {
-  return usgsSites.find(site => site.id === id);
+  return usgsSites.find((site) => site.id === id);
 };
 
 export const getWaterHeight = async (
@@ -362,7 +362,7 @@ export const getWaterHeight = async (
     { start, end },
     (v: any) => ({
       timestamp: new Date(v.dateTime).toISOString(),
-      height: Number(v.value)
+      height: Number(v.value),
     })
   );
 
@@ -378,7 +378,7 @@ export const getWaterTemperatureLatest = async (siteId: string) => {
 
   if (data.length < 1) return null;
 
-  return orderBy(data, [x => x.timestamp], ["desc"])[0];
+  return orderBy(data, [(x) => x.timestamp], ["desc"])[0];
 };
 
 export const getWaterTemperature = async (
@@ -394,8 +394,8 @@ export const getWaterTemperature = async (
       timestamp: new Date(v.dateTime).toISOString(),
       temperature: {
         degrees: ((Number(v.value) * 9) / 5 + 32).toFixed(1),
-        unit: "F"
-      }
+        unit: "F",
+      },
     })
   );
 };
@@ -420,21 +420,21 @@ export const getWind = async (
 ): Promise<Wind[]> => {
   const [speeds, directions] = await Promise.all([
     getWindSpeed(location, numHours),
-    getWindDirection(location, numHours)
+    getWindDirection(location, numHours),
   ]);
 
   const combined: Wind[] = [];
 
   speeds.forEach((speed: any) => {
     const direction = directions.find(
-      direction => direction.timestamp === speed.timestamp
+      (direction) => direction.timestamp === speed.timestamp
     );
     if (direction) {
       combined.push({
         timestamp: speed.timestamp,
         speed: speed.speed,
         direction: direction.direction,
-        directionDegrees: direction.degrees
+        directionDegrees: direction.degrees,
       });
     }
   });
@@ -452,7 +452,7 @@ const getWindSpeed = async (
     { numHours },
     (v: any) => ({
       timestamp: new Date(v.dateTime).toISOString(),
-      speed: Number(v.value)
+      speed: Number(v.value),
     })
   );
 };
@@ -468,7 +468,7 @@ const getWindDirection = async (
     (v: any) => ({
       timestamp: new Date(v.dateTime).toISOString(),
       degrees: Number(v.value),
-      direction: degreesToCompass(Number(v.value))
+      direction: degreesToCompass(Number(v.value)),
     })
   );
 };
@@ -480,7 +480,7 @@ export const getSalinity = (
 ): Promise<{ timestamp: string; salinity: number }[]> => {
   return fetchAndMap(siteId, UsgsParams.Salinity, { start, end }, (v: any) => ({
     timestamp: new Date(v.dateTime).toISOString(),
-    salinity: +v.value
+    salinity: +v.value,
   }));
 };
 
@@ -535,7 +535,7 @@ export function degreesToCompass(degrees: number): string {
     "W",
     "WNW",
     "NW",
-    "NNW"
+    "NNW",
   ];
   return arr[val % 16];
 }

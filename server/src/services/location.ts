@@ -278,9 +278,6 @@ const locations: LocationEntity[] = [
 ];
 
 // lafitte
-// delacroix
-// empire
-// Port Sulphur
 // bay gardene
 // breton island
 // port fouchon
@@ -293,12 +290,8 @@ const locations: LocationEntity[] = [
 
 // ideas:
 // show tide stations on a map
-// put a link at the top of the page for each section. That way you know what all is provided without scrolling thru everything.
 // barometric pressure
-// native app
-// see tides from days before and after
 // salinity tables? not sure what that is
-// pick locations from a map instead of a drop down
 // river guage info - The Atchafalaya river at butte Larose is pertinent to us here on vermilion bay.
 
 export const getAll = (): LocationEntity[] =>

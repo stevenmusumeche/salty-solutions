@@ -5,7 +5,7 @@ import {
 } from "../generated/graphql";
 import ErrorIcon from "../assets/error.svg";
 import { HourlyForecastSkeleton } from "./ForecastSkeleton";
-import { format, getHours } from "date-fns";
+import { format } from "date-fns";
 import { WindowSizeContext } from "../providers/WindowSizeProvider";
 
 interface Props {
