@@ -2,10 +2,17 @@ import { LocationEntity } from "./location";
 import axios from "axios";
 import axiosRetry from "axios-retry";
 import cheerio from "cheerio";
+import { getCacheVal, setCacheVal } from "./db";
 
-axiosRetry(axios, { retries: 3, retryDelay: retryCount => retryCount * 500 });
+axiosRetry(axios, { retries: 3, retryDelay: (retryCount) => retryCount * 500 });
 
-export async function getSalinityMap(location: LocationEntity) {
+export async function getSalinityMap(
+  location: LocationEntity
+): Promise<string> {
+  const cacheKey = `nowcast-${location.nowcastSubdomain}`;
+  const cachedData = await getCacheVal<string>(cacheKey, 6 * 60); // fresh for 3 hours
+  if (cachedData) return cachedData;
+
   const url = `https://tidesandcurrents.noaa.gov/ofs/ofs_animation.shtml?ofsregion=ng&subdomain=${location.nowcastSubdomain}&model_type=salinity_nowcast`;
   const result = await axios.get(url);
   const $ = cheerio.load(result.data);
@@ -17,5 +24,5 @@ export async function getSalinityMap(location: LocationEntity) {
 
   if (options.length === 0) throw new Error("unable to parse nowcast options");
 
-  return `https://tidesandcurrents.noaa.gov${options[0]}`;
+  return setCacheVal(cacheKey, options[0]);
 }
