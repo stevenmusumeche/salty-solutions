@@ -17,6 +17,7 @@ import * as saveOurLakeService from "./services/saveourlake";
 import typeDefs from "./graphql/schema";
 import resolvers from "./graphql/resolvers";
 import Rollbar from "rollbar";
+// @ts-ignore
 import exec from "await-exec";
 // @ts-ignore
 import { FormatErrorWithContextExtension } from "graphql-format-error-context-extension";
