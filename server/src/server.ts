@@ -118,10 +118,11 @@ export const pdfToImage: APIGatewayProxyHandler = async (event) => {
 
   return {
     statusCode: 200,
-    body: resp,
+    body: "yay",
   };
 };
 
 const ghostScriptPDF = async () => {
+  // gs -dSAFER -dBATCH -dNOPAUSE -sDEVICE=jpeg -r600 -sOutputFile=foo.jpg -dDownScaleFactor=3 ./foo.pdf
   return await exec("/opt/bin/gs --version");
 };
