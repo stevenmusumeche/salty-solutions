@@ -2,7 +2,7 @@ import { LocationEntity } from "./location";
 import axios from "axios";
 import axiosRetry from "axios-retry";
 import cheerio from "cheerio";
-import { promises as fs } from "fs";
+import fs from "fs";
 // @ts-ignore
 import exec from "await-exec"; // todo
 import { S3 } from "aws-sdk";
@@ -16,25 +16,13 @@ const s3Bucket = "salty-solutions-assets";
 export async function getSalinityMap(
   location: LocationEntity
 ): Promise<string> {
-  const url =
-    "https://saveourlake.org/lpbf-programs/coastal/hydrocoast-maps/pontchartrain-basin/";
-
-  const result = await axios.get(url);
-  const $ = cheerio.load(result.data);
-
-  // salinity map URL has -3/? in it
-  const salinityLinks = $("a")
-    .map((i, el) => $(el).attr("href"))
-    .get()
-    .filter((val) => /download.*?\-3\/\?/.test(val));
-
-  const pdfUrl = salinityLinks[0];
-
   const localPdf = "/tmp/salinity.pdf";
   const localJpg = "/tmp/salinity.jpg";
+
+  const pdfUrl = await getPdfUrl(location);
   await fetchPdf(pdfUrl, localPdf);
   await convertPdfToJpg(localPdf, localJpg);
-  const stream = await fs.readFile(localJpg);
+  const stream = await fs.promises.readFile(localJpg);
   const awsResponse = await s3
     .upload({
       ACL: "public-read",
@@ -48,6 +36,23 @@ export async function getSalinityMap(
 
   return pdfUrl;
 }
+
+// https://saveourlake.org/lpbf-programs/coastal/hydrocoast-maps/pontchartrain-basin/pontchartrain-basin-hydrocoast-map-archives/
+const getPdfUrl = async (location: LocationEntity): Promise<string> => {
+  const url =
+    "https://saveourlake.org/lpbf-programs/coastal/hydrocoast-maps/pontchartrain-basin/";
+
+  const result = await axios.get(url);
+  const $ = cheerio.load(result.data);
+
+  // salinity map URL has -3/? in it
+  const salinityLinks = $("a")
+    .map((i, el) => $(el).attr("href"))
+    .get()
+    .filter((val) => /download.*?\-3\/\?/.test(val));
+
+  return salinityLinks[0];
+};
 
 const fetchPdf = async (url: string, output: string): Promise<void> => {
   const pdfResp = await axios({
