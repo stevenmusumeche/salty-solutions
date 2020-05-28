@@ -2,11 +2,15 @@ import { LocationEntity } from "./location";
 import axios from "axios";
 import axiosRetry from "axios-retry";
 import cheerio from "cheerio";
-import fs from "fs";
+import { promises as fs } from "fs";
 // @ts-ignore
 import exec from "await-exec"; // todo
+import { S3 } from "aws-sdk";
+const s3 = new S3();
 
 axiosRetry(axios, { retries: 3, retryDelay: (retryCount) => retryCount * 500 });
+
+const s3Bucket = "salty-solutions-assets";
 
 // https://saveourlake.org/lpbf-programs/coastal/hydrocoast-maps/pontchartrain-basin/pontchartrain-basin-hydrocoast-map-archives/
 export async function getSalinityMap(
@@ -30,6 +34,17 @@ export async function getSalinityMap(
   const localJpg = "/tmp/salinity.jpg";
   await fetchPdf(pdfUrl, localPdf);
   await convertPdfToJpg(localPdf, localJpg);
+  const stream = await fs.readFile(localJpg);
+  const awsResponse = await s3
+    .upload({
+      ACL: "public-read",
+      Bucket: s3Bucket,
+      Key: "foobar.jpg",
+      Body: stream,
+    })
+    .promise();
+
+  console.log("aws response", awsResponse);
 
   return pdfUrl;
 }
