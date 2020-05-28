@@ -34,7 +34,7 @@ provider:
         - ${cf:ss-queue-${self:provider.stage}.TidePreloaderQueueArn}
     - Effect: Allow
       Action:
-        - s3:PutObject
+        - s3:*
       Resource: arn:aws:s3:::salty-solutions-assets/*
   environment:
     SERVERLESS_STAGE: ${self:provider.stage}
