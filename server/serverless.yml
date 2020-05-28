@@ -32,6 +32,10 @@ provider:
       Resource:
         - ${cf:ss-queue-${self:provider.stage}.ForecastPreloaderQueueArn}
         - ${cf:ss-queue-${self:provider.stage}.TidePreloaderQueueArn}
+    - Effect: Allow
+      Action:
+        - s3:*
+      Resource: arn:aws:s3:::salty-solutions-assets/*
   environment:
     SERVERLESS_STAGE: ${self:provider.stage}
     ROLLBAR_KEY: ${env:ROLLBAR_KEY}
@@ -40,7 +44,9 @@ provider:
 functions:
   graphql:
     handler: ./src/server.graphql
-    timeout: 10
+    layers:
+      - arn:aws:lambda:us-east-1:764866452798:layer:ghostscript:8
+    timeout: 20
     events:
       - http:
           cors: true

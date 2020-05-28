@@ -261,7 +261,7 @@ export async function getTidePredictions(
   )}`;
 
   // todo: figure out a way to cache tide data without hitting dynamodb limits
-  //const cachedData = await getCacheVal<Normalized[]>(cacheKey, 3 * 60 * 24 * 7); // fresh for 7 days
+  //const cachedData = await getCacheVal<Normalized[]>(cacheKey, 60 * 24 * 7); // fresh for 7 days
   //if (cachedData) return cachedData;
 
   const [hiLoData, allData] = await Promise.all([

@@ -10,7 +10,7 @@ export async function getSalinityMap(
   location: LocationEntity
 ): Promise<string> {
   const cacheKey = `nowcast-${location.nowcastSubdomain}`;
-  const cachedData = await getCacheVal<string>(cacheKey, 6 * 60); // fresh for 3 hours
+  const cachedData = await getCacheVal<string>(cacheKey, 6 * 60); // fresh for 6 hours
   if (cachedData) return cachedData;
 
   const url = `https://tidesandcurrents.noaa.gov/ofs/ofs_animation.shtml?ofsregion=ng&subdomain=${location.nowcastSubdomain}&model_type=salinity_nowcast`;

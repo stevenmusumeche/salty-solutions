@@ -11,7 +11,7 @@ interface Props {
 
 export const SalinityMap: React.FC<Props> = ({ locationId }) => {
   const [salinityMap, refresh] = useSalinityMapQuery({
-    variables: { locationId }
+    variables: { locationId },
   });
 
   const { isSmall } = useBreakpoints();
@@ -43,7 +43,6 @@ export const SalinityMap: React.FC<Props> = ({ locationId }) => {
     }
 
     const mapUrl = salinityMap.data.location.salinityMap;
-    const isPdf = /saveourlake/.test(mapUrl);
 
     return (
       <ConditionalWrapper
@@ -54,22 +53,7 @@ export const SalinityMap: React.FC<Props> = ({ locationId }) => {
           </a>
         )}
       >
-        {isPdf ? (
-          isSmall ? (
-            <span className="text-black cursor-pointer underline">
-              Open Salinity Map PDF
-            </span>
-          ) : (
-            <embed
-              src={mapUrl}
-              type="application/pdf"
-              width="100%"
-              height="900px"
-            />
-          )
-        ) : (
-          <img src={mapUrl} className="max-h-full" alt="salinity map" />
-        )}
+        <img src={mapUrl} className="max-h-full" alt="salinity map" />
       </ConditionalWrapper>
     );
   }
