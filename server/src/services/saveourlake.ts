@@ -3,9 +3,10 @@ import axios from "axios";
 import axiosRetry from "axios-retry";
 import cheerio from "cheerio";
 import fs from "fs";
-// @ts-ignore
-import exec from "await-exec"; // todo
+import { exec } from "child_process";
 import { S3 } from "aws-sdk";
+import { getCacheVal, setCacheVal } from "./db";
+
 const s3 = new S3();
 
 axiosRetry(axios, { retries: 3, retryDelay: (retryCount) => retryCount * 500 });
@@ -16,25 +17,22 @@ const s3Bucket = "salty-solutions-assets";
 export async function getSalinityMap(
   location: LocationEntity
 ): Promise<string> {
+  const cacheKey = `hydrocoast`;
+  const cachedData = await getCacheVal<string>(cacheKey, 60 * 24); // fresh for 1 day
+  if (cachedData) return cachedData;
+
   const localPdf = "/tmp/salinity.pdf";
   const localJpg = "/tmp/salinity.jpg";
 
   const pdfUrl = await getPdfUrl(location);
   await fetchPdf(pdfUrl, localPdf);
   await convertPdfToJpg(localPdf, localJpg);
-  const stream = await fs.promises.readFile(localJpg);
-  const awsResponse = await s3
-    .upload({
-      ACL: "public-read",
-      Bucket: s3Bucket,
-      Key: "foobar.jpg",
-      Body: stream,
-    })
-    .promise();
+  const s3Url = await uploadToS3(
+    localJpg,
+    `hydrocoast-${new Date().getTime()}.jpg`
+  );
 
-  console.log("aws response", awsResponse);
-
-  return pdfUrl;
+  return setCacheVal(cacheKey, s3Url);
 }
 
 // https://saveourlake.org/lpbf-programs/coastal/hydrocoast-maps/pontchartrain-basin/pontchartrain-basin-hydrocoast-map-archives/
@@ -55,17 +53,46 @@ const getPdfUrl = async (location: LocationEntity): Promise<string> => {
 };
 
 const fetchPdf = async (url: string, output: string): Promise<void> => {
-  const pdfResp = await axios({
+  const pdfResp = await axios.request({
+    url,
     method: "get",
-    url:
-      "https://saveourlake.org/download/may-17-2020-3/?wpdmdl=17782&refresh=5ecff4dc5aa231590686940",
-    responseType: "stream",
+    responseType: "arraybuffer",
+    headers: {
+      "Content-Type": "application/pdf",
+    },
   });
-  pdfResp.data.pipe(fs.createWriteStream(output));
+  await fs.promises.writeFile(output, pdfResp.data);
 };
 
 const convertPdfToJpg = async (pdf: string, jpg: string) => {
-  return await exec(
-    `/opt/bin/gs -dSAFER -dBATCH -dNOPAUSE -sDEVICE=jpeg -r600 -sOutputFile=${jpg} -dDownScaleFactor=3 ${pdf}`
+  const ghostscriptBinary = process.env.GHOSTSCRIPT_PATH || "/opt/bin/gs";
+  await execAsync(
+    `${ghostscriptBinary} -dSAFER -dBATCH -dNOPAUSE -sDEVICE=jpeg -r600 -sOutputFile=${jpg} -dDownScaleFactor=3 ${pdf}`
   );
+};
+
+async function uploadToS3(localJpg: string, key: string): Promise<string> {
+  const stream = await fs.promises.readFile(localJpg);
+  const awsResponse = await s3
+    .upload({
+      ACL: "public-read",
+      Bucket: s3Bucket,
+      Key: key,
+      Body: stream,
+    })
+    .promise();
+  return awsResponse.Location;
+}
+
+const execAsync = (command: string): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    exec(command, (err, stdout) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+
+      resolve(stdout);
+    });
+  });
 };

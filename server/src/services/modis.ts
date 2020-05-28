@@ -12,7 +12,7 @@ export const getMaps = async (
   numDays: number
 ): Promise<ModisMap[]> => {
   const cacheKey = `modis2-${location.modisArea}-${numDays}`;
-  const cachedData = await getCacheVal<ModisMap[]>(cacheKey, 3 * 60 * 4); // fresh for 4 hours
+  const cachedData = await getCacheVal<ModisMap[]>(cacheKey, 60 * 4); // fresh for 4 hours
   if (cachedData) return cachedData;
 
   let result: ModisMap[] = [];
