@@ -19,11 +19,12 @@ import resolvers from "./graphql/resolvers";
 import Rollbar from "rollbar";
 // @ts-ignore
 import { FormatErrorWithContextExtension } from "graphql-format-error-context-extension";
+import { APIGatewayProxyHandler } from "aws-lambda";
 
 var rollbar = new Rollbar({
   accessToken: process.env.ROLLBAR_KEY,
   captureUncaught: true,
-  captureUnhandledRejections: true
+  captureUnhandledRejections: true,
 });
 
 const IS_DEV =
@@ -51,14 +52,14 @@ const formatError = (error: any, context: Context) => {
   rollbar.error(error, context.koaCtx.request, {
     path: error.path,
     locations: error.locations,
-    ...error.extensions
+    ...error.extensions,
   });
   console.error({
     name: "Apollo Server Error",
     message: error.message,
     locations: error.locations,
     path: error.path,
-    extensions: error.extensions
+    extensions: error.extensions,
   });
   return error;
 };
@@ -80,14 +81,14 @@ const server = new ApolloServer({
         combinedForecast: combinedForecastService,
         nowcast: nowcastService,
         modis: modisService,
-        saveOurLake: saveOurLakeService
+        saveOurLake: saveOurLakeService,
       },
-      pass: {}
+      pass: {},
     };
   },
   extensions: [() => new FormatErrorWithContextExtension(formatError)],
   playground: true, // IS_DEV,
-  introspection: true // IS_DEV
+  introspection: true, // IS_DEV
 });
 
 const app = new Koa();
@@ -107,3 +108,10 @@ if (process.env.LOCAL_DEV) {
 }
 
 export const graphql = serverless(app);
+
+export const pdfToImage: APIGatewayProxyHandler = async (event) => {
+  return {
+    statusCode: 200,
+    body: JSON.stringify({ message: "Hello World!" }),
+  };
+};
