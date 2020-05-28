@@ -114,16 +114,17 @@ if (process.env.LOCAL_DEV) {
 export const graphql = serverless(app);
 
 export const pdfToImage: APIGatewayProxyHandler = async (event) => {
-  console.log("starting fetch");
-
   const pdfUrl =
     "https://saveourlake.org/download/may-17-2020-3/?wpdmdl=17782&refresh=5ecff4dc5aa231590686940";
-  const localFile = "/tmp/salinity.pdf";
-  await fetchPdf(pdfUrl, localFile);
+  const localPdf = "/tmp/salinity.pdf";
+  const localJpg = "/tmp/salinity.jpg";
+
+  console.log("starting fetch");
+  await fetchPdf(pdfUrl, localPdf);
   console.log("done with fetch");
 
   console.log("starting ghostscript");
-  const resp = await ghostScriptPDF("/tmp/salinity.pdf");
+  const resp = await ghostScriptPDF(localPdf, localJpg);
   console.log("done with ghostscript", resp);
 
   return {
@@ -132,9 +133,11 @@ export const pdfToImage: APIGatewayProxyHandler = async (event) => {
   };
 };
 
-const ghostScriptPDF = async (file: string) => {
+const ghostScriptPDF = async (pdf: string, jpg: string) => {
   // gs -dSAFER -dBATCH -dNOPAUSE -sDEVICE=jpeg -r600 -sOutputFile=foo.jpg -dDownScaleFactor=3 ./foo.pdf
-  return await exec("/opt/bin/gs --version");
+  return await exec(
+    `/opt/bin/gs -dSAFER -dBATCH -dNOPAUSE -sDEVICE=jpeg -r600 -sOutputFile=${jpg} -dDownScaleFactor=3 ${pdf}`
+  );
 };
 
 const fetchPdf = async (url: string, output: string): Promise<void> => {
