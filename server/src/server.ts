@@ -17,10 +17,6 @@ import * as saveOurLakeService from "./services/saveourlake";
 import typeDefs from "./graphql/schema";
 import resolvers from "./graphql/resolvers";
 import Rollbar from "rollbar";
-import axios from "axios";
-import fs from "fs";
-// @ts-ignore
-import exec from "await-exec";
 // @ts-ignore
 import { FormatErrorWithContextExtension } from "graphql-format-error-context-extension";
 import { APIGatewayProxyHandler } from "aws-lambda";
@@ -112,40 +108,3 @@ if (process.env.LOCAL_DEV) {
 }
 
 export const graphql = serverless(app);
-
-export const pdfToImage: APIGatewayProxyHandler = async (event) => {
-  const pdfUrl =
-    "https://saveourlake.org/download/may-17-2020-3/?wpdmdl=17782&refresh=5ecff4dc5aa231590686940";
-  const localPdf = "/tmp/salinity.pdf";
-  const localJpg = "/tmp/salinity.jpg";
-
-  console.log("starting fetch");
-  await fetchPdf(pdfUrl, localPdf);
-  console.log("done with fetch");
-
-  console.log("starting ghostscript");
-  const resp = await ghostScriptPDF(localPdf, localJpg);
-  console.log("done with ghostscript", resp);
-
-  return {
-    statusCode: 200,
-    body: "yay",
-  };
-};
-
-const ghostScriptPDF = async (pdf: string, jpg: string) => {
-  // gs -dSAFER -dBATCH -dNOPAUSE -sDEVICE=jpeg -r600 -sOutputFile=foo.jpg -dDownScaleFactor=3 ./foo.pdf
-  return await exec(
-    `/opt/bin/gs -dSAFER -dBATCH -dNOPAUSE -sDEVICE=jpeg -r600 -sOutputFile=${jpg} -dDownScaleFactor=3 ${pdf}`
-  );
-};
-
-const fetchPdf = async (url: string, output: string): Promise<void> => {
-  const pdfResp = await axios({
-    method: "get",
-    url:
-      "https://saveourlake.org/download/may-17-2020-3/?wpdmdl=17782&refresh=5ecff4dc5aa231590686940",
-    responseType: "stream",
-  });
-  pdfResp.data.pipe(fs.createWriteStream(output));
-};
