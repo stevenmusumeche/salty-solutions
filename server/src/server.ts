@@ -17,6 +17,7 @@ import * as saveOurLakeService from "./services/saveourlake";
 import typeDefs from "./graphql/schema";
 import resolvers from "./graphql/resolvers";
 import Rollbar from "rollbar";
+import exec from "await-exec";
 // @ts-ignore
 import { FormatErrorWithContextExtension } from "graphql-format-error-context-extension";
 import { APIGatewayProxyHandler } from "aws-lambda";
@@ -110,8 +111,16 @@ if (process.env.LOCAL_DEV) {
 export const graphql = serverless(app);
 
 export const pdfToImage: APIGatewayProxyHandler = async (event) => {
+  console.log("starting ghostscript");
+  const resp = await ghostScriptPDF();
+  console.log("done with ghostscript", resp);
+
   return {
     statusCode: 200,
-    body: JSON.stringify({ message: "Hello World!" }),
+    body: resp,
   };
+};
+
+const ghostScriptPDF = async () => {
+  return await exec("/opt/bin/gs --version");
 };
