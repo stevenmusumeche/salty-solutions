@@ -32,6 +32,10 @@ provider:
       Resource:
         - ${cf:ss-queue-${self:provider.stage}.ForecastPreloaderQueueArn}
         - ${cf:ss-queue-${self:provider.stage}.TidePreloaderQueueArn}
+    - Effect: Allow
+      Action:
+        - s3:PutObject
+      Resource: arn:aws:s3:::salty-solutions-assets/*
   environment:
     SERVERLESS_STAGE: ${self:provider.stage}
     ROLLBAR_KEY: ${env:ROLLBAR_KEY}
