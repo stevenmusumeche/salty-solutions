@@ -22,7 +22,7 @@ export interface LocationEntity {
   saveOurLake?: boolean;
   modisArea: string;
   windfinder: {
-    spotId?: string;
+    slug?: string;
   };
 }
 
@@ -51,7 +51,7 @@ const locations: LocationEntity[] = [
     },
     nowcastSubdomain: "0",
     modisArea: "USA7",
-    windfinder: { spotId: undefined },
+    windfinder: { slug: "cypremort-point_vermillion-bay" },
   },
   {
     id: "calcasieu-lake",
@@ -70,7 +70,7 @@ const locations: LocationEntity[] = [
     },
     nowcastSubdomain: "cc",
     modisArea: "USA7",
-    windfinder: { spotId: undefined },
+    windfinder: { slug: "calcasieu_pass" },
   },
   {
     id: "cocodrie",
@@ -96,7 +96,7 @@ const locations: LocationEntity[] = [
     },
     nowcastSubdomain: "0",
     modisArea: "USA7",
-    windfinder: { spotId: "us8927" },
+    windfinder: { slug: "tambour_bay" },
   },
   {
     id: "dularge",
@@ -121,7 +121,7 @@ const locations: LocationEntity[] = [
     },
     nowcastSubdomain: "0",
     modisArea: "USA7",
-    windfinder: { spotId: "us8924" },
+    windfinder: { slug: "caillou-lake" },
   },
   {
     id: "hopedale",
@@ -147,7 +147,7 @@ const locations: LocationEntity[] = [
     },
     saveOurLake: true,
     modisArea: "USA7",
-    windfinder: { spotId: undefined },
+    windfinder: { slug: undefined },
   },
   {
     id: "grand-isle",
@@ -179,7 +179,7 @@ const locations: LocationEntity[] = [
     },
     nowcastSubdomain: "0",
     modisArea: "USA7",
-    windfinder: { spotId: undefined },
+    windfinder: { slug: undefined },
   },
   {
     id: "venice",
@@ -221,7 +221,7 @@ const locations: LocationEntity[] = [
     },
     modisArea: "USA7",
     saveOurLake: true,
-    windfinder: { spotId: undefined },
+    windfinder: { slug: undefined },
   },
   {
     id: "lake-ponchartrain",
@@ -261,7 +261,7 @@ const locations: LocationEntity[] = [
     },
     modisArea: "USA7",
     saveOurLake: true,
-    windfinder: { spotId: undefined },
+    windfinder: { slug: undefined },
   },
   {
     id: "rigolets",
@@ -285,7 +285,7 @@ const locations: LocationEntity[] = [
     },
     modisArea: "USA7",
     saveOurLake: true,
-    windfinder: { spotId: undefined },
+    windfinder: { slug: undefined },
   },
 ];
 

@@ -193,7 +193,7 @@ interface NWSValue {
   qualityControl: string;
 }
 
-function celciusToFahrenheit(celcius: number) {
+export function celciusToFahrenheit(celcius: number) {
   return (celcius * 1.8 + 32).toFixed(1);
 }
 

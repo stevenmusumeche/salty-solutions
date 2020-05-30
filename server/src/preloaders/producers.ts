@@ -7,6 +7,7 @@ import { chunk } from "lodash";
 export const PRODUCER_NAMES = {
   forecast: "forecast-preloader",
   tide: "tide-preloader",
+  windFinder: "wind-finder",
 };
 
 export const forecast: ScheduledHandler = async () => {
@@ -47,14 +48,19 @@ export const tide: ScheduledHandler = async () => {
 export const windFinder: ScheduledHandler = async () => {
   console.log("Preloading windfinder");
 
-  const uniqueSpotIds = new Set(
+  const uniqueSlugs = new Set(
     getAll()
-      .filter((location) => !!location.windfinder.spotId)
-      .map((location) => location.windfinder.spotId)
+      .filter((location) => !!location.windfinder.slug)
+      .map((location) => location.windfinder.slug)
   );
 
-  for (const spotId of uniqueSpotIds) {
-    const body = { spotId };
-    await sendMessage(process.env.QUEUE_URL!, PRODUCER_NAMES.forecast, body);
+  for (const slug of uniqueSlugs) {
+    const body = { slug };
+    const resp = await sendMessage(
+      process.env.QUEUE_URL!,
+      PRODUCER_NAMES.windFinder,
+      body
+    );
+    console.log(process.env.QUEUE_URL, resp);
   }
 };

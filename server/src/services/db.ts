@@ -2,7 +2,7 @@ import { DynamoDB } from "aws-sdk";
 export const client = new DynamoDB.DocumentClient();
 import { subMinutes, addDays } from "date-fns";
 
-const tableName = process.env.DATABASE_TABLE_NAME!;
+export const tableName = process.env.DATABASE_TABLE_NAME!;
 
 export const getCacheVal = async <T>(
   key: string,

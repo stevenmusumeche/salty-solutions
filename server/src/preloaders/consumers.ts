@@ -34,6 +34,6 @@ export const tide: SQSHandler = async (event, ctx, cb) => {
 export const windFinder: SQSHandler = async (event, ctx, cb) => {
   for (const record of event.Records) {
     const payload = JSON.parse(record.body);
-    console.log("Preloading windfinder for", payload.spotId);
+    console.log("Preloading windfinder for", payload.slug);
   }
 };
