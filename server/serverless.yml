@@ -77,7 +77,7 @@ functions:
       - schedule:
           name: WindFinderPreloader-${self:provider.stage}
           enabled: ${self:custom.schedule_enabled.${self:provider.stage}, false}
-          rate: rate(1 hours)
+          rate: rate(1 hour)
     environment:
       QUEUE_URL: ${cf:ss-queue-${self:provider.stage}.WindFinderPreloaderQueueUrl}
   preload-windfinder-consumer:
@@ -111,4 +111,5 @@ custom:
     port: 4000
   schedule_enabled:
     prod: true
+    # todo disable
     dev: true
