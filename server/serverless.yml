@@ -20,6 +20,7 @@ provider:
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
         - dynamodb:DescribeTimeToLive
+        - dynamodb:BatchWriteItem
       Resource: ${cf:ss-database-${self:provider.stage}.MainTableArn}
     - Effect: Allow
       Action:
