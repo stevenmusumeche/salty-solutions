@@ -32,6 +32,7 @@ provider:
       Resource:
         - ${cf:ss-queue-${self:provider.stage}.ForecastPreloaderQueueArn}
         - ${cf:ss-queue-${self:provider.stage}.TidePreloaderQueueArn}
+        - ${cf:ss-queue-${self:provider.stage}.WindFinderPreloaderQueueArn}
     - Effect: Allow
       Action:
         - s3:*
@@ -68,6 +69,23 @@ functions:
       - sqs:
           batchSize: 1
           arn: ${cf:ss-queue-${self:provider.stage}.ForecastPreloaderQueueArn}
+
+  preload-windfinder-producer:
+    handler: src/preloaders/producers.windFinder
+    events:
+      - schedule:
+          name: WindFinderPreloader-${self:provider.stage}
+          enabled: ${self:custom.schedule_enabled.${self:provider.stage}, false}
+          rate: rate(3 hours)
+    environment:
+      QUEUE_URL: ${cf:ss-queue-${self:provider.stage}.WindFinderPreloaderQueueUrl}
+  preload-windfinder-consumer:
+    handler: src/preloaders/consumers.windFinder
+    timeout: 120
+    events:
+      - sqs:
+          batchSize: 1
+          arn: ${cf:ss-queue-${self:provider.stage}.WindFinderPreloaderQueueArn}
 
   # todo re-enable this if we can get past dynamodb limits
   # preload-tide-producer:

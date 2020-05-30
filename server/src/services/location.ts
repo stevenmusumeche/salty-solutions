@@ -21,6 +21,9 @@ export interface LocationEntity {
   nowcastSubdomain?: string;
   saveOurLake?: boolean;
   modisArea: string;
+  windfinder: {
+    spotId?: string;
+  };
 }
 
 const locations: LocationEntity[] = [
@@ -48,6 +51,7 @@ const locations: LocationEntity[] = [
     },
     nowcastSubdomain: "0",
     modisArea: "USA7",
+    windfinder: { spotId: undefined },
   },
   {
     id: "calcasieu-lake",
@@ -66,6 +70,7 @@ const locations: LocationEntity[] = [
     },
     nowcastSubdomain: "cc",
     modisArea: "USA7",
+    windfinder: { spotId: undefined },
   },
   {
     id: "cocodrie",
@@ -91,6 +96,7 @@ const locations: LocationEntity[] = [
     },
     nowcastSubdomain: "0",
     modisArea: "USA7",
+    windfinder: { spotId: "us8927" },
   },
   {
     id: "dularge",
@@ -115,6 +121,7 @@ const locations: LocationEntity[] = [
     },
     nowcastSubdomain: "0",
     modisArea: "USA7",
+    windfinder: { spotId: "us8924" },
   },
   {
     id: "hopedale",
@@ -140,6 +147,7 @@ const locations: LocationEntity[] = [
     },
     saveOurLake: true,
     modisArea: "USA7",
+    windfinder: { spotId: undefined },
   },
   {
     id: "grand-isle",
@@ -171,6 +179,7 @@ const locations: LocationEntity[] = [
     },
     nowcastSubdomain: "0",
     modisArea: "USA7",
+    windfinder: { spotId: undefined },
   },
   {
     id: "venice",
@@ -212,6 +221,7 @@ const locations: LocationEntity[] = [
     },
     modisArea: "USA7",
     saveOurLake: true,
+    windfinder: { spotId: undefined },
   },
   {
     id: "lake-ponchartrain",
@@ -251,6 +261,7 @@ const locations: LocationEntity[] = [
     },
     modisArea: "USA7",
     saveOurLake: true,
+    windfinder: { spotId: undefined },
   },
   {
     id: "rigolets",
@@ -274,6 +285,7 @@ const locations: LocationEntity[] = [
     },
     modisArea: "USA7",
     saveOurLake: true,
+    windfinder: { spotId: undefined },
   },
 ];
 

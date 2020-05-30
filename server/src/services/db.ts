@@ -1,5 +1,5 @@
 import { DynamoDB } from "aws-sdk";
-const client = new DynamoDB.DocumentClient();
+export const client = new DynamoDB.DocumentClient();
 import { subMinutes, addDays } from "date-fns";
 
 const tableName = process.env.DATABASE_TABLE_NAME!;
@@ -16,10 +16,10 @@ export const getCacheVal = async <T>(
         KeyConditionExpression: "pk = :key AND sk >= :date",
         ExpressionAttributeValues: {
           ":key": key,
-          ":date": cutoff.getTime()
+          ":date": cutoff.getTime(),
         },
         Limit: 1,
-        ScanIndexForward: false
+        ScanIndexForward: false,
       })
       .promise();
 
@@ -40,8 +40,8 @@ export const setCacheVal = async <T>(key: string, data: T): Promise<T> => {
         pk: key,
         sk: Date.now(),
         ttl: addDays(new Date(), 30).getTime(),
-        data
-      }
+        data,
+      },
     })
     .promise();
   return data;
