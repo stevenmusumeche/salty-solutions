@@ -5,13 +5,9 @@ import { parseFromTimeZone } from "date-fns-timezone";
 import { chunk } from "lodash";
 import { client, tableName } from "./db";
 
-main();
-
-async function main() {
-  // const spotId = "caillou-lake";
-  const spotId = "cocodrie_marina";
-  const data = await fetchData(spotId);
-  await saveToDynamo(spotId, data);
+export async function loadAndSave(siteTag: string) {
+  const data = await fetchData(siteTag);
+  await saveToDynamo(siteTag, data);
 }
 
 async function fetchData(siteTag: string): Promise<WindFinderParsed[]> {

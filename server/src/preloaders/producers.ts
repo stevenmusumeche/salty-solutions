@@ -56,11 +56,6 @@ export const windFinder: ScheduledHandler = async () => {
 
   for (const slug of uniqueSlugs) {
     const body = { slug };
-    const resp = await sendMessage(
-      process.env.QUEUE_URL!,
-      PRODUCER_NAMES.windFinder,
-      body
-    );
-    console.log(process.env.QUEUE_URL, resp);
+    await sendMessage(process.env.QUEUE_URL!, PRODUCER_NAMES.windFinder, body);
   }
 };
