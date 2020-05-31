@@ -40,10 +40,17 @@ export async function getData(
 
 async function fetchData(siteTag: string): Promise<WindFinderParsed[]> {
   // fetch the forecast (10 days) and superforecast (3 days)
-  const [superForecast, forecast] = await Promise.all([
+  let [superForecast, forecast] = await Promise.all([
     normalize(await fetchSuperForecast(siteTag)),
     normalize(await fetchForecast(siteTag)),
   ]);
+
+  // rain in superforecast is mm/hr
+  // rain in regular forecast is mm/3hr
+  forecast = forecast.map((x) => ({
+    ...x,
+    rainMmPerHour: Number((x.rainMmPerHour / 3).toFixed(2)),
+  }));
 
   // figure out the latest date of superforecast and exclude forecast points before that
   const lastSuperForecastDate = new Date(
@@ -88,6 +95,7 @@ interface WindFinderTimePeriod {
   };
   cloudCoverPercent: number;
   temperatureCelcius: number;
+  rainMmPerPeriod: number;
 }
 
 interface WindFinderParsed {
@@ -103,6 +111,7 @@ interface WindFinderParsed {
   };
   cloudCoverPercent: number;
   temperature: number;
+  rainMmPerHour: number;
 }
 
 async function fetchAndParse(url: string): Promise<WindFinderResult[]> {
@@ -168,6 +177,9 @@ async function fetchAndParse(url: string): Promise<WindFinderResult[]> {
               temperatureCelcius: Number(
                 extract(".cell-weather-2 .data-temp .units-at")
               ),
+              rainMmPerPeriod: Number(
+                extract(".cell-weather-1 .data-rain .units-pr")
+              ),
             };
           })
           .get(),
@@ -206,6 +218,7 @@ function normalize(days: WindFinderResult[]): WindFinderParsed[] {
           celciusToFahrenheit(timePeriod.temperatureCelcius),
           10
         ),
+        rainMmPerHour: timePeriod.rainMmPerPeriod,
       };
     });
   });
