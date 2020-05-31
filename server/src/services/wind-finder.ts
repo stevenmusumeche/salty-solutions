@@ -239,7 +239,7 @@ async function saveToDynamo(slug: string, windFinderData: WindFinderParsed[]) {
     });
 
     // todo handle errors
-    return client
+    await client
       .batchWrite({
         RequestItems: {
           [tableName]: request,
