@@ -4,10 +4,38 @@ import { format, isAfter, parse, addDays } from "date-fns";
 import { parseFromTimeZone } from "date-fns-timezone";
 import { chunk } from "lodash";
 import { client, tableName } from "./db";
+import { LocationEntity } from "./location";
+import { celciusToFahrenheit } from "./weather";
 
 export async function loadAndSave(siteTag: string) {
   const data = await fetchData(siteTag);
   await saveToDynamo(siteTag, data);
+}
+
+export async function getData(
+  location: LocationEntity,
+  start: Date,
+  end: Date
+): Promise<WindFinderParsed[]> {
+  const pk = `windfinder-forecast-${location.windfinder.slug}`;
+  const result = await client
+    .query({
+      TableName: tableName,
+      KeyConditionExpression: "pk = :key AND sk BETWEEN :start AND :end",
+      ExpressionAttributeValues: {
+        ":key": pk,
+        ":start": start.getTime(),
+        ":end": end.getTime(),
+      },
+    })
+    .promise();
+
+  if (!result.Items) return [];
+
+  return result.Items.map((item) => ({
+    timestamp: new Date(item.sk),
+    ...item.data,
+  }));
 }
 
 async function fetchData(siteTag: string): Promise<WindFinderParsed[]> {
@@ -59,6 +87,7 @@ interface WindFinderTimePeriod {
     heightUnit?: string;
   };
   cloudCoverPercent: number;
+  temperatureCelcius: number;
 }
 
 interface WindFinderParsed {
@@ -73,6 +102,7 @@ interface WindFinderParsed {
     heightFt?: number;
   };
   cloudCoverPercent: number;
+  temperature: number;
 }
 
 async function fetchAndParse(url: string): Promise<WindFinderResult[]> {
@@ -135,6 +165,9 @@ async function fetchAndParse(url: string): Promise<WindFinderResult[]> {
               cloudCoverPercent: Number(
                 extract(".cell-weather-1 .data-cover__number").replace("%", "")
               ),
+              temperatureCelcius: Number(
+                extract(".cell-weather-2 .data-temp .units-at")
+              ),
             };
           })
           .get(),
@@ -169,6 +202,10 @@ function normalize(days: WindFinderResult[]): WindFinderParsed[] {
             timePeriod.wave.height && meterToFeet(timePeriod.wave.height),
         },
         cloudCoverPercent: timePeriod.cloudCoverPercent,
+        temperature: parseInt(
+          celciusToFahrenheit(timePeriod.temperatureCelcius),
+          10
+        ),
       };
     });
   });
@@ -182,10 +219,7 @@ function meterToFeet(meters: number): number {
   return Number((meters * 3.28084).toFixed(1));
 }
 
-async function saveToDynamo(
-  spotId: string,
-  windFinderData: WindFinderParsed[]
-) {
+async function saveToDynamo(slug: string, windFinderData: WindFinderParsed[]) {
   const chunkedData = chunk(windFinderData, 25);
   for (let chunkPiece of chunkedData) {
     const request = chunkPiece.map((data) => {
@@ -194,7 +228,7 @@ async function saveToDynamo(
       return {
         PutRequest: {
           Item: {
-            pk: `windfinder-forecast-${spotId}`,
+            pk: `windfinder-forecast-${slug}`,
             sk: itemDate.getTime(),
             ttl: addDays(itemDate, 60).getTime(),
             data: itemData,
