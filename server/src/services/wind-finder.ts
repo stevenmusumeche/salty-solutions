@@ -231,13 +231,15 @@ async function saveToDynamo(slug: string, windFinderData: WindFinderParsed[]) {
             pk: `windfinder-forecast-${slug}`,
             sk: itemDate.getTime(),
             ttl: addDays(itemDate, 60).getTime(),
+            updatedAt: new Date().toISOString(),
             data: itemData,
           },
         },
       };
     });
 
-    await client
+    // todo handle errors
+    return client
       .batchWrite({
         RequestItems: {
           [tableName]: request,
