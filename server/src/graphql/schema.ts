@@ -17,6 +17,7 @@ export default gql`
     sun(start: String!, end: String!): [SunDetail!]
     moon(start: String!, end: String!): [MoonDetail!]
     combinedForecast: [CombinedForecast!]
+    combinedForecastV2: [CombinedForecastV2!]
     weatherForecast: [WeatherForecast!]
     hourlyWeatherForecast: [WeatherForecast!]
     marineForecast: [MarineForecast!]
@@ -75,6 +76,22 @@ export default gql`
     detailed: String!
     chanceOfPrecipitation: Int
     icon: String!
+  }
+
+  type CombinedForecastV2 {
+    date: String!
+    name: String!
+    wind: [ForecastWindDetailV2!]!
+    waves: [ForecastWaveDetail!]!
+    temperature: [TemperatureDetail!]!
+    day: ForecastDescription!
+    night: ForecastDescription!
+    rain: [RainDetail!]!
+  }
+
+  type ForecastDescription {
+    short: String
+    detailed: String
   }
 
   type WaterCondition {
@@ -190,6 +207,27 @@ export default gql`
   type ForecastWindSpeedDetail {
     from: Int!
     to: Int!
+  }
+
+  type ForecastWindDetailV2 {
+    timestamp: String!
+    "mph"
+    base: Float!
+    "mph"
+    gusts: Float!
+    direction: WindDirection!
+  }
+
+  type ForecastWaveDetail {
+    timestamp: String!
+    "feet"
+    height: Float!
+    direction: WindDirection!
+  }
+
+  type RainDetail {
+    timestamp: String!
+    mmPerHour: Float!
   }
 
   type WaterHeight {

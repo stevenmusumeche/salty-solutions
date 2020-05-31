@@ -24,6 +24,18 @@ export type CombinedForecast = {
   icon: Scalars['String'],
 };
 
+export type CombinedForecastV2 = {
+  __typename?: 'CombinedForecastV2',
+  date: Scalars['String'],
+  name: Scalars['String'],
+  wind: Array<ForecastWindDetailV2>,
+  waves: Array<ForecastWaveDetail>,
+  temperature: Array<TemperatureDetail>,
+  day: ForecastDescription,
+  night: ForecastDescription,
+  rain: Array<RainDetail>,
+};
+
 export type Coords = {
   __typename?: 'Coords',
   lat: Scalars['Float'],
@@ -46,6 +58,30 @@ export type DataSources = {
   weatherRadarSiteId: Scalars['String'],
 };
 
+export type ForecastDescription = {
+  __typename?: 'ForecastDescription',
+  short?: Maybe<Scalars['String']>,
+  detailed?: Maybe<Scalars['String']>,
+};
+
+export type ForecastWaveDetail = {
+  __typename?: 'ForecastWaveDetail',
+  timestamp: Scalars['String'],
+  /** feet */
+  height: Scalars['Float'],
+  direction: WindDirection,
+};
+
+export type ForecastWindDetailV2 = {
+  __typename?: 'ForecastWindDetailV2',
+  timestamp: Scalars['String'],
+  /** mph */
+  base: Scalars['Float'],
+  /** mph */
+  gusts: Scalars['Float'],
+  direction: WindDirection,
+};
+
 export type ForecastWindSpeedDetail = {
   __typename?: 'ForecastWindSpeedDetail',
   from: Scalars['Int'],
@@ -62,6 +98,7 @@ export type Location = {
   sun?: Maybe<Array<SunDetail>>,
   moon?: Maybe<Array<MoonDetail>>,
   combinedForecast?: Maybe<Array<CombinedForecast>>,
+  combinedForecastV2?: Maybe<Array<CombinedForecastV2>>,
   weatherForecast?: Maybe<Array<WeatherForecast>>,
   hourlyWeatherForecast?: Maybe<Array<WeatherForecast>>,
   marineForecast?: Maybe<Array<MarineForecast>>,
@@ -179,6 +216,12 @@ export type QueryTidePreditionStationArgs = {
 
 export type QueryUsgsSiteArgs = {
   siteId?: Maybe<Scalars['ID']>
+};
+
+export type RainDetail = {
+  __typename?: 'RainDetail',
+  timestamp: Scalars['String'],
+  mmPerHour: Scalars['Float'],
 };
 
 export type Salinity = {
