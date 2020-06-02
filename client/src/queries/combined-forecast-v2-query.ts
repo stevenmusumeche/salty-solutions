@@ -21,5 +21,13 @@ export const COMBINED_FORECAST_V2_QUERY = gql`
         degrees
       }
     }
+    day {
+      short
+      detailed
+    }
+    night {
+      short
+      detailed
+    }
   }
 `;

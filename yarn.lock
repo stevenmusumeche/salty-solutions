@@ -2622,10 +2622,10 @@
   resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-0.7.0.tgz#9a06f4f137ee84d7df0460c1fdb1135ffa6c50fd"
   integrity sha512-ONhaKPIufzzrlNbqtWFFd+jlnemX6lJAgq9ZeiZtS7I1PIf/la7CW4m83rTXRnVnsMbW2k56pGYu7AUFJD9Pow==
 
-"@stevenmusumeche/salty-solutions-shared@^1.0.27":
-  version "1.0.27"
-  resolved "https://npm.pkg.github.com/download/@stevenmusumeche/salty-solutions-shared/1.0.27/5c7c7825441f2905ca1f52cff6de4e509c6f886ccaf583bfaf6ad23cac0d274e#b38ab144e5c3202c13442cd7083e042662d9805b"
-  integrity sha512-6JcBXDn4kGMwZriesVP9oLVuFN+UVjySNM8kXtGgaVvPUdqlNjQh0rLO/DnFOOKICOL37VLQ1F8BSKCGnQdfJQ==
+"@stevenmusumeche/salty-solutions-shared@^1.0.28":
+  version "1.0.28"
+  resolved "https://npm.pkg.github.com/download/@stevenmusumeche/salty-solutions-shared/1.0.28/7ef9bd10345b67c935f6d22cc5b410a0bc54ef56907f0f2baeed63e95c0d6d38#d8c3f19d576ce62c9b3e38a12b639e86da8fe6bf"
+  integrity sha512-prn3qEMMI2R5ZvMc0E05/39ttz+IwSuVlF2rvC8eHnbBQk4/k0qLi7EcY+9aXrDTn6vHDPePNtvRHBtOG5THNg==
 
 "@svgr/babel-plugin-add-jsx-attribute@^4.2.0":
   version "4.2.0"

@@ -24,6 +24,18 @@ export type CombinedForecast = {
   icon: Scalars['String'],
 };
 
+export type CombinedForecastV2 = {
+  __typename?: 'CombinedForecastV2',
+  date: Scalars['String'],
+  name: Scalars['String'],
+  wind: Array<ForecastWindDetailV2>,
+  waves: Array<ForecastWaveDetail>,
+  temperature: Array<TemperatureDetail>,
+  day: ForecastDescription,
+  night: ForecastDescription,
+  rain: Array<RainDetail>,
+};
+
 export type Coords = {
   __typename?: 'Coords',
   lat: Scalars['Float'],
@@ -46,6 +58,30 @@ export type DataSources = {
   weatherRadarSiteId: Scalars['String'],
 };
 
+export type ForecastDescription = {
+  __typename?: 'ForecastDescription',
+  short?: Maybe<Scalars['String']>,
+  detailed?: Maybe<Scalars['String']>,
+};
+
+export type ForecastWaveDetail = {
+  __typename?: 'ForecastWaveDetail',
+  timestamp: Scalars['String'],
+  /** feet */
+  height: Scalars['Float'],
+  direction: WindDirection,
+};
+
+export type ForecastWindDetailV2 = {
+  __typename?: 'ForecastWindDetailV2',
+  timestamp: Scalars['String'],
+  /** mph */
+  base: Scalars['Float'],
+  /** mph */
+  gusts: Scalars['Float'],
+  direction: WindDirection,
+};
+
 export type ForecastWindSpeedDetail = {
   __typename?: 'ForecastWindSpeedDetail',
   from: Scalars['Int'],
@@ -62,6 +98,7 @@ export type Location = {
   sun?: Maybe<Array<SunDetail>>,
   moon?: Maybe<Array<MoonDetail>>,
   combinedForecast?: Maybe<Array<CombinedForecast>>,
+  combinedForecastV2?: Maybe<Array<CombinedForecastV2>>,
   weatherForecast?: Maybe<Array<WeatherForecast>>,
   hourlyWeatherForecast?: Maybe<Array<WeatherForecast>>,
   marineForecast?: Maybe<Array<MarineForecast>>,
@@ -69,7 +106,7 @@ export type Location = {
   temperature: TemperatureResult,
   maps?: Maybe<Maps>,
   dataSources?: Maybe<DataSources>,
-  modisMaps: Array<ModusMap>,
+  modisMaps: Array<ModisMap>,
   salinityMap: Scalars['String'],
 };
 
@@ -121,6 +158,15 @@ export type MarineForecastDetail = {
   windDirection?: Maybe<WindDirection>,
 };
 
+export type ModisMap = {
+  __typename?: 'ModisMap',
+  date: Scalars['String'],
+  satellite: ModisSatellite,
+  small: ModisMapEntry,
+  medium: ModisMapEntry,
+  large: ModisMapEntry,
+};
+
 export type ModisMapEntry = {
   __typename?: 'ModisMapEntry',
   url: Scalars['String'],
@@ -128,13 +174,10 @@ export type ModisMapEntry = {
   height: Scalars['Int'],
 };
 
-export type ModusMap = {
-  __typename?: 'ModusMap',
-  date: Scalars['String'],
-  small: ModisMapEntry,
-  medium: ModisMapEntry,
-  large: ModisMapEntry,
-};
+export enum ModisSatellite {
+  Terra = 'TERRA',
+  Aqua = 'AQUA'
+}
 
 export type MoonDetail = {
   __typename?: 'MoonDetail',
@@ -173,6 +216,12 @@ export type QueryTidePreditionStationArgs = {
 
 export type QueryUsgsSiteArgs = {
   siteId?: Maybe<Scalars['ID']>
+};
+
+export type RainDetail = {
+  __typename?: 'RainDetail',
+  timestamp: Scalars['String'],
+  mmPerHour: Scalars['Float'],
 };
 
 export type Salinity = {
@@ -377,9 +426,20 @@ export type CombinedForecastQueryVariables = {
 };
 
 
-export type CombinedForecastQuery = ({ __typename?: 'Query' } & { location: Maybe<({ __typename?: 'Location' } & { combinedForecast: Maybe<Array<({ __typename?: 'CombinedForecast' } & Pick<CombinedForecast, 'timePeriod' | 'chanceOfPrecipitation' | 'icon' | 'marine' | 'short' | 'detailed'> & { wind: ({ __typename?: 'WindForecast' } & { speed: Maybe<({ __typename?: 'ForecastWindSpeedDetail' } & Pick<ForecastWindSpeedDetail, 'from' | 'to'>)>, direction: Maybe<({ __typename?: 'WindDirection' } & Pick<WindDirection, 'text' | 'degrees'>)> }), waterCondition: Maybe<({ __typename?: 'WaterCondition' } & Pick<WaterCondition, 'text' | 'icon'>)>, temperature: ({ __typename?: 'Temperature' } & Pick<Temperature, 'degrees' | 'unit'>) })>>, hourlyWeatherForecast: Maybe<Array<({ __typename?: 'WeatherForecast' } & HourlyForecastDetailFragment)>> })> });
+export type CombinedForecastQuery = ({ __typename?: 'Query' } & { location: Maybe<({ __typename?: 'Location' } & { combinedForecast: Maybe<Array<({ __typename?: 'CombinedForecast' } & CombinedForecastDetailFragment)>>, hourlyWeatherForecast: Maybe<Array<({ __typename?: 'WeatherForecast' } & HourlyForecastDetailFragment)>> })> });
 
 export type HourlyForecastDetailFragment = ({ __typename?: 'WeatherForecast' } & Pick<WeatherForecast, 'startTime' | 'icon' | 'shortForecast'> & { temperature: ({ __typename?: 'Temperature' } & Pick<Temperature, 'degrees' | 'unit'>), windSpeed: Maybe<({ __typename?: 'ForecastWindSpeedDetail' } & Pick<ForecastWindSpeedDetail, 'from' | 'to'>)>, windDirection: Maybe<({ __typename?: 'WindDirection' } & Pick<WindDirection, 'text'>)> });
+
+export type CombinedForecastDetailFragment = ({ __typename?: 'CombinedForecast' } & Pick<CombinedForecast, 'timePeriod' | 'chanceOfPrecipitation' | 'icon' | 'marine' | 'short' | 'detailed'> & { wind: ({ __typename?: 'WindForecast' } & { speed: Maybe<({ __typename?: 'ForecastWindSpeedDetail' } & Pick<ForecastWindSpeedDetail, 'from' | 'to'>)>, direction: Maybe<({ __typename?: 'WindDirection' } & Pick<WindDirection, 'text' | 'degrees'>)> }), waterCondition: Maybe<({ __typename?: 'WaterCondition' } & Pick<WaterCondition, 'text' | 'icon'>)>, temperature: ({ __typename?: 'Temperature' } & Pick<Temperature, 'degrees' | 'unit'>) });
+
+export type CombinedForecastV2QueryVariables = {
+  locationId: Scalars['ID']
+};
+
+
+export type CombinedForecastV2Query = ({ __typename?: 'Query' } & { location: Maybe<({ __typename?: 'Location' } & { combinedForecastV2: Maybe<Array<({ __typename?: 'CombinedForecastV2' } & CombinedForecastV2DetailFragment)>> })> });
+
+export type CombinedForecastV2DetailFragment = ({ __typename?: 'CombinedForecastV2' } & Pick<CombinedForecastV2, 'name' | 'date'> & { wind: Array<({ __typename?: 'ForecastWindDetailV2' } & Pick<ForecastWindDetailV2, 'timestamp' | 'base' | 'gusts'> & { direction: ({ __typename?: 'WindDirection' } & Pick<WindDirection, 'text' | 'degrees'>) })>, day: ({ __typename?: 'ForecastDescription' } & Pick<ForecastDescription, 'short' | 'detailed'>), night: ({ __typename?: 'ForecastDescription' } & Pick<ForecastDescription, 'short' | 'detailed'>) });
 
 export type CurrentConditionsDataQueryVariables = {
   locationId: Scalars['ID'],
@@ -405,11 +465,13 @@ export type ForecastQuery = ({ __typename?: 'Query' } & { location: Maybe<({ __t
 export type LocationsQueryVariables = {};
 
 
-export type LocationsQuery = ({ __typename?: 'Query' } & { locations: Array<({ __typename?: 'Location' } & Pick<Location, 'id' | 'name'> & { coords: ({ __typename?: 'Coords' } & Pick<Coords, 'lat' | 'lon'>), tidePreditionStations: Array<({ __typename?: 'TidePreditionStation' } & TideStationDetailFragment)>, usgsSites: Array<({ __typename?: 'UsgsSite' } & UsgsSiteDetailFragment)> })> });
+export type LocationsQuery = ({ __typename?: 'Query' } & { locations: Array<({ __typename?: 'Location' } & LocationDetailFragment)> });
 
 export type TideStationDetailFragment = ({ __typename?: 'TidePreditionStation' } & Pick<TidePreditionStation, 'id' | 'name'>);
 
 export type UsgsSiteDetailFragment = ({ __typename?: 'UsgsSite' } & Pick<UsgsSite, 'id' | 'name' | 'availableParams'>);
+
+export type LocationDetailFragment = ({ __typename?: 'Location' } & Pick<Location, 'id' | 'name'> & { coords: ({ __typename?: 'Coords' } & Pick<Coords, 'lat' | 'lon'>), tidePreditionStations: Array<({ __typename?: 'TidePreditionStation' } & TideStationDetailFragment)>, usgsSites: Array<({ __typename?: 'UsgsSite' } & UsgsSiteDetailFragment)> });
 
 export type MapsQueryVariables = {
   locationId: Scalars['ID']
@@ -425,7 +487,7 @@ export type ModisMapQueryVariables = {
 };
 
 
-export type ModisMapQuery = ({ __typename?: 'Query' } & { location: Maybe<({ __typename?: 'Location' } & { modisMaps: Array<({ __typename?: 'ModusMap' } & Pick<ModusMap, 'date'> & { small: ({ __typename?: 'ModisMapEntry' } & Pick<ModisMapEntry, 'url' | 'width' | 'height'>), large: ({ __typename?: 'ModisMapEntry' } & Pick<ModisMapEntry, 'url' | 'width' | 'height'>) })> })> });
+export type ModisMapQuery = ({ __typename?: 'Query' } & { location: Maybe<({ __typename?: 'Location' } & { modisMaps: Array<({ __typename?: 'ModisMap' } & Pick<ModisMap, 'date' | 'satellite'> & { small: ({ __typename?: 'ModisMapEntry' } & Pick<ModisMapEntry, 'url' | 'width' | 'height'>), large: ({ __typename?: 'ModisMapEntry' } & Pick<ModisMapEntry, 'url' | 'width' | 'height'>) })> })> });
 
 export type SalinityMapQueryVariables = {
   locationId: Scalars['ID']
@@ -433,15 +495,6 @@ export type SalinityMapQueryVariables = {
 
 
 export type SalinityMapQuery = ({ __typename?: 'Query' } & { location: Maybe<({ __typename?: 'Location' } & Pick<Location, 'salinityMap'>)> });
-
-export type SunAndMoonQueryVariables = {
-  locationId: Scalars['ID'],
-  startDate: Scalars['String'],
-  endDate: Scalars['String']
-};
-
-
-export type SunAndMoonQuery = ({ __typename?: 'Query' } & { location: Maybe<({ __typename?: 'Location' } & { sun: Maybe<Array<({ __typename?: 'SunDetail' } & Pick<SunDetail, 'sunrise' | 'sunset' | 'nauticalDawn' | 'nauticalDusk'>)>>, moon: Maybe<Array<({ __typename?: 'MoonDetail' } & Pick<MoonDetail, 'phase' | 'illumination'>)>> })> });
 
 export type TideQueryVariables = {
   locationId: Scalars['ID'],
@@ -480,6 +533,57 @@ export const HourlyForecastDetailFragmentDoc = gql`
   }
   icon
   shortForecast
+}
+    `;
+export const CombinedForecastDetailFragmentDoc = gql`
+    fragment CombinedForecastDetail on CombinedForecast {
+  timePeriod
+  wind {
+    speed {
+      from
+      to
+    }
+    direction {
+      text
+      degrees
+    }
+  }
+  waterCondition {
+    text
+    icon
+  }
+  temperature {
+    degrees
+    unit
+  }
+  chanceOfPrecipitation
+  icon
+  marine
+  short
+  detailed
+}
+    `;
+export const CombinedForecastV2DetailFragmentDoc = gql`
+    fragment CombinedForecastV2Detail on CombinedForecastV2 {
+  name
+  date
+  wind {
+    timestamp
+    base
+    gusts
+    direction {
+      text
+      degrees
+    }
+  }
+  day {
+    short
+    detailed
+  }
+  night {
+    short
+    detailed
+  }
 }
     `;
 export const UsgsSiteDetailFieldsFragmentDoc = gql`
@@ -536,6 +640,23 @@ export const UsgsSiteDetailFragmentDoc = gql`
   availableParams
 }
     `;
+export const LocationDetailFragmentDoc = gql`
+    fragment LocationDetail on Location {
+  id
+  name
+  coords {
+    lat
+    lon
+  }
+  tidePreditionStations {
+    ...TideStationDetail
+  }
+  usgsSites {
+    ...UsgsSiteDetail
+  }
+}
+    ${TideStationDetailFragmentDoc}
+${UsgsSiteDetailFragmentDoc}`;
 export const OverlayMapsFragmentDoc = gql`
     fragment OverlayMaps on Overlays {
   topo
@@ -588,40 +709,31 @@ export const CombinedForecastDocument = gql`
     query CombinedForecast($locationId: ID!) {
   location(id: $locationId) {
     combinedForecast {
-      timePeriod
-      wind {
-        speed {
-          from
-          to
-        }
-        direction {
-          text
-          degrees
-        }
-      }
-      waterCondition {
-        text
-        icon
-      }
-      temperature {
-        degrees
-        unit
-      }
-      chanceOfPrecipitation
-      icon
-      marine
-      short
-      detailed
+      ...CombinedForecastDetail
     }
     hourlyWeatherForecast {
       ...HourlyForecastDetail
     }
   }
 }
-    ${HourlyForecastDetailFragmentDoc}`;
+    ${CombinedForecastDetailFragmentDoc}
+${HourlyForecastDetailFragmentDoc}`;
 
 export function useCombinedForecastQuery(options: Omit<Urql.UseQueryArgs<CombinedForecastQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<CombinedForecastQuery>({ query: CombinedForecastDocument, ...options });
+};
+export const CombinedForecastV2Document = gql`
+    query CombinedForecastV2($locationId: ID!) {
+  location(id: $locationId) {
+    combinedForecastV2 {
+      ...CombinedForecastV2Detail
+    }
+  }
+}
+    ${CombinedForecastV2DetailFragmentDoc}`;
+
+export function useCombinedForecastV2Query(options: Omit<Urql.UseQueryArgs<CombinedForecastV2QueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<CombinedForecastV2Query>({ query: CombinedForecastV2Document, ...options });
 };
 export const CurrentConditionsDataDocument = gql`
     query CurrentConditionsData($locationId: ID!, $usgsSiteId: ID, $startDate: String!, $endDate: String!) {
@@ -698,22 +810,10 @@ export function useForecastQuery(options: Omit<Urql.UseQueryArgs<ForecastQueryVa
 export const LocationsDocument = gql`
     query Locations {
   locations {
-    id
-    name
-    coords {
-      lat
-      lon
-    }
-    tidePreditionStations {
-      ...TideStationDetail
-    }
-    usgsSites {
-      ...UsgsSiteDetail
-    }
+    ...LocationDetail
   }
 }
-    ${TideStationDetailFragmentDoc}
-${UsgsSiteDetailFragmentDoc}`;
+    ${LocationDetailFragmentDoc}`;
 
 export function useLocationsQuery(options: Omit<Urql.UseQueryArgs<LocationsQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<LocationsQuery>({ query: LocationsDocument, ...options });
@@ -742,6 +842,7 @@ export const ModisMapDocument = gql`
   location(id: $locationId) {
     modisMaps(numDays: 8) {
       date
+      satellite
       small {
         url
         width
@@ -770,26 +871,6 @@ export const SalinityMapDocument = gql`
 
 export function useSalinityMapQuery(options: Omit<Urql.UseQueryArgs<SalinityMapQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<SalinityMapQuery>({ query: SalinityMapDocument, ...options });
-};
-export const SunAndMoonDocument = gql`
-    query SunAndMoon($locationId: ID!, $startDate: String!, $endDate: String!) {
-  location(id: $locationId) {
-    sun(start: $startDate, end: $endDate) {
-      sunrise
-      sunset
-      nauticalDawn
-      nauticalDusk
-    }
-    moon(start: $startDate, end: $endDate) {
-      phase
-      illumination
-    }
-  }
-}
-    `;
-
-export function useSunAndMoonQuery(options: Omit<Urql.UseQueryArgs<SunAndMoonQueryVariables>, 'query'> = {}) {
-  return Urql.useQuery<SunAndMoonQuery>({ query: SunAndMoonDocument, ...options });
 };
 export const TideDocument = gql`
     query Tide($locationId: ID!, $tideStationId: ID!, $usgsSiteId: ID!, $startDate: String!, $endDate: String!) {

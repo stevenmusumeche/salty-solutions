@@ -432,6 +432,15 @@ export type HourlyForecastDetailFragment = ({ __typename?: 'WeatherForecast' } &
 
 export type CombinedForecastDetailFragment = ({ __typename?: 'CombinedForecast' } & Pick<CombinedForecast, 'timePeriod' | 'chanceOfPrecipitation' | 'icon' | 'marine' | 'short' | 'detailed'> & { wind: ({ __typename?: 'WindForecast' } & { speed: Maybe<({ __typename?: 'ForecastWindSpeedDetail' } & Pick<ForecastWindSpeedDetail, 'from' | 'to'>)>, direction: Maybe<({ __typename?: 'WindDirection' } & Pick<WindDirection, 'text' | 'degrees'>)> }), waterCondition: Maybe<({ __typename?: 'WaterCondition' } & Pick<WaterCondition, 'text' | 'icon'>)>, temperature: ({ __typename?: 'Temperature' } & Pick<Temperature, 'degrees' | 'unit'>) });
 
+export type CombinedForecastV2QueryVariables = {
+  locationId: Scalars['ID']
+};
+
+
+export type CombinedForecastV2Query = ({ __typename?: 'Query' } & { location: Maybe<({ __typename?: 'Location' } & { combinedForecastV2: Maybe<Array<({ __typename?: 'CombinedForecastV2' } & CombinedForecastV2DetailFragment)>> })> });
+
+export type CombinedForecastV2DetailFragment = ({ __typename?: 'CombinedForecastV2' } & Pick<CombinedForecastV2, 'name' | 'date'> & { wind: Array<({ __typename?: 'ForecastWindDetailV2' } & Pick<ForecastWindDetailV2, 'timestamp' | 'base' | 'gusts'> & { direction: ({ __typename?: 'WindDirection' } & Pick<WindDirection, 'text' | 'degrees'>) })>, day: ({ __typename?: 'ForecastDescription' } & Pick<ForecastDescription, 'short' | 'detailed'>), night: ({ __typename?: 'ForecastDescription' } & Pick<ForecastDescription, 'short' | 'detailed'>) });
+
 export type CurrentConditionsDataQueryVariables = {
   locationId: Scalars['ID'],
   usgsSiteId?: Maybe<Scalars['ID']>,
@@ -552,6 +561,29 @@ export const CombinedForecastDetailFragmentDoc = gql`
   marine
   short
   detailed
+}
+    `;
+export const CombinedForecastV2DetailFragmentDoc = gql`
+    fragment CombinedForecastV2Detail on CombinedForecastV2 {
+  name
+  date
+  wind {
+    timestamp
+    base
+    gusts
+    direction {
+      text
+      degrees
+    }
+  }
+  day {
+    short
+    detailed
+  }
+  night {
+    short
+    detailed
+  }
 }
     `;
 export const UsgsSiteDetailFieldsFragmentDoc = gql`
@@ -689,6 +721,19 @@ ${HourlyForecastDetailFragmentDoc}`;
 
 export function useCombinedForecastQuery(options: Omit<Urql.UseQueryArgs<CombinedForecastQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<CombinedForecastQuery>({ query: CombinedForecastDocument, ...options });
+};
+export const CombinedForecastV2Document = gql`
+    query CombinedForecastV2($locationId: ID!) {
+  location(id: $locationId) {
+    combinedForecastV2 {
+      ...CombinedForecastV2Detail
+    }
+  }
+}
+    ${CombinedForecastV2DetailFragmentDoc}`;
+
+export function useCombinedForecastV2Query(options: Omit<Urql.UseQueryArgs<CombinedForecastV2QueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<CombinedForecastV2Query>({ query: CombinedForecastV2Document, ...options });
 };
 export const CurrentConditionsDataDocument = gql`
     query CurrentConditionsData($locationId: ID!, $usgsSiteId: ID, $startDate: String!, $endDate: String!) {
