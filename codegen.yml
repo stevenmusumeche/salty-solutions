@@ -10,15 +10,6 @@ generates:
     config:
       withHooks: true
       withComponent: false
-  client/src/generated/graphql.ts:
-    plugins:
-      - typescript
-      - typescript-operations
-      - typescript-urql
-    config:
-      withHooks: true
-      withComponent: false
-
   server/src/generated/graphql.ts:
     config:
       contextType: "../server#Context"

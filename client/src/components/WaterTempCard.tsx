@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import ConditionCard from "./ConditionCard";
 import { hooks } from "@stevenmusumeche/salty-solutions-shared";
-import { UsgsSiteDetailFragment } from "../generated/graphql";
 import { subHours, startOfDay } from "date-fns";
 import UsgsSiteSelect from "./UsgsSiteSelect";
 import MiniGraph from "./MiniGraph";
 import { noDecimals } from "../hooks/utils";
+import { UsgsSiteDetailFragment } from "@stevenmusumeche/salty-solutions-shared/dist/graphql";
 
 interface Props {
   locationId: string;

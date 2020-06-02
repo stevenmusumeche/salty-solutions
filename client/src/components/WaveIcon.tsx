@@ -19,8 +19,8 @@ const WaveIcon: React.FC<{ min: number; max: number }> = ({ min, max }) => {
   }
 
   return (
-    <div className="w-full flex items-center">
-      <img src={image} alt={"waves"} className="w-full h-auto" />
+    <div className="w-full flex items-center h-10">
+      <img src={image} alt={"waves"} className="w-full h-full" />
     </div>
   );
 };

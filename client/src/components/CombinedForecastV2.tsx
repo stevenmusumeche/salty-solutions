@@ -1,12 +1,14 @@
 import React, { FC, ReactNode, useContext } from "react";
 import { WindowSizeContext } from "../providers/WindowSizeProvider";
-import { ForecastSkeleton } from "./ForecastSkeleton";
-import { useCombinedForecastV2Query } from "../generated/graphql";
 import ForecastChart from "./ForecastChart";
+import { useCombinedForecastV2Query } from "@stevenmusumeche/salty-solutions-shared/dist/graphql";
+import ForecastTimeBuckets from "./ForecastTimeBuckets";
 
 interface Props {
   locationId: string;
 }
+
+// todo: rain chances
 
 const CombinedForecastV2: React.FC<Props> = ({ locationId }) => {
   const [forecast] = useCombinedForecastV2Query({ variables: { locationId } });
@@ -61,6 +63,7 @@ const CombinedForecastV2: React.FC<Props> = ({ locationId }) => {
               </div>
 
               <ForecastChart data={data} date={new Date(data.date)} />
+              <ForecastTimeBuckets data={data} date={new Date(data.date)} />
 
               <div style={{ gridArea: "text" }}>
                 {data.day.detailed && (

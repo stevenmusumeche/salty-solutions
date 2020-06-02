@@ -35,5 +35,9 @@ export const COMBINED_FORECAST_V2_QUERY = gql`
         degrees
       }
     }
+    rain {
+      timestamp
+      mmPerHour
+    }
   }
 `;

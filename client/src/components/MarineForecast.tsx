@@ -1,7 +1,7 @@
 import React, { ReactNode } from "react";
-import { useForecastQuery } from "../generated/graphql";
 import ErrorIcon from "../assets/error.svg";
 import { ForecastSkeleton } from "./ForecastSkeleton";
+import { useForecastQuery } from "@stevenmusumeche/salty-solutions-shared/dist/graphql";
 
 interface Props {
   locationId: string;
@@ -34,7 +34,7 @@ const MarineForecast: React.FC<Props> = ({ locationId }) => {
       {forecast.data &&
         forecast.data.location &&
         forecast.data.location.marineForecast &&
-        forecast.data.location.marineForecast.map(data => {
+        forecast.data.location.marineForecast.map((data) => {
           return (
             <div className="mb-4 last-no-margin" key={data.timePeriod}>
               <div className="forecast-header">{data.timePeriod}</div>

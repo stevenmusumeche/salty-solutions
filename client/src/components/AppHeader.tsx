@@ -1,6 +1,9 @@
 import React, { ChangeEventHandler } from "react";
 import { UseQueryState } from "urql";
-import { LocationsQuery, useLocationsQuery } from "../generated/graphql";
+import {
+  useLocationsQuery,
+  LocationsQuery,
+} from "@stevenmusumeche/salty-solutions-shared/dist/graphql";
 
 interface Props {
   setLocationId: (id: string) => void;
@@ -14,7 +17,7 @@ const AppHeader: React.FC<Props> = ({ setLocationId, activeLocationId }) => {
     <div className="ml-3 md:ml-0">
       <LocationSelect
         locations={locations}
-        onChange={e => setLocationId(e.target.value)}
+        onChange={(e) => setLocationId(e.target.value)}
         value={activeLocationId}
       />
     </div>
@@ -32,7 +35,7 @@ interface LocationSelectProps {
 const LocationSelect: React.FC<LocationSelectProps> = ({
   locations,
   value,
-  onChange
+  onChange,
 }) => (
   <div className="">
     <select
@@ -44,7 +47,7 @@ const LocationSelect: React.FC<LocationSelectProps> = ({
       {locations.data &&
         locations.data.locations
           .sort((a, b) => ("" + a.name).localeCompare(b.name))
-          .map(location => {
+          .map((location) => {
             return (
               <option key={location.id} value={location.id}>
                 {location.name}

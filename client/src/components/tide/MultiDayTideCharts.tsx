@@ -3,11 +3,6 @@ import { VictoryChart, VictoryAxis, VictoryLine, VictoryArea } from "victory";
 import { renderBackgroundColor, Y_PADDING } from "./tide-helpers";
 import useBreakpoints from "../../hooks/useBreakpoints";
 import {
-  SunDetailFieldsFragment,
-  TideDetailFieldsFragment,
-  WaterHeightFieldsFragment,
-} from "../../generated/graphql";
-import {
   addHours,
   startOfDay,
   format,
@@ -20,6 +15,11 @@ import {
   isBefore,
 } from "date-fns";
 import { buildDatasets } from "@stevenmusumeche/salty-solutions-shared/dist/tide-helpers";
+import {
+  SunDetailFieldsFragment,
+  TideDetailFieldsFragment,
+  WaterHeightFieldsFragment,
+} from "@stevenmusumeche/salty-solutions-shared/dist/graphql";
 
 interface Props {
   sunData: SunDetailFieldsFragment[];

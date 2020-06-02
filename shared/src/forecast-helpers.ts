@@ -23,6 +23,7 @@ interface WindData {
   gustY: number;
   directionDegrees: number;
   temperature?: number;
+  rain?: number;
 }
 const createTimeChunks = (windData: WindData[], numChunks = 4) => {
   const rawChunks = chunk(windData, Math.ceil(windData.length / numChunks));
@@ -41,6 +42,10 @@ const createTimeChunks = (windData: WindData[], numChunks = 4) => {
           acc.temperatures.push(cur.temperature);
         }
 
+        if (cur.rain) {
+          acc.rainTotal += cur.rain;
+        }
+
         return acc;
       },
       {
@@ -48,6 +53,8 @@ const createTimeChunks = (windData: WindData[], numChunks = 4) => {
         max: 0,
         directions: [] as number[],
         temperatures: [] as number[],
+        // in millimeters
+        rainTotal: 0,
       }
     );
 
@@ -71,9 +78,11 @@ export const prepareForecastData = (
       x: new Date(datum.timestamp),
       y: datum.base,
       gustY: datum.gusts - datum.base,
+      ySum: datum.gusts,
       directionDegrees: datum.direction.degrees,
       temperature: data.temperature.find((x) => x.timestamp === datum.timestamp)
         ?.temperature.degrees,
+      rain: data.rain.find((x) => x.timestamp === datum.timestamp)?.mmPerHour,
     };
   });
 

@@ -58,18 +58,7 @@
           <use xlink:href="#d1cWg45AJw" opacity="1" fill-opacity="0" stroke="#4299e1" stroke-width="3" stroke-opacity="1"></use>
         </g>
       </g>
-      <g>
-        <use xlink:href="#j10TsWEqN6" opacity="1" fill="#000000" fill-opacity="0"></use>
-        <g>
-          <use xlink:href="#j10TsWEqN6" opacity="1" fill-opacity="0" stroke="#4299e1" stroke-width="3" stroke-opacity="1"></use>
-        </g>
-      </g>
-      <g>
-        <use xlink:href="#a6rC4TzbkZ" opacity="1" fill="#000000" fill-opacity="0"></use>
-        <g>
-          <use xlink:href="#a6rC4TzbkZ" opacity="1" fill-opacity="0" stroke="#4299e1" stroke-width="3" stroke-opacity="1"></use>
-        </g>
-      </g>
+
     </g>
   </g>
 </svg>

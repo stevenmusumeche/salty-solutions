@@ -1,6 +1,4 @@
 import React, { ReactNode, useContext } from "react";
-// todo: fix all imports from client to use npm package if typings work
-import { useCombinedForecastQuery } from "../generated/graphql";
 import ErrorIcon from "../assets/error.svg";
 import { ForecastSkeleton } from "./ForecastSkeleton";
 import Compass from "../assets/compass.svg";
@@ -10,6 +8,7 @@ import Unknown from "../assets/water-conditions/unknown.svg";
 import Choppy from "../assets/water-conditions/choppy.svg";
 import Rough from "../assets/water-conditions/rough.svg";
 import { WindowSizeContext } from "../providers/WindowSizeProvider";
+import { useCombinedForecastQuery } from "@stevenmusumeche/salty-solutions-shared/dist/graphql";
 
 interface Props {
   locationId: string;
