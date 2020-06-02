@@ -29,5 +29,11 @@ export const COMBINED_FORECAST_V2_QUERY = gql`
       short
       detailed
     }
+    temperature {
+      timestamp
+      temperature {
+        degrees
+      }
+    }
   }
 `;

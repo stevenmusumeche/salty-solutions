@@ -98,8 +98,8 @@ export const getCombinedForecastV2 = async (
       temperature: matchedWindFinderData.map((x) => ({
         timestamp: new Date(x.timestamp).toISOString(),
         temperature: {
-          degrees: 42,
-          unit: "",
+          degrees: x.temperature,
+          unit: "F",
         },
       })),
     };
