@@ -142,7 +142,7 @@ const RainDrop: React.FC<any> = ({ x, y, datum, index, data, ...props }) => {
   }
 
   if (numDrops === 1) {
-    return <>{renderDrop(7, 18)}</>;
+    return <>{renderDrop(7.5, 18)}</>;
   } else if (numDrops === 2) {
     return (
       <>
@@ -153,9 +153,9 @@ const RainDrop: React.FC<any> = ({ x, y, datum, index, data, ...props }) => {
   } else {
     return (
       <>
-        {renderDrop(8, 18)}
-        {renderDrop(4, 24)}
-        {renderDrop(10, 28)}
+        {renderDrop(8.5, 18)}
+        {renderDrop(4.5, 24)}
+        {renderDrop(10.5, 28)}
       </>
     );
   }
