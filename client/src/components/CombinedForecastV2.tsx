@@ -5,6 +5,8 @@ import ForecastChart from "./ForecastChart";
 import ForecastTimeBuckets from "./ForecastTimeBuckets";
 import EmptyBox from "./EmptyBox";
 import ErrorIcon from "../assets/error.svg";
+import { format, startOfDay, addDays } from "date-fns";
+import { ISO_FORMAT } from "./tide/Tides";
 
 const NUM_DAYS = 9;
 
@@ -13,7 +15,13 @@ interface Props {
 }
 
 const CombinedForecastV2: FC<Props> = ({ locationId }) => {
-  const [forecast] = useCombinedForecastV2Query({ variables: { locationId } });
+  const [forecast] = useCombinedForecastV2Query({
+    variables: {
+      locationId,
+      startDate: format(startOfDay(new Date()), ISO_FORMAT),
+      endDate: format(addDays(startOfDay(new Date()), 10), ISO_FORMAT),
+    },
+  });
   let data =
     forecast.data?.location?.combinedForecastV2?.slice(0, NUM_DAYS) || [];
 
