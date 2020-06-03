@@ -8,7 +8,7 @@ import { LocationEntity } from "./location";
 import { celciusToFahrenheit } from "./weather";
 
 export async function loadAndSave(siteTag: string) {
-  const data = await fetchData(siteTag);
+  const data = await scrapeData(siteTag);
   await saveToDynamo(siteTag, data);
 }
 
@@ -38,7 +38,7 @@ export async function getData(
   }));
 }
 
-async function fetchData(siteTag: string): Promise<WindFinderParsed[]> {
+async function scrapeData(siteTag: string): Promise<WindFinderParsed[]> {
   // fetch the forecast (10 days) and superforecast (3 days)
   let [superForecast, forecast] = await Promise.all([
     normalize(await fetchSuperForecast(siteTag)),
@@ -65,7 +65,7 @@ async function fetchData(siteTag: string): Promise<WindFinderParsed[]> {
 }
 
 async function fetchSuperForecast(siteTag: string) {
-  const url = `https://www.windfinder.com/weatherforecast/${siteTag}`;
+  const url = `https://www.windfinder.com/weatherforecxxast/${siteTag}`;
   return fetchAndParse(url);
 }
 
@@ -124,7 +124,7 @@ async function fetchAndParse(url: string): Promise<WindFinderResult[]> {
 
   const $ = cheerio.load(data);
 
-  return $(".forecast-day")
+  const parsed = $(".forecast-day")
     .map((i, dayEl) => {
       return {
         date: $(".weathertable__header h4", dayEl)
@@ -186,6 +186,12 @@ async function fetchAndParse(url: string): Promise<WindFinderResult[]> {
       };
     })
     .get();
+
+  if (parsed.length === 0) {
+    throw new Error(`Unable to parse windfinder data for ${url}`);
+  }
+
+  return parsed;
 }
 
 function normalize(days: WindFinderResult[]): WindFinderParsed[] {
