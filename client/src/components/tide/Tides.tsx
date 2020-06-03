@@ -32,7 +32,7 @@ interface Props {
   setActiveDate: (date: Date | Date[]) => void;
 }
 
-const ISO_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSxxx";
+export const ISO_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSxxx";
 
 const Tides: React.FC<Props> = ({
   tideStations,

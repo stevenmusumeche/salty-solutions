@@ -5,13 +5,13 @@ import { addHours, isBefore } from "date-fns";
 const getChunkLabel = (i: number): string => {
   switch (i) {
     case 0:
-      return "midnight";
+      return "mid-6am";
     case 1:
-      return "6am";
+      return "6-noon";
     case 2:
-      return "noon";
+      return "noon-6pm";
     case 3:
-      return "6pm";
+      return "6pm-mid";
     default:
       return "";
   }

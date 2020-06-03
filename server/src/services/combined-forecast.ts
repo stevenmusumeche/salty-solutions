@@ -1,5 +1,5 @@
 import { LocationEntity, makeCacheKey } from "./location";
-import { getForecast as getMarineForecast, MarineForecast } from "./marine";
+import { getForecast as getMarineForecast } from "./marine";
 import { getForecast as getWeatherForecast } from "./weather";
 import { CombinedForecast, CombinedForecastV2 } from "../generated/graphql";
 import { getCacheVal, setCacheVal } from "./db";
@@ -19,17 +19,15 @@ import { notUndefined } from "./utils";
  * Combined forecast using windfinder data
  */
 export const getCombinedForecastV2 = async (
-  location: LocationEntity
+  location: LocationEntity,
+  start: Date,
+  end: Date
 ): Promise<CombinedForecastV2[]> => {
   // todo add caching
 
   const dayDiffs = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
   const [windFinderData, weather] = await Promise.all([
-    getData(
-      location,
-      startOfDay(new Date()),
-      endOfDay(addDays(new Date(), 10))
-    ),
+    getData(location, start, end),
     getWeatherForecast(location),
   ]);
 

@@ -20,7 +20,7 @@ interface Props {
 const ForecastChart: FC<Props> = ({ data, date }) => {
   const { chartData } = prepareForecastData(data, date);
   const hasAnyData = !(chartData.find((x) => x.y !== undefined) === undefined);
-  const yTickVals = [3, 6, 9, 12, 15, 18, 21].map((h) => addHours(date, h));
+  const yTickVals = [0, 3, 6, 9, 12, 15, 18, 21].map((h) => addHours(date, h));
 
   if (!hasAnyData) {
     return <EmptyChart yTickVals={yTickVals} />;

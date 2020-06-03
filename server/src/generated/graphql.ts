@@ -125,6 +125,12 @@ export type LocationMoonArgs = {
 };
 
 
+export type LocationCombinedForecastV2Args = {
+  start: Scalars['String'],
+  end: Scalars['String']
+};
+
+
 export type LocationModisMapsArgs = {
   numDays?: Maybe<Scalars['Int']>
 };
@@ -661,7 +667,7 @@ export type LocationResolvers<ContextType = Context, ParentType = ResolversParen
   sun?: Resolver<Maybe<Array<ResolversTypes['SunDetail']>>, ParentType, ContextType, LocationSunArgs>,
   moon?: Resolver<Maybe<Array<ResolversTypes['MoonDetail']>>, ParentType, ContextType, LocationMoonArgs>,
   combinedForecast?: Resolver<Maybe<Array<ResolversTypes['CombinedForecast']>>, ParentType, ContextType>,
-  combinedForecastV2?: Resolver<Maybe<Array<ResolversTypes['CombinedForecastV2']>>, ParentType, ContextType>,
+  combinedForecastV2?: Resolver<Maybe<Array<ResolversTypes['CombinedForecastV2']>>, ParentType, ContextType, LocationCombinedForecastV2Args>,
   weatherForecast?: Resolver<Maybe<Array<ResolversTypes['WeatherForecast']>>, ParentType, ContextType>,
   hourlyWeatherForecast?: Resolver<Maybe<Array<ResolversTypes['WeatherForecast']>>, ParentType, ContextType>,
   marineForecast?: Resolver<Maybe<Array<ResolversTypes['MarineForecast']>>, ParentType, ContextType>,

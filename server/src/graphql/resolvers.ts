@@ -66,7 +66,11 @@ const resolvers: Resolvers & { UsgsParam: Object } = {
       return services.combinedForecast.getCombinedForecast(location);
     },
     combinedForecastV2: async (location, args, { services }) => {
-      return services.combinedForecast.getCombinedForecastV2(location);
+      return services.combinedForecast.getCombinedForecastV2(
+        location,
+        new Date(args.start),
+        new Date(args.end)
+      );
     },
     weatherForecast: async (location, args, { services }) => {
       return services.weather.getForecast(location);

@@ -1,9 +1,13 @@
 import gql from "graphql-tag";
 
 export const COMBINED_FORECAST_V2_QUERY = gql`
-  query CombinedForecastV2($locationId: ID!) {
+  query CombinedForecastV2(
+    $locationId: ID!
+    $startDate: String!
+    $endDate: String!
+  ) {
     location(id: $locationId) {
-      combinedForecastV2 {
+      combinedForecastV2(start: $startDate, end: $endDate) {
         ...CombinedForecastV2Detail
       }
     }

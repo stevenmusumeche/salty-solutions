@@ -17,7 +17,7 @@ export default gql`
     sun(start: String!, end: String!): [SunDetail!]
     moon(start: String!, end: String!): [MoonDetail!]
     combinedForecast: [CombinedForecast!]
-    combinedForecastV2: [CombinedForecastV2!]
+    combinedForecastV2(start: String!, end: String!): [CombinedForecastV2!]
     weatherForecast: [WeatherForecast!]
     hourlyWeatherForecast: [WeatherForecast!]
     marineForecast: [MarineForecast!]

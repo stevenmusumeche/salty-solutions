@@ -123,6 +123,12 @@ export type LocationMoonArgs = {
 };
 
 
+export type LocationCombinedForecastV2Args = {
+  start: Scalars['String'],
+  end: Scalars['String']
+};
+
+
 export type LocationModisMapsArgs = {
   numDays?: Maybe<Scalars['Int']>
 };
@@ -433,7 +439,9 @@ export type HourlyForecastDetailFragment = ({ __typename?: 'WeatherForecast' } &
 export type CombinedForecastDetailFragment = ({ __typename?: 'CombinedForecast' } & Pick<CombinedForecast, 'timePeriod' | 'chanceOfPrecipitation' | 'icon' | 'marine' | 'short' | 'detailed'> & { wind: ({ __typename?: 'WindForecast' } & { speed: Maybe<({ __typename?: 'ForecastWindSpeedDetail' } & Pick<ForecastWindSpeedDetail, 'from' | 'to'>)>, direction: Maybe<({ __typename?: 'WindDirection' } & Pick<WindDirection, 'text' | 'degrees'>)> }), waterCondition: Maybe<({ __typename?: 'WaterCondition' } & Pick<WaterCondition, 'text' | 'icon'>)>, temperature: ({ __typename?: 'Temperature' } & Pick<Temperature, 'degrees' | 'unit'>) });
 
 export type CombinedForecastV2QueryVariables = {
-  locationId: Scalars['ID']
+  locationId: Scalars['ID'],
+  startDate: Scalars['String'],
+  endDate: Scalars['String']
 };
 
 
@@ -733,9 +741,9 @@ export function useCombinedForecastQuery(options: Omit<Urql.UseQueryArgs<Combine
   return Urql.useQuery<CombinedForecastQuery>({ query: CombinedForecastDocument, ...options });
 };
 export const CombinedForecastV2Document = gql`
-    query CombinedForecastV2($locationId: ID!) {
+    query CombinedForecastV2($locationId: ID!, $startDate: String!, $endDate: String!) {
   location(id: $locationId) {
-    combinedForecastV2 {
+    combinedForecastV2(start: $startDate, end: $endDate) {
       ...CombinedForecastV2Detail
     }
   }
