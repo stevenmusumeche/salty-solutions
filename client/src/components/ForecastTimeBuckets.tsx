@@ -25,13 +25,19 @@ const ForecastTimeBuckets: FC<Props> = ({ data, date }) => {
             <div className="mt-2 mb-1">
               <WaveIcon min={timeChunk.min} max={timeChunk.max} />
             </div>
-            <div className="mb-1">
-              {Math.ceil(timeChunk.min)}-{Math.ceil(timeChunk.max)}{" "}
-              {degreesToCompass(timeChunk.averageDirection)}
-            </div>
-            <div className="text-xl">
-              {timeChunk.averageTemperature.toFixed(0)}°
-            </div>
+            {timeChunk.min === Infinity ? (
+              <div className="mb-1">unknown</div>
+            ) : (
+              <div className="mb-1">
+                {Math.ceil(timeChunk.min)}-{Math.ceil(timeChunk.max)}{" "}
+                {degreesToCompass(timeChunk.averageDirection)}
+              </div>
+            )}
+            {timeChunk.averageTemperature && (
+              <div className="text-xl">
+                {timeChunk.averageTemperature.toFixed(0)}°
+              </div>
+            )}
           </div>
         );
       })}

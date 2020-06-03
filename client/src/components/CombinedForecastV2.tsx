@@ -1,7 +1,7 @@
-import React, { FC, ReactNode, useContext } from "react";
-import { WindowSizeContext } from "../providers/WindowSizeProvider";
-import ForecastChart from "./ForecastChart";
 import { useCombinedForecastV2Query } from "@stevenmusumeche/salty-solutions-shared/dist/graphql";
+import React, { FC, ReactNode } from "react";
+import useBreakpoints from "../hooks/useBreakpoints";
+import ForecastChart from "./ForecastChart";
 import ForecastTimeBuckets from "./ForecastTimeBuckets";
 
 interface Props {
@@ -10,7 +10,7 @@ interface Props {
 
 const CombinedForecastV2: FC<Props> = ({ locationId }) => {
   const [forecast] = useCombinedForecastV2Query({ variables: { locationId } });
-  const { isSmall } = useContext(WindowSizeContext);
+  const { isSmall } = useBreakpoints();
 
   let data = forecast.data?.location?.combinedForecastV2;
 

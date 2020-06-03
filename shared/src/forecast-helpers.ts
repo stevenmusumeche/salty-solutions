@@ -50,7 +50,7 @@ const createTimeChunks = (windData: WindData[], numChunks = 4) => {
       },
       {
         min: Infinity,
-        max: 0,
+        max: -Infinity,
         directions: [] as number[],
         temperatures: [] as number[],
         // in millimeters
@@ -63,8 +63,9 @@ const createTimeChunks = (windData: WindData[], numChunks = 4) => {
       label: getChunkLabel(i),
       averageDirection: averageAngle(windReductions.directions),
       averageTemperature:
-        windReductions.temperatures.reduce((a, b) => a + b) /
-        windReductions.temperatures.length,
+        windReductions.temperatures.length > 0 &&
+        windReductions.temperatures.reduce((a, b) => a + b, 0) /
+          windReductions.temperatures.length,
     };
   });
 };
