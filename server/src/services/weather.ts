@@ -23,6 +23,10 @@ axiosRetry(axios, { retries: 3, retryDelay: (retryCount) => retryCount * 500 });
 
   https://api.weather.gov/gridpoints/TOP/31,80
   If an application knows the office and grid position for a location (through caching—a similar concept to a bookmark for users), the link data would not be needed to locate the content for raw forecast data.
+
+
+  get list of all stations here:
+https://w1.weather.gov/xml/current_obs/seek.php?state=la&Find=Find
   */
 
 export const getForecast = async (

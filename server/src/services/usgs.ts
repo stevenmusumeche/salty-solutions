@@ -331,6 +331,44 @@ const usgsSites: UsgsSiteEntity[] = [
     name: "Pilots Station E, SW Pass",
     availableParams: [UsgsParams.GuageHeight],
   },
+  {
+    id: "292800090060000",
+    name: "Little Lake near Bay Dosgris",
+    availableParams: [
+      UsgsParams.WindSpeed,
+      UsgsParams.WindDirection,
+      UsgsParams.WaterTemp,
+      UsgsParams.GuageHeight,
+      UsgsParams.Salinity,
+    ],
+  },
+  {
+    id: "07380335",
+    name: "Little Lake Near Cutoff",
+    availableParams: [
+      UsgsParams.WaterTemp,
+      UsgsParams.GuageHeight,
+      UsgsParams.Salinity,
+    ],
+  },
+  {
+    id: "07380330",
+    name: "Bayou Perot at Point Legard",
+    availableParams: [
+      UsgsParams.WaterTemp,
+      UsgsParams.GuageHeight,
+      UsgsParams.Salinity,
+    ],
+  },
+  {
+    id: "07380251",
+    name: "Barataria Bay N of Grand Isle",
+    availableParams: [
+      UsgsParams.WaterTemp,
+      UsgsParams.GuageHeight,
+      UsgsParams.Salinity,
+    ],
+  },
 ];
 
 // https://waterservices.usgs.gov/rest/IV-Service.html

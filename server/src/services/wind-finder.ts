@@ -65,7 +65,7 @@ async function scrapeData(siteTag: string): Promise<WindFinderParsed[]> {
 }
 
 async function fetchSuperForecast(siteTag: string) {
-  const url = `https://www.windfinder.com/weatherforecxxast/${siteTag}`;
+  const url = `https://www.windfinder.com/weatherforecast/${siteTag}`;
   return fetchAndParse(url);
 }
 
