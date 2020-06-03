@@ -113,7 +113,7 @@ const ArrowPoint: React.FC<any> = ({ x, y, datum, index, data, ...props }) => {
 const RainDrop: React.FC<any> = ({ x, y, datum, index, data, ...props }) => {
   if (datum.rain === 0) return null;
 
-  const renderDrop = (xOffset: number, yOffset: number) => (
+  const renderDrop = (xOffset: number, yOffset: number, scale = 1) => (
     <svg
       key={yOffset}
       xmlns="http://www.w3.org/2000/svg"
@@ -126,8 +126,7 @@ const RainDrop: React.FC<any> = ({ x, y, datum, index, data, ...props }) => {
       <g>
         <path
           fill="#4299e1"
-          stroke="#2b6cb0"
-          strokeWidth="2"
+          transform={`scale(${scale})`}
           d="M16.82,3.43a1,1,0,0,0-1.64,0C14.34,4.64,7,15.4,7,20a9,9,0,0,0,18,0C25,15.4,17.66,4.64,16.82,3.43Z"
         />
       </g>
@@ -146,16 +145,16 @@ const RainDrop: React.FC<any> = ({ x, y, datum, index, data, ...props }) => {
   } else if (numDrops === 2) {
     return (
       <>
-        {renderDrop(10, 22)}
-        {renderDrop(5, 18)}
+        {renderDrop(9, 18)}
+        {renderDrop(0, 20, 0.6)}
       </>
     );
   } else {
     return (
       <>
-        {renderDrop(8.5, 18)}
-        {renderDrop(4.5, 24)}
-        {renderDrop(10.5, 28)}
+        {renderDrop(9, 18)}
+        {renderDrop(0, 19, 0.6)}
+        {renderDrop(2.5, 22, 0.4)}
       </>
     );
   }
