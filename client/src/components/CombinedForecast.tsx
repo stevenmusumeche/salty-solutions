@@ -154,10 +154,7 @@ const Wrapper: React.FC<{
 }> = ({ children }) => {
   const { isSmall } = useContext(WindowSizeContext);
   return (
-    <div
-      className={`${!isSmall &&
-        "forecast-wrapper"} scroller-vertical mb-0 md:mb-8`}
-    >
+    <div className={`${!isSmall && "forecast-wrapper"} mb-0 md:mb-8`}>
       {children}
     </div>
   );

@@ -113,34 +113,6 @@ html {
   margin: 0;
 }
 
-.scroller-vertical {
-  overflow-x: auto;
-}
-
-.scroller-vertical::-webkit-scrollbar {
-  width: 1rem;
-}
-
-.scroller-vertical::-webkit-scrollbar-thumb {
-  border: 4px solid rgba(255, 255, 255, 0);
-  background-clip: padding-box;
-  border-radius: 7px;
-  width: 5px;
-  background-color: rgba(44, 82, 130, 0.35);
-  box-shadow: inset -1px -1px 0px rgba(44, 82, 130, 0.05),
-    inset 1px 1px 0px rgba(44, 82, 130, 0.05);
-}
-
-.scroller-vertical::-webkit-scrollbar-button {
-  width: 0;
-  height: 0;
-  display: none;
-}
-
-.scroller-vertical::-webkit-scrollbar-corner {
-  background-color: transparent;
-}
-
 .react-date-picker__calendar.react-date-picker__calendar--open {
   bottom: unset !important;
   top: 100% !important;

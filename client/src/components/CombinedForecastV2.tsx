@@ -8,7 +8,7 @@ interface Props {
   locationId: string;
 }
 
-const CombinedForecastV2: React.FC<Props> = ({ locationId }) => {
+const CombinedForecastV2: FC<Props> = ({ locationId }) => {
   const [forecast] = useCombinedForecastV2Query({ variables: { locationId } });
   const { isSmall } = useContext(WindowSizeContext);
 
@@ -98,12 +98,8 @@ export default CombinedForecastV2;
 const Wrapper: React.FC<{
   children: ReactNode;
 }> = ({ children }) => {
-  const { isSmall } = useContext(WindowSizeContext);
-  // todo: remove scroller-vertical?
   return (
-    <div
-      className={`scroller-vertical mb-0 md:mb-8 md:flex md:flex-wrap md:justify-between`}
-    >
+    <div className={`mb-0 md:mb-8 md:flex md:flex-wrap md:justify-between`}>
       {children}
     </div>
   );
