@@ -1,7 +1,6 @@
 import { startOfDay } from "date-fns";
 import React, { useState, useEffect } from "react";
 import "./App.css";
-import CombinedForecast from "./components/CombinedForecast";
 import AirTempCard from "./components/AirTempCard";
 import SalinityCard from "./components/SalinityCard";
 import WaterTempCard from "./components/WaterTempCard";
@@ -108,6 +107,7 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
     <Shell
       header={
         <AppHeader
+          locations={locations}
           setLocationId={(id) => {
             setLocationId(id);
             window.scrollTo({ top: 0 });
@@ -120,7 +120,8 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
       <JumpNav dispatch={dispatch} />
 
       <div className="container p-4 md:p-0 md:mx-auto md:my-0 md:mt-8">
-        <span id="current-conditions"></span>
+        <CombinedForecastV2 locationId={locationId} />
+        {/* <span id="current-conditions"></span>
         <div className="current-conditions-grid">
           <WindCard locationId={locationId} />
           <AirTempCard locationId={locationId} />
@@ -154,7 +155,6 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
         <Donate />
 
         <span id="forecast"></span>
-        {/* <CombinedForecast locationId={locationId} /> */}
         <CombinedForecastV2 locationId={locationId} />
 
         <span id="radar"></span>
@@ -197,7 +197,7 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
           }
         >
           <HourlyForecast locationId={locationId} />
-        </CollapsibleSection>
+        </CollapsibleSection>*/}
       </div>
     </Shell>
   );

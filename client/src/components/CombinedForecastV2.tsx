@@ -3,6 +3,8 @@ import React, { FC, ReactNode } from "react";
 import useBreakpoints from "../hooks/useBreakpoints";
 import ForecastChart from "./ForecastChart";
 import ForecastTimeBuckets from "./ForecastTimeBuckets";
+import EmptyBox from "./EmptyBox";
+import ErrorIcon from "../assets/error.svg";
 
 interface Props {
   locationId: string;
@@ -17,15 +19,13 @@ const CombinedForecastV2: FC<Props> = ({ locationId }) => {
   if (forecast.fetching) {
     return (
       <Wrapper>
-        {/* todo */}
-        <div>loading</div>
+        <ForecastLoading />
       </Wrapper>
     );
   } else if (forecast.error && !data) {
     return (
       <Wrapper>
-        {/* todo */}
-        <div>error</div>
+        <ForecastError />
       </Wrapper>
     );
   }
@@ -35,11 +35,7 @@ const CombinedForecastV2: FC<Props> = ({ locationId }) => {
       {data &&
         data.slice(0, 9).map((data) => {
           return (
-            <div
-              key={data.date}
-              className={`mb-4 md:mb-8 forecast-wrapper`}
-              style={{ flexBasis: isSmall ? "auto" : "calc(33.3% - 1.3rem)" }}
-            >
+            <CardWrapper key={data.name}>
               <div className="forecast-header text-xl mb-2 flex items-center justify-between">
                 <div>{data.name}</div>
                 <div
@@ -86,7 +82,7 @@ const CombinedForecastV2: FC<Props> = ({ locationId }) => {
                   </div>
                 )}
               </div>
-            </div>
+            </CardWrapper>
           );
         })}
     </Wrapper>
@@ -102,5 +98,49 @@ const Wrapper: React.FC<{
     <div className={`mb-0 md:mb-8 md:flex md:flex-wrap md:justify-between`}>
       {children}
     </div>
+  );
+};
+
+const CardWrapper: React.FC<{
+  children: ReactNode;
+}> = ({ children }) => {
+  const { isSmall } = useBreakpoints();
+
+  return (
+    <div
+      className={`mb-4 md:mb-8 forecast-wrapper`}
+      style={{ flexBasis: isSmall ? "auto" : "calc(33.3% - 1.3rem)" }}
+    >
+      {children}
+    </div>
+  );
+};
+
+export const ForecastLoading: React.FC = () => {
+  return (
+    <>
+      {[...Array(9)].map((x, i) => (
+        <CardWrapper key={i}>
+          <EmptyBox w={180} h="2rem" className="mb-2" />
+          <EmptyBox w="100%" h={600} className="" />
+        </CardWrapper>
+      ))}
+    </>
+  );
+};
+
+export const ForecastError: React.FC = () => {
+  const { isSmall } = useBreakpoints();
+
+  return (
+    <>
+      {[...Array(isSmall ? 1 : 3)].map((x, i) => (
+        <CardWrapper key={i}>
+          <div className="h-48 flex items-center justify-center">
+            <img src={ErrorIcon} style={{ height: 120 }} alt="error" />
+          </div>
+        </CardWrapper>
+      ))}
+    </>
   );
 };

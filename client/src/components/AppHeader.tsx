@@ -1,18 +1,18 @@
 import React, { ChangeEventHandler } from "react";
 import { UseQueryState } from "urql";
-import {
-  useLocationsQuery,
-  LocationsQuery,
-} from "@stevenmusumeche/salty-solutions-shared/dist/graphql";
+import { LocationsQuery } from "@stevenmusumeche/salty-solutions-shared/dist/graphql";
 
 interface Props {
+  locations: UseQueryState<LocationsQuery>;
   setLocationId: (id: string) => void;
   activeLocationId: string;
 }
 
-const AppHeader: React.FC<Props> = ({ setLocationId, activeLocationId }) => {
-  const [locations] = useLocationsQuery();
-
+const AppHeader: React.FC<Props> = ({
+  locations,
+  setLocationId,
+  activeLocationId,
+}) => {
   return (
     <div className="ml-3 md:ml-0">
       <LocationSelect
