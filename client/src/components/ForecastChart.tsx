@@ -27,65 +27,72 @@ const ForecastChart: FC<Props> = ({ data, date }) => {
   }
 
   return (
-    <VictoryChart
-      padding={{ left: 25, top: 35, right: 25, bottom: 25 }}
-      domainPadding={{ y: 10, x: 7 }}
-      style={{ parent: { touchAction: "auto" } }}
-      height={230}
-    >
-      <VictoryAxis
-        scale={{ x: "time" }}
-        dependentAxis
-        style={{
-          tickLabels: { fontSize: 16, padding: 5 },
-        }}
-        tickFormat={noDecimals}
-      />
+    <>
+      <VictoryChart
+        padding={{ left: 25, top: 35, right: 25, bottom: 25 }}
+        domainPadding={{ y: 10, x: 7 }}
+        style={{ parent: { touchAction: "auto" } }}
+        height={230}
+      >
+        <VictoryAxis
+          scale={{ x: "time" }}
+          dependentAxis
+          style={{
+            tickLabels: { fontSize: 16, padding: 5 },
+          }}
+          tickFormat={noDecimals}
+        />
 
-      <VictoryAxis
-        fixLabelOverlap={false}
-        tickValues={yTickVals}
-        tickFormat={(date) => {
-          const d = new Date(date);
-          if (d.getHours() === 12) {
-            return format(d, "b");
-          }
-          return format(d, "haaaaa");
-        }}
-        style={{
-          tickLabels: { fontSize: 16, padding: 5 },
-        }}
-      />
+        <VictoryAxis
+          fixLabelOverlap={false}
+          tickValues={yTickVals}
+          tickFormat={(date) => {
+            const d = new Date(date);
+            if (d.getHours() === 12) {
+              return format(d, "b");
+            }
+            return format(d, "haaaaa");
+          }}
+          style={{
+            tickLabels: { fontSize: 16, padding: 5 },
+          }}
+        />
 
-      <VictoryStack>
-        <VictoryGroup data={chartData}>
+        <VictoryStack>
+          <VictoryGroup data={chartData}>
+            <VictoryBar
+              style={{
+                data: {
+                  width: 14,
+                  fill: "#2b6cb0",
+                },
+              }}
+            />
+
+            <VictoryScatter
+              dataComponent={<ArrowPoint style={{ fontSize: "2rem" }} />}
+            />
+          </VictoryGroup>
           <VictoryBar
+            data={chartData}
+            y="gustY"
             style={{
               data: {
                 width: 14,
                 fill: "#2b6cb0",
+                fillOpacity: 0.3,
               },
             }}
           />
-
-          <VictoryScatter
-            dataComponent={<ArrowPoint style={{ fontSize: "2rem" }} />}
-          />
-        </VictoryGroup>
-        <VictoryBar
+        </VictoryStack>
+        <VictoryScatter
           data={chartData}
-          y="gustY"
-          style={{
-            data: {
-              width: 14,
-              fill: "#2b6cb0",
-              fillOpacity: 0.3,
-            },
-          }}
+          y="ySum"
+          dataComponent={<RainDrop />}
         />
-      </VictoryStack>
-      <VictoryScatter data={chartData} y="ySum" dataComponent={<RainDrop />} />
-    </VictoryChart>
+      </VictoryChart>
+      <ChartLegend />
+    </>
   );
 };
 
@@ -197,3 +204,26 @@ const EmptyChart: FC<{ yTickVals: Date[] }> = ({ yTickVals }) => (
     />
   </VictoryChart>
 );
+
+const ChartLegend = () => {
+  return (
+    <div className="flex justify-center mt-2">
+      <div
+        className="flex tracking-tight tracking-wide uppercase font-normal text-gray-600 leading-none uppercase"
+        style={{ fontSize: ".65rem" }}
+      >
+        <div className="flex items-center h-3">
+          <div className="w-3 h-3 mr-1 rounded-sm bg-blue-700 flex-shrink-0"></div>
+          <div className="">Wind</div>
+        </div>
+        <div className="flex items-center h-3">
+          <div
+            className="w-3 h-3 mr-1 ml-2 rounded-sm bg-blue-700 flex-shrink-0"
+            style={{ opacity: 0.15 }}
+          ></div>
+          <div className="">Gusts</div>
+        </div>
+      </div>
+    </div>
+  );
+};

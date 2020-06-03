@@ -6,15 +6,16 @@ import ForecastTimeBuckets from "./ForecastTimeBuckets";
 import EmptyBox from "./EmptyBox";
 import ErrorIcon from "../assets/error.svg";
 
+const NUM_DAYS = 9;
+
 interface Props {
   locationId: string;
 }
 
 const CombinedForecastV2: FC<Props> = ({ locationId }) => {
   const [forecast] = useCombinedForecastV2Query({ variables: { locationId } });
-  const { isSmall } = useBreakpoints();
-
-  let data = forecast.data?.location?.combinedForecastV2;
+  let data =
+    forecast.data?.location?.combinedForecastV2?.slice(0, NUM_DAYS) || [];
 
   if (forecast.fetching) {
     return (
@@ -32,37 +33,13 @@ const CombinedForecastV2: FC<Props> = ({ locationId }) => {
 
   return (
     <Wrapper>
-      {data &&
-        data.slice(0, 9).map((data) => {
-          return (
-            <CardWrapper key={data.name}>
-              <div className="forecast-header text-xl mb-2 flex items-center justify-between">
-                <div>{data.name}</div>
-                <div
-                  className="md:flex tracking-tight md:tracking-wide uppercase font-normal text-gray-600 leading-none uppercase"
-                  style={{ fontSize: ".65rem" }}
-                >
-                  <div
-                    className="flex items-center h-3"
-                    style={{ marginBottom: isSmall ? 2 : 0 }}
-                  >
-                    <div className="w-3 h-3 mr-1 rounded-sm bg-blue-700 flex-shrink-0"></div>
-                    <div className="">Wind</div>
-                  </div>
-                  <div className="flex items-center h-3">
-                    <div
-                      className="w-3 h-3 mr-1 md:ml-2 rounded-sm bg-blue-700 flex-shrink-0"
-                      style={{ opacity: 0.15 }}
-                    ></div>
-                    <div className="">Gusts</div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="">
-                <ForecastChart data={data} date={new Date(data.date)} />
-                <ForecastTimeBuckets data={data} date={new Date(data.date)} />
-              </div>
+      {data.map((data) => {
+        return (
+          <CardWrapper key={data.name}>
+            <Header>{data.name}</Header>
+            <div className="p-4">
+              <ForecastChart data={data} date={new Date(data.date)} />
+              <ForecastTimeBuckets data={data} date={new Date(data.date)} />
 
               <div className="" style={{ gridArea: "text" }}>
                 {data.day.detailed && (
@@ -82,9 +59,10 @@ const CombinedForecastV2: FC<Props> = ({ locationId }) => {
                   </div>
                 )}
               </div>
-            </CardWrapper>
-          );
-        })}
+            </div>
+          </CardWrapper>
+        );
+      })}
     </Wrapper>
   );
 };
@@ -108,7 +86,7 @@ const CardWrapper: React.FC<{
 
   return (
     <div
-      className={`mb-4 md:mb-8 forecast-wrapper`}
+      className={`mb-4 md:mb-8 forecast-wrapper p-0 bg-white`}
       style={{ flexBasis: isSmall ? "auto" : "calc(33.3% - 1.3rem)" }}
     >
       {children}
@@ -121,8 +99,12 @@ export const ForecastLoading: React.FC = () => {
     <>
       {[...Array(9)].map((x, i) => (
         <CardWrapper key={i}>
-          <EmptyBox w={180} h="2rem" className="mb-2" />
-          <EmptyBox w="100%" h={600} className="" />
+          <Header>
+            <EmptyBox w={"55%"} h={24} className="bg-gray-400 mx-auto my-1" />
+          </Header>
+          <div className="m-4">
+            <EmptyBox w="100%" h={600} className="" />
+          </div>
         </CardWrapper>
       ))}
     </>
@@ -144,3 +126,9 @@ export const ForecastError: React.FC = () => {
     </>
   );
 };
+
+const Header: React.FC = ({ children }) => (
+  <div className="bg-gray-200 p-2 overflow-hidden rounded-lg rounded-b-none flex-grow-0 flex-shrink-0 text-base md:text-lg text-center">
+    {children}
+  </div>
+);

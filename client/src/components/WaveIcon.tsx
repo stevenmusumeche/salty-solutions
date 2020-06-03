@@ -16,7 +16,7 @@ const WaveIcon: React.FC<{ min: number; max: number }> = ({ min, max }) => {
     image = LightChop;
   } else if (max <= 18) {
     image = Choppy;
-  } else if (max > 24) {
+  } else if (max > 18) {
     image = Rough;
   }
 
