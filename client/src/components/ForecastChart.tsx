@@ -174,35 +174,38 @@ const RainDrop: React.FC<any> = ({ x, y, datum, index, data, ...props }) => {
 };
 
 const EmptyChart: FC<{ yTickVals: Date[] }> = ({ yTickVals }) => (
-  <VictoryChart
-    padding={{ left: 25, top: 35, right: 25, bottom: 25 }}
-    height={230}
-  >
-    <VictoryAxis
-      scale={{ x: "time" }}
-      dependentAxis
-      style={{
-        tickLabels: { fontSize: 16, padding: 5 },
-      }}
-      tickFormat={noDecimals}
-      domain={[0, 20]}
-    />
+  <>
+    <VictoryChart
+      padding={{ left: 25, top: 35, right: 25, bottom: 25 }}
+      height={230}
+    >
+      <VictoryAxis
+        scale={{ x: "time" }}
+        dependentAxis
+        style={{
+          tickLabels: { fontSize: 16, padding: 5 },
+        }}
+        tickFormat={noDecimals}
+        domain={[0, 20]}
+      />
 
-    <VictoryAxis
-      fixLabelOverlap={false}
-      tickValues={yTickVals}
-      tickFormat={(date) => {
-        const d = new Date(date);
-        if (d.getHours() === 12) {
-          return format(d, "b");
-        }
-        return format(d, "haaaaa");
-      }}
-      style={{
-        tickLabels: { fontSize: 16, padding: 5 },
-      }}
-    />
-  </VictoryChart>
+      <VictoryAxis
+        fixLabelOverlap={false}
+        tickValues={yTickVals}
+        tickFormat={(date) => {
+          const d = new Date(date);
+          if (d.getHours() === 12) {
+            return format(d, "b");
+          }
+          return format(d, "haaaaa");
+        }}
+        style={{
+          tickLabels: { fontSize: 16, padding: 5 },
+        }}
+      />
+    </VictoryChart>
+    <ChartLegend />
+  </>
 );
 
 const ChartLegend = () => {
