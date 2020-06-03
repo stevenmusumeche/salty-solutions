@@ -79,9 +79,11 @@ const extractForecast = ({
   }
 
   // wind speed
-  matches = windSpeed.match(
-    /^((?<from>[\d]{1,2}) to )?(?<to>[\d]{1,2}) mph$/ims
-  );
+  if (windSpeed) {
+    matches = windSpeed.match(
+      /^((?<from>[\d]{1,2}) to )?(?<to>[\d]{1,2}) mph$/ims
+    );
+  }
 
   // wind direction
   if (windDirection) {

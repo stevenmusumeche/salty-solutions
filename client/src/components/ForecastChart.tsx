@@ -24,8 +24,9 @@ const ForecastChart: FC<Props> = ({ data, date }) => {
   return (
     <VictoryChart
       padding={{ left: 25, top: 35, right: 25, bottom: 25 }}
-      domainPadding={{ y: 35, x: 7 }}
+      domainPadding={{ y: 10, x: 7 }}
       style={{ parent: { touchAction: "auto" } }}
+      height={230}
     >
       <VictoryAxis
         scale={{ x: "time" }}
@@ -86,15 +87,15 @@ const ForecastChart: FC<Props> = ({ data, date }) => {
 export default ForecastChart;
 
 const ArrowPoint: React.FC<any> = ({ x, y, datum, index, data, ...props }) => {
-  if (index % 2 !== 0) return null;
+  if (index % 2 !== 1) return null;
 
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 640 640"
-      width="2rem"
-      height="2rem"
-      x={x - 15}
+      width="1.5rem"
+      height="1.5rem"
+      x={x - 12}
       y={0}
       {...props}
     >

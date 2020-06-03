@@ -15,11 +15,13 @@ const ForecastTimeBuckets: FC<Props> = ({ data, date }) => {
   const { timeChunks } = prepareForecastData(data, date);
 
   return (
-    <div className="flex mt-4 mb-4 text-xs justify-between items-start text-center flex-grow">
+    <div className="flex mt-6 mb-6 text-xs justify-between items-start text-center flex-grow">
       {timeChunks.map((timeChunk, i) => {
         return (
           <div className="mr-2 last:mr-0" key={i}>
-            <div className="uppercase text-gray-600">{timeChunk.label}</div>
+            <div className="uppercase text-gray-600 tracking-wide">
+              {timeChunk.label}
+            </div>
             <div className="mt-2 mb-1">
               <WaveIcon min={timeChunk.min} max={timeChunk.max} />
             </div>

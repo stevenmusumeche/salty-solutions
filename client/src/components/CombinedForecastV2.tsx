@@ -8,8 +8,6 @@ interface Props {
   locationId: string;
 }
 
-// todo: rain chances
-
 const CombinedForecastV2: React.FC<Props> = ({ locationId }) => {
   const [forecast] = useCombinedForecastV2Query({ variables: { locationId } });
   const { isSmall } = useContext(WindowSizeContext);
@@ -35,46 +33,55 @@ const CombinedForecastV2: React.FC<Props> = ({ locationId }) => {
   return (
     <Wrapper>
       {data &&
-        data.slice(0, 1000).map((data) => {
+        data.slice(0, 9).map((data) => {
           return (
             <div
               key={data.date}
-              className={`${isSmall && "forecast-wrapper mb-4"}`}
+              className={`mb-4 md:mb-8 forecast-wrapper`}
+              style={{ flexBasis: isSmall ? "auto" : "calc(33.3% - 1.3rem)" }}
             >
               <div className="forecast-header text-xl mb-2 flex items-center justify-between">
                 <div>{data.name}</div>
-                <div>
-                  <div className="flex" style={{ marginBottom: 2 }}>
+                <div
+                  className="md:flex tracking-tight md:tracking-wide uppercase font-normal text-gray-600 leading-none uppercase"
+                  style={{ fontSize: ".65rem" }}
+                >
+                  <div
+                    className="flex items-center h-3"
+                    style={{ marginBottom: isSmall ? 2 : 0 }}
+                  >
                     <div className="w-3 h-3 mr-1 rounded-sm bg-blue-700 flex-shrink-0"></div>
-                    <div className="uppercase tracking-tight font-normal text-gray-600 text-xs leading-none">
-                      Wind
-                    </div>
+                    <div className="">Wind</div>
                   </div>
-                  <div className="flex">
+                  <div className="flex items-center h-3">
                     <div
-                      className="w-3 h-3 mr-1 rounded-sm bg-blue-700 flex-shrink-0"
+                      className="w-3 h-3 mr-1 md:ml-2 rounded-sm bg-blue-700 flex-shrink-0"
                       style={{ opacity: 0.15 }}
                     ></div>
-                    <div className="uppercase tracking-tight font-normal text-gray-600 text-xs leading-none">
-                      Gusts
-                    </div>
+                    <div className="">Gusts</div>
                   </div>
                 </div>
               </div>
 
-              <ForecastChart data={data} date={new Date(data.date)} />
-              <ForecastTimeBuckets data={data} date={new Date(data.date)} />
+              <div className="">
+                <ForecastChart data={data} date={new Date(data.date)} />
+                <ForecastTimeBuckets data={data} date={new Date(data.date)} />
+              </div>
 
-              <div style={{ gridArea: "text" }}>
+              <div className="" style={{ gridArea: "text" }}>
                 {data.day.detailed && (
                   <div className="mb-4 leading-snug text-gray-700 text-sm">
-                    <div className="text-black text-base">Day</div>
+                    <div className="tracking-wide uppercase text-gray-600 text-sm leading-none uppercase mb-1 font-semibold">
+                      Day
+                    </div>
                     {data.day.detailed}
                   </div>
                 )}
                 {data.night.detailed && (
                   <div className="leading-snug text-gray-700 text-sm">
-                    <div className="text-black text-base">Night</div>
+                    <div className="tracking-wide uppercase text-gray-600 text-sm leading-none uppercase mb-1 font-semibold">
+                      Night
+                    </div>
                     {data.night.detailed}
                   </div>
                 )}
@@ -92,10 +99,10 @@ const Wrapper: React.FC<{
   children: ReactNode;
 }> = ({ children }) => {
   const { isSmall } = useContext(WindowSizeContext);
+  // todo: remove scroller-vertical?
   return (
     <div
-      className={`${!isSmall &&
-        "forecast-wrapper"} scroller-vertical mb-0 md:mb-8`}
+      className={`scroller-vertical mb-0 md:mb-8 md:flex md:flex-wrap md:justify-between`}
     >
       {children}
     </div>

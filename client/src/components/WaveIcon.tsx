@@ -8,11 +8,11 @@ import Unknown from "../assets/water-conditions/unknown.svg";
 const WaveIcon: React.FC<{ min: number; max: number }> = ({ min, max }) => {
   let image = Unknown;
 
-  if (max <= 5) {
+  if (max <= 6) {
     image = Smooth;
-  } else if (max <= 10) {
+  } else if (max <= 12) {
     image = LightChop;
-  } else if (max <= 15) {
+  } else if (max <= 18) {
     image = Choppy;
   } else {
     image = Rough;
