@@ -7,6 +7,7 @@ import EmptyBox from "./EmptyBox";
 import ErrorIcon from "../assets/error.svg";
 import { format, startOfDay, addDays } from "date-fns";
 import { ISO_FORMAT } from "./tide/Tides";
+import { endOfDay } from "date-fns/esm";
 
 const NUM_DAYS = 9;
 
@@ -19,7 +20,7 @@ const CombinedForecastV2: FC<Props> = ({ locationId }) => {
     variables: {
       locationId,
       startDate: format(startOfDay(new Date()), ISO_FORMAT),
-      endDate: format(addDays(startOfDay(new Date()), 10), ISO_FORMAT),
+      endDate: format(addDays(endOfDay(new Date()), 10), ISO_FORMAT),
     },
   });
   let data =

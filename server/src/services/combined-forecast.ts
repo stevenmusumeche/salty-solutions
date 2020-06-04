@@ -5,13 +5,12 @@ import { CombinedForecast, CombinedForecastV2 } from "../generated/graphql";
 import { getCacheVal, setCacheVal } from "./db";
 import { getData } from "./wind-finder";
 import {
-  startOfDay,
-  endOfDay,
   addDays,
   format,
   isBefore,
   isAfter,
   differenceInDays,
+  subSeconds,
 } from "date-fns";
 import { degreesToCompass } from "./usgs";
 import { notUndefined } from "./utils";
@@ -33,8 +32,8 @@ export const getCombinedForecastV2 = async (
 
   const dayDiffs = [...Array(differenceInDays(end, start)).keys()];
   const data = dayDiffs.map((dayDiff) => {
-    const startDate = startOfDay(addDays(new Date(), dayDiff));
-    const endDate = endOfDay(addDays(new Date(), dayDiff));
+    const startDate = addDays(start, dayDiff);
+    const endDate = subSeconds(addDays(start, dayDiff + 1), 1);
 
     const dayName = format(startDate, "EEEE");
     let name = dayName;
