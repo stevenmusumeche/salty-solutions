@@ -9,6 +9,7 @@ import {
   format,
   isBefore,
   isAfter,
+  isEqual,
   differenceInDays,
   subSeconds,
 } from "date-fns";
@@ -45,11 +46,14 @@ export const getCombinedForecastV2 = async (
 
     const matchedWindFinderData = windFinderData.filter(
       (data) =>
-        isAfter(data.timestamp, startDate) && isBefore(data.timestamp, endDate)
+        (isEqual(new Date(data.timestamp), startDate) ||
+          isAfter(data.timestamp, startDate)) &&
+        isBefore(data.timestamp, endDate)
     );
     const matchedWeatherData = weather.filter(
       (data) =>
-        isAfter(new Date(data.startTime), startDate) &&
+        (isEqual(new Date(data.startTime), startDate) ||
+          isAfter(new Date(data.startTime), startDate)) &&
         isBefore(new Date(data.startTime), endDate)
     );
     const weatherDay = matchedWeatherData.find((x) => x.isDaytime);
