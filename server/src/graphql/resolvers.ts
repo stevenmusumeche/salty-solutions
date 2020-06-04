@@ -1,5 +1,5 @@
 import { Resolvers } from "../generated/graphql";
-import { ApolloError, UserInputError } from "apollo-server-koa";
+import { ApolloError } from "apollo-server-koa";
 import { notUndefined } from "../services/utils";
 
 const resolvers: Resolvers & { UsgsParam: Object } = {
@@ -64,6 +64,13 @@ const resolvers: Resolvers & { UsgsParam: Object } = {
     },
     combinedForecast: async (location, args, { services }) => {
       return services.combinedForecast.getCombinedForecast(location);
+    },
+    combinedForecastV2: async (location, args, { services }) => {
+      return services.combinedForecast.getCombinedForecastV2(
+        location,
+        new Date(args.start),
+        new Date(args.end)
+      );
     },
     weatherForecast: async (location, args, { services }) => {
       return services.weather.getForecast(location);

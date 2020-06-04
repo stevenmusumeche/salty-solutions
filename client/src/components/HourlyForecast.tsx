@@ -1,12 +1,12 @@
 import React, { ReactNode, useContext } from "react";
-import {
-  HourlyForecastDetailFragment,
-  useCombinedForecastQuery,
-} from "../generated/graphql";
 import ErrorIcon from "../assets/error.svg";
 import { HourlyForecastSkeleton } from "./ForecastSkeleton";
 import { format } from "date-fns";
 import { WindowSizeContext } from "../providers/WindowSizeProvider";
+import {
+  useCombinedForecastQuery,
+  HourlyForecastDetailFragment,
+} from "@stevenmusumeche/salty-solutions-shared/dist/graphql";
 
 interface Props {
   locationId: string;

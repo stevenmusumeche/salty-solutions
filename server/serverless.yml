@@ -20,6 +20,7 @@ provider:
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
         - dynamodb:DescribeTimeToLive
+        - dynamodb:BatchWriteItem
       Resource: ${cf:ss-database-${self:provider.stage}.MainTableArn}
     - Effect: Allow
       Action:
@@ -32,6 +33,7 @@ provider:
       Resource:
         - ${cf:ss-queue-${self:provider.stage}.ForecastPreloaderQueueArn}
         - ${cf:ss-queue-${self:provider.stage}.TidePreloaderQueueArn}
+        - ${cf:ss-queue-${self:provider.stage}.WindFinderPreloaderQueueArn}
     - Effect: Allow
       Action:
         - s3:*
@@ -69,6 +71,23 @@ functions:
           batchSize: 1
           arn: ${cf:ss-queue-${self:provider.stage}.ForecastPreloaderQueueArn}
 
+  preload-windfinder-producer:
+    handler: src/preloaders/producers.windFinder
+    events:
+      - schedule:
+          name: WindFinderPreloader-${self:provider.stage}
+          enabled: ${self:custom.schedule_enabled.${self:provider.stage}, false}
+          rate: rate(1 hour)
+    environment:
+      QUEUE_URL: ${cf:ss-queue-${self:provider.stage}.WindFinderPreloaderQueueUrl}
+  preload-windfinder-consumer:
+    handler: src/preloaders/consumers.windFinder
+    timeout: 120
+    events:
+      - sqs:
+          batchSize: 1
+          arn: ${cf:ss-queue-${self:provider.stage}.WindFinderPreloaderQueueArn}
+
   # todo re-enable this if we can get past dynamodb limits
   # preload-tide-producer:
   #   handler: src/preloaders/producers.tide
@@ -92,4 +111,5 @@ custom:
     port: 4000
   schedule_enabled:
     prod: true
-    dev: false
+    # todo disable
+    dev: true

@@ -8,13 +8,6 @@ import {
 } from "date-fns";
 import React, { ChangeEventHandler, useEffect, useState } from "react";
 import ErrorIcon from "../../assets/error.svg";
-import {
-  TideStationDetailFragment,
-  useTideQuery,
-  UsgsSiteDetailFragment,
-  SunDetailFieldsFragment,
-  MoonDetailFieldsFragment,
-} from "../../generated/graphql";
 import useBreakpoints from "../../hooks/useBreakpoints";
 import EmptyBox from "../EmptyBox";
 import MainTideChart from "./MainTideChart";
@@ -23,6 +16,13 @@ import UsgsSiteSelect from "../UsgsSiteSelect";
 import MoonPhase from "../MoonPhase";
 import DatePicker from "react-date-picker";
 import { buildDatasets } from "@stevenmusumeche/salty-solutions-shared/dist/tide-helpers";
+import {
+  TideStationDetailFragment,
+  UsgsSiteDetailFragment,
+  useTideQuery,
+  SunDetailFieldsFragment,
+  MoonDetailFieldsFragment,
+} from "@stevenmusumeche/salty-solutions-shared/dist/graphql";
 
 interface Props {
   tideStations: TideStationDetailFragment[];
@@ -32,7 +32,7 @@ interface Props {
   setActiveDate: (date: Date | Date[]) => void;
 }
 
-const ISO_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSxxx";
+export const ISO_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSxxx";
 
 const Tides: React.FC<Props> = ({
   tideStations,

@@ -1,5 +1,4 @@
 import React, { ReactNode, useContext } from "react";
-import { useCombinedForecastQuery } from "../generated/graphql";
 import ErrorIcon from "../assets/error.svg";
 import { ForecastSkeleton } from "./ForecastSkeleton";
 import Compass from "../assets/compass.svg";
@@ -9,6 +8,7 @@ import Unknown from "../assets/water-conditions/unknown.svg";
 import Choppy from "../assets/water-conditions/choppy.svg";
 import Rough from "../assets/water-conditions/rough.svg";
 import { WindowSizeContext } from "../providers/WindowSizeProvider";
+import { useCombinedForecastQuery } from "@stevenmusumeche/salty-solutions-shared/dist/graphql";
 
 interface Props {
   locationId: string;
@@ -47,7 +47,7 @@ const CombinedForecast: React.FC<Props> = ({ locationId }) => {
   return (
     <Wrapper>
       {data &&
-        data.map(data => {
+        data.map((data) => {
           let windDisplay;
           let degrees;
           if (data.wind && data.wind.speed && data.wind.direction) {
@@ -79,7 +79,7 @@ const CombinedForecast: React.FC<Props> = ({ locationId }) => {
                     className="block m-auto h-12 w-12 md:h-20 md:w-20"
                     style={{
                       transform: `rotate(${degrees}deg)`,
-                      maxWidth: "5rem"
+                      maxWidth: "5rem",
                     }}
                   />
                   <div className="mt-2 text-xs md:text-base md:text-xl text-center text-gray-800 leading-none">
@@ -108,7 +108,7 @@ const CombinedForecast: React.FC<Props> = ({ locationId }) => {
                     display: "grid",
                     gridTemplateColumns: isSmall ? "3rem auto" : "4.5rem auto",
                     gridTemplateRows: "1fr 1fr",
-                    gridArea: "temp"
+                    gridArea: "temp",
                   }}
                 >
                   <div>{data.temperature.degrees}°</div>
@@ -154,16 +154,15 @@ const Wrapper: React.FC<{
 }> = ({ children }) => {
   const { isSmall } = useContext(WindowSizeContext);
   return (
-    <div
-      className={`${!isSmall &&
-        "forecast-wrapper"} scroller-vertical mb-0 md:mb-8`}
-    >
+    <div className={`${!isSmall && "forecast-wrapper"} mb-0 md:mb-8`}>
       {children}
     </div>
   );
 };
 
-const WaterConditionIcon: React.FC<{ text?: string }> = ({ text = "" }) => {
+export const WaterConditionIcon: React.FC<{ text?: string }> = ({
+  text = "",
+}) => {
   let image = Unknown;
   const [, second] = text.split("-");
 

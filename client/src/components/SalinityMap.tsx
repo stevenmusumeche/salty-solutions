@@ -1,9 +1,12 @@
 import React from "react";
-import { useSalinityMapQuery, SalinityMapQuery } from "../generated/graphql";
 import ErrorIcon from "../assets/error.svg";
 import { UseQueryState } from "urql";
 import useBreakpoints from "../hooks/useBreakpoints";
 import EmptyBox from "./EmptyBox";
+import {
+  SalinityMapQuery,
+  useSalinityMapQuery,
+} from "@stevenmusumeche/salty-solutions-shared/dist/graphql";
 
 interface Props {
   locationId: string;

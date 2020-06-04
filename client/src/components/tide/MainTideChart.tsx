@@ -14,17 +14,18 @@ import {
   VictoryLine,
   VictoryScatter,
 } from "victory";
-import {
-  SunDetailFieldsFragment,
-  TideDetailFieldsFragment,
-  WaterHeightFieldsFragment,
-} from "../../generated/graphql";
+
 import useBreakpoints from "../../hooks/useBreakpoints";
 import {
   buildDatasets,
   Y_PADDING,
 } from "@stevenmusumeche/salty-solutions-shared/dist/tide-helpers";
 import { renderBackgroundColor } from "./tide-helpers";
+import {
+  SunDetailFieldsFragment,
+  TideDetailFieldsFragment,
+  WaterHeightFieldsFragment,
+} from "@stevenmusumeche/salty-solutions-shared/dist/graphql";
 
 interface Props {
   sunData: SunDetailFieldsFragment;

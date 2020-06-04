@@ -1,7 +1,6 @@
 import { startOfDay } from "date-fns";
 import React, { useState, useEffect } from "react";
 import "./App.css";
-import CombinedForecast from "./components/CombinedForecast";
 import AirTempCard from "./components/AirTempCard";
 import SalinityCard from "./components/SalinityCard";
 import WaterTempCard from "./components/WaterTempCard";
@@ -9,7 +8,6 @@ import WindCard from "./components/WindCard";
 import AppHeader from "./components/AppHeader";
 import HourlyForecast from "./components/HourlyForecast";
 import Tides from "./components/tide/Tides";
-import { useLocationsQuery, UsgsParam } from "./generated/graphql";
 import Shell from "./components/Shell";
 import NotFound from "./components/NotFound";
 import { RouteComponentProps, navigate } from "@reach/router";
@@ -20,6 +18,11 @@ import DarkSkyRadar from "./components/DarkSkyRadar";
 import { SalinityMap } from "./components/SalinityMap";
 import ModisMap from "./components/ModisMap";
 import { useReducer } from "react";
+import CombinedForecastV2 from "./components/CombinedForecastV2";
+import {
+  useLocationsQuery,
+  UsgsParam,
+} from "@stevenmusumeche/salty-solutions-shared/dist/graphql";
 
 export interface Action {
   type: string;
@@ -104,6 +107,7 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
     <Shell
       header={
         <AppHeader
+          locations={locations}
           setLocationId={(id) => {
             setLocationId(id);
             window.scrollTo({ top: 0 });
@@ -114,6 +118,7 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
       }
     >
       <JumpNav dispatch={dispatch} />
+
       <div className="container p-4 md:p-0 md:mx-auto md:my-0 md:mt-8">
         <span id="current-conditions"></span>
         <div className="current-conditions-grid">
@@ -149,7 +154,7 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
         <Donate />
 
         <span id="forecast"></span>
-        <CombinedForecast locationId={locationId} />
+        <CombinedForecastV2 locationId={locationId} />
 
         <span id="radar"></span>
         <CollapsibleSection

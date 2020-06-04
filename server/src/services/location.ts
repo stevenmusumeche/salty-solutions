@@ -21,6 +21,9 @@ export interface LocationEntity {
   nowcastSubdomain?: string;
   saveOurLake?: boolean;
   modisArea: string;
+  windfinder: {
+    slug?: string;
+  };
 }
 
 const locations: LocationEntity[] = [
@@ -48,6 +51,7 @@ const locations: LocationEntity[] = [
     },
     nowcastSubdomain: "0",
     modisArea: "USA7",
+    windfinder: { slug: "cypremort-point_vermillion-bay" },
   },
   {
     id: "calcasieu-lake",
@@ -66,6 +70,7 @@ const locations: LocationEntity[] = [
     },
     nowcastSubdomain: "cc",
     modisArea: "USA7",
+    windfinder: { slug: "calcasieu_pass" },
   },
   {
     id: "cocodrie",
@@ -91,6 +96,7 @@ const locations: LocationEntity[] = [
     },
     nowcastSubdomain: "0",
     modisArea: "USA7",
+    windfinder: { slug: "tambour_bay" },
   },
   {
     id: "dularge",
@@ -115,6 +121,7 @@ const locations: LocationEntity[] = [
     },
     nowcastSubdomain: "0",
     modisArea: "USA7",
+    windfinder: { slug: "caillou-lake" },
   },
   {
     id: "hopedale",
@@ -140,6 +147,7 @@ const locations: LocationEntity[] = [
     },
     saveOurLake: true,
     modisArea: "USA7",
+    windfinder: { slug: "shell_beach" },
   },
   {
     id: "grand-isle",
@@ -171,6 +179,7 @@ const locations: LocationEntity[] = [
     },
     nowcastSubdomain: "0",
     modisArea: "USA7",
+    windfinder: { slug: "grand_isle_eastern_tip" },
   },
   {
     id: "venice",
@@ -212,6 +221,7 @@ const locations: LocationEntity[] = [
     },
     modisArea: "USA7",
     saveOurLake: true,
+    windfinder: { slug: "pilottown" },
   },
   {
     id: "lake-ponchartrain",
@@ -251,6 +261,7 @@ const locations: LocationEntity[] = [
     },
     modisArea: "USA7",
     saveOurLake: true,
+    windfinder: { slug: "lakefront_new_orleans" },
   },
   {
     id: "rigolets",
@@ -274,6 +285,34 @@ const locations: LocationEntity[] = [
     },
     modisArea: "USA7",
     saveOurLake: true,
+    windfinder: { slug: "lake_pontchartrain_rigolets" },
+  },
+  {
+    id: "lafitte",
+    name: "Lafitte",
+    tideStationIds: ["8761732", "8761899", "8761819"],
+    marineZoneId: "",
+    coords: {
+      lat: 29.6669,
+      lon: -90.1084,
+    },
+    usgsSiteIds: [
+      "07380251",
+      "291929089562600",
+      "292800090060000",
+      "07380335",
+      "07380330",
+      "073802516",
+    ],
+    weatherGov: {
+      apiBase: "https://api.weather.gov/gridpoints/LIX/68,77",
+      stationId: "KGAO",
+      radarSiteId: "LIX",
+    },
+    modisArea: "USA7",
+    saveOurLake: false,
+    nowcastSubdomain: "0",
+    windfinder: { slug: "little-lake_bay-dosgris" },
   },
 ];
 

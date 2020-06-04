@@ -24,6 +24,18 @@ export type CombinedForecast = {
   icon: Scalars['String'],
 };
 
+export type CombinedForecastV2 = {
+  __typename?: 'CombinedForecastV2',
+  date: Scalars['String'],
+  name: Scalars['String'],
+  wind: Array<ForecastWindDetailV2>,
+  waves: Array<ForecastWaveDetail>,
+  temperature: Array<TemperatureDetail>,
+  day: ForecastDescription,
+  night: ForecastDescription,
+  rain: Array<RainDetail>,
+};
+
 export type Coords = {
   __typename?: 'Coords',
   lat: Scalars['Float'],
@@ -46,6 +58,30 @@ export type DataSources = {
   weatherRadarSiteId: Scalars['String'],
 };
 
+export type ForecastDescription = {
+  __typename?: 'ForecastDescription',
+  short?: Maybe<Scalars['String']>,
+  detailed?: Maybe<Scalars['String']>,
+};
+
+export type ForecastWaveDetail = {
+  __typename?: 'ForecastWaveDetail',
+  timestamp: Scalars['String'],
+  /** feet */
+  height: Scalars['Float'],
+  direction: WindDirection,
+};
+
+export type ForecastWindDetailV2 = {
+  __typename?: 'ForecastWindDetailV2',
+  timestamp: Scalars['String'],
+  /** mph */
+  base: Scalars['Float'],
+  /** mph */
+  gusts: Scalars['Float'],
+  direction: WindDirection,
+};
+
 export type ForecastWindSpeedDetail = {
   __typename?: 'ForecastWindSpeedDetail',
   from: Scalars['Int'],
@@ -62,6 +98,7 @@ export type Location = {
   sun?: Maybe<Array<SunDetail>>,
   moon?: Maybe<Array<MoonDetail>>,
   combinedForecast?: Maybe<Array<CombinedForecast>>,
+  combinedForecastV2?: Maybe<Array<CombinedForecastV2>>,
   weatherForecast?: Maybe<Array<WeatherForecast>>,
   hourlyWeatherForecast?: Maybe<Array<WeatherForecast>>,
   marineForecast?: Maybe<Array<MarineForecast>>,
@@ -81,6 +118,12 @@ export type LocationSunArgs = {
 
 
 export type LocationMoonArgs = {
+  start: Scalars['String'],
+  end: Scalars['String']
+};
+
+
+export type LocationCombinedForecastV2Args = {
   start: Scalars['String'],
   end: Scalars['String']
 };
@@ -179,6 +222,12 @@ export type QueryTidePreditionStationArgs = {
 
 export type QueryUsgsSiteArgs = {
   siteId?: Maybe<Scalars['ID']>
+};
+
+export type RainDetail = {
+  __typename?: 'RainDetail',
+  timestamp: Scalars['String'],
+  mmPerHour: Scalars['Float'],
 };
 
 export type Salinity = {
@@ -389,6 +438,17 @@ export type HourlyForecastDetailFragment = ({ __typename?: 'WeatherForecast' } &
 
 export type CombinedForecastDetailFragment = ({ __typename?: 'CombinedForecast' } & Pick<CombinedForecast, 'timePeriod' | 'chanceOfPrecipitation' | 'icon' | 'marine' | 'short' | 'detailed'> & { wind: ({ __typename?: 'WindForecast' } & { speed: Maybe<({ __typename?: 'ForecastWindSpeedDetail' } & Pick<ForecastWindSpeedDetail, 'from' | 'to'>)>, direction: Maybe<({ __typename?: 'WindDirection' } & Pick<WindDirection, 'text' | 'degrees'>)> }), waterCondition: Maybe<({ __typename?: 'WaterCondition' } & Pick<WaterCondition, 'text' | 'icon'>)>, temperature: ({ __typename?: 'Temperature' } & Pick<Temperature, 'degrees' | 'unit'>) });
 
+export type CombinedForecastV2QueryVariables = {
+  locationId: Scalars['ID'],
+  startDate: Scalars['String'],
+  endDate: Scalars['String']
+};
+
+
+export type CombinedForecastV2Query = ({ __typename?: 'Query' } & { location: Maybe<({ __typename?: 'Location' } & { combinedForecastV2: Maybe<Array<({ __typename?: 'CombinedForecastV2' } & CombinedForecastV2DetailFragment)>> })> });
+
+export type CombinedForecastV2DetailFragment = ({ __typename?: 'CombinedForecastV2' } & Pick<CombinedForecastV2, 'name' | 'date'> & { wind: Array<({ __typename?: 'ForecastWindDetailV2' } & Pick<ForecastWindDetailV2, 'timestamp' | 'base' | 'gusts'> & { direction: ({ __typename?: 'WindDirection' } & Pick<WindDirection, 'text' | 'degrees'>) })>, day: ({ __typename?: 'ForecastDescription' } & Pick<ForecastDescription, 'short' | 'detailed'>), night: ({ __typename?: 'ForecastDescription' } & Pick<ForecastDescription, 'short' | 'detailed'>), temperature: Array<({ __typename?: 'TemperatureDetail' } & Pick<TemperatureDetail, 'timestamp'> & { temperature: ({ __typename?: 'Temperature' } & Pick<Temperature, 'degrees'>) })>, rain: Array<({ __typename?: 'RainDetail' } & Pick<RainDetail, 'timestamp' | 'mmPerHour'>)> });
+
 export type CurrentConditionsDataQueryVariables = {
   locationId: Scalars['ID'],
   usgsSiteId?: Maybe<Scalars['ID']>,
@@ -509,6 +569,39 @@ export const CombinedForecastDetailFragmentDoc = gql`
   marine
   short
   detailed
+}
+    `;
+export const CombinedForecastV2DetailFragmentDoc = gql`
+    fragment CombinedForecastV2Detail on CombinedForecastV2 {
+  name
+  date
+  wind {
+    timestamp
+    base
+    gusts
+    direction {
+      text
+      degrees
+    }
+  }
+  day {
+    short
+    detailed
+  }
+  night {
+    short
+    detailed
+  }
+  temperature {
+    timestamp
+    temperature {
+      degrees
+    }
+  }
+  rain {
+    timestamp
+    mmPerHour
+  }
 }
     `;
 export const UsgsSiteDetailFieldsFragmentDoc = gql`
@@ -646,6 +739,19 @@ ${HourlyForecastDetailFragmentDoc}`;
 
 export function useCombinedForecastQuery(options: Omit<Urql.UseQueryArgs<CombinedForecastQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<CombinedForecastQuery>({ query: CombinedForecastDocument, ...options });
+};
+export const CombinedForecastV2Document = gql`
+    query CombinedForecastV2($locationId: ID!, $startDate: String!, $endDate: String!) {
+  location(id: $locationId) {
+    combinedForecastV2(start: $startDate, end: $endDate) {
+      ...CombinedForecastV2Detail
+    }
+  }
+}
+    ${CombinedForecastV2DetailFragmentDoc}`;
+
+export function useCombinedForecastV2Query(options: Omit<Urql.UseQueryArgs<CombinedForecastV2QueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<CombinedForecastV2Query>({ query: CombinedForecastV2Document, ...options });
 };
 export const CurrentConditionsDataDocument = gql`
     query CurrentConditionsData($locationId: ID!, $usgsSiteId: ID, $startDate: String!, $endDate: String!) {

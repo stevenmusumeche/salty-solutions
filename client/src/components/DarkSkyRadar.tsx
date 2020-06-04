@@ -1,6 +1,6 @@
 import React from "react";
-import { Coords } from "../generated/graphql";
 import useBreakpoints from "../hooks/useBreakpoints";
+import { Coords } from "@stevenmusumeche/salty-solutions-shared/dist/graphql";
 
 const DarkSkyRadar: React.FC<{ coords: Coords }> = ({ coords }) => {
   const { isSmall } = useBreakpoints();

@@ -2,6 +2,7 @@ import { SQSHandler } from "aws-lambda";
 import { getById } from "../services/location";
 import { getTidePredictions } from "../services/tide";
 import { getCombinedForecast } from "../services/combined-forecast";
+import { loadAndSave } from "../services/wind-finder";
 
 export const forecast: SQSHandler = async (event, ctx, cb) => {
   for (const record of event.Records) {
@@ -28,5 +29,13 @@ export const tide: SQSHandler = async (event, ctx, cb) => {
       new Date(payload.endDate),
       payload.stationId
     );
+  }
+};
+
+export const windFinder: SQSHandler = async (event, ctx, cb) => {
+  for (const record of event.Records) {
+    const payload = JSON.parse(record.body);
+    console.log("Preloading windfinder for", payload.slug);
+    await loadAndSave(payload.slug);
   }
 };

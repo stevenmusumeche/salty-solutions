@@ -1,14 +1,14 @@
 import React, { useEffect, useRef, ReactElement } from "react";
-import {
-  useMapsQuery,
-  OverlayMapsFragment,
-  Maybe,
-  Map
-} from "../generated/graphql";
 import PlayIcon from "../assets/play.svg";
 import StopIcon from "../assets/stop.svg";
 import { format } from "date-fns";
 import ErrorIcon from "../assets/error.svg";
+import {
+  OverlayMapsFragment,
+  useMapsQuery,
+  Maybe,
+  Map,
+} from "@stevenmusumeche/salty-solutions-shared/dist/graphql";
 
 interface Props {
   locationId: string;
@@ -38,7 +38,7 @@ export const RadarMap: React.FC<Props> = ({ locationId }) => {
     if (animated) {
       const ticker = () => {
         timer.current = setInterval(() => {
-          setTick(x => {
+          setTick((x) => {
             const isLastImage = x % radar.length === radar.length - 1;
             if (isLastImage && timer.current) {
               cleanup();
@@ -124,7 +124,10 @@ export const RadarMap: React.FC<Props> = ({ locationId }) => {
             <>
               {/* play/stop button */}
               <div className="mr-5 w-5 flex">
-                <button className="w-full" onClick={() => setAnimated(x => !x)}>
+                <button
+                  className="w-full"
+                  onClick={() => setAnimated((x) => !x)}
+                >
                   <img
                     src={animated ? StopIcon : PlayIcon}
                     alt="animation controls"
@@ -168,7 +171,7 @@ export const RadarMap: React.FC<Props> = ({ locationId }) => {
 export default RadarMap;
 
 const OverlayMaps: React.FC<{ overlays: OverlayMapsFragment }> = ({
-  overlays
+  overlays,
 }) => {
   return (
     <>

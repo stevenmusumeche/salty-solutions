@@ -234,6 +234,18 @@ const tideStations: TideStationEntity[] = [
     lat: 28.915,
     lon: -91.0716667,
   },
+  {
+    id: "8761732",
+    name: "Manilla, LA",
+    lat: 29.4266667,
+    lon: -89.97667,
+  },
+  {
+    id: "8761899",
+    name: "Lafitte, Barataria Waterway",
+    lat: 29.6666667,
+    lon: -90.111667,
+  },
 ];
 
 // tide stations in LA: https://tidesandcurrents.noaa.gov/tide_predictions.html?gid=1400

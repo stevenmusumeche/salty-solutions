@@ -6,7 +6,8 @@ import { chunk } from "lodash";
 
 export const PRODUCER_NAMES = {
   forecast: "forecast-preloader",
-  tide: "tide-preloader"
+  tide: "tide-preloader",
+  windFinder: "wind-finder",
 };
 
 export const forecast: ScheduledHandler = async () => {
@@ -26,7 +27,7 @@ export const tide: ScheduledHandler = async () => {
   const endDate = addDays(startOfDay(curDate), 4).toISOString();
 
   const uniqueStationIds = getAll().reduce((stations, location) => {
-    location.tideStationIds.forEach(id => stations.add(id));
+    location.tideStationIds.forEach((id) => stations.add(id));
     return stations;
   }, new Set());
 
@@ -35,11 +36,26 @@ export const tide: ScheduledHandler = async () => {
     await sendMessageBatch(
       process.env.QUEUE_URL!,
       PRODUCER_NAMES.tide,
-      chunk.map(stationId => ({
+      chunk.map((stationId) => ({
         stationId,
         startDate,
-        endDate
+        endDate,
       }))
     );
+  }
+};
+
+export const windFinder: ScheduledHandler = async () => {
+  console.log("Preloading windfinder");
+
+  const uniqueSlugs = new Set(
+    getAll()
+      .filter((location) => !!location.windfinder.slug)
+      .map((location) => location.windfinder.slug)
+  );
+
+  for (const slug of uniqueSlugs) {
+    const body = { slug };
+    await sendMessage(process.env.QUEUE_URL!, PRODUCER_NAMES.windFinder, body);
   }
 };

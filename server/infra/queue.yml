@@ -36,6 +36,18 @@ Resources:
             - DeadLetterQueue
             - Arn
         maxReceiveCount: 3
+  WindFinderPreloaderQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Join ["", ["windfinder-preloader-", Ref: StageParam]]
+      VisibilityTimeout: 120
+      MessageRetentionPeriod: 43200 # 12 hours
+      RedrivePolicy:
+        deadLetterTargetArn:
+          Fn::GetAtt:
+            - DeadLetterQueue
+            - Arn
+        maxReceiveCount: 3
 Outputs:
   ForecastPreloaderQueueUrl:
     Value: !Ref ForecastPreloaderQueue
@@ -53,3 +65,11 @@ Outputs:
     Value: !GetAtt TidePreloaderQueue.Arn
     Export:
       Name: !Join ["-", [TidePreloaderQueueArn, Ref: StageParam]]
+  WindFinderPreloaderQueueUrl:
+    Value: !Ref WindFinderPreloaderQueue
+    Export:
+      Name: !Join ["-", [WindFinderPreloaderQueueUrl, Ref: StageParam]]
+  WindFinderPreloaderQueueArn:
+    Value: !GetAtt WindFinderPreloaderQueue.Arn
+    Export:
+      Name: !Join ["-", [WindFinderPreloaderQueueArn, Ref: StageParam]]

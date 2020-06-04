@@ -1,5 +1,5 @@
 import React, { ChangeEventHandler } from "react";
-import { UsgsSiteDetailFragment } from "../generated/graphql";
+import { UsgsSiteDetailFragment } from "@stevenmusumeche/salty-solutions-shared/dist/graphql";
 
 const UsgsSiteSelect: React.FC<{
   sites: UsgsSiteDetailFragment[];
@@ -19,7 +19,7 @@ const UsgsSiteSelect: React.FC<{
         value={selectedId}
         className="select-css pr-8 pl-2 py-1 bg-white text-gray-700 text-sm w-full"
       >
-        {sites.map(site => (
+        {sites.map((site) => (
           <option key={site.id} value={site.id}>
             {site.name}
           </option>
