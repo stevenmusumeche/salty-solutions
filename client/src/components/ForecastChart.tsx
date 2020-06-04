@@ -105,8 +105,8 @@ const ArrowPoint: React.FC<any> = ({ x, y, datum, index, data, ...props }) => {
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 640 640"
-      width="1.5rem"
-      height="1.5rem"
+      width=".75em"
+      height=".75em"
       x={x - 12}
       y={0}
       {...props}
