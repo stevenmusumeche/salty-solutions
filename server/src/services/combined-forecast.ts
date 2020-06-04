@@ -11,6 +11,7 @@ import {
   format,
   isBefore,
   isAfter,
+  differenceInDays,
 } from "date-fns";
 import { degreesToCompass } from "./usgs";
 import { notUndefined } from "./utils";
@@ -25,12 +26,12 @@ export const getCombinedForecastV2 = async (
 ): Promise<CombinedForecastV2[]> => {
   // todo add caching
 
-  const dayDiffs = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
   const [windFinderData, weather] = await Promise.all([
     getData(location, start, end),
     getWeatherForecast(location),
   ]);
 
+  const dayDiffs = [...Array(differenceInDays(end, start)).keys()];
   const data = dayDiffs.map((dayDiff) => {
     const startDate = startOfDay(addDays(new Date(), dayDiff));
     const endDate = endOfDay(addDays(new Date(), dayDiff));
