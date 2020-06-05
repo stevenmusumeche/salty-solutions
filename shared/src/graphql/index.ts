@@ -111,6 +111,11 @@ export type Location = {
 };
 
 
+export type LocationTidePreditionStationsArgs = {
+  limit?: Maybe<Scalars['Int']>
+};
+
+
 export type LocationSunArgs = {
   start: Scalars['String'],
   end: Scalars['String']
@@ -445,7 +450,7 @@ export type CombinedForecastV2QueryVariables = {
 };
 
 
-export type CombinedForecastV2Query = ({ __typename?: 'Query' } & { location: Maybe<({ __typename?: 'Location' } & { combinedForecastV2: Maybe<Array<({ __typename?: 'CombinedForecastV2' } & CombinedForecastV2DetailFragment)>> })> });
+export type CombinedForecastV2Query = ({ __typename?: 'Query' } & { location: Maybe<({ __typename?: 'Location' } & { combinedForecastV2: Maybe<Array<({ __typename?: 'CombinedForecastV2' } & CombinedForecastV2DetailFragment)>>, tidePreditionStations: Array<({ __typename?: 'TidePreditionStation' } & Pick<TidePreditionStation, 'id' | 'name'> & { tides: Maybe<Array<({ __typename?: 'TideDetail' } & TideDetailFieldsFragment)>> })>, sun: Maybe<Array<({ __typename?: 'SunDetail' } & SunDetailFieldsFragment)>> })> });
 
 export type CombinedForecastV2DetailFragment = ({ __typename?: 'CombinedForecastV2' } & Pick<CombinedForecastV2, 'name' | 'date'> & { wind: Array<({ __typename?: 'ForecastWindDetailV2' } & Pick<ForecastWindDetailV2, 'timestamp' | 'base' | 'gusts'> & { direction: ({ __typename?: 'WindDirection' } & Pick<WindDirection, 'text' | 'degrees'>) })>, day: ({ __typename?: 'ForecastDescription' } & Pick<ForecastDescription, 'short' | 'detailed'>), night: ({ __typename?: 'ForecastDescription' } & Pick<ForecastDescription, 'short' | 'detailed'>), temperature: Array<({ __typename?: 'TemperatureDetail' } & Pick<TemperatureDetail, 'timestamp'> & { temperature: ({ __typename?: 'Temperature' } & Pick<Temperature, 'degrees'>) })>, rain: Array<({ __typename?: 'RainDetail' } & Pick<RainDetail, 'timestamp' | 'mmPerHour'>)> });
 
@@ -746,9 +751,21 @@ export const CombinedForecastV2Document = gql`
     combinedForecastV2(start: $startDate, end: $endDate) {
       ...CombinedForecastV2Detail
     }
+    tidePreditionStations(limit: 1) {
+      id
+      name
+      tides(start: $startDate, end: $endDate) {
+        ...TideDetailFields
+      }
+    }
+    sun(start: $startDate, end: $endDate) {
+      ...SunDetailFields
+    }
   }
 }
-    ${CombinedForecastV2DetailFragmentDoc}`;
+    ${CombinedForecastV2DetailFragmentDoc}
+${TideDetailFieldsFragmentDoc}
+${SunDetailFieldsFragmentDoc}`;
 
 export function useCombinedForecastV2Query(options: Omit<Urql.UseQueryArgs<CombinedForecastV2QueryVariables>, 'query'> = {}) {
   return Urql.useQuery<CombinedForecastV2Query>({ query: CombinedForecastV2Document, ...options });

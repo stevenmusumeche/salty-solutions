@@ -36,8 +36,9 @@ const resolvers: Resolvers & { UsgsParam: Object } = {
     temperature: async (location) => {
       return { location };
     },
-    tidePreditionStations: (location, __, { services }) => {
+    tidePreditionStations: (location, { limit }, { services }) => {
       return location.tideStationIds
+        .slice(0, limit || 99)
         .map((id) => services.tide.getStationById(id))
         .filter(notUndefined);
     },

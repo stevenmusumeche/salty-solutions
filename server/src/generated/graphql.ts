@@ -113,6 +113,11 @@ export type Location = {
 };
 
 
+export type LocationTidePreditionStationsArgs = {
+  limit?: Maybe<Scalars['Int']>
+};
+
+
 export type LocationSunArgs = {
   start: Scalars['String'],
   end: Scalars['String']
@@ -495,6 +500,7 @@ export type ResolversTypes = {
   Location: ResolverTypeWrapper<LocationEntity>,
   ID: ResolverTypeWrapper<Partial<Scalars['ID']>>,
   String: ResolverTypeWrapper<Partial<Scalars['String']>>,
+  Int: ResolverTypeWrapper<Partial<Scalars['Int']>>,
   TidePreditionStation: ResolverTypeWrapper<TideStationEntity>,
   Float: ResolverTypeWrapper<Partial<Scalars['Float']>>,
   TideDetail: ResolverTypeWrapper<Partial<TideDetail>>,
@@ -511,7 +517,6 @@ export type ResolversTypes = {
   UsgsParam: ResolverTypeWrapper<Partial<UsgsParam>>,
   SunDetail: ResolverTypeWrapper<Partial<SunDetail>>,
   MoonDetail: ResolverTypeWrapper<Partial<MoonDetail>>,
-  Int: ResolverTypeWrapper<Partial<Scalars['Int']>>,
   CombinedForecast: ResolverTypeWrapper<Partial<CombinedForecast>>,
   WindForecast: ResolverTypeWrapper<Partial<WindForecast>>,
   ForecastWindSpeedDetail: ResolverTypeWrapper<Partial<ForecastWindSpeedDetail>>,
@@ -547,6 +552,7 @@ export type ResolversParentTypes = {
   Location: LocationEntity,
   ID: Partial<Scalars['ID']>,
   String: Partial<Scalars['String']>,
+  Int: Partial<Scalars['Int']>,
   TidePreditionStation: TideStationEntity,
   Float: Partial<Scalars['Float']>,
   TideDetail: Partial<TideDetail>,
@@ -563,7 +569,6 @@ export type ResolversParentTypes = {
   UsgsParam: Partial<UsgsParam>,
   SunDetail: Partial<SunDetail>,
   MoonDetail: Partial<MoonDetail>,
-  Int: Partial<Scalars['Int']>,
   CombinedForecast: Partial<CombinedForecast>,
   WindForecast: Partial<WindForecast>,
   ForecastWindSpeedDetail: Partial<ForecastWindSpeedDetail>,
@@ -661,7 +666,7 @@ export type ForecastWindSpeedDetailResolvers<ContextType = Context, ParentType =
 export type LocationResolvers<ContextType = Context, ParentType = ResolversParentTypes['Location']> = {
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
-  tidePreditionStations?: Resolver<Array<ResolversTypes['TidePreditionStation']>, ParentType, ContextType>,
+  tidePreditionStations?: Resolver<Array<ResolversTypes['TidePreditionStation']>, ParentType, ContextType, LocationTidePreditionStationsArgs>,
   usgsSites?: Resolver<Array<ResolversTypes['UsgsSite']>, ParentType, ContextType>,
   coords?: Resolver<ResolversTypes['Coords'], ParentType, ContextType>,
   sun?: Resolver<Maybe<Array<ResolversTypes['SunDetail']>>, ParentType, ContextType, LocationSunArgs>,

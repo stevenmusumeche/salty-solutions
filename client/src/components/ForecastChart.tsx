@@ -29,7 +29,7 @@ const ForecastChart: FC<Props> = ({ data, date }) => {
   return (
     <>
       <VictoryChart
-        padding={{ left: 25, top: 35, right: 25, bottom: 25 }}
+        padding={{ left: 28, top: 35, right: 25, bottom: 25 }}
         domainPadding={{ y: 10, x: 7 }}
         style={{ parent: { touchAction: "auto" } }}
         height={230}
@@ -38,7 +38,7 @@ const ForecastChart: FC<Props> = ({ data, date }) => {
           scale={{ x: "time" }}
           dependentAxis
           style={{
-            tickLabels: { fontSize: 16, padding: 5 },
+            tickLabels: { fontSize: 14, padding: 5 },
           }}
           tickFormat={noDecimals}
         />
@@ -54,7 +54,7 @@ const ForecastChart: FC<Props> = ({ data, date }) => {
             return format(d, "haaaaa");
           }}
           style={{
-            tickLabels: { fontSize: 16, padding: 5 },
+            tickLabels: { fontSize: 14, padding: 5 },
           }}
         />
 
