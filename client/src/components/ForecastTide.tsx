@@ -46,7 +46,7 @@ const ForecastTide: FC<Props> = ({ tideData: rawTideData, sunData, date }) => {
     curDayTideData,
     []
   );
-  const { min, max } = tideBoundaries;
+  const { min } = tideBoundaries;
 
   return (
     <>

@@ -1,17 +1,14 @@
-import {
-  useCombinedForecastV2Query,
-  SunDetailFieldsFragment,
-} from "@stevenmusumeche/salty-solutions-shared/dist/graphql";
-import React, { FC, ReactNode } from "react";
-import useBreakpoints from "../hooks/useBreakpoints";
-import ForecastChart from "./ForecastChart";
-import ForecastTimeBuckets from "./ForecastTimeBuckets";
-import EmptyBox from "./EmptyBox";
-import ErrorIcon from "../assets/error.svg";
-import { format, startOfDay, addDays, isSameDay } from "date-fns";
-import { ISO_FORMAT } from "./tide/Tides";
+import { useCombinedForecastV2Query } from "@stevenmusumeche/salty-solutions-shared/dist/graphql";
+import { addDays, format, startOfDay } from "date-fns";
 import { endOfDay } from "date-fns/esm";
+import React, { FC, ReactNode } from "react";
+import ErrorIcon from "../assets/error.svg";
+import useBreakpoints from "../hooks/useBreakpoints";
+import EmptyBox from "./EmptyBox";
+import ForecastChart from "./ForecastChart";
 import ForecastTide from "./ForecastTide";
+import ForecastTimeBuckets from "./ForecastTimeBuckets";
+import { ISO_FORMAT } from "./tide/Tides";
 
 const NUM_DAYS = 9;
 
