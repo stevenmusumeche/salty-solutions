@@ -1,12 +1,9 @@
-import {
-  SunDetailFieldsFragment,
-  TideDetailFieldsFragment,
-} from "@stevenmusumeche/salty-solutions-shared/dist/graphql";
+import { TideDetailFieldsFragment } from "@stevenmusumeche/salty-solutions-shared/dist/graphql";
 import {
   buildDatasets,
   Y_PADDING,
 } from "@stevenmusumeche/salty-solutions-shared/dist/tide-helpers";
-import { addHours, format, isSameDay, startOfDay } from "date-fns";
+import { addHours, format, isSameDay } from "date-fns";
 import React, { FC, useMemo } from "react";
 import {
   VictoryArea,
@@ -19,21 +16,14 @@ import {
 interface Props {
   stationName: string;
   tideData: TideDetailFieldsFragment[];
-  sunData: SunDetailFieldsFragment[];
   date: Date;
 }
 
-const ForecastTide: FC<Props> = ({ tideData: rawTideData, sunData, date }) => {
-  const curDaySunData: SunDetailFieldsFragment = useMemo(
-    () =>
-      sunData.filter(
-        (x) =>
-          startOfDay(new Date(x.sunrise)).toISOString() ===
-          startOfDay(date).toISOString()
-      )[0] || {},
-    [sunData, date]
-  );
-
+const ForecastTide: FC<Props> = ({
+  tideData: rawTideData,
+  date,
+  stationName,
+}) => {
   const curDayTideData = useMemo(
     () => rawTideData.filter((x) => isSameDay(new Date(x.time), date)),
     [rawTideData, date]
@@ -42,7 +32,7 @@ const ForecastTide: FC<Props> = ({ tideData: rawTideData, sunData, date }) => {
   const yTickVals = [0, 3, 6, 9, 12, 15, 18, 21].map((h) => addHours(date, h));
 
   const { tideData, hiLowData, tideBoundaries } = buildDatasets(
-    curDaySunData,
+    {} as any,
     curDayTideData,
     []
   );
@@ -133,23 +123,26 @@ const ForecastTide: FC<Props> = ({ tideData: rawTideData, sunData, date }) => {
           }
         />
       </VictoryChart>
-      <ChartLegend />
+      <ChartLegend stationName={stationName} />
     </>
   );
 };
 
 export default ForecastTide;
 
-const ChartLegend = () => {
+const ChartLegend: FC<{ stationName: string }> = ({ stationName }) => {
   return (
     <div className="flex justify-center mt-2">
       <div
-        className="flex tracking-tight tracking-wide uppercase font-normal text-gray-600 leading-none uppercase"
+        className="flex uppercase font-normal text-gray-600 leading-none uppercase"
         style={{ fontSize: ".65rem" }}
       >
         <div className="flex items-center h-3">
-          <div className="w-3 h-3 mr-1 rounded-sm bg-blue-700 flex-shrink-0"></div>
-          <div className="">Tide Predictions</div>
+          <div
+            className="w-3 h-3 mr-1 rounded-sm bg-blue-700 flex-shrink-0"
+            style={{ opacity: 0.75 }}
+          ></div>
+          <div className="">Tides for {stationName}</div>
         </div>
       </div>
     </div>

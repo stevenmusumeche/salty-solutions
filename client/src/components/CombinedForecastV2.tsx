@@ -9,6 +9,7 @@ import ForecastChart from "./ForecastChart";
 import ForecastTide from "./ForecastTide";
 import ForecastTimeBuckets from "./ForecastTimeBuckets";
 import { ISO_FORMAT } from "./tide/Tides";
+import ForecastSun from "./ForecastSun";
 
 const NUM_DAYS = 9;
 
@@ -48,37 +49,37 @@ const CombinedForecastV2: FC<Props> = ({ locationId }) => {
 
   return (
     <Wrapper>
-      {data.map((data) => {
-        const date = new Date(data.date);
+      {data.map((datum) => {
+        const date = new Date(datum.date);
 
         return (
-          <CardWrapper key={data.name}>
-            <Header>{data.name}</Header>
+          <CardWrapper key={datum.name}>
+            <Header>{datum.name}</Header>
             <div className="p-4">
-              <ForecastChart data={data} date={date} />
-              <ForecastTimeBuckets data={data} date={date} />
+              <ForecastChart data={datum} date={date} />
+              <ForecastTimeBuckets data={datum} date={date} />
               <ForecastTide
                 tideData={tideData}
-                sunData={sunData}
                 stationName={tideStationName}
                 date={date}
               />
+              <ForecastSun sunData={sunData} date={date} />
 
               <div className="mt-4" style={{ gridArea: "text" }}>
-                {data.day.detailed && (
+                {datum.day.detailed && (
                   <div className="mb-4 leading-snug text-gray-700 text-sm">
                     <div className="tracking-wide uppercase text-gray-600 text-sm leading-none uppercase mb-1 font-semibold">
                       Day
                     </div>
-                    {data.day.detailed}
+                    {datum.day.detailed}
                   </div>
                 )}
-                {data.night.detailed && (
+                {datum.night.detailed && (
                   <div className="leading-snug text-gray-700 text-sm">
                     <div className="tracking-wide uppercase text-gray-600 text-sm leading-none uppercase mb-1 font-semibold">
                       Night
                     </div>
-                    {data.night.detailed}
+                    {datum.night.detailed}
                   </div>
                 )}
               </div>
