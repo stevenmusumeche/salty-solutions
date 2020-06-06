@@ -159,7 +159,7 @@ export type MapsRadarArgs = {
 
 export type MarineForecast = {
   __typename?: 'MarineForecast',
-  timePeriod: Scalars['String'],
+  timePeriod: MarineForecastTimePeriod,
   forecast: MarineForecastDetail,
 };
 
@@ -169,6 +169,13 @@ export type MarineForecastDetail = {
   waterCondition?: Maybe<Scalars['String']>,
   windSpeed?: Maybe<ForecastWindSpeedDetail>,
   windDirection?: Maybe<WindDirection>,
+};
+
+export type MarineForecastTimePeriod = {
+  __typename?: 'MarineForecastTimePeriod',
+  text: Scalars['String'],
+  date: Scalars['String'],
+  isDaytime: Scalars['Boolean'],
 };
 
 export type ModisMap = {
@@ -527,6 +534,7 @@ export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Partial<Scalars['Boolean']>>,
   ForecastWindSpeedDetail: ResolverTypeWrapper<Partial<ForecastWindSpeedDetail>>,
   MarineForecast: ResolverTypeWrapper<Partial<MarineForecast>>,
+  MarineForecastTimePeriod: ResolverTypeWrapper<Partial<MarineForecastTimePeriod>>,
   MarineForecastDetail: ResolverTypeWrapper<Partial<MarineForecastDetail>>,
   Wind: ResolverTypeWrapper<Partial<Wind> & {location: LocationEntity}>,
   WindSummary: ResolverTypeWrapper<Partial<WindSummary>>,
@@ -579,6 +587,7 @@ export type ResolversParentTypes = {
   Boolean: Partial<Scalars['Boolean']>,
   ForecastWindSpeedDetail: Partial<ForecastWindSpeedDetail>,
   MarineForecast: Partial<MarineForecast>,
+  MarineForecastTimePeriod: Partial<MarineForecastTimePeriod>,
   MarineForecastDetail: Partial<MarineForecastDetail>,
   Wind: Partial<Wind> & {location: LocationEntity},
   WindSummary: Partial<WindSummary>,
@@ -694,7 +703,7 @@ export type MapsResolvers<ContextType = Context, ParentType = ResolversParentTyp
 };
 
 export type MarineForecastResolvers<ContextType = Context, ParentType = ResolversParentTypes['MarineForecast']> = {
-  timePeriod?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
+  timePeriod?: Resolver<ResolversTypes['MarineForecastTimePeriod'], ParentType, ContextType>,
   forecast?: Resolver<ResolversTypes['MarineForecastDetail'], ParentType, ContextType>,
 };
 
@@ -703,6 +712,12 @@ export type MarineForecastDetailResolvers<ContextType = Context, ParentType = Re
   waterCondition?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   windSpeed?: Resolver<Maybe<ResolversTypes['ForecastWindSpeedDetail']>, ParentType, ContextType>,
   windDirection?: Resolver<Maybe<ResolversTypes['WindDirection']>, ParentType, ContextType>,
+};
+
+export type MarineForecastTimePeriodResolvers<ContextType = Context, ParentType = ResolversParentTypes['MarineForecastTimePeriod']> = {
+  text?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
+  date?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
+  isDaytime?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>,
 };
 
 export type ModisMapResolvers<ContextType = Context, ParentType = ResolversParentTypes['ModisMap']> = {
@@ -887,6 +902,7 @@ export type Resolvers<ContextType = Context> = {
   Maps?: MapsResolvers<ContextType>,
   MarineForecast?: MarineForecastResolvers<ContextType>,
   MarineForecastDetail?: MarineForecastDetailResolvers<ContextType>,
+  MarineForecastTimePeriod?: MarineForecastTimePeriodResolvers<ContextType>,
   ModisMap?: ModisMapResolvers<ContextType>,
   ModisMapEntry?: ModisMapEntryResolvers<ContextType>,
   MoonDetail?: MoonDetailResolvers<ContextType>,

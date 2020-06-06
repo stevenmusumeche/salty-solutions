@@ -3,11 +3,17 @@ import axiosRetry from "axios-retry";
 import { parseWindDirection } from "./utils";
 import cheerio from "cheerio";
 import { LocationEntity, makeCacheKey } from "./location";
+import { parseFromTimeZone, formatToTimeZone } from "date-fns-timezone";
+import { addDays, format, startOfDay } from "date-fns";
 
 axiosRetry(axios, { retries: 3, retryDelay: (retryCount) => retryCount * 500 });
 
 export interface MarineForecast {
-  timePeriod: string;
+  timePeriod: {
+    text: string;
+    date: string;
+    isDaytime: boolean;
+  };
   forecast: {
     text: string;
     waterCondition?: string;
@@ -26,9 +32,11 @@ export const getForecast = async (
     return $(".row-forecast", "#detailed-forecast-body")
       .map((i, el) => {
         return {
-          timePeriod: $(".forecast-label", el)
-            .text()
-            .trim(),
+          timePeriod: parseTimePeriod(
+            $(".forecast-label", el)
+              .text()
+              .trim()
+          ),
           forecast: {
             ...parseForecast(
               $(".forecast-text", el)
@@ -51,7 +59,7 @@ export function parseForecast(
   let retVal: any = { text: forecastText };
   retVal.waterCondition = parseWaterCondition(forecastText);
 
-  const windRegex = /^(?<direction>[\w]+) winds(?<qualifier> around| up to| near| rising to| building to)? ((?<speed>[\d]+)|((?<speedStart>[\d]+) to (?<speedEnd>[\d]+))) knots( becoming)?/im;
+  const windRegex = /(?<direction>[\w]+) winds(?<qualifier> around| up to| near| rising to| building to)? ((?<speed>[\d]+)|((?<speedStart>[\d]+) to (?<speedEnd>[\d]+))) knots( becoming)?/im;
   let matches = forecastText.match(windRegex);
 
   if (matches && matches.groups) {
@@ -107,6 +115,48 @@ function parseWaterCondition(forecastText: string): string | void {
   } else {
     console.error({ message: "Unable to parse water condition", forecastText });
   }
+}
+
+function parseTimePeriod(timePeriod: string) {
+  let today = startOfDay(new Date());
+  today = parseFromTimeZone(today.toISOString(), {
+    timeZone: "US/Central",
+  });
+  if (timePeriod.match(/(rest of )?today/im)) {
+    return {
+      text: timePeriod,
+      date: today.toISOString(),
+      isDaytime: true,
+    };
+  } else if (timePeriod.toLowerCase() === "tonight") {
+    return {
+      text: timePeriod,
+      date: today.toISOString(),
+      isDaytime: false,
+    };
+  } else {
+    const matches = timePeriod.match(
+      /(?<dayName>[a-z]+)(?<isNight> night$)?/im
+    );
+    if (matches) {
+      const dayName = matches.groups!.dayName;
+      const isDaytime = !matches.groups!.isNight;
+      // try to figure out what date this dayName aligns with
+      for (let i = 1; i <= 7; i++) {
+        const attempt = addDays(today, i);
+        if (dayName.toLowerCase() === format(attempt, "eeee").toLowerCase()) {
+          return {
+            text: timePeriod,
+            date: attempt.toISOString(),
+            isDaytime: isDaytime,
+          };
+        }
+      }
+    }
+  }
+
+  // couldn't match it up with a day
+  throw new Error(`Unable to match ${timePeriod} to a date`);
 }
 // calcasieu lake: https://forecast.weather.gov/shmrn.php?mz=gmz432
 // sabine lake: https://forecast.weather.gov/shmrn.php?mz=gmz430

@@ -128,7 +128,7 @@ export const getCombinedForecast = async (
   const result = weather.map((w) => {
     const timePeriod = getNormalizedName(w.name);
     const matchedMarine = marine.find(
-      (x) => getNormalizedName(x.timePeriod) === timePeriod
+      (x) => getNormalizedName(x.timePeriod.text) === timePeriod
     );
 
     const windSpeed =
