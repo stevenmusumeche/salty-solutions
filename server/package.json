@@ -3,7 +3,7 @@
     "@types/graphql": "^14.2.1",
     "@types/suncalc": "^1.8.0",
     "apollo-server-koa": "^2.5.0",
-    "apollo-server-lambda": "^2.8.1",
+    "apollo-server-lambda": "^2.14.2",
     "aws-sdk": "^2.638.0",
     "axios": "^0.19.1",
     "axios-retry": "^3.1.2",
