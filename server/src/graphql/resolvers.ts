@@ -63,9 +63,9 @@ const resolvers: Resolvers & { UsgsParam: Object } = {
         location.coords.lon
       );
     },
-    combinedForecast: async (location, args, { services }) => {
-      return services.combinedForecast.getCombinedForecast(location);
-    },
+    // combinedForecast: async (location, args, { services }) => {
+    //   return services.combinedForecast.getCombinedForecast(location);
+    // },
     combinedForecastV2: async (location, args, { services }) => {
       return services.combinedForecast.getCombinedForecastV2(
         location,

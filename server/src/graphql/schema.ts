@@ -16,7 +16,7 @@ export default gql`
     coords: Coords!
     sun(start: String!, end: String!): [SunDetail!]
     moon(start: String!, end: String!): [MoonDetail!]
-    combinedForecast: [CombinedForecast!]
+    # combinedForecast: [CombinedForecast!]
     combinedForecastV2(start: String!, end: String!): [CombinedForecastV2!]
     weatherForecast: [WeatherForecast!]
     hourlyWeatherForecast: [WeatherForecast!]

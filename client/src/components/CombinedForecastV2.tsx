@@ -66,6 +66,7 @@ const CombinedForecastV2: FC<Props> = ({ locationId }) => {
               />
               <ForecastSun sunData={sunData} date={date} />
               {/* todo: https://github.com/pablosichert/react-truncate */}
+              {/* todo show marine forecast */}
               <div className="mt-4 px-4" style={{ gridArea: "text" }}>
                 {datum.day.detailed && (
                   <div className="mb-4 leading-snug text-gray-700 text-sm">

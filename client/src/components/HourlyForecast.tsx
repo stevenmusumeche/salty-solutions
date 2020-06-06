@@ -4,8 +4,8 @@ import { HourlyForecastSkeleton } from "./ForecastSkeleton";
 import { format } from "date-fns";
 import { WindowSizeContext } from "../providers/WindowSizeProvider";
 import {
-  useCombinedForecastQuery,
   HourlyForecastDetailFragment,
+  useHourlyForecastQuery,
 } from "@stevenmusumeche/salty-solutions-shared/dist/graphql";
 
 interface Props {
@@ -13,7 +13,7 @@ interface Props {
 }
 
 const HourlyForecast: React.FC<Props> = ({ locationId }) => {
-  const [forecast] = useCombinedForecastQuery({ variables: { locationId } });
+  const [forecast] = useHourlyForecastQuery({ variables: { locationId } });
   const { isSmall } = useContext(WindowSizeContext);
 
   const data =
