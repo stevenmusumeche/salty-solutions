@@ -23,7 +23,7 @@ const ForecastSun: FC<Props> = ({ sunData, date }) => {
 
   return (
     <div
-      className="my-8"
+      className="p-4 mt-4 bg-gray-100 border-gray-200 border border-l-0 border-r-0"
       style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr" }}
     >
       <SunDay

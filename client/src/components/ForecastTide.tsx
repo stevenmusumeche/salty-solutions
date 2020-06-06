@@ -1,26 +1,26 @@
-import { TideDetailFieldsFragment } from "@stevenmusumeche/salty-solutions-shared/dist/graphql";
+import {
+  SunDetailFieldsFragment,
+  TideDetailFieldsFragment,
+} from "@stevenmusumeche/salty-solutions-shared/dist/graphql";
 import {
   buildDatasets,
   Y_PADDING,
 } from "@stevenmusumeche/salty-solutions-shared/dist/tide-helpers";
-import { addHours, format, isSameDay } from "date-fns";
+import { addHours, endOfDay, format, isSameDay, startOfDay } from "date-fns";
 import React, { FC, useMemo } from "react";
-import {
-  VictoryArea,
-  VictoryAxis,
-  VictoryChart,
-  VictoryLabel,
-  VictoryScatter,
-} from "victory";
+import { VictoryArea, VictoryAxis, VictoryChart } from "victory";
+import { renderBackgroundColor } from "./tide/tide-helpers";
 
 interface Props {
   stationName: string;
   tideData: TideDetailFieldsFragment[];
+  sunData: SunDetailFieldsFragment[];
   date: Date;
 }
 
 const ForecastTide: FC<Props> = ({
   tideData: rawTideData,
+  sunData,
   date,
   stationName,
 }) => {
@@ -29,17 +29,27 @@ const ForecastTide: FC<Props> = ({
     [rawTideData, date]
   );
 
+  const curDaySunData: SunDetailFieldsFragment = useMemo(
+    () =>
+      sunData.filter(
+        (x) =>
+          startOfDay(new Date(x.sunrise)).toISOString() ===
+          startOfDay(date).toISOString()
+      )[0] || {},
+    [sunData, date]
+  );
+
   const yTickVals = [0, 3, 6, 9, 12, 15, 18, 21].map((h) => addHours(date, h));
 
-  const { tideData, hiLowData, tideBoundaries } = buildDatasets(
-    {} as any,
+  const { tideData, tideBoundaries, daylight } = buildDatasets(
+    curDaySunData,
     curDayTideData,
     []
   );
-  const { min } = tideBoundaries;
+  const { min, max } = tideBoundaries;
 
   return (
-    <>
+    <div className="mx-4 mt-1">
       <VictoryChart
         width={450}
         height={180}
@@ -56,6 +66,28 @@ const ForecastTide: FC<Props> = ({
           right: 25,
         }}
       >
+        {/* background colors for night */}
+        <VictoryArea
+          data={[
+            {
+              x: startOfDay(date),
+              y: max + Y_PADDING,
+            },
+            { x: endOfDay(date), y: max + Y_PADDING },
+          ]}
+          scale={{ x: "time", y: "linear" }}
+          style={{
+            data: {
+              strokeWidth: 0,
+              fill: "#4a5568",
+            },
+          }}
+          y0={() => (min < 0 ? min - Y_PADDING : 0)}
+        />
+
+        {/* background colors for time periods like night, dusk, etc */}
+        {renderBackgroundColor(daylight, "#f7fafc", min)}
+
         {/* time x-axis */}
         <VictoryAxis
           style={{
@@ -91,40 +123,13 @@ const ForecastTide: FC<Props> = ({
             data: {
               stroke: "#2c5282",
               strokeWidth: 1,
-              fill: "#2b6cb0",
-              fillOpacity: 0.75,
+              fill: "#5f8dc1",
             },
           }}
-        />
-
-        {/* hi/low labels */}
-        <VictoryScatter
-          data={hiLowData}
-          size={2.5}
-          labels={(data) => format(new Date(data.x), "h:mma")}
-          style={{
-            data: {
-              fill: "#2a4365",
-            },
-            labels: {
-              fontSize: 12,
-              fill: "#000000",
-              textShadow:
-                "0px 1px 0px #ffffff, 0px -1px 0px #ffffff, 1px 0px 0px #ffffff, -1px 0px 0px #ffffff",
-            },
-          }}
-          labelComponent={
-            <VictoryLabel
-              dy={(datum) => {
-                if (datum.y < 0) return -25;
-                return 5;
-              }}
-            />
-          }
         />
       </VictoryChart>
       <ChartLegend stationName={stationName} />
-    </>
+    </div>
   );
 };
 

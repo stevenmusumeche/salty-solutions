@@ -55,17 +55,18 @@ const CombinedForecastV2: FC<Props> = ({ locationId }) => {
         return (
           <CardWrapper key={datum.name}>
             <Header>{datum.name}</Header>
-            <div className="p-4">
+            <div className="py-4">
               <ForecastChart data={datum} date={date} />
               <ForecastTimeBuckets data={datum} date={date} />
               <ForecastTide
                 tideData={tideData}
                 stationName={tideStationName}
                 date={date}
+                sunData={sunData}
               />
               <ForecastSun sunData={sunData} date={date} />
-
-              <div className="mt-4" style={{ gridArea: "text" }}>
+              {/* todo: https://github.com/pablosichert/react-truncate */}
+              <div className="mt-4 px-4" style={{ gridArea: "text" }}>
                 {datum.day.detailed && (
                   <div className="mb-4 leading-snug text-gray-700 text-sm">
                     <div className="tracking-wide uppercase text-gray-600 text-sm leading-none uppercase mb-1 font-semibold">
