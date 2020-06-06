@@ -58,9 +58,9 @@ const SunDay: FC<{ name: string; value: Date; icon: any }> = ({
   icon,
 }) => (
   <div className="mr-0 last:mr-0 text-center" style={{ fontSize: ".60rem" }}>
-    <div className="">
+    {/* <div className="">
       <img src={icon} alt={name} className="h-12 mx-auto mb-2" />
-    </div>
+    </div> */}
     <div className="text-xl leading-tight">{format(value, "h:mm")}</div>
     <div className="uppercase text-gray-600 tracking-tighter">{name}</div>
   </div>
