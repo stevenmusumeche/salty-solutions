@@ -10,6 +10,7 @@ import ForecastTide from "./ForecastTide";
 import ForecastTimeBuckets from "./ForecastTimeBuckets";
 import { ISO_FORMAT } from "./tide/Tides";
 import ForecastSun from "./ForecastSun";
+import ForecastText from "./ForecastText";
 
 const NUM_DAYS = 9;
 
@@ -67,24 +68,10 @@ const CombinedForecastV2: FC<Props> = ({ locationId }) => {
               <ForecastSun sunData={sunData} date={date} />
               {/* todo: https://github.com/pablosichert/react-truncate */}
               {/* todo show marine forecast */}
-              <div className="mt-4 px-4" style={{ gridArea: "text" }}>
-                {datum.day.detailed && (
-                  <div className="mb-4 leading-snug text-gray-700 text-sm">
-                    <div className="tracking-wide uppercase text-gray-600 text-sm leading-none uppercase mb-1 font-semibold">
-                      Day
-                    </div>
-                    {datum.day.detailed}
-                  </div>
-                )}
-                {datum.night.detailed && (
-                  <div className="leading-snug text-gray-700 text-sm">
-                    <div className="tracking-wide uppercase text-gray-600 text-sm leading-none uppercase mb-1 font-semibold">
-                      Night
-                    </div>
-                    {datum.night.detailed}
-                  </div>
-                )}
-              </div>
+              <ForecastText
+                day={datum.day.detailed}
+                night={datum.night.detailed}
+              />
             </div>
           </CardWrapper>
         );
