@@ -12,6 +12,8 @@ import {
 } from "victory";
 import { noDecimals } from "../hooks/utils";
 
+const WIND_WARNING_MIN = 20;
+
 interface Props {
   data: CombinedForecastV2DetailFragment;
   date: Date;
@@ -27,18 +29,18 @@ const ForecastChart: FC<Props> = ({ data, date }) => {
   }
 
   return (
-    <>
+    <div className="px-4">
       <VictoryChart
-        padding={{ left: 25, top: 35, right: 25, bottom: 25 }}
+        padding={{ left: 28, top: 35, right: 25, bottom: 25 }}
         domainPadding={{ y: 10, x: 7 }}
         style={{ parent: { touchAction: "auto" } }}
-        height={230}
+        height={180}
       >
         <VictoryAxis
           scale={{ x: "time" }}
           dependentAxis
           style={{
-            tickLabels: { fontSize: 16, padding: 5 },
+            tickLabels: { fontSize: 14, padding: 5 },
           }}
           tickFormat={noDecimals}
         />
@@ -54,7 +56,7 @@ const ForecastChart: FC<Props> = ({ data, date }) => {
             return format(d, "haaaaa");
           }}
           style={{
-            tickLabels: { fontSize: 16, padding: 5 },
+            tickLabels: { fontSize: 14, padding: 5 },
           }}
         />
 
@@ -64,7 +66,9 @@ const ForecastChart: FC<Props> = ({ data, date }) => {
               style={{
                 data: {
                   width: 14,
-                  fill: "#2b6cb0",
+                  fill: ({ y }) => {
+                    return y >= WIND_WARNING_MIN ? "#c53030" : "#2b6cb0";
+                  },
                 },
               }}
             />
@@ -79,8 +83,12 @@ const ForecastChart: FC<Props> = ({ data, date }) => {
             style={{
               data: {
                 width: 14,
-                fill: "#2b6cb0",
-                fillOpacity: 0.3,
+                fill: (datum) => {
+                  return datum.y >= WIND_WARNING_MIN ? "#c53030" : "#2b6cb0";
+                },
+                fillOpacity: (datum) => {
+                  return datum.y >= WIND_WARNING_MIN ? 0.2 : 0.3;
+                },
               },
             }}
           />
@@ -92,7 +100,7 @@ const ForecastChart: FC<Props> = ({ data, date }) => {
         />
       </VictoryChart>
       <ChartLegend />
-    </>
+    </div>
   );
 };
 

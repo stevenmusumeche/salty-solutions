@@ -5,13 +5,13 @@ import { addHours, isBefore } from "date-fns";
 const getChunkLabel = (i: number): string => {
   switch (i) {
     case 0:
-      return "mid-6am";
+      return "12-6";
     case 1:
       return "6-noon";
     case 2:
-      return "noon-6pm";
+      return "noon-6";
     case 3:
-      return "6pm-mid";
+      return "6-12";
     default:
       return "";
   }
@@ -121,13 +121,15 @@ function degreeToRadians(degrees: number) {
 }
 
 function averageAngle(degrees: number[]) {
-  return (
+  const base = Math.floor(
     (180 / Math.PI) *
-    Math.atan2(
-      sum(degrees.map(degreeToRadians).map(Math.sin)) / degrees.length,
-      sum(degrees.map(degreeToRadians).map(Math.cos)) / degrees.length
-    )
+      Math.atan2(
+        sum(degrees.map(degreeToRadians).map(Math.sin)) / degrees.length,
+        sum(degrees.map(degreeToRadians).map(Math.cos)) / degrees.length
+      )
   );
+
+  return base < 0 ? base + 360 : base;
 }
 
 export function degreesToCompass(degrees: number): string {

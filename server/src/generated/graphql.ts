@@ -99,7 +99,7 @@ export type Location = {
   coords: Coords,
   sun?: Maybe<Array<SunDetail>>,
   moon?: Maybe<Array<MoonDetail>>,
-  combinedForecast?: Maybe<Array<CombinedForecast>>,
+  /** combinedForecast: [CombinedForecast!] */
   combinedForecastV2?: Maybe<Array<CombinedForecastV2>>,
   weatherForecast?: Maybe<Array<WeatherForecast>>,
   hourlyWeatherForecast?: Maybe<Array<WeatherForecast>>,
@@ -110,6 +110,11 @@ export type Location = {
   dataSources?: Maybe<DataSources>,
   modisMaps: Array<ModisMap>,
   salinityMap: Scalars['String'],
+};
+
+
+export type LocationTidePreditionStationsArgs = {
+  limit?: Maybe<Scalars['Int']>
 };
 
 
@@ -495,6 +500,7 @@ export type ResolversTypes = {
   Location: ResolverTypeWrapper<LocationEntity>,
   ID: ResolverTypeWrapper<Partial<Scalars['ID']>>,
   String: ResolverTypeWrapper<Partial<Scalars['String']>>,
+  Int: ResolverTypeWrapper<Partial<Scalars['Int']>>,
   TidePreditionStation: ResolverTypeWrapper<TideStationEntity>,
   Float: ResolverTypeWrapper<Partial<Scalars['Float']>>,
   TideDetail: ResolverTypeWrapper<Partial<TideDetail>>,
@@ -511,19 +517,15 @@ export type ResolversTypes = {
   UsgsParam: ResolverTypeWrapper<Partial<UsgsParam>>,
   SunDetail: ResolverTypeWrapper<Partial<SunDetail>>,
   MoonDetail: ResolverTypeWrapper<Partial<MoonDetail>>,
-  Int: ResolverTypeWrapper<Partial<Scalars['Int']>>,
-  CombinedForecast: ResolverTypeWrapper<Partial<CombinedForecast>>,
-  WindForecast: ResolverTypeWrapper<Partial<WindForecast>>,
-  ForecastWindSpeedDetail: ResolverTypeWrapper<Partial<ForecastWindSpeedDetail>>,
-  WindDirection: ResolverTypeWrapper<Partial<WindDirection>>,
-  WaterCondition: ResolverTypeWrapper<Partial<WaterCondition>>,
   CombinedForecastV2: ResolverTypeWrapper<Partial<CombinedForecastV2>>,
   ForecastWindDetailV2: ResolverTypeWrapper<Partial<ForecastWindDetailV2>>,
+  WindDirection: ResolverTypeWrapper<Partial<WindDirection>>,
   ForecastWaveDetail: ResolverTypeWrapper<Partial<ForecastWaveDetail>>,
   ForecastDescription: ResolverTypeWrapper<Partial<ForecastDescription>>,
   RainDetail: ResolverTypeWrapper<Partial<RainDetail>>,
   WeatherForecast: ResolverTypeWrapper<Partial<WeatherForecast>>,
   Boolean: ResolverTypeWrapper<Partial<Scalars['Boolean']>>,
+  ForecastWindSpeedDetail: ResolverTypeWrapper<Partial<ForecastWindSpeedDetail>>,
   MarineForecast: ResolverTypeWrapper<Partial<MarineForecast>>,
   MarineForecastDetail: ResolverTypeWrapper<Partial<MarineForecastDetail>>,
   Wind: ResolverTypeWrapper<Partial<Wind> & {location: LocationEntity}>,
@@ -538,6 +540,9 @@ export type ResolversTypes = {
   ModisMap: ResolverTypeWrapper<Partial<ModisMap>>,
   ModisSatellite: ResolverTypeWrapper<Partial<ModisSatellite>>,
   ModisMapEntry: ResolverTypeWrapper<Partial<ModisMapEntry>>,
+  CombinedForecast: ResolverTypeWrapper<Partial<CombinedForecast>>,
+  WindForecast: ResolverTypeWrapper<Partial<WindForecast>>,
+  WaterCondition: ResolverTypeWrapper<Partial<WaterCondition>>,
   CurrentWind: ResolverTypeWrapper<Partial<CurrentWind>>,
 };
 
@@ -547,6 +552,7 @@ export type ResolversParentTypes = {
   Location: LocationEntity,
   ID: Partial<Scalars['ID']>,
   String: Partial<Scalars['String']>,
+  Int: Partial<Scalars['Int']>,
   TidePreditionStation: TideStationEntity,
   Float: Partial<Scalars['Float']>,
   TideDetail: Partial<TideDetail>,
@@ -563,19 +569,15 @@ export type ResolversParentTypes = {
   UsgsParam: Partial<UsgsParam>,
   SunDetail: Partial<SunDetail>,
   MoonDetail: Partial<MoonDetail>,
-  Int: Partial<Scalars['Int']>,
-  CombinedForecast: Partial<CombinedForecast>,
-  WindForecast: Partial<WindForecast>,
-  ForecastWindSpeedDetail: Partial<ForecastWindSpeedDetail>,
-  WindDirection: Partial<WindDirection>,
-  WaterCondition: Partial<WaterCondition>,
   CombinedForecastV2: Partial<CombinedForecastV2>,
   ForecastWindDetailV2: Partial<ForecastWindDetailV2>,
+  WindDirection: Partial<WindDirection>,
   ForecastWaveDetail: Partial<ForecastWaveDetail>,
   ForecastDescription: Partial<ForecastDescription>,
   RainDetail: Partial<RainDetail>,
   WeatherForecast: Partial<WeatherForecast>,
   Boolean: Partial<Scalars['Boolean']>,
+  ForecastWindSpeedDetail: Partial<ForecastWindSpeedDetail>,
   MarineForecast: Partial<MarineForecast>,
   MarineForecastDetail: Partial<MarineForecastDetail>,
   Wind: Partial<Wind> & {location: LocationEntity},
@@ -590,6 +592,9 @@ export type ResolversParentTypes = {
   ModisMap: Partial<ModisMap>,
   ModisSatellite: Partial<ModisSatellite>,
   ModisMapEntry: Partial<ModisMapEntry>,
+  CombinedForecast: Partial<CombinedForecast>,
+  WindForecast: Partial<WindForecast>,
+  WaterCondition: Partial<WaterCondition>,
   CurrentWind: Partial<CurrentWind>,
 };
 
@@ -661,12 +666,11 @@ export type ForecastWindSpeedDetailResolvers<ContextType = Context, ParentType =
 export type LocationResolvers<ContextType = Context, ParentType = ResolversParentTypes['Location']> = {
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
-  tidePreditionStations?: Resolver<Array<ResolversTypes['TidePreditionStation']>, ParentType, ContextType>,
+  tidePreditionStations?: Resolver<Array<ResolversTypes['TidePreditionStation']>, ParentType, ContextType, LocationTidePreditionStationsArgs>,
   usgsSites?: Resolver<Array<ResolversTypes['UsgsSite']>, ParentType, ContextType>,
   coords?: Resolver<ResolversTypes['Coords'], ParentType, ContextType>,
   sun?: Resolver<Maybe<Array<ResolversTypes['SunDetail']>>, ParentType, ContextType, LocationSunArgs>,
   moon?: Resolver<Maybe<Array<ResolversTypes['MoonDetail']>>, ParentType, ContextType, LocationMoonArgs>,
-  combinedForecast?: Resolver<Maybe<Array<ResolversTypes['CombinedForecast']>>, ParentType, ContextType>,
   combinedForecastV2?: Resolver<Maybe<Array<ResolversTypes['CombinedForecastV2']>>, ParentType, ContextType, LocationCombinedForecastV2Args>,
   weatherForecast?: Resolver<Maybe<Array<ResolversTypes['WeatherForecast']>>, ParentType, ContextType>,
   hourlyWeatherForecast?: Resolver<Maybe<Array<ResolversTypes['WeatherForecast']>>, ParentType, ContextType>,

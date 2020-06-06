@@ -1,13 +1,16 @@
 import { useCombinedForecastV2Query } from "@stevenmusumeche/salty-solutions-shared/dist/graphql";
-import React, { FC, ReactNode } from "react";
-import useBreakpoints from "../hooks/useBreakpoints";
-import ForecastChart from "./ForecastChart";
-import ForecastTimeBuckets from "./ForecastTimeBuckets";
-import EmptyBox from "./EmptyBox";
-import ErrorIcon from "../assets/error.svg";
-import { format, startOfDay, addDays } from "date-fns";
-import { ISO_FORMAT } from "./tide/Tides";
+import { addDays, format, startOfDay } from "date-fns";
 import { endOfDay } from "date-fns/esm";
+import React, { FC, ReactNode } from "react";
+import ErrorIcon from "../assets/error.svg";
+import useBreakpoints from "../hooks/useBreakpoints";
+import EmptyBox from "./EmptyBox";
+import ForecastChart from "./ForecastChart";
+import ForecastTide from "./ForecastTide";
+import ForecastTimeBuckets from "./ForecastTimeBuckets";
+import { ISO_FORMAT } from "./tide/Tides";
+import ForecastSun from "./ForecastSun";
+import ForecastText from "./ForecastText";
 
 const NUM_DAYS = 9;
 
@@ -20,11 +23,16 @@ const CombinedForecastV2: FC<Props> = ({ locationId }) => {
     variables: {
       locationId,
       startDate: format(startOfDay(new Date()), ISO_FORMAT),
-      endDate: format(addDays(endOfDay(new Date()), 10), ISO_FORMAT),
+      endDate: format(addDays(endOfDay(new Date()), NUM_DAYS), ISO_FORMAT),
     },
   });
   let data =
     forecast.data?.location?.combinedForecastV2?.slice(0, NUM_DAYS) || [];
+
+  let sunData = forecast.data?.location?.sun || [];
+  let tideData = forecast.data?.location?.tidePreditionStations[0]?.tides || [];
+  let tideStationName =
+    forecast.data?.location?.tidePreditionStations[0].name || "";
 
   if (forecast.fetching) {
     return (
@@ -42,32 +50,28 @@ const CombinedForecastV2: FC<Props> = ({ locationId }) => {
 
   return (
     <Wrapper>
-      {data.map((data) => {
-        return (
-          <CardWrapper key={data.name}>
-            <Header>{data.name}</Header>
-            <div className="p-4">
-              <ForecastChart data={data} date={new Date(data.date)} />
-              <ForecastTimeBuckets data={data} date={new Date(data.date)} />
+      {data.map((datum) => {
+        const date = new Date(datum.date);
 
-              <div className="" style={{ gridArea: "text" }}>
-                {data.day.detailed && (
-                  <div className="mb-4 leading-snug text-gray-700 text-sm">
-                    <div className="tracking-wide uppercase text-gray-600 text-sm leading-none uppercase mb-1 font-semibold">
-                      Day
-                    </div>
-                    {data.day.detailed}
-                  </div>
-                )}
-                {data.night.detailed && (
-                  <div className="leading-snug text-gray-700 text-sm">
-                    <div className="tracking-wide uppercase text-gray-600 text-sm leading-none uppercase mb-1 font-semibold">
-                      Night
-                    </div>
-                    {data.night.detailed}
-                  </div>
-                )}
-              </div>
+        return (
+          <CardWrapper key={datum.name}>
+            <Header>{datum.name}</Header>
+            <div className="py-4">
+              <ForecastChart data={datum} date={date} />
+              <ForecastTimeBuckets data={datum} date={date} />
+              <ForecastTide
+                tideData={tideData}
+                stationName={tideStationName}
+                date={date}
+                sunData={sunData}
+              />
+              <ForecastSun sunData={sunData} date={date} />
+              {/* todo: https://github.com/pablosichert/react-truncate */}
+              {/* todo show marine forecast */}
+              <ForecastText
+                day={datum.day.detailed}
+                night={datum.night.detailed}
+              />
             </div>
           </CardWrapper>
         );

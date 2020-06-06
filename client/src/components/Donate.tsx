@@ -28,14 +28,15 @@ const Donate = () => (
               name="hosted_button_id"
               value="CPQ8TNMTP42NY"
             />
-            I developed this site as a free service, but it takes time and money
-            to run it. If you enjoy it, please consider{" "}
+            I developed this site as a free service because I fish the Dularge
+            area, but it takes time and money to run it. If you enjoy it, please
+            consider{" "}
             <button className="underline" type="submit">
               buying me a beer
             </button>{" "}
             or sending me{" "}
             <a
-              href="https://www.facebook.com/musumeche"
+              href="mailto:steven@musumeche.com"
               className="underline"
               target="_blank"
               rel="noopener noreferrer"

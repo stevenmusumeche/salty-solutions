@@ -54,6 +54,8 @@ functions:
           cors: true
           method: any
           path: api
+
+  # todo change this to v2?
   preload-forecast-producer:
     handler: src/preloaders/producers.forecast
     events:

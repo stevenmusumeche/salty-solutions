@@ -10,6 +10,16 @@ export const COMBINED_FORECAST_V2_QUERY = gql`
       combinedForecastV2(start: $startDate, end: $endDate) {
         ...CombinedForecastV2Detail
       }
+      tidePreditionStations(limit: 1) {
+        id
+        name
+        tides(start: $startDate, end: $endDate) {
+          ...TideDetailFields
+        }
+      }
+      sun(start: $startDate, end: $endDate) {
+        ...SunDetailFields
+      }
     }
   }
 
