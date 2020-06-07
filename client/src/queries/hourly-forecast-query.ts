@@ -3,6 +3,7 @@ import gql from "graphql-tag";
 export const HOURLY_FORECAST_QUERY = gql`
   query HourlyForecast($locationId: ID!) {
     location(id: $locationId) {
+      id
       hourlyWeatherForecast {
         ...HourlyForecastDetail
       }

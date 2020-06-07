@@ -8,6 +8,7 @@ const CURRENT_CONDITIONS_QUERY = gql`
     $endDate: String!
   ) {
     location(id: $locationId) {
+      id
       wind {
         summary {
           mostRecent {

@@ -9,6 +9,7 @@ const TIDE_QUERY = gql`
     $endDate: String!
   ) {
     tidePreditionStation(stationId: $tideStationId) {
+      id
       tides(start: $startDate, end: $endDate) {
         ...TideDetailFields
       }
@@ -17,6 +18,7 @@ const TIDE_QUERY = gql`
       ...UsgsSiteFields
     }
     location(id: $locationId) {
+      id
       sun(start: $startDate, end: $endDate) {
         ...SunDetailFields
       }
