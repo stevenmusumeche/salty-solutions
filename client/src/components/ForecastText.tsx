@@ -1,18 +1,23 @@
 import React, { FC } from "react";
-import { Maybe } from "@stevenmusumeche/salty-solutions-shared/dist/graphql";
+import {
+  Maybe,
+  ForecastDescription,
+} from "@stevenmusumeche/salty-solutions-shared/dist/graphql";
 import { useState } from "react";
 
 interface Props {
-  day?: Maybe<string>;
-  night?: Maybe<string>;
+  day?: Maybe<ForecastDescription>;
+  night?: Maybe<ForecastDescription>;
 }
 
 const ForecastText: FC<Props> = ({ day, night }) => {
   const [collapsed, setCollapsed] = useState(true);
-  const hasAny = !!day || !!night;
-  const previewText = day || night;
+  const hasAny =
+    !!day?.marine || !!night?.marine || !!day?.detailed || !!night?.detailed;
+  const previewText =
+    day?.marine || night?.marine || day?.detailed || night?.detailed;
   const truncatedPreviewText =
-    previewText?.replace(/^(.{140}[^\s]*).*/, "$1") || "";
+    previewText?.replace(/^(.{130}[^\s]*).*/, "$1") || "";
   const ellipsis =
     truncatedPreviewText[truncatedPreviewText.length - 1] === "."
       ? ".."
@@ -40,20 +45,28 @@ const ForecastText: FC<Props> = ({ day, night }) => {
   }
   return (
     <div className="mt-4 px-4 text-sm" style={{ gridArea: "text" }}>
-      {day && (
+      {(day?.marine || night?.marine) && (
         <div className="mb-4 leading-snug text-gray-700">
           <div className="tracking-wide uppercase text-gray-600  leading-none uppercase mb-1 font-semibold">
-            Day
+            Marine Forecast
           </div>
-          {day}
+          {day?.marine || night?.marine}
         </div>
       )}
-      {night && (
+      {day?.detailed && (
+        <div className="mb-4 leading-snug text-gray-700">
+          <div className="tracking-wide uppercase text-gray-600  leading-none uppercase mb-1 font-semibold">
+            Daytime Forecast
+          </div>
+          {day.detailed}
+        </div>
+      )}
+      {night?.detailed && (
         <div className="leading-snug text-gray-700">
           <div className="tracking-wide uppercase text-gray-600  leading-none uppercase mb-1 font-semibold">
-            Night
+            Nighttime Forecast
           </div>
-          {night}
+          {night.detailed}
         </div>
       )}
       <div className="mt-4">

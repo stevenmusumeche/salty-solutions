@@ -26,9 +26,10 @@ export const getCombinedForecastV2 = async (
 ): Promise<CombinedForecastV2[]> => {
   // todo add caching
 
-  const [windFinderData, weather] = await Promise.all([
+  const [windFinderData, weather, marine] = await Promise.all([
     getData(location, start, end),
     getWeatherForecast(location),
+    getMarineForecast(location),
   ]);
 
   const dayDiffs = [...Array(differenceInDays(end, start)).keys()];
@@ -56,8 +57,18 @@ export const getCombinedForecastV2 = async (
           isAfter(new Date(data.startTime), startDate)) &&
         isBefore(new Date(data.startTime), endDate)
     );
+
+    const matchedMarineData = marine.filter(
+      (data) =>
+        (isEqual(new Date(data.timePeriod.date), startDate) ||
+          isAfter(new Date(data.timePeriod.date), startDate)) &&
+        isBefore(new Date(data.timePeriod.date), endDate)
+    );
+
     const weatherDay = matchedWeatherData.find((x) => x.isDaytime);
     const weatherNight = matchedWeatherData.find((x) => !x.isDaytime);
+    const marineDay = matchedMarineData.find((x) => x.timePeriod.isDaytime);
+    const marineNight = matchedMarineData.find((x) => !x.timePeriod.isDaytime);
 
     return {
       date: startDate.toISOString(),
@@ -65,10 +76,12 @@ export const getCombinedForecastV2 = async (
       day: {
         short: weatherDay && weatherDay.shortForecast,
         detailed: weatherDay && weatherDay.detailedForecast,
+        marine: marineDay && marineDay.forecast.text,
       },
       night: {
         short: weatherNight && weatherNight.shortForecast,
         detailed: weatherNight && weatherNight.detailedForecast,
+        marine: marineNight && marineNight.forecast.text,
       },
       rain: matchedWindFinderData.map((x) => ({
         timestamp: new Date(x.timestamp).toISOString(),
@@ -128,7 +141,7 @@ export const getCombinedForecast = async (
   const result = weather.map((w) => {
     const timePeriod = getNormalizedName(w.name);
     const matchedMarine = marine.find(
-      (x) => getNormalizedName(x.timePeriod) === timePeriod
+      (x) => getNormalizedName(x.timePeriod.text) === timePeriod
     );
 
     const windSpeed =

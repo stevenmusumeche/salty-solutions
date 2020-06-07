@@ -66,12 +66,7 @@ const CombinedForecastV2: FC<Props> = ({ locationId }) => {
                 sunData={sunData}
               />
               <ForecastSun sunData={sunData} date={date} />
-              {/* todo: https://github.com/pablosichert/react-truncate */}
-              {/* todo show marine forecast */}
-              <ForecastText
-                day={datum.day.detailed}
-                night={datum.night.detailed}
-              />
+              <ForecastText day={datum.day} night={datum.night} />
             </div>
           </CardWrapper>
         );

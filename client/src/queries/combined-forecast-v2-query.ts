@@ -38,10 +38,12 @@ export const COMBINED_FORECAST_V2_QUERY = gql`
     day {
       short
       detailed
+      marine
     }
     night {
       short
       detailed
+      marine
     }
     temperature {
       timestamp

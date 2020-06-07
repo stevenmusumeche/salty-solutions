@@ -92,6 +92,7 @@ export default gql`
   type ForecastDescription {
     short: String
     detailed: String
+    marine: String
   }
 
   type WaterCondition {
@@ -188,8 +189,14 @@ export default gql`
   }
 
   type MarineForecast {
-    timePeriod: String!
+    timePeriod: MarineForecastTimePeriod!
     forecast: MarineForecastDetail!
+  }
+
+  type MarineForecastTimePeriod {
+    text: String!
+    date: String!
+    isDaytime: Boolean!
   }
 
   type MarineForecastDetail {
