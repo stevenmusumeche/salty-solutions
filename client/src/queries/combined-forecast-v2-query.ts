@@ -7,6 +7,7 @@ export const COMBINED_FORECAST_V2_QUERY = gql`
     $endDate: String!
   ) {
     location(id: $locationId) {
+      id
       combinedForecastV2(start: $startDate, end: $endDate) {
         ...CombinedForecastV2Detail
       }

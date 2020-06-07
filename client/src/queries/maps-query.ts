@@ -3,6 +3,7 @@ import gql from "graphql-tag";
 const MAP_QUERY = gql`
   query Maps($locationId: ID!) {
     location(id: $locationId) {
+      id
       maps {
         radar(numImages: 8) {
           timestamp
