@@ -19,7 +19,6 @@ import resolvers from "./graphql/resolvers";
 import Rollbar from "rollbar";
 // @ts-ignore
 import { FormatErrorWithContextExtension } from "graphql-format-error-context-extension";
-import { APIGatewayProxyHandler } from "aws-lambda";
 
 var rollbar = new Rollbar({
   accessToken: process.env.ROLLBAR_KEY,
