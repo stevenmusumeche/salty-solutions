@@ -92,6 +92,7 @@ export default gql`
   type ForecastDescription {
     short: String
     detailed: String
+    marine: String
   }
 
   type WaterCondition {

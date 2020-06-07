@@ -62,6 +62,7 @@ export type ForecastDescription = {
   __typename?: 'ForecastDescription',
   short?: Maybe<Scalars['String']>,
   detailed?: Maybe<Scalars['String']>,
+  marine?: Maybe<Scalars['String']>,
 };
 
 export type ForecastWaveDetail = {
@@ -448,7 +449,7 @@ export type CombinedForecastV2QueryVariables = {
 
 export type CombinedForecastV2Query = ({ __typename?: 'Query' } & { location: Maybe<({ __typename?: 'Location' } & { combinedForecastV2: Maybe<Array<({ __typename?: 'CombinedForecastV2' } & CombinedForecastV2DetailFragment)>>, tidePreditionStations: Array<({ __typename?: 'TidePreditionStation' } & Pick<TidePreditionStation, 'id' | 'name'> & { tides: Maybe<Array<({ __typename?: 'TideDetail' } & TideDetailFieldsFragment)>> })>, sun: Maybe<Array<({ __typename?: 'SunDetail' } & SunDetailFieldsFragment)>> })> });
 
-export type CombinedForecastV2DetailFragment = ({ __typename?: 'CombinedForecastV2' } & Pick<CombinedForecastV2, 'name' | 'date'> & { wind: Array<({ __typename?: 'ForecastWindDetailV2' } & Pick<ForecastWindDetailV2, 'timestamp' | 'base' | 'gusts'> & { direction: ({ __typename?: 'WindDirection' } & Pick<WindDirection, 'text' | 'degrees'>) })>, day: ({ __typename?: 'ForecastDescription' } & Pick<ForecastDescription, 'short' | 'detailed'>), night: ({ __typename?: 'ForecastDescription' } & Pick<ForecastDescription, 'short' | 'detailed'>), temperature: Array<({ __typename?: 'TemperatureDetail' } & Pick<TemperatureDetail, 'timestamp'> & { temperature: ({ __typename?: 'Temperature' } & Pick<Temperature, 'degrees'>) })>, rain: Array<({ __typename?: 'RainDetail' } & Pick<RainDetail, 'timestamp' | 'mmPerHour'>)> });
+export type CombinedForecastV2DetailFragment = ({ __typename?: 'CombinedForecastV2' } & Pick<CombinedForecastV2, 'name' | 'date'> & { wind: Array<({ __typename?: 'ForecastWindDetailV2' } & Pick<ForecastWindDetailV2, 'timestamp' | 'base' | 'gusts'> & { direction: ({ __typename?: 'WindDirection' } & Pick<WindDirection, 'text' | 'degrees'>) })>, day: ({ __typename?: 'ForecastDescription' } & Pick<ForecastDescription, 'short' | 'detailed' | 'marine'>), night: ({ __typename?: 'ForecastDescription' } & Pick<ForecastDescription, 'short' | 'detailed' | 'marine'>), temperature: Array<({ __typename?: 'TemperatureDetail' } & Pick<TemperatureDetail, 'timestamp'> & { temperature: ({ __typename?: 'Temperature' } & Pick<Temperature, 'degrees'>) })>, rain: Array<({ __typename?: 'RainDetail' } & Pick<RainDetail, 'timestamp' | 'mmPerHour'>)> });
 
 export type CurrentConditionsDataQueryVariables = {
   locationId: Scalars['ID'],
@@ -544,10 +545,12 @@ export const CombinedForecastV2DetailFragmentDoc = gql`
   day {
     short
     detailed
+    marine
   }
   night {
     short
     detailed
+    marine
   }
   temperature {
     timestamp

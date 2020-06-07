@@ -64,6 +64,7 @@ export type ForecastDescription = {
   __typename?: 'ForecastDescription',
   short?: Maybe<Scalars['String']>,
   detailed?: Maybe<Scalars['String']>,
+  marine?: Maybe<Scalars['String']>,
 };
 
 export type ForecastWaveDetail = {
@@ -652,6 +653,7 @@ export type DataSourcesResolvers<ContextType = Context, ParentType = ResolversPa
 export type ForecastDescriptionResolvers<ContextType = Context, ParentType = ResolversParentTypes['ForecastDescription']> = {
   short?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   detailed?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+  marine?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
 };
 
 export type ForecastWaveDetailResolvers<ContextType = Context, ParentType = ResolversParentTypes['ForecastWaveDetail']> = {
