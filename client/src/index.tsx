@@ -15,6 +15,7 @@ import { Router, Redirect, RouteComponentProps } from "@reach/router";
 import About from "./components/About";
 import MediaQueryProvider from "./providers/WindowSizeProvider";
 import { useState } from "react";
+import "intersection-observer";
 
 export const INITIAL_LOCATION = "calcasieu-lake";
 
