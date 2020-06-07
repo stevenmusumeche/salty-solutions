@@ -110,7 +110,7 @@ export const ForecastLoading: React.FC = () => {
           <Header>
             <EmptyBox w={"55%"} h={24} className="bg-gray-400 mx-auto my-1" />
           </Header>
-          <div className="m-4">
+          <div className="p-4">
             <EmptyBox w="100%" h={600} className="" />
           </div>
         </CardWrapper>

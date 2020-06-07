@@ -163,14 +163,14 @@ const MainTideChart: React.FC<Props> = ({
             labels: {
               fontSize: 8,
               padding: 2,
-              fill: (datum) => {
+              fill: ({ datum }) => {
                 const isNight =
                   isAfter(datum.x, new Date(sunData.nauticalDusk)) ||
                   isBefore(datum.x, new Date(sunData.nauticalDawn));
 
                 return isNight ? "#a0aec0" : "#000000";
               },
-              textShadow: (datum) => {
+              textShadow: ({ datum }) => {
                 const isNight =
                   isAfter(datum.x, new Date(sunData.nauticalDusk)) ||
                   isBefore(datum.x, new Date(sunData.nauticalDawn));

@@ -39,12 +39,14 @@ const ForecastTide: FC<Props> = ({
     [sunData, date]
   );
 
-  const yTickVals = [0, 3, 6, 9, 12, 15, 18, 21].map((h) => addHours(date, h));
+  const yTickVals = useMemo(
+    () => [0, 3, 6, 9, 12, 15, 18, 21].map((h) => addHours(date, h)),
+    [date]
+  );
 
-  const { tideData, tideBoundaries, daylight } = buildDatasets(
-    curDaySunData,
-    curDayTideData,
-    []
+  const { tideData, tideBoundaries, daylight } = useMemo(
+    () => buildDatasets(curDaySunData, curDayTideData, []),
+    [curDaySunData, curDayTideData]
   );
   const { min, max } = tideBoundaries;
 

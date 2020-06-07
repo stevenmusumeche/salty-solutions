@@ -1,7 +1,7 @@
 import { prepareForecastData } from "@stevenmusumeche/salty-solutions-shared/dist/forecast-helpers";
 import { CombinedForecastV2DetailFragment } from "@stevenmusumeche/salty-solutions-shared/dist/graphql";
 import { addHours, format } from "date-fns";
-import React, { FC } from "react";
+import React, { FC, useMemo } from "react";
 import {
   VictoryAxis,
   VictoryBar,
@@ -20,9 +20,18 @@ interface Props {
 }
 
 const ForecastChart: FC<Props> = ({ data, date }) => {
-  const { chartData } = prepareForecastData(data, date);
-  const hasAnyData = !(chartData.find((x) => x.y !== undefined) === undefined);
-  const yTickVals = [0, 3, 6, 9, 12, 15, 18, 21].map((h) => addHours(date, h));
+  const { chartData } = useMemo(() => prepareForecastData(data, date), [
+    data,
+    date,
+  ]);
+  const hasAnyData = useMemo(
+    () => !(chartData.find((x) => x.y !== undefined) === undefined),
+    [chartData]
+  );
+  const yTickVals = useMemo(
+    () => [0, 3, 6, 9, 12, 15, 18, 21].map((h) => addHours(date, h)),
+    [date]
+  );
 
   if (!hasAnyData) {
     return <EmptyChart yTickVals={yTickVals} />;
@@ -66,8 +75,8 @@ const ForecastChart: FC<Props> = ({ data, date }) => {
               style={{
                 data: {
                   width: 14,
-                  fill: ({ y }) => {
-                    return y >= WIND_WARNING_MIN ? "#c53030" : "#2b6cb0";
+                  fill: ({ datum }) => {
+                    return datum.y >= WIND_WARNING_MIN ? "#c53030" : "#2b6cb0";
                   },
                 },
               }}
@@ -83,10 +92,10 @@ const ForecastChart: FC<Props> = ({ data, date }) => {
             style={{
               data: {
                 width: 14,
-                fill: (datum) => {
+                fill: ({ datum }) => {
                   return datum.y >= WIND_WARNING_MIN ? "#c53030" : "#2b6cb0";
                 },
-                fillOpacity: (datum) => {
+                fillOpacity: ({ datum }) => {
                   return datum.y >= WIND_WARNING_MIN ? 0.2 : 0.3;
                 },
               },

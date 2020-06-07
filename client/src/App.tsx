@@ -23,6 +23,7 @@ import {
   useLocationsQuery,
   UsgsParam,
 } from "@stevenmusumeche/salty-solutions-shared/dist/graphql";
+import { useInView } from "react-intersection-observer";
 
 export interface Action {
   type: string;
@@ -69,6 +70,10 @@ const sectionReducer = (state: State, action: Action) => {
 const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
   locationSlug,
 }) => {
+  const [forecastRef, forecastInView] = useInView({
+    triggerOnce: true,
+    rootMargin: "200px",
+  });
   const [sections, dispatch] = useReducer(sectionReducer, initialState);
   const [locations] = useLocationsQuery();
   const [locationId, setLocationId] = useState(locationSlug!);
@@ -153,8 +158,8 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
 
         <Donate />
 
-        <span id="forecast"></span>
-        <CombinedForecastV2 locationId={locationId} />
+        <span id="forecast" ref={forecastRef}></span>
+        {forecastInView && <CombinedForecastV2 locationId={locationId} />}
 
         <span id="radar"></span>
         <CollapsibleSection
