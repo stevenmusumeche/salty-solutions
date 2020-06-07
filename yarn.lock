@@ -2998,25 +2998,13 @@
   dependencies:
     "@types/koa" "*"
 
-"@types/koa@*":
+"@types/koa@*", "@types/koa@^2.0.46", "@types/koa@^2.0.48":
   version "2.11.3"
   resolved "https://registry.yarnpkg.com/@types/koa/-/koa-2.11.3.tgz#540ece376581b12beadf9a417dd1731bc31c16ce"
   integrity sha512-ABxVkrNWa4O/Jp24EYI/hRNqEVRlhB9g09p48neQp4m3xL1TJtdWk2NyNQSMCU45ejeELMQZBYyfstyVvO2H3Q==
   dependencies:
     "@types/accepts" "*"
     "@types/content-disposition" "*"
-    "@types/cookies" "*"
-    "@types/http-assert" "*"
-    "@types/keygrip" "*"
-    "@types/koa-compose" "*"
-    "@types/node" "*"
-
-"@types/koa@^2.0.46", "@types/koa@^2.0.48":
-  version "2.11.0"
-  resolved "https://registry.yarnpkg.com/@types/koa/-/koa-2.11.0.tgz#394a3e9ec94f796003a6c8374b4dbc2778746f20"
-  integrity sha512-Hgx/1/rVlJvqYBrdeCsS7PDiR2qbxlMt1RnmNWD4Uxi5FF9nwkYqIldo7urjc+dfNpk+2NRGcnAYd4L5xEhCcQ==
-  dependencies:
-    "@types/accepts" "*"
     "@types/cookies" "*"
     "@types/http-assert" "*"
     "@types/keygrip" "*"
@@ -3890,7 +3878,7 @@ apollo-server-caching@^0.5.1:
   dependencies:
     lru-cache "^5.0.0"
 
-apollo-server-core@^2.9.16:
+apollo-server-core@^2.14.2, apollo-server-core@^2.9.16:
   version "2.14.2"
   resolved "https://registry.yarnpkg.com/apollo-server-core/-/apollo-server-core-2.14.2.tgz#4ab055b96b8be7821a726c81e8aa412deb7f3644"
   integrity sha512-8G6Aoz+k+ecuQco1KNLFbMrxhe/8uR4AOaOYEvT/N5m/6lrkPYzvBAxbpRIub5AxEwpBPcIrI452rR3PD9DItA==
@@ -3931,10 +3919,10 @@ apollo-server-errors@^2.0.2, apollo-server-errors@^2.4.1:
   resolved "https://registry.yarnpkg.com/apollo-server-errors/-/apollo-server-errors-2.4.1.tgz#16ad49de6c9134bfb2b7dede9842e73bb239dbe2"
   integrity sha512-7oEd6pUxqyWYUbQ9TA8tM0NU/3aGtXSEibo6+txUkuHe7QaxfZ2wHRp+pfT1LC1K3RXYjKj61/C2xEO19s3Kdg==
 
-apollo-server-koa@^2.5.0:
-  version "2.9.16"
-  resolved "https://registry.yarnpkg.com/apollo-server-koa/-/apollo-server-koa-2.9.16.tgz#ca822db84cceb187d9560116b2d6af325d32d576"
-  integrity sha512-lh9T1VxOhV/JqjATdNRaD1A2kuUnGEzX3/88c4geSvL3PF0fJg5BI3x2r//UChsG1HAQCytSQ7PBeWH+KY7j3g==
+apollo-server-koa@^2.14.2:
+  version "2.14.2"
+  resolved "https://registry.yarnpkg.com/apollo-server-koa/-/apollo-server-koa-2.14.2.tgz#95d098dd6cf831e2e466908956c2dee8b8b6d59b"
+  integrity sha512-pQuQPQeIkUdsjn3anRN5y1nZSM+tu/H2rCLae3l2gBZknj8ABJ20EeBKFjnB2/6OuHo3FQJSZVt9zeRbMfWKSw==
   dependencies:
     "@apollographql/graphql-playground-html" "1.6.24"
     "@koa/cors" "^2.2.1"
@@ -3945,11 +3933,11 @@ apollo-server-koa@^2.5.0:
     "@types/koa-compose" "^3.2.2"
     "@types/koa__cors" "^2.2.1"
     accepts "^1.3.5"
-    apollo-server-core "^2.9.16"
-    apollo-server-types "^0.2.10"
+    apollo-server-core "^2.14.2"
+    apollo-server-types "^0.5.0"
     graphql-subscriptions "^1.0.0"
     graphql-tools "^4.0.0"
-    koa "2.11.0"
+    koa "2.12.0"
     koa-bodyparser "^4.2.1"
     koa-compose "^4.1.0"
     koa-router "^7.4.0"
@@ -7322,11 +7310,6 @@ error-ex@^1.2.0, error-ex@^1.3.1:
   integrity sha512-7dFHNmqeFSEt2ZBsCriorKnn3Z2pj+fd9kmI6QoWw4//DL+icEBfc0U7qJCisqrTsKTjw4fNFy2pW9OqStD84g==
   dependencies:
     is-arrayish "^0.2.1"
-
-error-inject@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/error-inject/-/error-inject-1.0.0.tgz#e2b3d91b54aed672f309d950d154850fa11d4f37"
-  integrity sha1-4rPZG1Su1nLzCdlQ0VSFD6EdTzc=
 
 error-stack-parser@^2.0.4:
   version "2.0.6"
@@ -11297,10 +11280,10 @@ koa-router@^7.4.0:
     path-to-regexp "^1.1.1"
     urijs "^1.19.0"
 
-koa@2.11.0, koa@^2.7.0:
-  version "2.11.0"
-  resolved "https://registry.yarnpkg.com/koa/-/koa-2.11.0.tgz#fe5a51c46f566d27632dd5dc8fd5d7dd44f935a4"
-  integrity sha512-EpR9dElBTDlaDgyhDMiLkXrPwp6ZqgAIBvhhmxQ9XN4TFgW+gEz6tkcsNI6BnUbUftrKDjVFj4lW2/J2aNBMMA==
+koa@2.12.0, koa@^2.7.0:
+  version "2.12.0"
+  resolved "https://registry.yarnpkg.com/koa/-/koa-2.12.0.tgz#c92bfb42defd86f365c31bf63fe918db11fc5c74"
+  integrity sha512-WlUBj6PXoVhjI5ljMmlyK+eqkbVFW5XQu8twz6bd4WM2E67IwKgPMu5wIFXGxAsZT7sW5xAB54KhY8WAEkLPug==
   dependencies:
     accepts "^1.3.5"
     cache-content-type "^1.0.0"
@@ -11312,7 +11295,6 @@ koa@2.11.0, koa@^2.7.0:
     depd "^1.1.2"
     destroy "^1.0.4"
     encodeurl "^1.0.2"
-    error-inject "^1.0.0"
     escape-html "^1.0.3"
     fresh "~0.5.2"
     http-assert "^1.3.0"
