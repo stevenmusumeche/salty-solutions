@@ -25,6 +25,7 @@ export interface MarineForecast {
 export const getForecast = async (
   location: LocationEntity
 ): Promise<MarineForecast[]> => {
+  // todo cache
   try {
     const url = `https://marine.weather.gov/MapClick.php?zoneid=${location.marineZoneId}&zflg=1`;
     const { data } = await axios.get(url);
@@ -32,17 +33,9 @@ export const getForecast = async (
     return $(".row-forecast", "#detailed-forecast-body")
       .map((i, el) => {
         return {
-          timePeriod: parseTimePeriod(
-            $(".forecast-label", el)
-              .text()
-              .trim()
-          ),
+          timePeriod: parseTimePeriod($(".forecast-label", el).text().trim()),
           forecast: {
-            ...parseForecast(
-              $(".forecast-text", el)
-                .text()
-                .trim()
-            ),
+            ...parseForecast($(".forecast-text", el).text().trim()),
           },
         };
       })
@@ -128,7 +121,7 @@ function parseTimePeriod(timePeriod: string) {
       date: today.toISOString(),
       isDaytime: true,
     };
-  } else if (timePeriod.toLowerCase() === "tonight") {
+  } else if (timePeriod.match(/(rest of )?tonight/im)) {
     return {
       text: timePeriod,
       date: today.toISOString(),
