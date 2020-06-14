@@ -604,7 +604,7 @@ export async function storeUsgsData(siteId: string, numHours = 24) {
   await saveToDynamo(site, waterHeight, salinity, waterTemp, wind);
 }
 
-// todo change this to run a loop that runs 25 queries at a time and re-adds those that weren't processed
+// todo make it reusable
 async function saveToDynamo(
   site: UsgsSiteEntity,
   waterHeight: WaterHeight[],
@@ -612,37 +612,22 @@ async function saveToDynamo(
   waterTemp: WaterTemperature[],
   wind: Wind[]
 ) {
-  const chunkedQueries = buildQueries(
-    site,
-    waterHeight,
-    salinity,
-    waterTemp,
-    wind
-  );
-  for (let queries of chunkedQueries) {
-    let curQueries = queries;
-    // while (curQueries.length) {
+  const queries = buildQueries(site, waterHeight, salinity, waterTemp, wind);
+
+  while (queries.length) {
+    const cur = queries.splice(0, 25);
     const result = await client
       .batchWrite({
         RequestItems: {
-          [tableName]: curQueries,
+          [tableName]: cur,
         },
       })
       .promise();
 
-    const unprocessed =
+    const unprocessed: any[] =
       (result.UnprocessedItems ? result.UnprocessedItems[tableName] : []) || [];
 
-    if (unprocessed.length > 0) {
-      console.warn(
-        JSON.stringify({
-          message: "DynamoDB Batch Write unprocessed",
-          count: unprocessed.length,
-          unprocessed,
-        })
-      );
-    }
-    // }
+    queries.concat(unprocessed);
   }
 }
 
@@ -660,14 +645,12 @@ function buildQueries(
   const salinityQueries = buildSalinityDynamoQueries(site.id, salinity);
   const waterTempQueries = buildWaterTempDynamoQueries(site.id, waterTemp);
   const windQueries = buildWindDynamoQueries(site.id, wind);
-  const insertQueries = [
+  return [
     ...waterHeightQueries,
     ...salinityQueries,
     ...waterTempQueries,
     ...windQueries,
   ];
-  const chunkedQueries = chunk(insertQueries, 25);
-  return chunkedQueries;
 }
 
 function buildWindDynamoQueries(siteId: string, wind: Wind[]) {
