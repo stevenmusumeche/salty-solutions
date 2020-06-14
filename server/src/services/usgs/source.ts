@@ -384,21 +384,11 @@ export interface WaterHeight {
   timestamp: string;
   height: number;
 }
-export const getWaterHeight = async (
+const getWaterHeight = async (
   siteId: string,
   start: Date,
   end: Date
 ): Promise<WaterHeight[]> => {
-  // const cacheKey = `water-height-${siteId}-${format(
-  //   start,
-  //   "yyyy-MM-dd"
-  // )}-${format(end, "yyyy-MM-dd")}`;
-
-  // data = await getCacheVal(cacheKey, 1 * 60); // fresh for 1 hour
-  // if (data) {
-  //   return data;
-  // }
-
   const data = await fetchAndMap(
     siteId,
     UsgsParams.GuageHeight,
@@ -412,18 +402,6 @@ export const getWaterHeight = async (
   return data;
 };
 
-export const getWaterTemperatureLatest = async (siteId: string) => {
-  const data = await getWaterTemperature(
-    siteId,
-    subHours(new Date(), 24),
-    new Date()
-  );
-
-  if (data.length < 1) return null;
-
-  return orderBy(data, [(x) => x.timestamp], ["desc"])[0];
-};
-
 export interface WaterTemperature {
   timestamp: string;
   temperature: {
@@ -431,7 +409,7 @@ export interface WaterTemperature {
     unit: string;
   };
 }
-export const getWaterTemperature = async (
+const getWaterTemperature = async (
   siteId: string,
   start: Date,
   end: Date
@@ -450,21 +428,13 @@ export const getWaterTemperature = async (
   );
 };
 
-export const getWindLatest = async (siteId: string) => {
-  const data = await getWind(siteId, subHours(new Date(), 24), new Date());
-
-  if (data.length < 1) return null;
-
-  return orderBy(data, ["timestamp"], ["desc"])[0];
-};
-
 interface Wind {
   timestamp: string;
   speed: number;
   direction: string;
   directionDegrees: number;
 }
-export const getWind = async (
+const getWind = async (
   siteId: string,
   start: Date,
   end: Date
@@ -530,7 +500,7 @@ export interface Salinity {
   timestamp: string;
   salinity: number;
 }
-export const getSalinity = (
+const getSalinity = (
   siteId: string,
   start: Date,
   end: Date
@@ -541,19 +511,10 @@ export const getSalinity = (
   }));
 };
 
-export const getSalinityLatest = async (siteId: string) => {
-  const data = await getSalinity(siteId, subHours(new Date(), 24), new Date());
-
-  if (data.length < 1) return null;
-
-  return orderBy(data, ["timestamp"], ["desc"])[0];
-};
-
-type DateInput = { start: Date; end: Date };
 async function fetchAndMap(
   siteId: string,
   parameterCode: string,
-  dateInput: DateInput,
+  dateInput: { start: Date; end: Date },
   mapFn: any
 ) {
   const url = `https://waterservices.usgs.gov/nwis/iv/?format=json&sites=${siteId}&startDT=${dateInput.start.toISOString()}&endDT=${dateInput.end.toISOString()}&parameterCd=${parameterCode}&siteStatus=all`;
@@ -605,7 +566,7 @@ export async function storeUsgsData(siteId: string, numHours = 24) {
   await saveToDynamo(site, waterHeight, salinity, waterTemp, wind);
 }
 
-// todo fix station select
+// todo fix station select in web app
 async function saveToDynamo(
   site: UsgsSiteEntity,
   waterHeight: WaterHeight[],
