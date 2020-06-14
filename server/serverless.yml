@@ -97,7 +97,7 @@ functions:
       - schedule:
           name: UsgsPreloader-${self:provider.stage}
           enabled: ${self:custom.schedule_enabled.${self:provider.stage}, false}
-          rate: rate(30 minutes)
+          rate: rate(1 hour)
     environment:
       QUEUE_URL: ${cf:ss-queue-${self:provider.stage}.UsgsPreloaderQueueUrl}
   preload-usgs-consumer:
@@ -131,5 +131,4 @@ custom:
     port: 4000
   schedule_enabled:
     prod: true
-    # todo disable
-    dev: true
+    dev: false

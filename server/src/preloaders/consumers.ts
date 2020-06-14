@@ -3,7 +3,7 @@ import { getById } from "../services/location";
 import { getTidePredictions } from "../services/tide";
 import { getCombinedForecast } from "../services/combined-forecast";
 import { loadAndSave } from "../services/wind-finder";
-import { storeUsgsData } from "../services/usgs";
+import { storeUsgsData } from "../services/usgs/source";
 
 export const forecast: SQSHandler = async (event, ctx, cb) => {
   for (const record of event.Records) {
@@ -45,6 +45,7 @@ export const usgs: SQSHandler = async (event, ctx, cb) => {
   for (const record of event.Records) {
     const payload = JSON.parse(record.body);
     console.log("Preloading USGS for", payload.siteId);
+    // todo: backfill this
     await storeUsgsData(payload.siteId);
   }
 };

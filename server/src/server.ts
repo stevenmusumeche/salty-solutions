@@ -8,7 +8,7 @@ import * as locationService from "./services/location";
 import * as sunMoonService from "./services/sun-and-moon";
 import * as weatherService from "./services/weather";
 import * as marineService from "./services/marine";
-import * as usgsService from "./services/usgs";
+import * as usgsService from "./services/usgs/client";
 import * as radarService from "./services/radar";
 import * as combinedForecastService from "./services/combined-forecast";
 import * as nowcastService from "./services/nowcast";

@@ -129,14 +129,12 @@ const resolvers: Resolvers & { UsgsParam: Object } = {
       );
     },
     salinity: async (site, args, { services }) => {
-      const [mostRecent, detail] = await Promise.all([
-        services.usgs.getSalinityLatest(site.id),
-        services.usgs.getSalinity(
-          site.id,
-          new Date(args.start),
-          new Date(args.end)
-        ),
-      ]);
+      const detail = await services.usgs.getSalinity(
+        site.id,
+        new Date(args.start),
+        new Date(args.end)
+      );
+      const mostRecent = detail[detail.length - 1];
       return {
         summary: { mostRecent },
         detail,

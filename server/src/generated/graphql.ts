@@ -1,7 +1,7 @@
 import { GraphQLResolveInfo } from 'graphql';
 import { LocationEntity } from '../services/location';
 import { TideStationEntity } from '../services/tide';
-import { UsgsSiteEntity } from '../services/usgs';
+import { UsgsSiteEntity } from '../services/usgs/source';
 import { Context } from '../server';
 export type Maybe<T> = T | null;
 export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?: T[X] } & { [P in K]-?: NonNullable<T[P]> };

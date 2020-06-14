@@ -1,11 +1,10 @@
 import axios from "axios";
 import axiosRetry from "axios-retry";
-import { LocationEntity, Coords } from "./location";
-import orderBy from "lodash/orderBy";
-import { subHours, format, addDays } from "date-fns";
-import { getCacheVal, setCacheVal } from "./db";
+import { subHours } from "date-fns";
 import { chunk } from "lodash";
-import { client, tableName } from "./db";
+import orderBy from "lodash/orderBy";
+import { client, tableName } from "../db";
+import { Coords } from "../location";
 
 axiosRetry(axios, { retries: 3, retryDelay: (retryCount) => retryCount * 500 });
 
@@ -380,7 +379,7 @@ export const getSiteById = (id: string): UsgsSiteEntity | undefined => {
   return usgsSites.find((site) => site.id === id);
 };
 
-interface WaterHeight {
+export interface WaterHeight {
   timestamp: string;
   height: number;
 }
@@ -424,7 +423,7 @@ export const getWaterTemperatureLatest = async (siteId: string) => {
   return orderBy(data, [(x) => x.timestamp], ["desc"])[0];
 };
 
-interface WaterTemperature {
+export interface WaterTemperature {
   timestamp: string;
   temperature: {
     degrees: number;
@@ -526,7 +525,7 @@ const getWindDirection = async (
   );
 };
 
-interface Salinity {
+export interface Salinity {
   timestamp: string;
   salinity: number;
 }
@@ -627,21 +626,17 @@ async function saveToDynamo(
     wind
   );
   for (let queries of chunkedQueries) {
-    try {
-      const result = await client
-        .batchWrite({
-          RequestItems: {
-            [tableName]: queries,
-          },
-        })
-        .promise();
+    const result = await client
+      .batchWrite({
+        RequestItems: {
+          [tableName]: queries,
+        },
+      })
+      .promise();
 
-      const unprocessed = Object.values(result.UnprocessedItems || {});
-      if (unprocessed.length > 0) {
-        console.warn("DynamoDB Batch Write unprocessed", unprocessed);
-      }
-    } catch (e) {
-      console.error("error writing usgs data to dynamodb", e);
+    const unprocessed = Object.values(result.UnprocessedItems || {});
+    if (unprocessed.length > 0) {
+      console.warn("DynamoDB Batch Write unprocessed", unprocessed);
     }
   }
 }
