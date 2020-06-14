@@ -3,7 +3,7 @@ import axiosRetry from "axios-retry";
 import { LocationEntity, makeCacheKey } from "./location";
 import { format, subHours } from "date-fns";
 import orderBy from "lodash/orderBy";
-import { degreesToCompass } from "./usgs";
+import { degreesToCompass } from "./usgs/source"; // todo: util
 import { WeatherForecast } from "../generated/graphql";
 import { parseWindDirection } from "./utils";
 import { getCacheVal, setCacheVal } from "./db";

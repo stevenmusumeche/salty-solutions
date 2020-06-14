@@ -1,9 +1,8 @@
 import axios from "axios";
 import cheerio from "cheerio";
-import { format, isAfter, parse, addDays } from "date-fns";
+import { format, isAfter, parse } from "date-fns";
 import { parseFromTimeZone } from "date-fns-timezone";
-import { chunk } from "lodash";
-import { client, tableName } from "./db";
+import { batchWrite, client, tableName } from "./db";
 import { LocationEntity } from "./location";
 import { celciusToFahrenheit } from "./weather";
 
@@ -127,15 +126,11 @@ async function fetchAndParse(url: string): Promise<WindFinderResult[]> {
   const parsed = $(".forecast-day")
     .map((i, dayEl) => {
       return {
-        date: $(".weathertable__header h4", dayEl)
-          .text()
-          .trim(),
+        date: $(".weathertable__header h4", dayEl).text().trim(),
         timePeriods: $(".weathertable__row", dayEl)
           .map((j, timeEl) => {
             function extract(selector: string) {
-              return $(selector, timeEl)
-                .text()
-                .trim();
+              return $(selector, timeEl).text().trim();
             }
 
             const waveDirection = extract(
@@ -239,32 +234,20 @@ function meterToFeet(meters: number): number {
 }
 
 async function saveToDynamo(slug: string, windFinderData: WindFinderParsed[]) {
-  const chunkedData = chunk(windFinderData, 25);
-  for (let chunkPiece of chunkedData) {
-    const request = chunkPiece.map((data) => {
-      const { timestamp, ...itemData } = data;
-      const itemDate = timestamp;
-      return {
-        PutRequest: {
-          Item: {
-            pk: `windfinder-forecast-${slug}`,
-            sk: itemDate.getTime(),
-            ttl: addDays(itemDate, 60).getTime(),
-            updatedAt: new Date().toISOString(),
-            data: itemData,
-          },
+  const queries = windFinderData.map((data) => {
+    const { timestamp, ...itemData } = data;
+    const itemDate = timestamp;
+    return {
+      PutRequest: {
+        Item: {
+          pk: `windfinder-forecast-${slug}`,
+          sk: itemDate.getTime(),
+          updatedAt: new Date().toISOString(),
+          data: itemData,
         },
-      };
-    });
+      },
+    };
+  });
 
-    // todo handle errors
-    await client
-      .batchWrite({
-        RequestItems: {
-          [tableName]: request,
-        },
-      })
-      .promise()
-      .then((r) => console.log(r));
-  }
+  await batchWrite(queries);
 }

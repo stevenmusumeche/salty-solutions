@@ -34,6 +34,7 @@ provider:
         - ${cf:ss-queue-${self:provider.stage}.ForecastPreloaderQueueArn}
         - ${cf:ss-queue-${self:provider.stage}.TidePreloaderQueueArn}
         - ${cf:ss-queue-${self:provider.stage}.WindFinderPreloaderQueueArn}
+        - ${cf:ss-queue-${self:provider.stage}.UsgsPreloaderQueueArn}
     - Effect: Allow
       Action:
         - s3:*
@@ -90,6 +91,23 @@ functions:
           batchSize: 1
           arn: ${cf:ss-queue-${self:provider.stage}.WindFinderPreloaderQueueArn}
 
+  preload-usgs-producer:
+    handler: src/preloaders/producers.usgs
+    events:
+      - schedule:
+          name: UsgsPreloader-${self:provider.stage}
+          enabled: ${self:custom.schedule_enabled.${self:provider.stage}, false}
+          rate: rate(1 hour)
+    environment:
+      QUEUE_URL: ${cf:ss-queue-${self:provider.stage}.UsgsPreloaderQueueUrl}
+  preload-usgs-consumer:
+    handler: src/preloaders/consumers.usgs
+    timeout: 120
+    events:
+      - sqs:
+          batchSize: 1
+          arn: ${cf:ss-queue-${self:provider.stage}.UsgsPreloaderQueueArn}
+
   # todo re-enable this if we can get past dynamodb limits
   # preload-tide-producer:
   #   handler: src/preloaders/producers.tide
@@ -113,5 +131,4 @@ custom:
     port: 4000
   schedule_enabled:
     prod: true
-    # todo disable
-    dev: true
+    dev: false

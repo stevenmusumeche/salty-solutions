@@ -20,7 +20,7 @@ generates:
         Maps: "Partial<{T}> & {location: LocationEntity}"
         Location: ../services/location#LocationEntity
         TidePreditionStation: ../services/tide#TideStationEntity
-        UsgsSite: ../services/usgs#UsgsSiteEntity
+        UsgsSite: ../services/usgs/source#UsgsSiteEntity
         WaterTemperature: "Object"
     plugins:
       - "typescript"

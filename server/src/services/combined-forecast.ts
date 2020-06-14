@@ -13,7 +13,7 @@ import {
   differenceInDays,
   subSeconds,
 } from "date-fns";
-import { degreesToCompass } from "./usgs";
+import { degreesToCompass } from "./usgs/source";
 import { notUndefined } from "./utils";
 
 /**
