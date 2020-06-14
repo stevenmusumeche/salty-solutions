@@ -619,10 +619,12 @@ async function saveToDynamo(
     wind
   );
   for (let queries of chunkedQueries) {
+    let curQueries = queries;
+    // while (curQueries.length) {
     const result = await client
       .batchWrite({
         RequestItems: {
-          [tableName]: queries,
+          [tableName]: curQueries,
         },
       })
       .promise();
@@ -632,10 +634,11 @@ async function saveToDynamo(
       console.warn(
         JSON.stringify({
           message: "DynamoDB Batch Write unprocessed",
-          unprocessed,
+          context: result.UnprocessedItems,
         })
       );
     }
+    // }
   }
 }
 
