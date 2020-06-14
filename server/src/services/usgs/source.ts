@@ -1,10 +1,11 @@
+import { DocumentClient } from "aws-sdk/clients/dynamodb";
 import axios from "axios";
 import axiosRetry from "axios-retry";
 import { subHours } from "date-fns";
-import { chunk } from "lodash";
 import orderBy from "lodash/orderBy";
-import { client, tableName } from "../db";
+import { batchWrite } from "../db";
 import { Coords } from "../location";
+type WriteRequest = DocumentClient.WriteRequest;
 
 axiosRetry(axios, { retries: 3, retryDelay: (retryCount) => retryCount * 500 });
 
@@ -604,7 +605,7 @@ export async function storeUsgsData(siteId: string, numHours = 24) {
   await saveToDynamo(site, waterHeight, salinity, waterTemp, wind);
 }
 
-// todo make it reusable
+// todo fix station select
 async function saveToDynamo(
   site: UsgsSiteEntity,
   waterHeight: WaterHeight[],
@@ -613,22 +614,7 @@ async function saveToDynamo(
   wind: Wind[]
 ) {
   const queries = buildQueries(site, waterHeight, salinity, waterTemp, wind);
-
-  while (queries.length) {
-    const cur = queries.splice(0, 25);
-    const result = await client
-      .batchWrite({
-        RequestItems: {
-          [tableName]: cur,
-        },
-      })
-      .promise();
-
-    const unprocessed: any[] =
-      (result.UnprocessedItems ? result.UnprocessedItems[tableName] : []) || [];
-
-    queries.concat(unprocessed);
-  }
+  await batchWrite(queries);
 }
 
 function buildQueries(

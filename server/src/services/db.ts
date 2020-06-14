@@ -5,6 +5,8 @@ var dynamodb = new DynamoDB({
 });
 export const client = new DynamoDB.DocumentClient({ service: dynamodb });
 import { subMinutes, addDays } from "date-fns";
+import { DocumentClient } from "aws-sdk/clients/dynamodb";
+type WriteRequest = DocumentClient.WriteRequest;
 
 export const tableName = process.env.DATABASE_TABLE_NAME!;
 
@@ -49,4 +51,38 @@ export const setCacheVal = async <T>(key: string, data: T): Promise<T> => {
     })
     .promise();
   return data;
+};
+
+export const batchWrite = async (
+  queries: WriteRequest[],
+  table = tableName,
+  batchSize = 25
+) => {
+  const maxLoops = Math.ceil(queries.length / batchSize) * 3;
+  let curLoop = 0;
+  while (queries.length && curLoop < maxLoops) {
+    const cur = queries.splice(0, batchSize);
+    const result = await client
+      .batchWrite({
+        RequestItems: {
+          [table]: cur,
+        },
+      })
+      .promise();
+
+    const unprocessed: WriteRequest[] =
+      (result.UnprocessedItems ? result.UnprocessedItems[tableName] : []) || [];
+
+    queries.concat(unprocessed);
+    curLoop++;
+  }
+
+  if (queries.length) {
+    console.error(
+      JSON.stringify({
+        message: "Unable to write all batch items",
+        remainingQueries: queries,
+      })
+    );
+  }
 };

@@ -71,10 +71,11 @@ export const usgs: ScheduledHandler = async () => {
 
   const chunks = chunk([...uniqueSiteIds], 10);
   for (const chunk of chunks) {
+    // todo: change this back to 24 hours
     await sendMessageBatch(
       process.env.QUEUE_URL!,
       PRODUCER_NAMES.usgs,
-      chunk.map((siteId) => ({ siteId }))
+      chunk.map((siteId) => ({ siteId, numHours: 168 }))
     );
   }
 };
