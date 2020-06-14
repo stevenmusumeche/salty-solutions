@@ -1,9 +1,8 @@
 import axios from "axios";
 import cheerio from "cheerio";
-import { format, isAfter, parse, addDays } from "date-fns";
+import { format, isAfter, parse } from "date-fns";
 import { parseFromTimeZone } from "date-fns-timezone";
-import { chunk } from "lodash";
-import { client, tableName } from "./db";
+import { batchWrite, client, tableName } from "./db";
 import { LocationEntity } from "./location";
 import { celciusToFahrenheit } from "./weather";
 
@@ -235,31 +234,20 @@ function meterToFeet(meters: number): number {
 }
 
 async function saveToDynamo(slug: string, windFinderData: WindFinderParsed[]) {
-  const chunkedData = chunk(windFinderData, 25);
-  for (let chunkPiece of chunkedData) {
-    const request = chunkPiece.map((data) => {
-      const { timestamp, ...itemData } = data;
-      const itemDate = timestamp;
-      return {
-        PutRequest: {
-          Item: {
-            pk: `windfinder-forecast-${slug}`,
-            sk: itemDate.getTime(),
-            updatedAt: new Date().toISOString(),
-            data: itemData,
-          },
+  const queries = windFinderData.map((data) => {
+    const { timestamp, ...itemData } = data;
+    const itemDate = timestamp;
+    return {
+      PutRequest: {
+        Item: {
+          pk: `windfinder-forecast-${slug}`,
+          sk: itemDate.getTime(),
+          updatedAt: new Date().toISOString(),
+          data: itemData,
         },
-      };
-    });
+      },
+    };
+  });
 
-    // todo handle errors
-    await client
-      .batchWrite({
-        RequestItems: {
-          [tableName]: request,
-        },
-      })
-      .promise()
-      .then((r) => console.log(r));
-  }
+  await batchWrite(queries);
 }

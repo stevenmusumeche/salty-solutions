@@ -38,6 +38,7 @@ export const windFinder: SQSHandler = async (event, ctx, cb) => {
     const payload = JSON.parse(record.body);
     console.log("Preloading windfinder for", payload.slug);
     await loadAndSave(payload.slug);
+    console.log("Finished preloading windfinder for", payload.slug);
   }
 };
 
