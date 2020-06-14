@@ -548,21 +548,14 @@ export const getSalinityLatest = async (siteId: string) => {
   return orderBy(data, ["timestamp"], ["desc"])[0];
 };
 
-type DateInput = { numHours: number } | { start: Date; end: Date };
+type DateInput = { start: Date; end: Date };
 async function fetchAndMap(
   siteId: string,
   parameterCode: string,
   dateInput: DateInput,
   mapFn: any
 ) {
-  let url;
-  if (typeof (dateInput as any).numHours !== "undefined") {
-    url = `https://waterservices.usgs.gov/nwis/iv/?format=json&sites=${siteId}&period=PT${
-      (dateInput as any).numHours
-    }H&parameterCd=${parameterCode}&siteStatus=all`;
-  } else {
-    url = `https://waterservices.usgs.gov/nwis/iv/?format=json&sites=${siteId}&startDT=${(dateInput as any).start.toISOString()}&endDT=${(dateInput as any).end.toISOString()}&parameterCd=${parameterCode}&siteStatus=all`;
-  }
+  const url = `https://waterservices.usgs.gov/nwis/iv/?format=json&sites=${siteId}&startDT=${dateInput.start.toISOString()}&endDT=${dateInput.end.toISOString()}&parameterCd=${parameterCode}&siteStatus=all`;
 
   const { data } = await axios.get(url);
 

@@ -46,6 +46,6 @@ export const usgs: SQSHandler = async (event, ctx, cb) => {
     const payload = JSON.parse(record.body);
     console.log("Preloading USGS for", payload.siteId);
     // todo: backfill this
-    await storeUsgsData(payload.siteId);
+    await storeUsgsData(payload.siteId, 168);
   }
 };
