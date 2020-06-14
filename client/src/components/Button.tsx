@@ -1,7 +1,7 @@
-import React, { MouseEventHandler } from "react";
+import React from "react";
 
 const Button: React.FC<{
-  onClick: MouseEventHandler;
+  onClick: (e: any) => void;
   className?: string;
 }> = ({ children, onClick, className }) => {
   return (

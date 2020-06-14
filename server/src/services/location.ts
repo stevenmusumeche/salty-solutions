@@ -133,12 +133,12 @@ const locations: LocationEntity[] = [
       lon: -89.65689,
     },
     usgsSiteIds: [
-      "073745257",
-      "295206089402400",
       "073745235",
+      "073745257",
+      // "295206089402400", not currently producing
       "07374526",
-      "073745275",
       "07374527",
+      "073745275",
     ],
     weatherGov: {
       apiBase: "https://api.weather.gov/gridpoints/LIX/85,84",
@@ -247,8 +247,8 @@ const locations: LocationEntity[] = [
       "301200090072400",
       "073802332",
       "07374581",
-      "300136090064800",
-      "300406090231600",
+      // "300136090064800", not producing
+      // "300406090231600", not producing
       "07375230",
       "073802339",
       "073802341",

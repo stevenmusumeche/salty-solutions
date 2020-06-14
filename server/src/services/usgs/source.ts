@@ -566,7 +566,6 @@ export async function storeUsgsData(siteId: string, numHours = 24) {
   await saveToDynamo(site, waterHeight, salinity, waterTemp, wind);
 }
 
-// todo fix station select in web app
 async function saveToDynamo(
   site: UsgsSiteEntity,
   waterHeight: WaterHeight[],

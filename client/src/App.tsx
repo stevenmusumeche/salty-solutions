@@ -1,29 +1,27 @@
-import { startOfDay } from "date-fns";
-import React, { useState, useEffect } from "react";
-import "./App.css";
-import AirTempCard from "./components/AirTempCard";
-import SalinityCard from "./components/SalinityCard";
-import WaterTempCard from "./components/WaterTempCard";
-import WindCard from "./components/WindCard";
-import AppHeader from "./components/AppHeader";
-import HourlyForecast from "./components/HourlyForecast";
-import Tides from "./components/tide/Tides";
-import Shell from "./components/Shell";
-import NotFound from "./components/NotFound";
-import { RouteComponentProps, navigate } from "@reach/router";
-import JumpNav from "./components/JumpNav";
-import Donate from "./components/Donate";
-import CollapsibleSection from "./components/CollapsibleSection";
-import DarkSkyRadar from "./components/DarkSkyRadar";
-import { SalinityMap } from "./components/SalinityMap";
-import ModisMap from "./components/ModisMap";
-import { useReducer } from "react";
-import CombinedForecastV2 from "./components/CombinedForecastV2";
+import { navigate, RouteComponentProps } from "@reach/router";
 import {
   useLocationsQuery,
   UsgsParam,
 } from "@stevenmusumeche/salty-solutions-shared/dist/graphql";
-import { useInView } from "react-intersection-observer";
+import { startOfDay } from "date-fns";
+import React, { useEffect, useMemo, useReducer, useState } from "react";
+import "./App.css";
+import AirTempCard from "./components/AirTempCard";
+import AppHeader from "./components/AppHeader";
+import CollapsibleSection from "./components/CollapsibleSection";
+import CombinedForecastV2 from "./components/CombinedForecastV2";
+import DarkSkyRadar from "./components/DarkSkyRadar";
+import Donate from "./components/Donate";
+import HourlyForecast from "./components/HourlyForecast";
+import JumpNav from "./components/JumpNav";
+import ModisMap from "./components/ModisMap";
+import NotFound from "./components/NotFound";
+import SalinityCard from "./components/SalinityCard";
+import { SalinityMap } from "./components/SalinityMap";
+import Shell from "./components/Shell";
+import Tides from "./components/tide/Tides";
+import WaterTempCard from "./components/WaterTempCard";
+import WindCard from "./components/WindCard";
 
 export interface Action {
   type: string;
@@ -70,10 +68,6 @@ const sectionReducer = (state: State, action: Action) => {
 const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
   locationSlug,
 }) => {
-  const [forecastRef, forecastInView] = useInView({
-    triggerOnce: true,
-    rootMargin: "200px",
-  });
   const [sections, dispatch] = useReducer(sectionReducer, initialState);
   const [locations] = useLocationsQuery();
   const [locationId, setLocationId] = useState(locationSlug!);
@@ -89,9 +83,11 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
     localStorage.setItem("locationId", locationSlug);
   }, [locationSlug]);
 
-  const selectedLocation = locations.data
-    ? locations.data.locations.find((location) => location.id === locationId)
-    : null;
+  const selectedLocation = useMemo(() => {
+    return locations.data
+      ? locations.data.locations.find((location) => location.id === locationId)
+      : null;
+  }, [locationId, locations.data]);
 
   const [date, setDate] = useState(() => startOfDay(new Date()));
 
@@ -99,6 +95,30 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
     if (Array.isArray(date)) return;
     setDate(date);
   };
+
+  const usgsSalinitySites = useMemo(() => {
+    return (
+      selectedLocation?.usgsSites.filter((site) =>
+        site.availableParams.includes(UsgsParam.Salinity)
+      ) || []
+    );
+  }, [selectedLocation]);
+
+  const usgsWaterTempSites = useMemo(() => {
+    return (
+      selectedLocation?.usgsSites.filter((site) =>
+        site.availableParams.includes(UsgsParam.WaterTemp)
+      ) || []
+    );
+  }, [selectedLocation]);
+
+  const usgsWaterHeightSites = useMemo(() => {
+    return (
+      selectedLocation?.usgsSites.filter((site) =>
+        site.availableParams.includes(UsgsParam.GuageHeight)
+      ) || []
+    );
+  }, [selectedLocation]);
 
   if (locations.fetching) {
     return null;
@@ -131,16 +151,9 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
           <AirTempCard locationId={locationId} />
           <WaterTempCard
             locationId={locationId}
-            usgsSites={selectedLocation.usgsSites.filter((site) =>
-              site.availableParams.includes(UsgsParam.WaterTemp)
-            )}
+            usgsSites={usgsWaterTempSites}
           />
-          <SalinityCard
-            locationId={locationId}
-            usgsSites={selectedLocation.usgsSites.filter((site) =>
-              site.availableParams.includes(UsgsParam.Salinity)
-            )}
-          />
+          <SalinityCard locationId={locationId} usgsSites={usgsSalinitySites} />
         </div>
 
         <span id="tides"></span>
@@ -148,9 +161,7 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
           <Tides
             locationId={locationId}
             tideStations={selectedLocation.tidePreditionStations}
-            usgsSites={selectedLocation.usgsSites.filter((site) =>
-              site.availableParams.includes(UsgsParam.GuageHeight)
-            )}
+            usgsSites={usgsWaterHeightSites}
             date={date}
             setActiveDate={handleDateChange}
           />
@@ -158,8 +169,8 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
 
         <Donate />
 
-        <span id="forecast" ref={forecastRef}></span>
-        {forecastInView && <CombinedForecastV2 locationId={locationId} />}
+        <span id="forecast"></span>
+        <CombinedForecastV2 locationId={locationId} />
 
         <span id="radar"></span>
         <CollapsibleSection

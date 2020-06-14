@@ -153,8 +153,8 @@ const MainTideChart: React.FC<Props> = ({
         <VictoryScatter
           data={hiLowData}
           size={1.5}
-          labels={(data) =>
-            format(new Date(data.x), "h:mma") + `\n${data.y.toFixed(1)}ft`
+          labels={({ datum }) =>
+            format(new Date(datum.x), "h:mma") + `\n${datum.y.toFixed(1)}ft`
           }
           style={{
             data: {

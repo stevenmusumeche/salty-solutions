@@ -18,7 +18,6 @@
     "react": "^16.13.1",
     "react-date-picker": "7.10.0",
     "react-dom": "^16.13.1",
-    "react-intersection-observer": "^8.26.2",
     "react-magnifier": "3.0.4",
     "react-scripts": "^3.4.1",
     "source-map-explorer": "^2.0.1",
