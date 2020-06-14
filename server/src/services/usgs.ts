@@ -2,8 +2,10 @@ import axios from "axios";
 import axiosRetry from "axios-retry";
 import { LocationEntity, Coords } from "./location";
 import orderBy from "lodash/orderBy";
-import { subHours, format } from "date-fns";
+import { subHours, format, addDays } from "date-fns";
 import { getCacheVal, setCacheVal } from "./db";
+import { chunk } from "lodash";
+import { client, tableName } from "./db";
 
 axiosRetry(axios, { retries: 3, retryDelay: (retryCount) => retryCount * 500 });
 
@@ -378,23 +380,26 @@ export const getSiteById = (id: string): UsgsSiteEntity | undefined => {
   return usgsSites.find((site) => site.id === id);
 };
 
+interface WaterHeight {
+  timestamp: string;
+  height: number;
+}
 export const getWaterHeight = async (
   siteId: string,
   start: Date,
   end: Date
-): Promise<{ timestamp: string; height: number }[]> => {
-  const cacheKey = `water-height-${siteId}-${format(
-    start,
-    "yyyy-MM-dd"
-  )}-${format(end, "yyyy-MM-dd")}`;
+): Promise<WaterHeight[]> => {
+  // const cacheKey = `water-height-${siteId}-${format(
+  //   start,
+  //   "yyyy-MM-dd"
+  // )}-${format(end, "yyyy-MM-dd")}`;
 
-  let data: any;
-  data = await getCacheVal(cacheKey, 1 * 60); // fresh for 1 hour
-  if (data) {
-    return data;
-  }
+  // data = await getCacheVal(cacheKey, 1 * 60); // fresh for 1 hour
+  // if (data) {
+  //   return data;
+  // }
 
-  data = await fetchAndMap(
+  const data = await fetchAndMap(
     siteId,
     UsgsParams.GuageHeight,
     { start, end },
@@ -404,7 +409,7 @@ export const getWaterHeight = async (
     })
   );
 
-  return setCacheVal(cacheKey, data);
+  return data;
 };
 
 export const getWaterTemperatureLatest = async (siteId: string) => {
@@ -419,11 +424,18 @@ export const getWaterTemperatureLatest = async (siteId: string) => {
   return orderBy(data, [(x) => x.timestamp], ["desc"])[0];
 };
 
+interface WaterTemperature {
+  timestamp: string;
+  temperature: {
+    degrees: number;
+    unit: string;
+  };
+}
 export const getWaterTemperature = async (
   siteId: string,
   start: Date,
   end: Date
-) => {
+): Promise<WaterTemperature[]> => {
   return fetchAndMap(
     siteId,
     UsgsParams.WaterTemp,
@@ -431,15 +443,15 @@ export const getWaterTemperature = async (
     (v: any) => ({
       timestamp: new Date(v.dateTime).toISOString(),
       temperature: {
-        degrees: ((Number(v.value) * 9) / 5 + 32).toFixed(1),
+        degrees: Number(((Number(v.value) * 9) / 5 + 32).toFixed(1)),
         unit: "F",
       },
     })
   );
 };
 
-export const getWindLatest = async (location: LocationEntity) => {
-  const data = await getWind(location, 24);
+export const getWindLatest = async (siteId: string) => {
+  const data = await getWind(siteId, subHours(new Date(), 24), new Date());
 
   if (data.length < 1) return null;
 
@@ -453,12 +465,13 @@ interface Wind {
   directionDegrees: number;
 }
 export const getWind = async (
-  location: any,
-  numHours: number
+  siteId: string,
+  start: Date,
+  end: Date
 ): Promise<Wind[]> => {
   const [speeds, directions] = await Promise.all([
-    getWindSpeed(location, numHours),
-    getWindDirection(location, numHours),
+    getWindSpeed(siteId, start, end),
+    getWindDirection(siteId, start, end),
   ]);
 
   const combined: Wind[] = [];
@@ -481,13 +494,14 @@ export const getWind = async (
 };
 
 const getWindSpeed = async (
-  location: LocationEntity,
-  numHours: number
+  siteId: string,
+  start: Date,
+  end: Date
 ): Promise<{ timestamp: string; speed: number }[]> => {
   return fetchAndMap(
-    location.usgsSiteIds[0],
+    siteId,
     UsgsParams.WindSpeed,
-    { numHours },
+    { start, end },
     (v: any) => ({
       timestamp: new Date(v.dateTime).toISOString(),
       speed: Number(v.value),
@@ -496,13 +510,14 @@ const getWindSpeed = async (
 };
 
 const getWindDirection = async (
-  location: LocationEntity,
-  numHours: number
+  siteId: string,
+  start: Date,
+  end: Date
 ): Promise<{ timestamp: string; degrees: number; direction: string }[]> => {
   return fetchAndMap(
-    location.usgsSiteIds[0],
+    siteId,
     UsgsParams.WindDirection,
-    { numHours },
+    { start, end },
     (v: any) => ({
       timestamp: new Date(v.dateTime).toISOString(),
       degrees: Number(v.value),
@@ -511,11 +526,15 @@ const getWindDirection = async (
   );
 };
 
+interface Salinity {
+  timestamp: string;
+  salinity: number;
+}
 export const getSalinity = (
   siteId: string,
   start: Date,
   end: Date
-): Promise<{ timestamp: string; salinity: number }[]> => {
+): Promise<Salinity[]> => {
   return fetchAndMap(siteId, UsgsParams.Salinity, { start, end }, (v: any) => ({
     timestamp: new Date(v.dateTime).toISOString(),
     salinity: +v.value,
@@ -577,3 +596,167 @@ export function degreesToCompass(degrees: number): string {
   ];
   return arr[val % 16];
 }
+
+export async function storeUsgsData(siteId: string, numHours = 24) {
+  const site = getSiteById(siteId);
+  if (!site) throw new Error(`Unable to load USGS site for ${siteId}`);
+  const endDate = new Date();
+  const startDate = subHours(endDate, numHours);
+
+  const { waterHeight, salinity, waterTemp, wind } = await scrapeData(
+    site,
+    startDate,
+    endDate
+  );
+
+  await saveToDynamo(site, waterHeight, salinity, waterTemp, wind);
+}
+
+async function saveToDynamo(
+  site: UsgsSiteEntity,
+  waterHeight: WaterHeight[],
+  salinity: Salinity[],
+  waterTemp: WaterTemperature[],
+  wind: Wind[]
+) {
+  const chunkedQueries = buildQueries(
+    site,
+    waterHeight,
+    salinity,
+    waterTemp,
+    wind
+  );
+  for (let queries of chunkedQueries) {
+    try {
+      const result = await client
+        .batchWrite({
+          RequestItems: {
+            [tableName]: queries,
+          },
+        })
+        .promise();
+
+      const unprocessed = Object.values(result.UnprocessedItems || {});
+      if (unprocessed.length > 0) {
+        console.warn("DynamoDB Batch Write unprocessed", unprocessed);
+      }
+    } catch (e) {
+      console.error("error writing usgs data to dynamodb", e);
+    }
+  }
+}
+
+function buildQueries(
+  site: UsgsSiteEntity,
+  waterHeight: WaterHeight[],
+  salinity: Salinity[],
+  waterTemp: WaterTemperature[],
+  wind: Wind[]
+) {
+  const waterHeightQueries = buildWaterHeightDynamoQueries(
+    site.id,
+    waterHeight
+  );
+  const salinityQueries = buildSalinityDynamoQueries(site.id, salinity);
+  const waterTempQueries = buildWaterTempDynamoQueries(site.id, waterTemp);
+  const windQueries = buildWindDynamoQueries(site.id, wind);
+  const insertQueries = [
+    ...waterHeightQueries,
+    ...salinityQueries,
+    ...waterTempQueries,
+    ...windQueries,
+  ];
+  const chunkedQueries = chunk(insertQueries, 25);
+  return chunkedQueries;
+}
+
+function buildWindDynamoQueries(siteId: string, wind: Wind[]) {
+  const queries = wind.map((data) => {
+    const { timestamp, ...itemData } = data;
+    const itemDate = new Date(timestamp);
+    return {
+      PutRequest: {
+        Item: {
+          pk: `usgs-wind-${siteId}`,
+          sk: itemDate.getTime(),
+          updatedAt: new Date().toISOString(),
+          data: itemData,
+        },
+      },
+    };
+  });
+  return queries;
+}
+
+function buildWaterTempDynamoQueries(
+  siteId: string,
+  waterTemp: WaterTemperature[]
+) {
+  const queries = waterTemp.map((data) => {
+    const { timestamp, ...itemData } = data;
+    const itemDate = new Date(timestamp);
+    return {
+      PutRequest: {
+        Item: {
+          pk: `usgs-water-temp-${siteId}`,
+          sk: itemDate.getTime(),
+          updatedAt: new Date().toISOString(),
+          data: itemData,
+        },
+      },
+    };
+  });
+  return queries;
+}
+
+function buildSalinityDynamoQueries(siteId: string, salinity: Salinity[]) {
+  const queries = salinity.map((data) => {
+    const { timestamp, ...itemData } = data;
+    const itemDate = new Date(timestamp);
+    return {
+      PutRequest: {
+        Item: {
+          pk: `usgs-salinity-${siteId}`,
+          sk: itemDate.getTime(),
+          updatedAt: new Date().toISOString(),
+          data: itemData,
+        },
+      },
+    };
+  });
+  return queries;
+}
+
+function buildWaterHeightDynamoQueries(
+  siteId: string,
+  waterHeight: WaterHeight[]
+) {
+  const queries = waterHeight.map((data) => {
+    const { timestamp, ...itemData } = data;
+    const itemDate = new Date(timestamp);
+    return {
+      PutRequest: {
+        Item: {
+          pk: `usgs-water-height-${siteId}`,
+          sk: itemDate.getTime(),
+          updatedAt: new Date().toISOString(),
+          data: itemData,
+        },
+      },
+    };
+  });
+  return queries;
+}
+
+async function scrapeData(site: UsgsSiteEntity, start: Date, end: Date) {
+  const [waterHeight, salinity, waterTemp, wind] = await Promise.all([
+    getWaterHeight(site.id, start, end),
+    getSalinity(site.id, start, end),
+    getWaterTemperature(site.id, start, end),
+    getWind(site.id, start, end),
+  ]);
+
+  return { waterHeight, salinity, waterTemp, wind };
+}
+
+storeUsgsData("07381349").then();

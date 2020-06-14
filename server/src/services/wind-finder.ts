@@ -127,15 +127,11 @@ async function fetchAndParse(url: string): Promise<WindFinderResult[]> {
   const parsed = $(".forecast-day")
     .map((i, dayEl) => {
       return {
-        date: $(".weathertable__header h4", dayEl)
-          .text()
-          .trim(),
+        date: $(".weathertable__header h4", dayEl).text().trim(),
         timePeriods: $(".weathertable__row", dayEl)
           .map((j, timeEl) => {
             function extract(selector: string) {
-              return $(selector, timeEl)
-                .text()
-                .trim();
+              return $(selector, timeEl).text().trim();
             }
 
             const waveDirection = extract(
@@ -249,7 +245,6 @@ async function saveToDynamo(slug: string, windFinderData: WindFinderParsed[]) {
           Item: {
             pk: `windfinder-forecast-${slug}`,
             sk: itemDate.getTime(),
-            ttl: addDays(itemDate, 60).getTime(),
             updatedAt: new Date().toISOString(),
             data: itemData,
           },
