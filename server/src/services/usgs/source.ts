@@ -629,7 +629,7 @@ async function saveToDynamo(
       })
       .promise();
 
-    const unprocessed = result.UnprocessedItems?.[tableName] || [];
+    const unprocessed = result.UnprocessedItems?[tableName] || [];
 
     if (unprocessed.length > 0) {
       console.warn(

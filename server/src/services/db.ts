@@ -1,5 +1,9 @@
 import { DynamoDB } from "aws-sdk";
-export const client = new DynamoDB.DocumentClient();
+var dynamodb = new DynamoDB({
+  maxRetries: 5,
+  retryDelayOptions: { base: 300 },
+});
+export const client = new DynamoDB.DocumentClient({ service: dynamodb });
 import { subMinutes, addDays } from "date-fns";
 
 export const tableName = process.env.DATABASE_TABLE_NAME!;
