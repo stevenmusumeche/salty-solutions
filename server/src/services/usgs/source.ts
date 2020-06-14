@@ -629,10 +629,12 @@ async function saveToDynamo(
 
     const unprocessed = Object.values(result.UnprocessedItems || {});
     if (unprocessed.length > 0) {
-      console.warn({
-        message: "DynamoDB Batch Write unprocessed",
-        unprocessed,
-      });
+      console.warn(
+        JSON.stringify({
+          message: "DynamoDB Batch Write unprocessed",
+          unprocessed,
+        })
+      );
     }
   }
 }
