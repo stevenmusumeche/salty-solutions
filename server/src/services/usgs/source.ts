@@ -604,6 +604,7 @@ export async function storeUsgsData(siteId: string, numHours = 24) {
   await saveToDynamo(site, waterHeight, salinity, waterTemp, wind);
 }
 
+// todo change this to run a loop that runs 25 queries at a time and re-adds those that weren't processed
 async function saveToDynamo(
   site: UsgsSiteEntity,
   waterHeight: WaterHeight[],
@@ -629,7 +630,9 @@ async function saveToDynamo(
       })
       .promise();
 
-    const unprocessed = result.UnprocessedItems?[tableName] || [];
+    const unprocessed = result.UnprocessedItems
+      ? result.UnprocessedItems[tableName]
+      : [];
 
     if (unprocessed.length > 0) {
       console.warn(
