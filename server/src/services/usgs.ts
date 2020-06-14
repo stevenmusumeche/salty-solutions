@@ -758,5 +758,3 @@ async function scrapeData(site: UsgsSiteEntity, start: Date, end: Date) {
 
   return { waterHeight, salinity, waterTemp, wind };
 }
-
-storeUsgsData("07381349").then();
