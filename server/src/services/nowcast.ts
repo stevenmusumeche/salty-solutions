@@ -24,5 +24,5 @@ export async function getSalinityMap(
 
   if (options.length === 0) throw new Error("unable to parse nowcast options");
 
-  return setCacheVal(cacheKey, options[0]);
+  return setCacheVal(cacheKey, options[options.length - 1]);
 }
