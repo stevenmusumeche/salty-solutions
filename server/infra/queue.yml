@@ -48,6 +48,18 @@ Resources:
             - DeadLetterQueue
             - Arn
         maxReceiveCount: 3
+  UsgsPreloaderQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Join ["", ["usgs-preloader-", Ref: StageParam]]
+      VisibilityTimeout: 120
+      MessageRetentionPeriod: 43200 # 12 hours
+      RedrivePolicy:
+        deadLetterTargetArn:
+          Fn::GetAtt:
+            - DeadLetterQueue
+            - Arn
+        maxReceiveCount: 3
 Outputs:
   ForecastPreloaderQueueUrl:
     Value: !Ref ForecastPreloaderQueue
@@ -73,3 +85,11 @@ Outputs:
     Value: !GetAtt WindFinderPreloaderQueue.Arn
     Export:
       Name: !Join ["-", [WindFinderPreloaderQueueArn, Ref: StageParam]]
+  UsgsPreloaderQueueUrl:
+    Value: !Ref UsgsPreloaderQueue
+    Export:
+      Name: !Join ["-", [UsgsPreloaderQueueUrl, Ref: StageParam]]
+  UsgsPreloaderQueueArn:
+    Value: !GetAtt UsgsPreloaderQueue.Arn
+    Export:
+      Name: !Join ["-", [UsgsPreloaderQueueArn, Ref: StageParam]]

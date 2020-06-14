@@ -7,7 +7,8 @@ import { chunk } from "lodash";
 export const PRODUCER_NAMES = {
   forecast: "forecast-preloader",
   tide: "tide-preloader",
-  windFinder: "wind-finder",
+  windFinder: "wind-finder-preloader",
+  usgs: "usgs-preloader",
 };
 
 export const forecast: ScheduledHandler = async () => {
@@ -57,5 +58,23 @@ export const windFinder: ScheduledHandler = async () => {
   for (const slug of uniqueSlugs) {
     const body = { slug };
     await sendMessage(process.env.QUEUE_URL!, PRODUCER_NAMES.windFinder, body);
+  }
+};
+
+export const usgs: ScheduledHandler = async () => {
+  console.log("Preloading USGS");
+
+  const uniqueSiteIds = getAll().reduce((sites, location) => {
+    location.usgsSiteIds.forEach((id) => sites.add(id));
+    return sites;
+  }, new Set());
+
+  const chunks = chunk([...uniqueSiteIds], 10);
+  for (const chunk of chunks) {
+    await sendMessageBatch(
+      process.env.QUEUE_URL!,
+      PRODUCER_NAMES.usgs,
+      chunk.map((siteId) => ({ siteId }))
+    );
   }
 };

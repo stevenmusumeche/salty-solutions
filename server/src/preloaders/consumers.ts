@@ -39,3 +39,10 @@ export const windFinder: SQSHandler = async (event, ctx, cb) => {
     await loadAndSave(payload.slug);
   }
 };
+
+export const usgs: SQSHandler = async (event, ctx, cb) => {
+  for (const record of event.Records) {
+    const payload = JSON.parse(record.body);
+    console.log("Preloading USGS for", payload.siteId);
+  }
+};
