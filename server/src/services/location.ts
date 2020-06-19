@@ -59,12 +59,12 @@ const locations: LocationEntity[] = [
     tideStationIds: ["8768094", "8767961", "8767816"],
     marineZoneId: "GMZ432",
     coords: {
-      lat: 29.9103,
-      lon: -93.2785,
+      lat: 29.996,
+      lon: -93.3421,
     },
     usgsSiteIds: ["08017118", "08017095", "08017044"],
     weatherGov: {
-      apiBase: "https://api.weather.gov/gridpoints/LCH/57,80",
+      apiBase: "https://api.weather.gov/gridpoints/LCH/54,83",
       stationId: "KLCH",
       radarSiteId: "LCH",
     },
@@ -115,7 +115,7 @@ const locations: LocationEntity[] = [
     },
     usgsSiteIds: ["07381349", "073813498"],
     weatherGov: {
-      apiBase: "ttps://api.weather.gov/gridpoints/LIX/42,65",
+      apiBase: "https://api.weather.gov/gridpoints/LIX/42,65",
       stationId: "KHUM",
       radarSiteId: "LIX",
     },
@@ -239,8 +239,8 @@ const locations: LocationEntity[] = [
     ],
     marineZoneId: "GMZ530",
     coords: {
-      lat: 30.193165894,
-      lon: -90.120332852,
+      lat: 30.0385,
+      lon: -90.0264,
     },
     usgsSiteIds: [
       "301001089442600",
@@ -255,7 +255,7 @@ const locations: LocationEntity[] = [
       "300703089522700",
     ],
     weatherGov: {
-      apiBase: "https://api.weather.gov/gridpoints/LIX/66,100",
+      apiBase: "https://api.weather.gov/gridpoints/LIX/70,93",
       stationId: "KASD",
       radarSiteId: "LIX",
     },
@@ -269,8 +269,8 @@ const locations: LocationEntity[] = [
     tideStationIds: ["8761402", "8761487", "8761473"],
     marineZoneId: "GMZ534",
     coords: {
-      lat: 30.1652143,
-      lon: -89.7281603,
+      lat: 30.170021,
+      lon: -89.711048,
     },
     usgsSiteIds: [
       "301001089442600",
@@ -279,7 +279,7 @@ const locations: LocationEntity[] = [
       "300703089522700",
     ],
     weatherGov: {
-      apiBase: "https://api.weather.gov/gridpoints/LIX/66,100",
+      apiBase: "https://api.weather.gov/gridpoints/LIX/82,99",
       stationId: "KASD",
       radarSiteId: "LIX",
     },
