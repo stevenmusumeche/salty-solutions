@@ -8,11 +8,13 @@ import { UseQueryState } from "urql";
 export function useCurrentWindData(
   locationId: string,
   startDate: Date,
-  endDate: Date
+  endDate: Date,
+  usgsSiteId?: string
 ) {
   const [result, executeQuery] = useCurrentConditionsDataQuery({
     variables: {
       locationId,
+      usgsSiteId,
       startDate: startDate.toISOString(),
       endDate: endDate.toISOString(),
     },
@@ -30,16 +32,17 @@ export function useCurrentWindData(
 }
 
 function extractData(windData: UseQueryState<CurrentConditionsDataQuery>) {
-  const curValue =
-    windData?.data?.location?.wind?.summary?.mostRecent &&
-    noDecimals(windData.data.location.wind.summary.mostRecent.speed);
+  // not all locations have a valid USGS site for wind speed
+  const base = windData?.data?.usgsSite?.wind || windData.data?.location?.wind;
 
-  const curDirectionValue =
-    windData?.data?.location?.wind?.summary?.mostRecent?.direction;
+  const curValue =
+    base?.summary.mostRecent && noDecimals(base?.summary.mostRecent.speed);
+
+  const curDirectionValue = base?.summary?.mostRecent?.direction;
 
   const curDetail =
-    windData?.data?.location?.wind?.detail &&
-    windData.data.location.wind.detail
+    base?.detail &&
+    base?.detail
       .map((data) => ({
         y: data.speed,
         x: data.timestamp,

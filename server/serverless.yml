@@ -57,22 +57,22 @@ functions:
           path: api
 
   # todo change this to v2?
-  preload-forecast-producer:
-    handler: src/preloaders/producers.forecast
-    events:
-      - schedule:
-          name: ForecastPreloader-${self:provider.stage}
-          enabled: ${self:custom.schedule_enabled.${self:provider.stage}, false}
-          rate: rate(3 hours)
-    environment:
-      QUEUE_URL: ${cf:ss-queue-${self:provider.stage}.ForecastPreloaderQueueUrl}
-  preload-forecast-consumer:
-    handler: src/preloaders/consumers.forecast
-    timeout: 120
-    events:
-      - sqs:
-          batchSize: 1
-          arn: ${cf:ss-queue-${self:provider.stage}.ForecastPreloaderQueueArn}
+  # preload-forecast-producer:
+  #   handler: src/preloaders/producers.forecast
+  #   events:
+  #     - schedule:
+  #         name: ForecastPreloader-${self:provider.stage}
+  #         enabled: ${self:custom.schedule_enabled.${self:provider.stage}, false}
+  #         rate: rate(3 hours)
+  #   environment:
+  #     QUEUE_URL: ${cf:ss-queue-${self:provider.stage}.ForecastPreloaderQueueUrl}
+  # preload-forecast-consumer:
+  #   handler: src/preloaders/consumers.forecast
+  #   timeout: 120
+  #   events:
+  #     - sqs:
+  #         batchSize: 1
+  #         arn: ${cf:ss-queue-${self:provider.stage}.ForecastPreloaderQueueArn}
 
   preload-windfinder-producer:
     handler: src/preloaders/producers.windFinder

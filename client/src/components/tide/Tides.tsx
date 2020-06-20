@@ -223,6 +223,12 @@ const HighLowTable: React.FC<{
         </Pill>
       ))}
 
+      {sunData && sunData.nauticalDawn && (
+        <Pill label="Nautical Dawn" color="orange-700">
+          {formatDate(sunData.nauticalDawn)}
+        </Pill>
+      )}
+
       {sunData && sunData.dawn && (
         <Pill label="Dawn" color="orange-700">
           {formatDate(sunData.dawn)}
@@ -241,6 +247,11 @@ const HighLowTable: React.FC<{
       {sunData && sunData.dusk && (
         <Pill label="Dusk" color="orange-700">
           {formatDate(sunData.dusk)}
+        </Pill>
+      )}
+      {sunData && sunData.nauticalDusk && (
+        <Pill label="Nautical Dusk" color="orange-700">
+          {formatDate(sunData.nauticalDusk)}
         </Pill>
       )}
       {moonData && moonData.phase && (

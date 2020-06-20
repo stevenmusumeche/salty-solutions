@@ -1,8 +1,25 @@
 export { getSiteById } from "./source";
 import { client, tableName } from "../db";
-import { WaterHeight, Salinity, WaterTemperature } from "./source";
+import { WaterHeight, Salinity, WaterTemperature, Wind } from "./source";
 import { subHours } from "date-fns";
 import { orderBy } from "lodash";
+
+export const getWind = async (
+  siteId: string,
+  start: Date,
+  end: Date
+): Promise<Wind[]> => {
+  const pk = `usgs-wind-${siteId}`;
+  return queryData<Wind>(pk, start, end);
+};
+
+export const getWindLatest = async (siteId: string) => {
+  const data = await getWind(siteId, subHours(new Date(), 24), new Date());
+
+  if (data.length < 1) return null;
+
+  return orderBy(data, [(x) => x.timestamp], ["desc"])[0];
+};
 
 export const getWaterHeight = async (
   siteId: string,

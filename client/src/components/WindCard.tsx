@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import ConditionCard from "./ConditionCard";
 import { hooks } from "@stevenmusumeche/salty-solutions-shared";
 import { subHours, differenceInDays, startOfDay } from "date-fns";
@@ -13,11 +13,18 @@ import ErrorIcon from "../assets/error.svg";
 import { CombinedError } from "urql";
 import MiniGraphWrapper from "./MiniGraphWrapper";
 import { noDecimals } from "../hooks/utils";
+import { UsgsSiteDetailFragment } from "@stevenmusumeche/salty-solutions-shared/dist/graphql";
+import UsgsSiteSelect from "./UsgsSiteSelect";
 
 interface Props {
   locationId: string;
+  usgsSites: UsgsSiteDetailFragment[];
 }
-const WindCard: React.FC<Props> = ({ locationId }) => {
+const WindCard: React.FC<Props> = ({ locationId, usgsSites }) => {
+  const [selectedUsgsSiteId, setSelectedUsgsSiteId] = useState(() =>
+    usgsSites.length ? usgsSites[0].id : undefined
+  );
+
   const date = startOfDay(new Date());
   const {
     curValue,
@@ -25,7 +32,16 @@ const WindCard: React.FC<Props> = ({ locationId }) => {
     curDirectionValue,
     fetching,
     error,
-  } = hooks.useCurrentWindData(locationId, subHours(date, 48), date);
+  } = hooks.useCurrentWindData(
+    locationId,
+    subHours(date, 48),
+    date,
+    selectedUsgsSiteId
+  );
+
+  useEffect(() => {
+    setSelectedUsgsSiteId(usgsSites.length ? usgsSites[0].id : undefined);
+  }, [locationId, usgsSites]);
 
   let graphDisplayVal = buildGraphDisplayVal(fetching, error, curDetail);
 
@@ -46,6 +62,13 @@ const WindCard: React.FC<Props> = ({ locationId }) => {
           </div>
         )}
         <div>{graphDisplayVal}</div>
+        {selectedUsgsSiteId && usgsSites.length > 1 && (
+          <UsgsSiteSelect
+            sites={usgsSites}
+            handleChange={(e) => setSelectedUsgsSiteId(e.target.value)}
+            selectedId={selectedUsgsSiteId}
+          />
+        )}
       </div>
     </ConditionCard>
   );
@@ -53,8 +76,8 @@ const WindCard: React.FC<Props> = ({ locationId }) => {
 
 export default WindCard;
 
-const ArrowPoint: React.FC<any> = ({ x, y, datum, index, ...props }) => {
-  if (index % 3 !== 0) return null;
+const ArrowPoint: React.FC<any> = ({ x, y, datum, index, data, ...props }) => {
+  if (index % Math.floor(data.length / 10) !== 0) return null;
 
   return (
     <svg

@@ -14,19 +14,6 @@ export type Scalars = {
   Float: number;
 };
 
-export type CombinedForecast = {
-  __typename?: 'CombinedForecast';
-  timePeriod: Scalars['String'];
-  wind: WindForecast;
-  waterCondition?: Maybe<WaterCondition>;
-  temperature: Temperature;
-  marine?: Maybe<Scalars['String']>;
-  short: Scalars['String'];
-  detailed: Scalars['String'];
-  chanceOfPrecipitation?: Maybe<Scalars['Int']>;
-  icon: Scalars['String'];
-};
-
 export type CombinedForecastV2 = {
   __typename?: 'CombinedForecastV2';
   date: Scalars['String'];
@@ -342,6 +329,7 @@ export type UsgsSite = {
   coords: Coords;
   waterHeight?: Maybe<Array<WaterHeight>>;
   waterTemperature?: Maybe<WaterTemperature>;
+  wind: WindV2;
   salinity?: Maybe<Salinity>;
   availableParams: Array<UsgsParam>;
 };
@@ -430,15 +418,21 @@ export type WindDirection = {
   degrees: Scalars['Int'];
 };
 
-export type WindForecast = {
-  __typename?: 'WindForecast';
-  speed?: Maybe<ForecastWindSpeedDetail>;
-  direction?: Maybe<WindDirection>;
-};
-
 export type WindSummary = {
   __typename?: 'WindSummary';
   mostRecent?: Maybe<WindDetail>;
+};
+
+export type WindV2 = {
+  __typename?: 'WindV2';
+  summary: WindSummary;
+  detail?: Maybe<Array<WindDetail>>;
+};
+
+
+export type WindV2DetailArgs = {
+  start: Scalars['String'];
+  end: Scalars['String'];
 };
 
 
@@ -534,6 +528,9 @@ export type ResolversTypes = {
   WaterTemperatureSummary: ResolverTypeWrapper<Partial<WaterTemperatureSummary>>;
   TemperatureDetail: ResolverTypeWrapper<Partial<TemperatureDetail>>;
   Temperature: ResolverTypeWrapper<Partial<Temperature>>;
+  WindV2: ResolverTypeWrapper<Partial<WindV2>>;
+  WindSummary: ResolverTypeWrapper<Partial<WindSummary>>;
+  WindDetail: ResolverTypeWrapper<Partial<WindDetail>>;
   Salinity: ResolverTypeWrapper<Partial<Salinity>>;
   SalinitySummary: ResolverTypeWrapper<Partial<SalinitySummary>>;
   SalinityDetail: ResolverTypeWrapper<Partial<SalinityDetail>>;
@@ -553,8 +550,6 @@ export type ResolversTypes = {
   MarineForecastTimePeriod: ResolverTypeWrapper<Partial<MarineForecastTimePeriod>>;
   MarineForecastDetail: ResolverTypeWrapper<Partial<MarineForecastDetail>>;
   Wind: ResolverTypeWrapper<Partial<Wind> & {location: LocationEntity}>;
-  WindSummary: ResolverTypeWrapper<Partial<WindSummary>>;
-  WindDetail: ResolverTypeWrapper<Partial<WindDetail>>;
   TemperatureResult: ResolverTypeWrapper<Partial<TemperatureResult> & {location: LocationEntity}>;
   TemperatureSummary: ResolverTypeWrapper<Partial<TemperatureSummary>>;
   Maps: ResolverTypeWrapper<Partial<Maps> & {location: LocationEntity}>;
@@ -564,8 +559,6 @@ export type ResolversTypes = {
   ModisMap: ResolverTypeWrapper<Partial<ModisMap>>;
   ModisSatellite: ResolverTypeWrapper<Partial<ModisSatellite>>;
   ModisMapEntry: ResolverTypeWrapper<Partial<ModisMapEntry>>;
-  CombinedForecast: ResolverTypeWrapper<Partial<CombinedForecast>>;
-  WindForecast: ResolverTypeWrapper<Partial<WindForecast>>;
   WaterCondition: ResolverTypeWrapper<Partial<WaterCondition>>;
   CurrentWind: ResolverTypeWrapper<Partial<CurrentWind>>;
 };
@@ -587,6 +580,9 @@ export type ResolversParentTypes = {
   WaterTemperatureSummary: Partial<WaterTemperatureSummary>;
   TemperatureDetail: Partial<TemperatureDetail>;
   Temperature: Partial<Temperature>;
+  WindV2: Partial<WindV2>;
+  WindSummary: Partial<WindSummary>;
+  WindDetail: Partial<WindDetail>;
   Salinity: Partial<Salinity>;
   SalinitySummary: Partial<SalinitySummary>;
   SalinityDetail: Partial<SalinityDetail>;
@@ -606,8 +602,6 @@ export type ResolversParentTypes = {
   MarineForecastTimePeriod: Partial<MarineForecastTimePeriod>;
   MarineForecastDetail: Partial<MarineForecastDetail>;
   Wind: Partial<Wind> & {location: LocationEntity};
-  WindSummary: Partial<WindSummary>;
-  WindDetail: Partial<WindDetail>;
   TemperatureResult: Partial<TemperatureResult> & {location: LocationEntity};
   TemperatureSummary: Partial<TemperatureSummary>;
   Maps: Partial<Maps> & {location: LocationEntity};
@@ -617,23 +611,8 @@ export type ResolversParentTypes = {
   ModisMap: Partial<ModisMap>;
   ModisSatellite: Partial<ModisSatellite>;
   ModisMapEntry: Partial<ModisMapEntry>;
-  CombinedForecast: Partial<CombinedForecast>;
-  WindForecast: Partial<WindForecast>;
   WaterCondition: Partial<WaterCondition>;
   CurrentWind: Partial<CurrentWind>;
-};
-
-export type CombinedForecastResolvers<ContextType = Context, ParentType extends ResolversParentTypes['CombinedForecast'] = ResolversParentTypes['CombinedForecast']> = {
-  timePeriod?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  wind?: Resolver<ResolversTypes['WindForecast'], ParentType, ContextType>;
-  waterCondition?: Resolver<Maybe<ResolversTypes['WaterCondition']>, ParentType, ContextType>;
-  temperature?: Resolver<ResolversTypes['Temperature'], ParentType, ContextType>;
-  marine?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  short?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  detailed?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  chanceOfPrecipitation?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  icon?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
 };
 
 export type CombinedForecastV2Resolvers<ContextType = Context, ParentType extends ResolversParentTypes['CombinedForecastV2'] = ResolversParentTypes['CombinedForecastV2']> = {
@@ -871,6 +850,7 @@ export type UsgsSiteResolvers<ContextType = Context, ParentType extends Resolver
   coords?: Resolver<ResolversTypes['Coords'], ParentType, ContextType>;
   waterHeight?: Resolver<Maybe<Array<ResolversTypes['WaterHeight']>>, ParentType, ContextType, RequireFields<UsgsSiteWaterHeightArgs, 'start' | 'end'>>;
   waterTemperature?: Resolver<Maybe<ResolversTypes['WaterTemperature']>, ParentType, ContextType>;
+  wind?: Resolver<ResolversTypes['WindV2'], ParentType, ContextType>;
   salinity?: Resolver<Maybe<ResolversTypes['Salinity']>, ParentType, ContextType, RequireFields<UsgsSiteSalinityArgs, 'start' | 'end'>>;
   availableParams?: Resolver<Array<ResolversTypes['UsgsParam']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType>;
@@ -934,19 +914,18 @@ export type WindDirectionResolvers<ContextType = Context, ParentType extends Res
   __isTypeOf?: IsTypeOfResolverFn<ParentType>;
 };
 
-export type WindForecastResolvers<ContextType = Context, ParentType extends ResolversParentTypes['WindForecast'] = ResolversParentTypes['WindForecast']> = {
-  speed?: Resolver<Maybe<ResolversTypes['ForecastWindSpeedDetail']>, ParentType, ContextType>;
-  direction?: Resolver<Maybe<ResolversTypes['WindDirection']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
-};
-
 export type WindSummaryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['WindSummary'] = ResolversParentTypes['WindSummary']> = {
   mostRecent?: Resolver<Maybe<ResolversTypes['WindDetail']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType>;
 };
 
+export type WindV2Resolvers<ContextType = Context, ParentType extends ResolversParentTypes['WindV2'] = ResolversParentTypes['WindV2']> = {
+  summary?: Resolver<ResolversTypes['WindSummary'], ParentType, ContextType>;
+  detail?: Resolver<Maybe<Array<ResolversTypes['WindDetail']>>, ParentType, ContextType, RequireFields<WindV2DetailArgs, 'start' | 'end'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+};
+
 export type Resolvers<ContextType = Context> = {
-  CombinedForecast?: CombinedForecastResolvers<ContextType>;
   CombinedForecastV2?: CombinedForecastV2Resolvers<ContextType>;
   Coords?: CoordsResolvers<ContextType>;
   CurrentWind?: CurrentWindResolvers<ContextType>;
@@ -986,8 +965,8 @@ export type Resolvers<ContextType = Context> = {
   Wind?: WindResolvers<ContextType>;
   WindDetail?: WindDetailResolvers<ContextType>;
   WindDirection?: WindDirectionResolvers<ContextType>;
-  WindForecast?: WindForecastResolvers<ContextType>;
   WindSummary?: WindSummaryResolvers<ContextType>;
+  WindV2?: WindV2Resolvers<ContextType>;
 };
 
 

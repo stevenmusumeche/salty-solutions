@@ -144,6 +144,10 @@ const resolvers: Resolvers & { UsgsParam: Object } = {
       ctx.pass.site = site;
       return {};
     },
+    wind: async (site, args, ctx) => {
+      ctx.pass.site = site;
+      return {};
+    },
   },
   WaterTemperature: {
     detail: async (_, args, { services, pass }) => {
@@ -159,6 +163,21 @@ const resolvers: Resolvers & { UsgsParam: Object } = {
       };
     },
   },
+  WindV2: {
+    detail: async (_, args, { services, pass }) => {
+      return services.usgs.getWind(
+        pass.site.id,
+        new Date(args.start),
+        new Date(args.end)
+      );
+    },
+    summary: async (_, args, { services, pass }) => {
+      return {
+        mostRecent: await services.usgs.getWindLatest(pass.site.id),
+      };
+    },
+  },
+  // @deprecated
   Wind: {
     detail: async (wind, args, { services }) => {
       const result = await services.weather.getConditions(
@@ -169,7 +188,6 @@ const resolvers: Resolvers & { UsgsParam: Object } = {
       return result.wind;
     },
     summary: async (wind, args, { services }) => {
-      // todo: switch to "getCurrentConditions"
       const result = await services.weather.getLatestConditions(wind.location);
       return {
         mostRecent: result.wind,

@@ -51,11 +51,13 @@ const WaterTempCard: React.FC<Props> = ({ locationId, usgsSites }) => {
           className="water-temp-graph"
           refresh={refresh}
         />
-        <UsgsSiteSelect
-          sites={usgsSites}
-          handleChange={(e) => setSelectedUsgsSiteId(e.target.value)}
-          selectedId={selectedUsgsSiteId}
-        />
+        {selectedUsgsSiteId && usgsSites.length > 1 && (
+          <UsgsSiteSelect
+            sites={usgsSites}
+            handleChange={(e) => setSelectedUsgsSiteId(e.target.value)}
+            selectedId={selectedUsgsSiteId}
+          />
+        )}
       </div>
     </ConditionCard>
   );

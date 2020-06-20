@@ -73,6 +73,16 @@ const CURRENT_CONDITIONS_QUERY = gql`
         }
       }
     }
+    wind {
+      summary {
+        mostRecent {
+          ...WindDetailFields2
+        }
+      }
+      detail(start: $startDate, end: $endDate) {
+        ...WindDetailFields2
+      }
+    }
   }
 
   fragment WindDetailFields2 on WindDetail {

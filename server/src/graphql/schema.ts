@@ -33,8 +33,11 @@ export default gql`
     id: ID!
     name: String!
     coords: Coords!
+    # todo: make this match the same format as wind and water temp
     waterHeight(start: String!, end: String!): [WaterHeight!]
     waterTemperature: WaterTemperature
+    wind: WindV2!
+    # todo: make this match the same format as wind and water temp
     salinity(start: String!, end: String!): Salinity
     availableParams: [UsgsParam!]!
   }
@@ -66,17 +69,18 @@ export default gql`
     weatherRadarSiteId: String!
   }
 
-  type CombinedForecast {
-    timePeriod: String!
-    wind: WindForecast!
-    waterCondition: WaterCondition
-    temperature: Temperature!
-    marine: String
-    short: String!
-    detailed: String!
-    chanceOfPrecipitation: Int
-    icon: String!
-  }
+  # todo
+  # type CombinedForecast {
+  #   timePeriod: String!
+  #   wind: WindForecast!
+  #   waterCondition: WaterCondition
+  #   temperature: Temperature!
+  #   marine: String
+  #   short: String!
+  #   detailed: String!
+  #   chanceOfPrecipitation: Int
+  #   icon: String!
+  # }
 
   type CombinedForecastV2 {
     date: String!
@@ -100,10 +104,10 @@ export default gql`
     icon: String!
   }
 
-  type WindForecast {
-    speed: ForecastWindSpeedDetail
-    direction: WindDirection
-  }
+  # type WindForecast {
+  #   speed: ForecastWindSpeedDetail
+  #   direction: WindDirection
+  # }
 
   type Maps {
     radar(numImages: Int): [Map!]!
@@ -266,6 +270,12 @@ export default gql`
   }
 
   type Wind {
+    summary: WindSummary!
+    detail(start: String!, end: String!): [WindDetail!]
+  }
+
+  # duplicated from Wind so we can have different type resolvers
+  type WindV2 {
     summary: WindSummary!
     detail(start: String!, end: String!): [WindDetail!]
   }

@@ -43,11 +43,13 @@ const SalinityCard: React.FC<Props> = ({ locationId, usgsSites }) => {
           dependentAxisTickFormat={oneDecimal}
           className="salinity-graph"
         />
-        <UsgsSiteSelect
-          sites={usgsSites}
-          handleChange={(e) => setSelectedUsgsSiteId(e.target.value)}
-          selectedId={selectedUsgsSiteId}
-        />
+        {selectedUsgsSiteId && usgsSites.length > 1 && (
+          <UsgsSiteSelect
+            sites={usgsSites}
+            handleChange={(e) => setSelectedUsgsSiteId(e.target.value)}
+            selectedId={selectedUsgsSiteId}
+          />
+        )}
       </div>
     </ConditionCard>
   );

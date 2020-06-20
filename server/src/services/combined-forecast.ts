@@ -1,7 +1,7 @@
 import { LocationEntity, makeCacheKey } from "./location";
 import { getForecast as getMarineForecast } from "./marine";
 import { getForecast as getWeatherForecast } from "./weather";
-import { CombinedForecast, CombinedForecastV2 } from "../generated/graphql";
+import { CombinedForecastV2 } from "../generated/graphql";
 import { getCacheVal, setCacheVal } from "./db";
 import { getData } from "./wind-finder";
 import {
@@ -121,62 +121,6 @@ export const getCombinedForecastV2 = async (
   });
 
   return data;
-};
-
-/**
- * @deprecated
- */
-export const getCombinedForecast = async (
-  location: LocationEntity
-): Promise<CombinedForecast[]> => {
-  const cacheKey = makeCacheKey(location, "combined-forecast");
-  const cachedData = await getCacheVal<CombinedForecast[]>(cacheKey, 3 * 60); // fresh for 3 hours
-  if (cachedData) return cachedData;
-
-  const [marine, weather] = await Promise.all([
-    getMarineForecast(location),
-    getWeatherForecast(location),
-  ]);
-
-  const result = weather.map((w) => {
-    const timePeriod = getNormalizedName(w.name);
-    const matchedMarine = marine.find(
-      (x) => getNormalizedName(x.timePeriod.text) === timePeriod
-    );
-
-    const windSpeed =
-      matchedMarine && matchedMarine.forecast.windSpeed
-        ? matchedMarine.forecast.windSpeed
-        : w.windSpeed;
-
-    const windDirection =
-      matchedMarine && matchedMarine.forecast.windDirection
-        ? matchedMarine.forecast.windDirection
-        : w.windDirection;
-
-    return {
-      timePeriod,
-      wind: {
-        speed: windSpeed,
-        direction: windDirection,
-      },
-      waterCondition:
-        matchedMarine && matchedMarine.forecast.waterCondition
-          ? {
-              text: matchedMarine.forecast.waterCondition,
-              icon: "todo.jpg",
-            }
-          : null,
-      temperature: w.temperature,
-      marine: matchedMarine && matchedMarine.forecast.text,
-      short: w.shortForecast,
-      detailed: w.detailedForecast,
-      chanceOfPrecipitation: w.chanceOfPrecipitation,
-      icon: w.icon,
-    };
-  });
-
-  return setCacheVal(cacheKey, result);
 };
 
 // these should be considered the same time period and normalized to the first entry

@@ -120,6 +120,14 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
     );
   }, [selectedLocation]);
 
+  const usgsWindSites = useMemo(() => {
+    return (
+      selectedLocation?.usgsSites.filter((site) =>
+        site.availableParams.includes(UsgsParam.WindSpeed)
+      ) || []
+    );
+  }, [selectedLocation]);
+
   if (locations.fetching) {
     return null;
   }
@@ -147,7 +155,7 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
       <div className="container p-4 md:p-0 md:mx-auto md:my-0 md:mt-8">
         <span id="current-conditions"></span>
         <div className="current-conditions-grid">
-          <WindCard locationId={locationId} />
+          <WindCard locationId={locationId} usgsSites={usgsWindSites} />
           <AirTempCard locationId={locationId} />
           <WaterTempCard
             locationId={locationId}

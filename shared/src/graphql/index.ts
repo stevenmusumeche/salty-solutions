@@ -11,19 +11,6 @@ export type Scalars = {
   Float: number;
 };
 
-export type CombinedForecast = {
-  __typename?: 'CombinedForecast';
-  timePeriod: Scalars['String'];
-  wind: WindForecast;
-  waterCondition?: Maybe<WaterCondition>;
-  temperature: Temperature;
-  marine?: Maybe<Scalars['String']>;
-  short: Scalars['String'];
-  detailed: Scalars['String'];
-  chanceOfPrecipitation?: Maybe<Scalars['Int']>;
-  icon: Scalars['String'];
-};
-
 export type CombinedForecastV2 = {
   __typename?: 'CombinedForecastV2';
   date: Scalars['String'];
@@ -339,6 +326,7 @@ export type UsgsSite = {
   coords: Coords;
   waterHeight?: Maybe<Array<WaterHeight>>;
   waterTemperature?: Maybe<WaterTemperature>;
+  wind: WindV2;
   salinity?: Maybe<Salinity>;
   availableParams: Array<UsgsParam>;
 };
@@ -427,15 +415,21 @@ export type WindDirection = {
   degrees: Scalars['Int'];
 };
 
-export type WindForecast = {
-  __typename?: 'WindForecast';
-  speed?: Maybe<ForecastWindSpeedDetail>;
-  direction?: Maybe<WindDirection>;
-};
-
 export type WindSummary = {
   __typename?: 'WindSummary';
   mostRecent?: Maybe<WindDetail>;
+};
+
+export type WindV2 = {
+  __typename?: 'WindV2';
+  summary: WindSummary;
+  detail?: Maybe<Array<WindDetail>>;
+};
+
+
+export type WindV2DetailArgs = {
+  start: Scalars['String'];
+  end: Scalars['String'];
 };
 
 export type CombinedForecastV2QueryVariables = {
@@ -582,7 +576,19 @@ export type UsgsSiteDetailFieldsFragment = (
         & Pick<Temperature, 'degrees'>
       ) }
     )>> }
-  )> }
+  )>, wind: (
+    { __typename?: 'WindV2' }
+    & { summary: (
+      { __typename?: 'WindSummary' }
+      & { mostRecent?: Maybe<(
+        { __typename?: 'WindDetail' }
+        & WindDetailFields2Fragment
+      )> }
+    ), detail?: Maybe<Array<(
+      { __typename?: 'WindDetail' }
+      & WindDetailFields2Fragment
+    )>> }
+  ) }
 );
 
 export type WindDetailFields2Fragment = (
@@ -821,6 +827,14 @@ export const CombinedForecastV2DetailFragmentDoc = gql`
   }
 }
     `;
+export const WindDetailFields2FragmentDoc = gql`
+    fragment WindDetailFields2 on WindDetail {
+  timestamp
+  speed
+  direction
+  directionDegrees
+}
+    `;
 export const UsgsSiteDetailFieldsFragmentDoc = gql`
     fragment UsgsSiteDetailFields on UsgsSite {
   id
@@ -852,16 +866,18 @@ export const UsgsSiteDetailFieldsFragmentDoc = gql`
       }
     }
   }
+  wind {
+    summary {
+      mostRecent {
+        ...WindDetailFields2
+      }
+    }
+    detail(start: $startDate, end: $endDate) {
+      ...WindDetailFields2
+    }
+  }
 }
-    `;
-export const WindDetailFields2FragmentDoc = gql`
-    fragment WindDetailFields2 on WindDetail {
-  timestamp
-  speed
-  direction
-  directionDegrees
-}
-    `;
+    ${WindDetailFields2FragmentDoc}`;
 export const HourlyForecastDetailFragmentDoc = gql`
     fragment HourlyForecastDetail on WeatherForecast {
   startTime

@@ -428,7 +428,7 @@ const getWaterTemperature = async (
   );
 };
 
-interface Wind {
+export interface Wind {
   timestamp: string;
   speed: number;
   direction: string;
