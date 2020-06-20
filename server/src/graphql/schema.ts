@@ -16,7 +16,6 @@ export default gql`
     coords: Coords!
     sun(start: String!, end: String!): [SunDetail!]
     moon(start: String!, end: String!): [MoonDetail!]
-    # combinedForecast: [CombinedForecast!]
     combinedForecastV2(start: String!, end: String!): [CombinedForecastV2!]
     weatherForecast: [WeatherForecast!]
     hourlyWeatherForecast: [WeatherForecast!]
@@ -33,12 +32,10 @@ export default gql`
     id: ID!
     name: String!
     coords: Coords!
-    # todo: make this match the same format as wind and water temp
     waterHeight(start: String!, end: String!): [WaterHeight!]
     waterTemperature: WaterTemperature
-    wind: WindV2!
-    # todo: make this match the same format as wind and water temp
-    salinity(start: String!, end: String!): Salinity
+    wind: UsgsWind
+    salinity: Salinity
     availableParams: [UsgsParam!]!
   }
 
@@ -69,19 +66,6 @@ export default gql`
     weatherRadarSiteId: String!
   }
 
-  # todo
-  # type CombinedForecast {
-  #   timePeriod: String!
-  #   wind: WindForecast!
-  #   waterCondition: WaterCondition
-  #   temperature: Temperature!
-  #   marine: String
-  #   short: String!
-  #   detailed: String!
-  #   chanceOfPrecipitation: Int
-  #   icon: String!
-  # }
-
   type CombinedForecastV2 {
     date: String!
     name: String!
@@ -98,16 +82,6 @@ export default gql`
     detailed: String
     marine: String
   }
-
-  type WaterCondition {
-    text: String!
-    icon: String!
-  }
-
-  # type WindForecast {
-  #   speed: ForecastWindSpeedDetail
-  #   direction: WindDirection
-  # }
 
   type Maps {
     radar(numImages: Int): [Map!]!
@@ -145,9 +119,7 @@ export default gql`
     id: ID!
     name: String!
     url: String!
-    # todo move to Coords type
-    lat: Float!
-    long: Float!
+    coords: Coords!
     tides(start: String!, end: String!): [TideDetail!]
   }
 
@@ -275,7 +247,7 @@ export default gql`
   }
 
   # duplicated from Wind so we can have different type resolvers
-  type WindV2 {
+  type UsgsWind {
     summary: WindSummary!
     detail(start: String!, end: String!): [WindDetail!]
   }
@@ -292,7 +264,7 @@ export default gql`
 
   type Salinity {
     summary: SalinitySummary
-    detail: [SalinityDetail!]
+    detail(start: String!, end: String!): [SalinityDetail!]
   }
 
   type SalinitySummary {

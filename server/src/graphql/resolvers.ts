@@ -128,17 +128,9 @@ const resolvers: Resolvers & { UsgsParam: Object } = {
         new Date(args.end)
       );
     },
-    salinity: async (site, args, { services }) => {
-      const detail = await services.usgs.getSalinity(
-        site.id,
-        new Date(args.start),
-        new Date(args.end)
-      );
-      const mostRecent = detail[detail.length - 1];
-      return {
-        summary: { mostRecent },
-        detail,
-      };
+    salinity: async (site, args, ctx) => {
+      ctx.pass.site = site;
+      return {};
     },
     waterTemperature: async (site, args, ctx) => {
       ctx.pass.site = site;
@@ -149,7 +141,23 @@ const resolvers: Resolvers & { UsgsParam: Object } = {
       return {};
     },
   },
+  Salinity: {
+    // todo: can we use data loader here so that detail and summary don't each make an API call?
+    detail: async (_, args, { services, pass }) => {
+      return services.usgs.getSalinity(
+        pass.site.id,
+        new Date(args.start),
+        new Date(args.end)
+      );
+    },
+    summary: async (_, args, { services, pass }) => {
+      return {
+        mostRecent: await services.usgs.getSalinityLatest(pass.site.id),
+      };
+    },
+  },
   WaterTemperature: {
+    // todo: can we use data loader here so that detail and summary don't each make an API call?
     detail: async (_, args, { services, pass }) => {
       return services.usgs.getWaterTemperature(
         pass.site.id,
@@ -163,7 +171,8 @@ const resolvers: Resolvers & { UsgsParam: Object } = {
       };
     },
   },
-  WindV2: {
+  UsgsWind: {
+    // todo: can we use data loader here so that detail and summary don't each make an API call?
     detail: async (_, args, { services, pass }) => {
       return services.usgs.getWind(
         pass.site.id,
@@ -177,8 +186,8 @@ const resolvers: Resolvers & { UsgsParam: Object } = {
       };
     },
   },
-  // @deprecated
   Wind: {
+    // todo: can we use data loader here so that detail and summary don't each make an API call?
     detail: async (wind, args, { services }) => {
       const result = await services.weather.getConditions(
         wind.location,
@@ -195,6 +204,7 @@ const resolvers: Resolvers & { UsgsParam: Object } = {
     },
   },
   TemperatureResult: {
+    // todo: can we use data loader here so that detail and summary don't each make an API call?
     detail: async (temperature, args, { services }) => {
       const data = await services.weather.getConditions(
         temperature.location,

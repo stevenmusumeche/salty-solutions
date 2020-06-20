@@ -45,14 +45,13 @@ const CURRENT_CONDITIONS_QUERY = gql`
   fragment UsgsSiteDetailFields on UsgsSite {
     id
     name
-    # // todo fix this
-    salinity(start: $startDate, end: $endDate) {
+    salinity {
       summary {
         mostRecent {
           salinity
         }
       }
-      detail {
+      detail(start: $startDate, end: $endDate) {
         timestamp
         salinity
       }

@@ -147,7 +147,7 @@ export const getConditions = async (
     .filter((x: any) => !!x.properties.windDirection.value)
     .map((x: any) => ({
       timestamp: x.properties.timestamp,
-      speed: metersPerSecondToMph(x.properties.windSpeed.value),
+      speed: kilometersPerHourToMph(x.properties.windSpeed.value),
       directionDegrees: x.properties.windDirection.value,
       direction: degreesToCompass(x.properties.windDirection.value),
     }));
@@ -203,6 +203,6 @@ export function celciusToFahrenheit(celcius: number) {
   return (celcius * 1.8 + 32).toFixed(1);
 }
 
-function metersPerSecondToMph(mps: number) {
-  return mps * 2.237;
+function kilometersPerHourToMph(mps: number) {
+  return mps / 1.609;
 }

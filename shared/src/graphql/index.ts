@@ -235,6 +235,12 @@ export type Salinity = {
   detail?: Maybe<Array<SalinityDetail>>;
 };
 
+
+export type SalinityDetailArgs = {
+  start: Scalars['String'];
+  end: Scalars['String'];
+};
+
 export type SalinityDetail = {
   __typename?: 'SalinityDetail';
   timestamp: Scalars['String'];
@@ -300,8 +306,7 @@ export type TidePreditionStation = {
   id: Scalars['ID'];
   name: Scalars['String'];
   url: Scalars['String'];
-  lat: Scalars['Float'];
-  long: Scalars['Float'];
+  coords: Coords;
   tides?: Maybe<Array<TideDetail>>;
 };
 
@@ -326,7 +331,7 @@ export type UsgsSite = {
   coords: Coords;
   waterHeight?: Maybe<Array<WaterHeight>>;
   waterTemperature?: Maybe<WaterTemperature>;
-  wind: WindV2;
+  wind?: Maybe<UsgsWind>;
   salinity?: Maybe<Salinity>;
   availableParams: Array<UsgsParam>;
 };
@@ -337,16 +342,16 @@ export type UsgsSiteWaterHeightArgs = {
   end: Scalars['String'];
 };
 
-
-export type UsgsSiteSalinityArgs = {
-  start: Scalars['String'];
-  end: Scalars['String'];
+export type UsgsWind = {
+  __typename?: 'UsgsWind';
+  summary: WindSummary;
+  detail?: Maybe<Array<WindDetail>>;
 };
 
-export type WaterCondition = {
-  __typename?: 'WaterCondition';
-  text: Scalars['String'];
-  icon: Scalars['String'];
+
+export type UsgsWindDetailArgs = {
+  start: Scalars['String'];
+  end: Scalars['String'];
 };
 
 export type WaterHeight = {
@@ -418,18 +423,6 @@ export type WindDirection = {
 export type WindSummary = {
   __typename?: 'WindSummary';
   mostRecent?: Maybe<WindDetail>;
-};
-
-export type WindV2 = {
-  __typename?: 'WindV2';
-  summary: WindSummary;
-  detail?: Maybe<Array<WindDetail>>;
-};
-
-
-export type WindV2DetailArgs = {
-  start: Scalars['String'];
-  end: Scalars['String'];
 };
 
 export type CombinedForecastV2QueryVariables = {
@@ -576,8 +569,8 @@ export type UsgsSiteDetailFieldsFragment = (
         & Pick<Temperature, 'degrees'>
       ) }
     )>> }
-  )>, wind: (
-    { __typename?: 'WindV2' }
+  )>, wind?: Maybe<(
+    { __typename?: 'UsgsWind' }
     & { summary: (
       { __typename?: 'WindSummary' }
       & { mostRecent?: Maybe<(
@@ -588,7 +581,7 @@ export type UsgsSiteDetailFieldsFragment = (
       { __typename?: 'WindDetail' }
       & WindDetailFields2Fragment
     )>> }
-  ) }
+  )> }
 );
 
 export type WindDetailFields2Fragment = (
@@ -839,13 +832,13 @@ export const UsgsSiteDetailFieldsFragmentDoc = gql`
     fragment UsgsSiteDetailFields on UsgsSite {
   id
   name
-  salinity(start: $startDate, end: $endDate) {
+  salinity {
     summary {
       mostRecent {
         salinity
       }
     }
-    detail {
+    detail(start: $startDate, end: $endDate) {
       timestamp
       salinity
     }

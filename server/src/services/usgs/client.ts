@@ -39,6 +39,14 @@ export const getSalinity = (
   return queryData<Salinity>(pk, start, end);
 };
 
+export const getSalinityLatest = async (siteId: string) => {
+  const data = await getSalinity(siteId, subHours(new Date(), 24), new Date());
+
+  if (data.length < 1) return null;
+
+  return orderBy(data, [(x) => x.timestamp], ["desc"])[0];
+};
+
 export const getWaterTemperature = async (
   siteId: string,
   start: Date,

@@ -238,6 +238,12 @@ export type Salinity = {
   detail?: Maybe<Array<SalinityDetail>>;
 };
 
+
+export type SalinityDetailArgs = {
+  start: Scalars['String'];
+  end: Scalars['String'];
+};
+
 export type SalinityDetail = {
   __typename?: 'SalinityDetail';
   timestamp: Scalars['String'];
@@ -303,8 +309,7 @@ export type TidePreditionStation = {
   id: Scalars['ID'];
   name: Scalars['String'];
   url: Scalars['String'];
-  lat: Scalars['Float'];
-  long: Scalars['Float'];
+  coords: Coords;
   tides?: Maybe<Array<TideDetail>>;
 };
 
@@ -329,7 +334,7 @@ export type UsgsSite = {
   coords: Coords;
   waterHeight?: Maybe<Array<WaterHeight>>;
   waterTemperature?: Maybe<WaterTemperature>;
-  wind: WindV2;
+  wind?: Maybe<UsgsWind>;
   salinity?: Maybe<Salinity>;
   availableParams: Array<UsgsParam>;
 };
@@ -340,16 +345,16 @@ export type UsgsSiteWaterHeightArgs = {
   end: Scalars['String'];
 };
 
-
-export type UsgsSiteSalinityArgs = {
-  start: Scalars['String'];
-  end: Scalars['String'];
+export type UsgsWind = {
+  __typename?: 'UsgsWind';
+  summary: WindSummary;
+  detail?: Maybe<Array<WindDetail>>;
 };
 
-export type WaterCondition = {
-  __typename?: 'WaterCondition';
-  text: Scalars['String'];
-  icon: Scalars['String'];
+
+export type UsgsWindDetailArgs = {
+  start: Scalars['String'];
+  end: Scalars['String'];
 };
 
 export type WaterHeight = {
@@ -421,18 +426,6 @@ export type WindDirection = {
 export type WindSummary = {
   __typename?: 'WindSummary';
   mostRecent?: Maybe<WindDetail>;
-};
-
-export type WindV2 = {
-  __typename?: 'WindV2';
-  summary: WindSummary;
-  detail?: Maybe<Array<WindDetail>>;
-};
-
-
-export type WindV2DetailArgs = {
-  start: Scalars['String'];
-  end: Scalars['String'];
 };
 
 
@@ -519,16 +512,16 @@ export type ResolversTypes = {
   String: ResolverTypeWrapper<Partial<Scalars['String']>>;
   Int: ResolverTypeWrapper<Partial<Scalars['Int']>>;
   TidePreditionStation: ResolverTypeWrapper<TideStationEntity>;
+  Coords: ResolverTypeWrapper<Partial<Coords>>;
   Float: ResolverTypeWrapper<Partial<Scalars['Float']>>;
   TideDetail: ResolverTypeWrapper<Partial<TideDetail>>;
   UsgsSite: ResolverTypeWrapper<UsgsSiteEntity>;
-  Coords: ResolverTypeWrapper<Partial<Coords>>;
   WaterHeight: ResolverTypeWrapper<Partial<WaterHeight>>;
   WaterTemperature: ResolverTypeWrapper<Object>;
   WaterTemperatureSummary: ResolverTypeWrapper<Partial<WaterTemperatureSummary>>;
   TemperatureDetail: ResolverTypeWrapper<Partial<TemperatureDetail>>;
   Temperature: ResolverTypeWrapper<Partial<Temperature>>;
-  WindV2: ResolverTypeWrapper<Partial<WindV2>>;
+  UsgsWind: ResolverTypeWrapper<Partial<UsgsWind>>;
   WindSummary: ResolverTypeWrapper<Partial<WindSummary>>;
   WindDetail: ResolverTypeWrapper<Partial<WindDetail>>;
   Salinity: ResolverTypeWrapper<Partial<Salinity>>;
@@ -559,7 +552,6 @@ export type ResolversTypes = {
   ModisMap: ResolverTypeWrapper<Partial<ModisMap>>;
   ModisSatellite: ResolverTypeWrapper<Partial<ModisSatellite>>;
   ModisMapEntry: ResolverTypeWrapper<Partial<ModisMapEntry>>;
-  WaterCondition: ResolverTypeWrapper<Partial<WaterCondition>>;
   CurrentWind: ResolverTypeWrapper<Partial<CurrentWind>>;
 };
 
@@ -571,16 +563,16 @@ export type ResolversParentTypes = {
   String: Partial<Scalars['String']>;
   Int: Partial<Scalars['Int']>;
   TidePreditionStation: TideStationEntity;
+  Coords: Partial<Coords>;
   Float: Partial<Scalars['Float']>;
   TideDetail: Partial<TideDetail>;
   UsgsSite: UsgsSiteEntity;
-  Coords: Partial<Coords>;
   WaterHeight: Partial<WaterHeight>;
   WaterTemperature: Object;
   WaterTemperatureSummary: Partial<WaterTemperatureSummary>;
   TemperatureDetail: Partial<TemperatureDetail>;
   Temperature: Partial<Temperature>;
-  WindV2: Partial<WindV2>;
+  UsgsWind: Partial<UsgsWind>;
   WindSummary: Partial<WindSummary>;
   WindDetail: Partial<WindDetail>;
   Salinity: Partial<Salinity>;
@@ -611,7 +603,6 @@ export type ResolversParentTypes = {
   ModisMap: Partial<ModisMap>;
   ModisSatellite: Partial<ModisSatellite>;
   ModisMapEntry: Partial<ModisMapEntry>;
-  WaterCondition: Partial<WaterCondition>;
   CurrentWind: Partial<CurrentWind>;
 };
 
@@ -778,7 +769,7 @@ export type RainDetailResolvers<ContextType = Context, ParentType extends Resolv
 
 export type SalinityResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Salinity'] = ResolversParentTypes['Salinity']> = {
   summary?: Resolver<Maybe<ResolversTypes['SalinitySummary']>, ParentType, ContextType>;
-  detail?: Resolver<Maybe<Array<ResolversTypes['SalinityDetail']>>, ParentType, ContextType>;
+  detail?: Resolver<Maybe<Array<ResolversTypes['SalinityDetail']>>, ParentType, ContextType, RequireFields<SalinityDetailArgs, 'start' | 'end'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType>;
 };
 
@@ -838,8 +829,7 @@ export type TidePreditionStationResolvers<ContextType = Context, ParentType exte
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  lat?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
-  long?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  coords?: Resolver<ResolversTypes['Coords'], ParentType, ContextType>;
   tides?: Resolver<Maybe<Array<ResolversTypes['TideDetail']>>, ParentType, ContextType, RequireFields<TidePreditionStationTidesArgs, 'start' | 'end'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType>;
 };
@@ -850,15 +840,15 @@ export type UsgsSiteResolvers<ContextType = Context, ParentType extends Resolver
   coords?: Resolver<ResolversTypes['Coords'], ParentType, ContextType>;
   waterHeight?: Resolver<Maybe<Array<ResolversTypes['WaterHeight']>>, ParentType, ContextType, RequireFields<UsgsSiteWaterHeightArgs, 'start' | 'end'>>;
   waterTemperature?: Resolver<Maybe<ResolversTypes['WaterTemperature']>, ParentType, ContextType>;
-  wind?: Resolver<ResolversTypes['WindV2'], ParentType, ContextType>;
-  salinity?: Resolver<Maybe<ResolversTypes['Salinity']>, ParentType, ContextType, RequireFields<UsgsSiteSalinityArgs, 'start' | 'end'>>;
+  wind?: Resolver<Maybe<ResolversTypes['UsgsWind']>, ParentType, ContextType>;
+  salinity?: Resolver<Maybe<ResolversTypes['Salinity']>, ParentType, ContextType>;
   availableParams?: Resolver<Array<ResolversTypes['UsgsParam']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType>;
 };
 
-export type WaterConditionResolvers<ContextType = Context, ParentType extends ResolversParentTypes['WaterCondition'] = ResolversParentTypes['WaterCondition']> = {
-  text?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  icon?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+export type UsgsWindResolvers<ContextType = Context, ParentType extends ResolversParentTypes['UsgsWind'] = ResolversParentTypes['UsgsWind']> = {
+  summary?: Resolver<ResolversTypes['WindSummary'], ParentType, ContextType>;
+  detail?: Resolver<Maybe<Array<ResolversTypes['WindDetail']>>, ParentType, ContextType, RequireFields<UsgsWindDetailArgs, 'start' | 'end'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType>;
 };
 
@@ -919,12 +909,6 @@ export type WindSummaryResolvers<ContextType = Context, ParentType extends Resol
   __isTypeOf?: IsTypeOfResolverFn<ParentType>;
 };
 
-export type WindV2Resolvers<ContextType = Context, ParentType extends ResolversParentTypes['WindV2'] = ResolversParentTypes['WindV2']> = {
-  summary?: Resolver<ResolversTypes['WindSummary'], ParentType, ContextType>;
-  detail?: Resolver<Maybe<Array<ResolversTypes['WindDetail']>>, ParentType, ContextType, RequireFields<WindV2DetailArgs, 'start' | 'end'>>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
-};
-
 export type Resolvers<ContextType = Context> = {
   CombinedForecastV2?: CombinedForecastV2Resolvers<ContextType>;
   Coords?: CoordsResolvers<ContextType>;
@@ -957,7 +941,7 @@ export type Resolvers<ContextType = Context> = {
   TideDetail?: TideDetailResolvers<ContextType>;
   TidePreditionStation?: TidePreditionStationResolvers<ContextType>;
   UsgsSite?: UsgsSiteResolvers<ContextType>;
-  WaterCondition?: WaterConditionResolvers<ContextType>;
+  UsgsWind?: UsgsWindResolvers<ContextType>;
   WaterHeight?: WaterHeightResolvers<ContextType>;
   WaterTemperature?: WaterTemperatureResolvers<ContextType>;
   WaterTemperatureSummary?: WaterTemperatureSummaryResolvers<ContextType>;
@@ -966,7 +950,6 @@ export type Resolvers<ContextType = Context> = {
   WindDetail?: WindDetailResolvers<ContextType>;
   WindDirection?: WindDirectionResolvers<ContextType>;
   WindSummary?: WindSummaryResolvers<ContextType>;
-  WindV2?: WindV2Resolvers<ContextType>;
 };
 
 
