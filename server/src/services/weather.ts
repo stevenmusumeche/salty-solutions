@@ -106,22 +106,6 @@ const extractForecast = ({
   return extracted;
 };
 
-export const getCurrentConditions = async (location: LocationEntity) => {
-  const url = `https://api.weather.gov/stations/${location.weatherGov.stationId}/observations/latest?require_qc=false`;
-
-  const { data } = await axios.get<NWSLatestObservations>(url);
-
-  return {
-    timestamp: new Date(data.properties.timestamp).toISOString(),
-    temperature: {
-      degrees: parseFloat(
-        celciusToFahrenheit(data.properties.temperature.value)
-      ),
-      unit: "F",
-    },
-  };
-};
-
 export const getConditions = async (
   location: LocationEntity,
   startDate: Date,

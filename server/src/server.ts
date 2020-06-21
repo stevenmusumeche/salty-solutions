@@ -19,6 +19,7 @@ import resolvers from "./graphql/resolvers";
 import Rollbar from "rollbar";
 // @ts-ignore
 import { FormatErrorWithContextExtension } from "graphql-format-error-context-extension";
+import { createDataLoaders } from "./dataloaders";
 
 var rollbar = new Rollbar({
   accessToken: process.env.ROLLBAR_KEY,
@@ -44,6 +45,7 @@ export interface Context {
     modis: typeof modisService;
     saveOurLake: typeof saveOurLakeService;
   };
+  loaders: ReturnType<typeof createDataLoaders>;
   pass: any;
 }
 
@@ -82,6 +84,7 @@ const server = new ApolloServer({
         modis: modisService,
         saveOurLake: saveOurLakeService,
       },
+      loaders: createDataLoaders(),
       pass: {},
     };
   },
