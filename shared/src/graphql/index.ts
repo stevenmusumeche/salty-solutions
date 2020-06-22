@@ -197,6 +197,15 @@ export type MoonDetail = {
   illumination: Scalars['Int'];
 };
 
+export enum NoaaParam {
+  Wind = 'Wind',
+  WaterLevel = 'WaterLevel',
+  AirTemperature = 'AirTemperature',
+  WaterTemperature = 'WaterTemperature',
+  AirPressure = 'AirPressure',
+  TidePrediction = 'TidePrediction'
+}
+
 export type Overlays = {
   __typename?: 'Overlays';
   topo: Scalars['String'];
@@ -221,7 +230,7 @@ export type QueryLocationArgs = {
 
 
 export type QueryTidePreditionStationArgs = {
-  stationId: Scalars['ID'];
+  stationId?: Maybe<Scalars['ID']>;
 };
 
 
@@ -297,7 +306,7 @@ export type TemperatureResultDetailArgs = {
 
 export type TemperatureSummary = {
   __typename?: 'TemperatureSummary';
-  mostRecent: TemperatureDetail;
+  mostRecent?: Maybe<TemperatureDetail>;
 };
 
 export type TideDetail = {
@@ -314,6 +323,11 @@ export type TidePreditionStation = {
   url: Scalars['String'];
   coords: Coords;
   tides?: Maybe<Array<TideDetail>>;
+  availableParams: Array<NoaaParam>;
+  wind?: Maybe<Wind>;
+  temperature?: Maybe<TemperatureResult>;
+  waterTemperature?: Maybe<WaterTemperature>;
+  salinity?: Maybe<Salinity>;
 };
 
 
@@ -337,25 +351,13 @@ export type UsgsSite = {
   coords: Coords;
   waterHeight?: Maybe<Array<WaterHeight>>;
   waterTemperature?: Maybe<WaterTemperature>;
-  wind?: Maybe<UsgsWind>;
+  wind?: Maybe<Wind>;
   salinity?: Maybe<Salinity>;
   availableParams: Array<UsgsParam>;
 };
 
 
 export type UsgsSiteWaterHeightArgs = {
-  start: Scalars['String'];
-  end: Scalars['String'];
-};
-
-export type UsgsWind = {
-  __typename?: 'UsgsWind';
-  summary: WindSummary;
-  detail?: Maybe<Array<WindDetail>>;
-};
-
-
-export type UsgsWindDetailArgs = {
   start: Scalars['String'];
   end: Scalars['String'];
 };
@@ -369,7 +371,7 @@ export type WaterHeight = {
 
 export type WaterTemperature = {
   __typename?: 'WaterTemperature';
-  summary: WaterTemperatureSummary;
+  summary: TemperatureSummary;
   detail?: Maybe<Array<TemperatureDetail>>;
 };
 
@@ -377,11 +379,6 @@ export type WaterTemperature = {
 export type WaterTemperatureDetailArgs = {
   start: Scalars['String'];
   end: Scalars['String'];
-};
-
-export type WaterTemperatureSummary = {
-  __typename?: 'WaterTemperatureSummary';
-  mostRecent?: Maybe<TemperatureDetail>;
 };
 
 export type WeatherForecast = {
@@ -492,6 +489,9 @@ export type CombinedForecastV2DetailFragment = (
 export type CurrentConditionsDataQueryVariables = {
   locationId: Scalars['ID'];
   usgsSiteId?: Maybe<Scalars['ID']>;
+  includeUsgs: Scalars['Boolean'];
+  noaaStationId?: Maybe<Scalars['ID']>;
+  includeNoaa: Scalars['Boolean'];
   startDate: Scalars['String'];
   endDate: Scalars['String'];
 };
@@ -502,42 +502,59 @@ export type CurrentConditionsDataQuery = (
   & { location?: Maybe<(
     { __typename?: 'Location' }
     & Pick<Location, 'id'>
-    & { wind?: Maybe<(
-      { __typename?: 'Wind' }
-      & { summary: (
-        { __typename?: 'WindSummary' }
-        & { mostRecent?: Maybe<(
-          { __typename?: 'WindDetail' }
-          & WindDetailFields2Fragment
-        )> }
-      ), detail?: Maybe<Array<(
-        { __typename?: 'WindDetail' }
-        & WindDetailFields2Fragment
-      )>> }
-    )>, temperature: (
+    & { temperature: (
       { __typename?: 'TemperatureResult' }
-      & { summary: (
-        { __typename?: 'TemperatureSummary' }
-        & { mostRecent: (
-          { __typename?: 'TemperatureDetail' }
-          & { temperature: (
-            { __typename?: 'Temperature' }
-            & Pick<Temperature, 'degrees'>
-          ) }
-        ) }
-      ), detail?: Maybe<Array<(
-        { __typename?: 'TemperatureDetail' }
-        & Pick<TemperatureDetail, 'timestamp'>
-        & { temperature: (
-          { __typename?: 'Temperature' }
-          & Pick<Temperature, 'degrees'>
-        ) }
-      )>> }
+      & TemperatureDetailFieldsFragment
     ) }
   )>, usgsSite?: Maybe<(
     { __typename?: 'UsgsSite' }
     & UsgsSiteDetailFieldsFragment
+  )>, tidePreditionStation?: Maybe<(
+    { __typename?: 'TidePreditionStation' }
+    & TidePredictionStationDetailFieldsFragment
   )> }
+);
+
+export type TemperatureDetailFieldsFragment = (
+  { __typename?: 'TemperatureResult' }
+  & { summary: (
+    { __typename?: 'TemperatureSummary' }
+    & { mostRecent?: Maybe<(
+      { __typename?: 'TemperatureDetail' }
+      & { temperature: (
+        { __typename?: 'Temperature' }
+        & Pick<Temperature, 'degrees'>
+      ) }
+    )> }
+  ), detail?: Maybe<Array<(
+    { __typename?: 'TemperatureDetail' }
+    & Pick<TemperatureDetail, 'timestamp'>
+    & { temperature: (
+      { __typename?: 'Temperature' }
+      & Pick<Temperature, 'degrees'>
+    ) }
+  )>> }
+);
+
+export type WaterTemperatureDetailFieldsFragment = (
+  { __typename?: 'WaterTemperature' }
+  & { summary: (
+    { __typename?: 'TemperatureSummary' }
+    & { mostRecent?: Maybe<(
+      { __typename?: 'TemperatureDetail' }
+      & { temperature: (
+        { __typename?: 'Temperature' }
+        & Pick<Temperature, 'degrees'>
+      ) }
+    )> }
+  ), detail?: Maybe<Array<(
+    { __typename?: 'TemperatureDetail' }
+    & Pick<TemperatureDetail, 'timestamp'>
+    & { temperature: (
+      { __typename?: 'Temperature' }
+      & Pick<Temperature, 'degrees'>
+    ) }
+  )>> }
 );
 
 export type UsgsSiteDetailFieldsFragment = (
@@ -557,26 +574,9 @@ export type UsgsSiteDetailFieldsFragment = (
     )>> }
   )>, waterTemperature?: Maybe<(
     { __typename?: 'WaterTemperature' }
-    & { summary: (
-      { __typename?: 'WaterTemperatureSummary' }
-      & { mostRecent?: Maybe<(
-        { __typename?: 'TemperatureDetail' }
-        & Pick<TemperatureDetail, 'timestamp'>
-        & { temperature: (
-          { __typename?: 'Temperature' }
-          & Pick<Temperature, 'degrees'>
-        ) }
-      )> }
-    ), detail?: Maybe<Array<(
-      { __typename?: 'TemperatureDetail' }
-      & Pick<TemperatureDetail, 'timestamp'>
-      & { temperature: (
-        { __typename?: 'Temperature' }
-        & Pick<Temperature, 'degrees'>
-      ) }
-    )>> }
+    & WaterTemperatureDetailFieldsFragment
   )>, wind?: Maybe<(
-    { __typename?: 'UsgsWind' }
+    { __typename?: 'Wind' }
     & { summary: (
       { __typename?: 'WindSummary' }
       & { mostRecent?: Maybe<(
@@ -587,6 +587,30 @@ export type UsgsSiteDetailFieldsFragment = (
       { __typename?: 'WindDetail' }
       & WindDetailFields2Fragment
     )>> }
+  )> }
+);
+
+export type TidePredictionStationDetailFieldsFragment = (
+  { __typename?: 'TidePreditionStation' }
+  & Pick<TidePreditionStation, 'id' | 'name'>
+  & { wind?: Maybe<(
+    { __typename?: 'Wind' }
+    & { summary: (
+      { __typename?: 'WindSummary' }
+      & { mostRecent?: Maybe<(
+        { __typename?: 'WindDetail' }
+        & WindDetailFields2Fragment
+      )> }
+    ), detail?: Maybe<Array<(
+      { __typename?: 'WindDetail' }
+      & WindDetailFields2Fragment
+    )>> }
+  )>, temperature?: Maybe<(
+    { __typename?: 'TemperatureResult' }
+    & TemperatureDetailFieldsFragment
+  )>, waterTemperature?: Maybe<(
+    { __typename?: 'WaterTemperature' }
+    & WaterTemperatureDetailFieldsFragment
   )> }
 );
 
@@ -640,7 +664,7 @@ export type LocationsQuery = (
 
 export type TideStationDetailFragment = (
   { __typename?: 'TidePreditionStation' }
-  & Pick<TidePreditionStation, 'id' | 'name'>
+  & Pick<TidePreditionStation, 'id' | 'name' | 'availableParams'>
 );
 
 export type UsgsSiteDetailFragment = (
@@ -826,6 +850,23 @@ export const CombinedForecastV2DetailFragmentDoc = gql`
   }
 }
     `;
+export const WaterTemperatureDetailFieldsFragmentDoc = gql`
+    fragment WaterTemperatureDetailFields on WaterTemperature {
+  summary {
+    mostRecent {
+      temperature {
+        degrees
+      }
+    }
+  }
+  detail(start: $startDate, end: $endDate) {
+    timestamp
+    temperature {
+      degrees
+    }
+  }
+}
+    `;
 export const WindDetailFields2FragmentDoc = gql`
     fragment WindDetailFields2 on WindDetail {
   timestamp
@@ -850,20 +891,7 @@ export const UsgsSiteDetailFieldsFragmentDoc = gql`
     }
   }
   waterTemperature {
-    summary {
-      mostRecent {
-        timestamp
-        temperature {
-          degrees
-        }
-      }
-    }
-    detail(start: $startDate, end: $endDate) {
-      timestamp
-      temperature {
-        degrees
-      }
-    }
+    ...WaterTemperatureDetailFields
   }
   wind {
     summary {
@@ -876,7 +904,49 @@ export const UsgsSiteDetailFieldsFragmentDoc = gql`
     }
   }
 }
-    ${WindDetailFields2FragmentDoc}`;
+    ${WaterTemperatureDetailFieldsFragmentDoc}
+${WindDetailFields2FragmentDoc}`;
+export const TemperatureDetailFieldsFragmentDoc = gql`
+    fragment TemperatureDetailFields on TemperatureResult {
+  summary {
+    mostRecent {
+      temperature {
+        degrees
+      }
+    }
+  }
+  detail(start: $startDate, end: $endDate) {
+    timestamp
+    temperature {
+      degrees
+    }
+  }
+}
+    `;
+export const TidePredictionStationDetailFieldsFragmentDoc = gql`
+    fragment TidePredictionStationDetailFields on TidePreditionStation {
+  id
+  name
+  wind {
+    summary {
+      mostRecent {
+        ...WindDetailFields2
+      }
+    }
+    detail(start: $startDate, end: $endDate) {
+      ...WindDetailFields2
+    }
+  }
+  temperature {
+    ...TemperatureDetailFields
+  }
+  waterTemperature {
+    ...WaterTemperatureDetailFields
+  }
+}
+    ${WindDetailFields2FragmentDoc}
+${TemperatureDetailFieldsFragmentDoc}
+${WaterTemperatureDetailFieldsFragmentDoc}`;
 export const HourlyForecastDetailFragmentDoc = gql`
     fragment HourlyForecastDetail on WeatherForecast {
   startTime
@@ -899,6 +969,7 @@ export const TideStationDetailFragmentDoc = gql`
     fragment TideStationDetail on TidePreditionStation {
   id
   name
+  availableParams
 }
     `;
 export const UsgsSiteDetailFragmentDoc = gql`
@@ -1000,41 +1071,23 @@ export function useCombinedForecastV2Query(options: Omit<Urql.UseQueryArgs<Combi
   return Urql.useQuery<CombinedForecastV2Query>({ query: CombinedForecastV2Document, ...options });
 };
 export const CurrentConditionsDataDocument = gql`
-    query CurrentConditionsData($locationId: ID!, $usgsSiteId: ID, $startDate: String!, $endDate: String!) {
+    query CurrentConditionsData($locationId: ID!, $usgsSiteId: ID, $includeUsgs: Boolean!, $noaaStationId: ID, $includeNoaa: Boolean!, $startDate: String!, $endDate: String!) {
   location(id: $locationId) {
     id
-    wind {
-      summary {
-        mostRecent {
-          ...WindDetailFields2
-        }
-      }
-      detail(start: $startDate, end: $endDate) {
-        ...WindDetailFields2
-      }
-    }
     temperature {
-      summary {
-        mostRecent {
-          temperature {
-            degrees
-          }
-        }
-      }
-      detail(start: $startDate, end: $endDate) {
-        timestamp
-        temperature {
-          degrees
-        }
-      }
+      ...TemperatureDetailFields
     }
   }
-  usgsSite(siteId: $usgsSiteId) {
+  usgsSite(siteId: $usgsSiteId) @include(if: $includeUsgs) {
     ...UsgsSiteDetailFields
   }
+  tidePreditionStation(stationId: $noaaStationId) @include(if: $includeNoaa) {
+    ...TidePredictionStationDetailFields
+  }
 }
-    ${WindDetailFields2FragmentDoc}
-${UsgsSiteDetailFieldsFragmentDoc}`;
+    ${TemperatureDetailFieldsFragmentDoc}
+${UsgsSiteDetailFieldsFragmentDoc}
+${TidePredictionStationDetailFieldsFragmentDoc}`;
 
 export function useCurrentConditionsDataQuery(options: Omit<Urql.UseQueryArgs<CurrentConditionsDataQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<CurrentConditionsDataQuery>({ query: CurrentConditionsDataDocument, ...options });

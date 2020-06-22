@@ -15,6 +15,8 @@ export function useSalinityData(
     variables: {
       locationId,
       usgsSiteId,
+      includeUsgs: true,
+      includeNoaa: true,
       startDate: startDate.toISOString(),
       endDate: endDate.toISOString(),
     },

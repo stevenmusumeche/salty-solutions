@@ -148,9 +148,10 @@ export const getLatestConditions = async (
 
   const data = await getConditions(
     location,
-    subHours(new Date(), 12),
+    subHours(new Date(), 48),
     new Date()
   );
+
   const result = {
     temperature: orderBy(data.temperature, ["timestamp"], ["desc"])[0],
     wind: orderBy(data.wind, ["timestamp"], ["desc"])[0],

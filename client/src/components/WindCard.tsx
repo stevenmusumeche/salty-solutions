@@ -1,47 +1,58 @@
-import React, { useState, useEffect } from "react";
-import ConditionCard from "./ConditionCard";
 import { hooks } from "@stevenmusumeche/salty-solutions-shared";
-import { subHours, differenceInDays, startOfDay } from "date-fns";
 import {
-  VictoryChart,
-  VictoryLine,
+  TideStationDetailFragment,
+  UsgsSiteDetailFragment,
+} from "@stevenmusumeche/salty-solutions-shared/dist/graphql";
+import { differenceInDays, subHours } from "date-fns";
+import React, { useEffect, useMemo, useState } from "react";
+import { CombinedError } from "urql";
+import {
   VictoryAxis,
+  VictoryChart,
   VictoryGroup,
+  VictoryLine,
   VictoryScatter,
 } from "victory";
 import ErrorIcon from "../assets/error.svg";
-import { CombinedError } from "urql";
-import MiniGraphWrapper from "./MiniGraphWrapper";
 import { noDecimals } from "../hooks/utils";
-import { UsgsSiteDetailFragment } from "@stevenmusumeche/salty-solutions-shared/dist/graphql";
+import ConditionCard from "./ConditionCard";
+import MiniGraphWrapper from "./MiniGraphWrapper";
 import UsgsSiteSelect from "./UsgsSiteSelect";
 
 interface Props {
   locationId: string;
-  usgsSites: UsgsSiteDetailFragment[];
+  sites: Array<UsgsSiteDetailFragment | TideStationDetailFragment>;
 }
-const WindCard: React.FC<Props> = ({ locationId, usgsSites }) => {
-  const [selectedUsgsSiteId, setSelectedUsgsSiteId] = useState(() =>
-    usgsSites.length ? usgsSites[0].id : undefined
+const WindCard: React.FC<Props> = ({ locationId, sites }) => {
+  const [selectedSite, setSelectedSite] = useState(() =>
+    sites.length ? sites[0] : undefined
   );
 
-  const date = startOfDay(new Date());
+  const date = useMemo(() => new Date(), []);
+
   const {
     curValue,
     curDetail,
     curDirectionValue,
     fetching,
     error,
-  } = hooks.useCurrentWindData(
+  } = hooks.useCurrentWindData({
     locationId,
-    subHours(date, 48),
-    date,
-    selectedUsgsSiteId
-  );
+    startDate: subHours(date, 48),
+    endDate: date,
+    usgsSiteId:
+      selectedSite && selectedSite.__typename === "UsgsSite"
+        ? selectedSite.id
+        : undefined,
+    noaaStationId:
+      selectedSite && selectedSite.__typename === "TidePreditionStation"
+        ? selectedSite.id
+        : undefined,
+  });
 
   useEffect(() => {
-    setSelectedUsgsSiteId(usgsSites.length ? usgsSites[0].id : undefined);
-  }, [locationId, usgsSites]);
+    setSelectedSite(sites.length ? sites[0] : undefined);
+  }, [locationId, sites]);
 
   let graphDisplayVal = buildGraphDisplayVal(fetching, error, curDetail);
 
@@ -62,11 +73,15 @@ const WindCard: React.FC<Props> = ({ locationId, usgsSites }) => {
           </div>
         )}
         <div>{graphDisplayVal}</div>
-        {selectedUsgsSiteId && usgsSites.length > 1 && (
+        {selectedSite && (
           <UsgsSiteSelect
-            sites={usgsSites}
-            handleChange={(e) => setSelectedUsgsSiteId(e.target.value)}
-            selectedId={selectedUsgsSiteId}
+            sites={sites}
+            handleChange={(e) => {
+              const match = sites.find((site) => site.id === e.target.value);
+              setSelectedSite(match);
+            }}
+            selectedId={selectedSite.id}
+            fullWidth={true}
           />
         )}
       </div>

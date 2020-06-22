@@ -9,6 +9,7 @@ export const LOCATION_QUERY = gql`
   fragment TideStationDetail on TidePreditionStation {
     id
     name
+    availableParams
   }
 
   fragment UsgsSiteDetail on UsgsSite {

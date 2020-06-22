@@ -5,16 +5,30 @@ import {
 import { noDecimals } from "./utils";
 import { UseQueryState } from "urql";
 
-export function useCurrentWindData(
-  locationId: string,
-  startDate: Date,
-  endDate: Date,
-  usgsSiteId?: string
-) {
+interface Input {
+  locationId: string;
+  startDate: Date;
+  endDate: Date;
+  usgsSiteId?: string;
+  noaaStationId?: string;
+}
+export function useCurrentWindData({
+  locationId,
+  startDate,
+  endDate,
+  usgsSiteId,
+  noaaStationId,
+}: Input) {
+  const includeUsgs = !!usgsSiteId;
+  const includeNoaa = !!noaaStationId;
+
   const [result, executeQuery] = useCurrentConditionsDataQuery({
     variables: {
       locationId,
       usgsSiteId,
+      includeUsgs,
+      noaaStationId,
+      includeNoaa,
       startDate: startDate.toISOString(),
       endDate: endDate.toISOString(),
     },
@@ -32,8 +46,10 @@ export function useCurrentWindData(
 }
 
 function extractData(windData: UseQueryState<CurrentConditionsDataQuery>) {
-  // not all locations have a valid USGS site for wind speed
-  const base = windData?.data?.usgsSite?.wind || windData.data?.location?.wind;
+  // use either the USGS or the NOAA field, depending on which was requested
+  const base =
+    windData?.data?.usgsSite?.wind ||
+    windData?.data?.tidePreditionStation?.wind;
 
   const curValue =
     base?.summary.mostRecent && noDecimals(base?.summary.mostRecent.speed);
