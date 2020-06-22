@@ -35,6 +35,7 @@ provider:
         - ${cf:ss-queue-${self:provider.stage}.TidePreloaderQueueArn}
         - ${cf:ss-queue-${self:provider.stage}.WindFinderPreloaderQueueArn}
         - ${cf:ss-queue-${self:provider.stage}.UsgsPreloaderQueueArn}
+        - ${cf:ss-queue-${self:provider.stage}.NoaaPreloaderQueueArn}
     - Effect: Allow
       Action:
         - s3:*
@@ -107,6 +108,23 @@ functions:
       - sqs:
           batchSize: 1
           arn: ${cf:ss-queue-${self:provider.stage}.UsgsPreloaderQueueArn}
+
+  preload-noaa-producer:
+    handler: src/preloaders/producers.noaa
+    events:
+      - schedule:
+          name: NoaaPreloader-${self:provider.stage}
+          enabled: ${self:custom.schedule_enabled.${self:provider.stage}, false}
+          rate: rate(1 hour)
+    environment:
+      QUEUE_URL: ${cf:ss-queue-${self:provider.stage}.NoaaPreloaderQueueUrl}
+  preload-noaa-consumer:
+    handler: src/preloaders/consumers.noaa
+    timeout: 120
+    events:
+      - sqs:
+          batchSize: 1
+          arn: ${cf:ss-queue-${self:provider.stage}.NoaaPreloaderQueueArn}
 
   # todo re-enable this if we can get past dynamodb limits
   # preload-tide-producer:

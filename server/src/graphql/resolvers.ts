@@ -110,11 +110,13 @@ const resolvers: Resolvers & { UsgsParam: Object } = {
       return `https://tidesandcurrents.noaa.gov/stationhome.html?id=${station.id}`;
     },
     tides: async (station, args, { services }) => {
-      return await services.tide.getTidePredictions(
-        new Date(args.start),
-        new Date(args.end),
-        station.id
-      );
+      return (
+        await services.tide.getTidePredictions(
+          new Date(args.start),
+          new Date(args.end),
+          station.id
+        )
+      ).map((x) => ({ ...x, time: x.timestamp }));
     },
   },
   UsgsSite: {

@@ -13,6 +13,7 @@ export interface LocationEntity {
     lon: number;
   };
   usgsSiteIds: string[];
+  noaaBuoyIds: string[];
   weatherGov: {
     apiBase: string;
     stationId: string;
@@ -52,6 +53,7 @@ const locations: LocationEntity[] = [
     nowcastSubdomain: "0",
     modisArea: "USA7",
     windfinder: { slug: "cypremort-point_vermillion-bay" },
+    noaaBuoyIds: ["FRWL1", "AMRL1", "EINL1"],
   },
   {
     id: "calcasieu-lake",
@@ -71,6 +73,7 @@ const locations: LocationEntity[] = [
     nowcastSubdomain: "cc",
     modisArea: "USA7",
     windfinder: { slug: "calcasieu_pass" },
+    noaaBuoyIds: ["CAPL1", "BKTL1"],
   },
   {
     id: "cocodrie",
@@ -97,6 +100,7 @@ const locations: LocationEntity[] = [
     nowcastSubdomain: "0",
     modisArea: "USA7",
     windfinder: { slug: "tambour_bay" },
+    noaaBuoyIds: [],
   },
   {
     id: "dularge",
@@ -122,6 +126,7 @@ const locations: LocationEntity[] = [
     nowcastSubdomain: "0",
     modisArea: "USA7",
     windfinder: { slug: "caillou-lake" },
+    noaaBuoyIds: ["AMRL1", "EINL1"],
   },
   {
     id: "hopedale",
@@ -148,6 +153,7 @@ const locations: LocationEntity[] = [
     saveOurLake: true,
     modisArea: "USA7",
     windfinder: { slug: "shell_beach" },
+    noaaBuoyIds: ["SHBL1", "42067"],
   },
   {
     id: "grand-isle",
@@ -180,6 +186,7 @@ const locations: LocationEntity[] = [
     nowcastSubdomain: "0",
     modisArea: "USA7",
     windfinder: { slug: "grand_isle_eastern_tip" },
+    noaaBuoyIds: ["GISL1", "KXPY", "42093", "LOPL1"],
   },
   {
     id: "venice",
@@ -222,6 +229,7 @@ const locations: LocationEntity[] = [
     modisArea: "USA7",
     saveOurLake: true,
     windfinder: { slug: "pilottown" },
+    noaaBuoyIds: ["PILL1", "KDLP", "PSTL1", "BURL1", "KDLP", "KVKY"],
   },
   {
     id: "lake-ponchartrain",
@@ -262,6 +270,7 @@ const locations: LocationEntity[] = [
     modisArea: "USA7",
     saveOurLake: true,
     windfinder: { slug: "lakefront_new_orleans" },
+    noaaBuoyIds: ["NWCL1", "8762484"],
   },
   {
     id: "rigolets",
@@ -286,6 +295,7 @@ const locations: LocationEntity[] = [
     modisArea: "USA7",
     saveOurLake: true,
     windfinder: { slug: "lake_pontchartrain_rigolets" },
+    noaaBuoyIds: [],
   },
   {
     id: "lafitte",
@@ -313,6 +323,7 @@ const locations: LocationEntity[] = [
     saveOurLake: false,
     nowcastSubdomain: "0",
     windfinder: { slug: "little-lake_bay-dosgris" },
+    noaaBuoyIds: [],
   },
 ];
 
