@@ -1,5 +1,5 @@
 export { getSiteById } from "./source";
-import { client, tableName } from "../db";
+import { queryTimeSeriesData } from "../db";
 import { WaterHeight, Salinity, WaterTemperature, Wind } from "./source";
 import { subHours } from "date-fns";
 import { orderBy } from "lodash";
@@ -10,7 +10,7 @@ export const getWind = async (
   end: Date
 ): Promise<Wind[]> => {
   const pk = `usgs-wind-${siteId}`;
-  return queryData<Wind>(pk, start, end);
+  return queryTimeSeriesData<Wind>(pk, start, end);
 };
 
 export const getWindLatest = async (siteId: string) => {
@@ -27,7 +27,7 @@ export const getWaterHeight = async (
   end: Date
 ): Promise<WaterHeight[]> => {
   const pk = `usgs-water-height-${siteId}`;
-  return queryData<WaterHeight>(pk, start, end);
+  return queryTimeSeriesData<WaterHeight>(pk, start, end);
 };
 
 export const getSalinity = (
@@ -36,7 +36,7 @@ export const getSalinity = (
   end: Date
 ): Promise<Salinity[]> => {
   const pk = `usgs-salinity-${siteId}`;
-  return queryData<Salinity>(pk, start, end);
+  return queryTimeSeriesData<Salinity>(pk, start, end);
 };
 
 export const getSalinityLatest = async (siteId: string) => {
@@ -53,7 +53,7 @@ export const getWaterTemperature = async (
   end: Date
 ): Promise<WaterTemperature[]> => {
   const pk = `usgs-water-temp-${siteId}`;
-  return queryData<WaterTemperature>(pk, start, end);
+  return queryTimeSeriesData<WaterTemperature>(pk, start, end);
 };
 
 export const getWaterTemperatureLatest = async (siteId: string) => {
@@ -66,29 +66,4 @@ export const getWaterTemperatureLatest = async (siteId: string) => {
   if (data.length < 1) return null;
 
   return orderBy(data, [(x) => x.timestamp], ["desc"])[0];
-};
-
-const queryData = async <T>(
-  pk: string,
-  start: Date,
-  end: Date
-): Promise<T[]> => {
-  const result = await client
-    .query({
-      TableName: tableName,
-      KeyConditionExpression: "pk = :key AND sk BETWEEN :start AND :end",
-      ExpressionAttributeValues: {
-        ":key": pk,
-        ":start": start.getTime(),
-        ":end": end.getTime(),
-      },
-    })
-    .promise();
-
-  if (!result.Items) return [];
-
-  return result.Items.map((item) => ({
-    timestamp: new Date(item.sk).toISOString(),
-    ...item.data,
-  }));
 };

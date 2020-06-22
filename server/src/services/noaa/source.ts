@@ -14,7 +14,8 @@ import {
 import { batchWrite } from "../db";
 import { degreesToCompass } from "../usgs/source";
 import { knotsToMph } from "../wind-finder";
-import { getStationById, getTidePredictions } from "./tide";
+import { getTidePredictions } from "./source-tide";
+import { getStationById } from "./client";
 type WriteRequest = DocumentClient.WriteRequest;
 
 // https://www.ndbc.noaa.gov/

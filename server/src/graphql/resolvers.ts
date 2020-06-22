@@ -20,7 +20,7 @@ const resolvers: Resolvers & { UsgsParam: Object } = {
       return location;
     },
     tidePreditionStation: (_, { stationId }, { services }) => {
-      const station = services.tide.getStationById(stationId);
+      const station = services.noaa.getStationById(stationId);
       if (!station)
         throw new ApolloError(`Unknown tide station ID ${stationId}`);
       return station;
@@ -39,7 +39,7 @@ const resolvers: Resolvers & { UsgsParam: Object } = {
     tidePreditionStations: (location, { limit }, { services }) => {
       return location.tideStationIds
         .slice(0, limit || 99)
-        .map((id) => services.tide.getStationById(id))
+        .map((id) => services.noaa.getStationById(id))
         .filter(notUndefined);
     },
     usgsSites: (location, _, { services }) => {
@@ -110,13 +110,11 @@ const resolvers: Resolvers & { UsgsParam: Object } = {
       return `https://tidesandcurrents.noaa.gov/stationhome.html?id=${station.id}`;
     },
     tides: async (station, args, { services }) => {
-      return (
-        await services.tide.getTidePredictions(
-          new Date(args.start),
-          new Date(args.end),
-          station.id
-        )
-      ).map((x) => ({ ...x, time: x.timestamp }));
+      return await services.noaa.getTidePredictions(
+        new Date(args.start),
+        new Date(args.end),
+        station.id
+      );
     },
   },
   UsgsSite: {
