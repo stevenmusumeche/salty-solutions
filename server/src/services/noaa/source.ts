@@ -415,8 +415,6 @@ export const noaaStations: NoaaStationEntity[] = [
   },
 ];
 
-storeNoaaData(noaaStations[2].id, 1);
-
 export async function storeNoaaData(stationId: string, numHours = 24) {
   const station = getStationById(stationId);
   if (!station) throw new Error(`Unable to load NOAA station for ${stationId}`);
