@@ -126,6 +126,7 @@ export default gql`
     temperature: TemperatureResult
     waterTemperature: WaterTemperature
     salinity: Salinity
+    waterHeight(start: String!, end: String!): [WaterHeight!]
   }
 
   type TideDetail {

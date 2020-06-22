@@ -136,6 +136,13 @@ const resolvers: Resolvers & { UsgsParam: Object; NoaaParam: Object } = {
 
       return { station };
     },
+    waterHeight: async (station, args, { services }) => {
+      return services.noaa.getWaterHeight(
+        station.id,
+        new Date(args.start),
+        new Date(args.end)
+      );
+    },
   },
   UsgsSite: {
     waterHeight: async (site, args, { services }) => {

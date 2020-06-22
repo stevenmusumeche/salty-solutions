@@ -5,6 +5,7 @@ import {
   TideDetail,
   WindDetail,
   TemperatureDetail,
+  WaterHeight,
 } from "../../generated/graphql";
 import { subHours } from "date-fns";
 import { orderBy } from "lodash";
@@ -72,6 +73,27 @@ export const getWaterTemperature = async (
 
 export const getWaterTemperatureLatest = async (stationId: string) => {
   const data = await getWaterTemperature(
+    stationId,
+    subHours(new Date(), 24),
+    new Date()
+  );
+
+  if (data.length < 1) return null;
+
+  return orderBy(data, [(x) => x.timestamp], ["desc"])[0];
+};
+
+export const getWaterHeight = async (
+  stationId: string,
+  start: Date,
+  end: Date
+): Promise<WaterHeight[]> => {
+  const pk = `noaa-water_level-${stationId}`;
+  return queryTimeSeriesData<WaterHeight>(pk, start, end);
+};
+
+export const getWaterHeightLatest = async (stationId: string) => {
+  const data = await getWaterHeight(
     stationId,
     subHours(new Date(), 24),
     new Date()

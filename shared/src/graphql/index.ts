@@ -328,10 +328,17 @@ export type TidePreditionStation = {
   temperature?: Maybe<TemperatureResult>;
   waterTemperature?: Maybe<WaterTemperature>;
   salinity?: Maybe<Salinity>;
+  waterHeight?: Maybe<Array<WaterHeight>>;
 };
 
 
 export type TidePreditionStationTidesArgs = {
+  start: Scalars['String'];
+  end: Scalars['String'];
+};
+
+
+export type TidePreditionStationWaterHeightArgs = {
   start: Scalars['String'];
   end: Scalars['String'];
 };
@@ -755,7 +762,10 @@ export type SalinityMapQuery = (
 export type TideQueryVariables = {
   locationId: Scalars['ID'];
   tideStationId: Scalars['ID'];
-  usgsSiteId: Scalars['ID'];
+  usgsSiteId?: Maybe<Scalars['ID']>;
+  includeUsgs: Scalars['Boolean'];
+  noaaStationId?: Maybe<Scalars['ID']>;
+  includeNoaa: Scalars['Boolean'];
   startDate: Scalars['String'];
   endDate: Scalars['String'];
 };
@@ -773,6 +783,12 @@ export type TideQuery = (
   )>, usgsSite?: Maybe<(
     { __typename?: 'UsgsSite' }
     & UsgsSiteFieldsFragment
+  )>, noaaWaterHeight?: Maybe<(
+    { __typename?: 'TidePreditionStation' }
+    & { waterHeight?: Maybe<Array<(
+      { __typename?: 'WaterHeight' }
+      & WaterHeightFieldsFragment
+    )>> }
   )>, location?: Maybe<(
     { __typename?: 'Location' }
     & Pick<Location, 'id'>
@@ -1175,15 +1191,20 @@ export function useSalinityMapQuery(options: Omit<Urql.UseQueryArgs<SalinityMapQ
   return Urql.useQuery<SalinityMapQuery>({ query: SalinityMapDocument, ...options });
 };
 export const TideDocument = gql`
-    query Tide($locationId: ID!, $tideStationId: ID!, $usgsSiteId: ID!, $startDate: String!, $endDate: String!) {
+    query Tide($locationId: ID!, $tideStationId: ID!, $usgsSiteId: ID, $includeUsgs: Boolean!, $noaaStationId: ID, $includeNoaa: Boolean!, $startDate: String!, $endDate: String!) {
   tidePreditionStation(stationId: $tideStationId) {
     id
     tides(start: $startDate, end: $endDate) {
       ...TideDetailFields
     }
   }
-  usgsSite(siteId: $usgsSiteId) {
+  usgsSite(siteId: $usgsSiteId) @include(if: $includeUsgs) {
     ...UsgsSiteFields
+  }
+  noaaWaterHeight: tidePreditionStation(stationId: $noaaStationId) @include(if: $includeNoaa) {
+    waterHeight(start: $startDate, end: $endDate) {
+      ...WaterHeightFields
+    }
   }
   location(id: $locationId) {
     id
@@ -1197,6 +1218,7 @@ export const TideDocument = gql`
 }
     ${TideDetailFieldsFragmentDoc}
 ${UsgsSiteFieldsFragmentDoc}
+${WaterHeightFieldsFragmentDoc}
 ${SunDetailFieldsFragmentDoc}
 ${MoonDetailFieldsFragmentDoc}`;
 

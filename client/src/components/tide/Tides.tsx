@@ -26,7 +26,7 @@ import {
 
 interface Props {
   tideStations: TideStationDetailFragment[];
-  usgsSites: UsgsSiteDetailFragment[];
+  sites: Array<UsgsSiteDetailFragment | TideStationDetailFragment>;
   locationId: string;
   date: Date;
   setActiveDate: (date: Date | Date[]) => void;
@@ -36,39 +36,59 @@ export const ISO_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSxxx";
 
 const Tides: React.FC<Props> = ({
   tideStations,
-  usgsSites,
+  sites,
   locationId,
   date,
   setActiveDate,
 }) => {
+  const [selectedSite, setSelectedSite] = useState(sites[0]);
   const [selectedTideStationId, setSelectedTideStationId] = useState(
     tideStations[0].id
   );
-  const [selectedUsgsSiteId, setSelectedUsgsSiteId] = useState(usgsSites[0].id);
   const { isSmall } = useBreakpoints();
 
   useEffect(() => {
     // if locationId changes, set tide station back to the default
     setSelectedTideStationId(tideStations[0].id);
-    setSelectedUsgsSiteId(usgsSites[0].id);
-  }, [locationId, tideStations, usgsSites]);
+    setSelectedSite(sites[0]);
+  }, [locationId, tideStations, sites]);
+
+  const usgsSiteId =
+    selectedSite && selectedSite.__typename === "UsgsSite"
+      ? selectedSite.id
+      : undefined;
+
+  const noaaStationId =
+    selectedSite && selectedSite.__typename === "TidePreditionStation"
+      ? selectedSite.id
+      : undefined;
 
   const [tideResult, refresh] = useTideQuery({
     variables: {
       locationId,
-      tideStationId: selectedTideStationId!,
-      usgsSiteId: selectedUsgsSiteId!,
+      tideStationId: selectedTideStationId,
+      usgsSiteId,
+      includeUsgs: !!usgsSiteId,
+      noaaStationId,
+      includeNoaa: !!noaaStationId,
       startDate: format(subDays(startOfDay(date), 3), ISO_FORMAT),
       endDate: format(addDays(startOfDay(date), 4), ISO_FORMAT),
     },
     pause: selectedTideStationId === undefined,
   });
 
-  const handleStationChange: ChangeEventHandler<HTMLSelectElement> = (e) =>
+  const handleStationChange: ChangeEventHandler<HTMLSelectElement> = (e) => {
     setSelectedTideStationId(e.target.value);
+  };
 
-  const handleUsgsSiteChange: ChangeEventHandler<HTMLSelectElement> = (e) =>
-    setSelectedUsgsSiteId(e.target.value);
+  const handleUsgsSiteChange: ChangeEventHandler<HTMLSelectElement> = (e) => {
+    const match = sites.find((site) => site.id === e.target.value);
+    setSelectedSite(match!);
+  };
+
+  const waterHeightBase =
+    tideResult.data?.usgsSite?.waterHeight ||
+    tideResult.data?.noaaWaterHeight?.waterHeight;
 
   if (tideResult.fetching) {
     return <Fetching />;
@@ -79,8 +99,7 @@ const Tides: React.FC<Props> = ({
     !tideResult.data.location ||
     !tideResult.data.location.sun ||
     !tideResult.data.location.moon ||
-    !tideResult.data.usgsSite ||
-    !tideResult.data.usgsSite.waterHeight
+    !waterHeightBase
   ) {
     return (
       <>
@@ -120,7 +139,7 @@ const Tides: React.FC<Props> = ({
       startOfDay(date).toISOString()
   )[0];
 
-  const curDayWaterHeight = tideResult.data.usgsSite.waterHeight.filter((x) => {
+  const curDayWaterHeight = waterHeightBase.filter((x) => {
     return isSameDay(new Date(x.timestamp), date);
   });
 
@@ -159,9 +178,9 @@ const Tides: React.FC<Props> = ({
         </div>
         <div className="md:ml-4 md:mb-4">
           <UsgsSiteSelect
-            sites={usgsSites}
+            sites={sites}
             handleChange={handleUsgsSiteChange}
-            selectedId={selectedUsgsSiteId}
+            selectedId={selectedSite.id}
             label="Observation Site:"
           />
         </div>
@@ -182,7 +201,7 @@ const Tides: React.FC<Props> = ({
       <MultiDayTideCharts
         sunData={tideResult.data.location.sun}
         tideData={tideResult.data.tidePreditionStation.tides}
-        waterHeightData={tideResult.data.usgsSite.waterHeight}
+        waterHeightData={waterHeightBase}
         activeDate={date}
         setActiveDate={setActiveDate}
         numDays={isSmall ? 3 : 7}

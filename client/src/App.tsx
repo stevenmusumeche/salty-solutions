@@ -120,11 +120,17 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
   }, [selectedLocation]);
 
   const waterHeightSites = useMemo(() => {
-    return (
+    const usgs =
       selectedLocation?.usgsSites.filter((site) =>
         site.availableParams.includes(UsgsParam.GuageHeight)
-      ) || []
-    );
+      ) || [];
+
+    const noaa =
+      selectedLocation?.tidePreditionStations.filter((station) =>
+        station.availableParams.includes(NoaaParam.WaterLevel)
+      ) || [];
+
+    return [...noaa, ...usgs];
   }, [selectedLocation]);
 
   const windSites = useMemo(() => {
@@ -187,7 +193,7 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
           <Tides
             locationId={locationId}
             tideStations={selectedLocation.tidePreditionStations}
-            usgsSites={waterHeightSites}
+            sites={waterHeightSites}
             date={date}
             setActiveDate={handleDateChange}
           />
