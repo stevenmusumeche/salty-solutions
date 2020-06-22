@@ -3,7 +3,7 @@
 import Koa from "koa";
 import serverless from "serverless-http";
 import { ApolloServer } from "apollo-server-koa";
-import * as tideService from "./services/tide";
+import * as tideService from "./services/noaa/tide";
 import * as locationService from "./services/location";
 import * as sunMoonService from "./services/sun-and-moon";
 import * as weatherService from "./services/weather";

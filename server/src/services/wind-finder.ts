@@ -225,7 +225,7 @@ function normalize(days: WindFinderResult[]): WindFinderParsed[] {
   });
 }
 
-function knotsToMph(knots: number): number {
+export function knotsToMph(knots: number): number {
   return Number((knots * 1.15078).toFixed(1));
 }
 

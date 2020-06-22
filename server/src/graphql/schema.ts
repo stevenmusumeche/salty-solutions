@@ -285,4 +285,11 @@ export default gql`
     GuageHeight
     Salinity
   }
+
+  # not used yet
+  type AirPressure {
+    timestamp: String!
+    # millibars
+    pressure: Float!
+  }
 `;

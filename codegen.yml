@@ -19,7 +19,7 @@ generates:
         TemperatureResult: "Partial<{T}> & {location: LocationEntity}"
         Maps: "Partial<{T}> & {location: LocationEntity}"
         Location: ../services/location#LocationEntity
-        TidePreditionStation: ../services/tide#TideStationEntity
+        TidePreditionStation: ../services/noaa/source#NoaaStationEntity
         UsgsSite: ../services/usgs/source#UsgsSiteEntity
         WaterTemperature: "Object"
     plugins:

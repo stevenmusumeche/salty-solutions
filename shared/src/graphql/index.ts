@@ -11,6 +11,12 @@ export type Scalars = {
   Float: number;
 };
 
+export type AirPressure = {
+  __typename?: 'AirPressure';
+  timestamp: Scalars['String'];
+  pressure: Scalars['Float'];
+};
+
 export type CombinedForecastV2 = {
   __typename?: 'CombinedForecastV2';
   date: Scalars['String'];

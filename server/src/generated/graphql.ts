@@ -1,6 +1,6 @@
 import { GraphQLResolveInfo } from 'graphql';
 import { LocationEntity } from '../services/location';
-import { TideStationEntity } from '../services/tide';
+import { NoaaStationEntity } from '../services/noaa/source';
 import { UsgsSiteEntity } from '../services/usgs/source';
 import { Context } from '../server';
 export type Maybe<T> = T | null;
@@ -12,6 +12,12 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+};
+
+export type AirPressure = {
+  __typename?: 'AirPressure';
+  timestamp: Scalars['String'];
+  pressure: Scalars['Float'];
 };
 
 export type CombinedForecastV2 = {
@@ -511,7 +517,7 @@ export type ResolversTypes = {
   ID: ResolverTypeWrapper<Partial<Scalars['ID']>>;
   String: ResolverTypeWrapper<Partial<Scalars['String']>>;
   Int: ResolverTypeWrapper<Partial<Scalars['Int']>>;
-  TidePreditionStation: ResolverTypeWrapper<TideStationEntity>;
+  TidePreditionStation: ResolverTypeWrapper<NoaaStationEntity>;
   Coords: ResolverTypeWrapper<Partial<Coords>>;
   Float: ResolverTypeWrapper<Partial<Scalars['Float']>>;
   TideDetail: ResolverTypeWrapper<Partial<TideDetail>>;
@@ -553,6 +559,7 @@ export type ResolversTypes = {
   ModisSatellite: ResolverTypeWrapper<Partial<ModisSatellite>>;
   ModisMapEntry: ResolverTypeWrapper<Partial<ModisMapEntry>>;
   CurrentWind: ResolverTypeWrapper<Partial<CurrentWind>>;
+  AirPressure: ResolverTypeWrapper<Partial<AirPressure>>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -562,7 +569,7 @@ export type ResolversParentTypes = {
   ID: Partial<Scalars['ID']>;
   String: Partial<Scalars['String']>;
   Int: Partial<Scalars['Int']>;
-  TidePreditionStation: TideStationEntity;
+  TidePreditionStation: NoaaStationEntity;
   Coords: Partial<Coords>;
   Float: Partial<Scalars['Float']>;
   TideDetail: Partial<TideDetail>;
@@ -604,6 +611,13 @@ export type ResolversParentTypes = {
   ModisSatellite: Partial<ModisSatellite>;
   ModisMapEntry: Partial<ModisMapEntry>;
   CurrentWind: Partial<CurrentWind>;
+  AirPressure: Partial<AirPressure>;
+};
+
+export type AirPressureResolvers<ContextType = Context, ParentType extends ResolversParentTypes['AirPressure'] = ResolversParentTypes['AirPressure']> = {
+  timestamp?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  pressure?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
 };
 
 export type CombinedForecastV2Resolvers<ContextType = Context, ParentType extends ResolversParentTypes['CombinedForecastV2'] = ResolversParentTypes['CombinedForecastV2']> = {
@@ -910,6 +924,7 @@ export type WindSummaryResolvers<ContextType = Context, ParentType extends Resol
 };
 
 export type Resolvers<ContextType = Context> = {
+  AirPressure?: AirPressureResolvers<ContextType>;
   CombinedForecastV2?: CombinedForecastV2Resolvers<ContextType>;
   Coords?: CoordsResolvers<ContextType>;
   CurrentWind?: CurrentWindResolvers<ContextType>;
