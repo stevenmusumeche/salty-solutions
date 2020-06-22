@@ -25,8 +25,8 @@ export const tide: ScheduledHandler = async () => {
   console.log("Preloading tides");
 
   const curDate = new Date();
-  const startDate = subDays(startOfDay(curDate), 3).toISOString();
-  const endDate = addDays(startOfDay(curDate), 4).toISOString();
+  const startDate = subDays(startOfDay(curDate), 1).toISOString();
+  const endDate = addDays(startOfDay(curDate), 30).toISOString();
 
   const uniqueStationIds = getAll().reduce((stations, location) => {
     location.tideStationIds.forEach((id) => stations.add(id));

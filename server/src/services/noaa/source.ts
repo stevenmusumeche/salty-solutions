@@ -3,6 +3,7 @@ import axios from "axios";
 import axiosRetry from "axios-retry";
 import { subHours } from "date-fns";
 import { formatToTimeZone } from "date-fns-timezone";
+import { uniqBy } from "lodash";
 import querystring from "querystring";
 import {
   AirPressure,
@@ -425,6 +426,25 @@ export async function storeNoaaData(stationId: string, numHours = 24) {
   await saveToDynamo(station, data);
 }
 
+export async function storeTideData(
+  stationId: string,
+  startDate: Date,
+  endDate: Date
+) {
+  const station = getStationById(stationId);
+  if (!station) throw new Error(`Unable to load NOAA station for ${stationId}`);
+
+  const data = await fetchDataForProduct(
+    NoaaProduct.TidePrediction,
+    station.id,
+    startDate,
+    endDate
+  );
+
+  const deduplicated = uniqBy(data, "timestamp");
+  await saveToDynamo(station, { [NoaaProduct.TidePrediction]: deduplicated });
+}
+
 async function saveToDynamo(station: NoaaStationEntity, data: ScrapedData) {
   const queries = buildDynamoQueries(station.id, data);
   await batchWrite(queries);
@@ -467,6 +487,7 @@ async function scrapeData(
 ): Promise<ScrapedData> {
   let returnVal: ScrapedData = {};
 
+  // scrape everything except tide predictions
   const stations = station.supportedProducts.filter(
     (x) => x !== NoaaProduct.TidePrediction
   );

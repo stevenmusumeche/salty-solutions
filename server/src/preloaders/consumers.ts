@@ -1,8 +1,7 @@
 import { SQSHandler } from "aws-lambda";
-import { getTidePredictions } from "../services/noaa/tide";
 import { loadAndSave } from "../services/wind-finder";
 import { storeUsgsData } from "../services/usgs/source";
-import { storeNoaaData } from "../services/noaa/source";
+import { storeNoaaData, storeTideData } from "../services/noaa/source";
 
 export const tide: SQSHandler = async (event, ctx, cb) => {
   for (const record of event.Records) {
@@ -14,11 +13,12 @@ export const tide: SQSHandler = async (event, ctx, cb) => {
       payload.endDate
     );
 
-    await getTidePredictions(
+    await storeTideData(
+      payload.stationId,
       new Date(payload.startDate),
-      new Date(payload.endDate),
-      payload.stationId
+      new Date(payload.endDate)
     );
+    console.log("Finished preloading tides for", payload.stationId);
   }
 };
 
