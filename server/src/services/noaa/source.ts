@@ -3,7 +3,6 @@ import axios from "axios";
 import axiosRetry from "axios-retry";
 import { subHours } from "date-fns";
 import { formatToTimeZone } from "date-fns-timezone";
-import { uniqBy } from "lodash";
 import querystring from "querystring";
 import {
   AirPressure,
@@ -442,7 +441,15 @@ export async function storeTideData(
     endDate
   );
 
-  const deduplicated = uniqBy(data, "timestamp");
+  // we could have two entries with the same timestamp. we want to keep the hi/low one and discard the intermediate one
+  const hiLowTimestamps = data
+    .filter((x: any) => x.type !== "intermediate")
+    .map((x: any) => new Date(x.timestamp).getTime());
+  const deduplicated = data.filter((x: any) => {
+    if (x.type !== "intermediate") return true;
+    return !hiLowTimestamps.includes(new Date(x.timestamp).getTime());
+  });
+
   await saveToDynamo(station, { [NoaaProduct.TidePrediction]: deduplicated });
 }
 
