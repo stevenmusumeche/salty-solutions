@@ -18,6 +18,7 @@ import { noDecimals } from "../hooks/utils";
 import ConditionCard from "./ConditionCard";
 import MiniGraphWrapper from "./MiniGraphWrapper";
 import UsgsSiteSelect from "./UsgsSiteSelect";
+import NoData from "./NoData";
 
 interface Props {
   locationId: string;
@@ -63,16 +64,20 @@ const WindCard: React.FC<Props> = ({ locationId, sites }) => {
       label="Wind (mph)"
       className="wind-summary"
     >
-      <div>
-        {curValue && (
-          <div>
-            {curValue}
-            <div className="absolute right-0 top-0 p-2 text-lg md:text-2xl">
-              {curDirectionValue}
+      <div className="flex flex-col justify-between h-full">
+        {curValue ? (
+          <>
+            <div>
+              {curValue}
+              <div className="absolute right-0 top-0 p-2 text-lg md:text-2xl">
+                {curDirectionValue}
+              </div>
             </div>
-          </div>
+            <div>{graphDisplayVal}</div>
+          </>
+        ) : (
+          <NoData />
         )}
-        <div>{graphDisplayVal}</div>
         {selectedSite && (
           <UsgsSiteSelect
             sites={sites}

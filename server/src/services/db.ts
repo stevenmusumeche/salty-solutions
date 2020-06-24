@@ -87,6 +87,7 @@ export const batchWrite = async (
   }
 };
 
+// todo: paging? only can return 1mb at a time
 export const queryTimeSeriesData = async <T>(
   pk: string,
   start: Date,

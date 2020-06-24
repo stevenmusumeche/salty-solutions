@@ -6,6 +6,7 @@ import { subHours } from "date-fns/esm";
 import { oneDecimal } from "../hooks/utils";
 import MiniGraph from "./MiniGraph";
 import { UsgsSiteDetailFragment } from "@stevenmusumeche/salty-solutions-shared/dist/graphql";
+import NoData from "./NoData";
 
 interface Props {
   locationId: string;
@@ -35,15 +36,21 @@ const SalinityCard: React.FC<Props> = ({ locationId, sites }) => {
       fetching={fetching}
       error={error}
     >
-      <div>
-        <div>{curValue}</div>
-        <MiniGraph
-          fetching={fetching}
-          error={error}
-          data={curDetail}
-          dependentAxisTickFormat={oneDecimal}
-          className="salinity-graph"
-        />
+      <div className="flex flex-col justify-between h-full">
+        {curValue ? (
+          <>
+            <div>{curValue}</div>
+            <MiniGraph
+              fetching={fetching}
+              error={error}
+              data={curDetail}
+              dependentAxisTickFormat={oneDecimal}
+              className="salinity-graph"
+            />
+          </>
+        ) : (
+          <NoData />
+        )}
         {selectedSite && (
           <UsgsSiteSelect
             sites={sites}

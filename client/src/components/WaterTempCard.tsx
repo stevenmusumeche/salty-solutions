@@ -9,6 +9,7 @@ import {
   UsgsSiteDetailFragment,
   TideStationDetailFragment,
 } from "@stevenmusumeche/salty-solutions-shared/dist/graphql";
+import NoData from "./NoData";
 
 interface Props {
   locationId: string;
@@ -54,16 +55,22 @@ const WaterTempCard: React.FC<Props> = ({ locationId, sites }) => {
       className="water-temp-summary"
       refresh={refresh}
     >
-      <div>
-        <div>{curValue}</div>
-        <MiniGraph
-          fetching={fetching}
-          error={error}
-          data={curDetail}
-          dependentAxisTickFormat={noDecimals}
-          className="water-temp-graph"
-          refresh={refresh}
-        />
+      <div className="flex flex-col justify-between h-full">
+        {curValue ? (
+          <>
+            <div>{curValue}</div>
+            <MiniGraph
+              fetching={fetching}
+              error={error}
+              data={curDetail}
+              dependentAxisTickFormat={noDecimals}
+              className="water-temp-graph"
+              refresh={refresh}
+            />
+          </>
+        ) : (
+          <NoData />
+        )}
         {selectedSite && (
           <UsgsSiteSelect
             sites={sites}

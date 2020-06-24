@@ -6,6 +6,7 @@ import MiniGraph from "./MiniGraph";
 import { noDecimals } from "../hooks/utils";
 import { TideStationDetailFragment } from "@stevenmusumeche/salty-solutions-shared/dist/graphql";
 import UsgsSiteSelect from "./UsgsSiteSelect";
+import NoData from "./NoData";
 
 interface Props {
   locationId: string;
@@ -39,16 +40,22 @@ const AirTempCard: React.FC<Props> = ({ locationId, sites }) => {
       error={error}
       className="air-temp-summary"
     >
-      <div>
-        <div>{curValue}</div>
-        <MiniGraph
-          fetching={fetching}
-          error={error}
-          data={curDetail}
-          dependentAxisTickFormat={noDecimals}
-          className="air-temp-graph"
-        />
-        {selectedSite && (
+      <div className="flex flex-col justify-between h-full">
+        {curValue ? (
+          <>
+            <div>{curValue}</div>
+            <MiniGraph
+              fetching={fetching}
+              error={error}
+              data={curDetail}
+              dependentAxisTickFormat={noDecimals}
+              className="air-temp-graph"
+            />
+          </>
+        ) : (
+          <NoData />
+        )}
+        {selectedSite ? (
           <UsgsSiteSelect
             sites={sites}
             handleChange={(e) => {
@@ -58,6 +65,8 @@ const AirTempCard: React.FC<Props> = ({ locationId, sites }) => {
             selectedId={selectedSite.id}
             fullWidth={true}
           />
+        ) : (
+          <div style={{ height: 40 }} />
         )}
       </div>
     </ConditionCard>

@@ -132,8 +132,6 @@ const resolvers: Resolvers & { UsgsParam: Object; NoaaParam: Object } = {
       return { station };
     },
     waterTemperature: async (station, args, ctx) => {
-      console.log("watertemp");
-
       return { station };
     },
     waterHeight: async (station, args, { services }) => {
@@ -308,6 +306,10 @@ const resolvers: Resolvers & { UsgsParam: Object; NoaaParam: Object } = {
         const data = await loaders.latestConditionsLoader.load(
           temperature.location
         );
+
+        if (!data.temperature) {
+          return { mostRecent: null };
+        }
 
         return {
           mostRecent: {
