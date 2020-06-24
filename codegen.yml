@@ -15,13 +15,14 @@ generates:
       contextType: "../server#Context"
       defaultMapper: Partial<{T}>
       mappers:
-        Wind: "Partial<{T}> & {location: LocationEntity}"
-        TemperatureResult: "Partial<{T}> & {location: LocationEntity}"
+        TemperatureResult: "Partial<{T}> & {location?: LocationEntity, station?: NoaaStationEntity}"
         Maps: "Partial<{T}> & {location: LocationEntity}"
         Location: ../services/location#LocationEntity
         TidePreditionStation: ../services/noaa/source#NoaaStationEntity
         UsgsSite: ../services/usgs/source#UsgsSiteEntity
-        WaterTemperature: "Object"
+        WaterTemperature: "Partial<{T}> & {site?: UsgsSiteEntity, station?: NoaaStationEntity}"
+        Salinity: "Partial<{T}> & {site: UsgsSiteEntity}"
+        Wind: "Partial<{T}> & {location?: LocationEntity, site?: UsgsSiteEntity, station?: NoaaStationEntity}"
     plugins:
       - "typescript"
       - "typescript-resolvers"

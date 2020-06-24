@@ -4,7 +4,7 @@ export default gql`
   type Query {
     locations: [Location!]!
     location(id: ID!): Location
-    tidePreditionStation(stationId: ID!): TidePreditionStation
+    tidePreditionStation(stationId: ID): TidePreditionStation
     usgsSite(siteId: ID): UsgsSite
   }
 
@@ -34,7 +34,7 @@ export default gql`
     coords: Coords!
     waterHeight(start: String!, end: String!): [WaterHeight!]
     waterTemperature: WaterTemperature
-    wind: UsgsWind
+    wind: Wind
     salinity: Salinity
     availableParams: [UsgsParam!]!
   }
@@ -107,7 +107,7 @@ export default gql`
   }
 
   type TemperatureSummary {
-    mostRecent: TemperatureDetail!
+    mostRecent: TemperatureDetail
   }
 
   type Coords {
@@ -121,6 +121,12 @@ export default gql`
     url: String!
     coords: Coords!
     tides(start: String!, end: String!): [TideDetail!]
+    availableParams: [NoaaParam!]!
+    wind: Wind
+    temperature: TemperatureResult
+    waterTemperature: WaterTemperature
+    salinity: Salinity
+    waterHeight(start: String!, end: String!): [WaterHeight!]
   }
 
   type TideDetail {
@@ -220,12 +226,8 @@ export default gql`
   }
 
   type WaterTemperature {
-    summary: WaterTemperatureSummary!
+    summary: TemperatureSummary!
     detail(start: String!, end: String!): [TemperatureDetail!]
-  }
-
-  type WaterTemperatureSummary {
-    mostRecent: TemperatureDetail
   }
 
   type TemperatureDetail {
@@ -242,12 +244,6 @@ export default gql`
   }
 
   type Wind {
-    summary: WindSummary!
-    detail(start: String!, end: String!): [WindDetail!]
-  }
-
-  # duplicated from Wind so we can have different type resolvers
-  type UsgsWind {
     summary: WindSummary!
     detail(start: String!, end: String!): [WindDetail!]
   }
@@ -284,6 +280,15 @@ export default gql`
     WindDirection
     GuageHeight
     Salinity
+  }
+
+  enum NoaaParam {
+    Wind
+    WaterLevel
+    AirTemperature
+    WaterTemperature
+    AirPressure
+    TidePrediction
   }
 
   # not used yet

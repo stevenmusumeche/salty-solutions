@@ -1,37 +1,51 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import ConditionCard from "./ConditionCard";
 import { hooks } from "@stevenmusumeche/salty-solutions-shared";
-import { subHours, startOfDay } from "date-fns";
+import { subHours } from "date-fns";
 import UsgsSiteSelect from "./UsgsSiteSelect";
 import MiniGraph from "./MiniGraph";
 import { noDecimals } from "../hooks/utils";
-import { UsgsSiteDetailFragment } from "@stevenmusumeche/salty-solutions-shared/dist/graphql";
+import {
+  UsgsSiteDetailFragment,
+  TideStationDetailFragment,
+} from "@stevenmusumeche/salty-solutions-shared/dist/graphql";
+import NoData from "./NoData";
 
 interface Props {
   locationId: string;
-  usgsSites: UsgsSiteDetailFragment[];
+  sites: Array<UsgsSiteDetailFragment | TideStationDetailFragment>;
 }
 
-const WaterTempCard: React.FC<Props> = ({ locationId, usgsSites }) => {
-  const [selectedUsgsSiteId, setSelectedUsgsSiteId] = useState(usgsSites[0].id);
+const WaterTempCard: React.FC<Props> = ({ locationId, sites }) => {
+  const [selectedSite, setSelectedSite] = useState(() =>
+    sites.length ? sites[0] : undefined
+  );
 
-  const date = startOfDay(new Date());
+  const date = useMemo(() => new Date(), []);
+
   const {
     curValue,
     curDetail,
     fetching,
     error,
     refresh,
-  } = hooks.useWaterTemperatureData(
+  } = hooks.useWaterTemperatureData({
     locationId,
-    selectedUsgsSiteId,
-    subHours(date, 48),
-    date
-  );
+    startDate: subHours(date, 48),
+    endDate: date,
+    usgsSiteId:
+      selectedSite && selectedSite.__typename === "UsgsSite"
+        ? selectedSite.id
+        : undefined,
+    noaaStationId:
+      selectedSite && selectedSite.__typename === "TidePreditionStation"
+        ? selectedSite.id
+        : undefined,
+  });
 
   useEffect(() => {
-    setSelectedUsgsSiteId(usgsSites[0].id);
-  }, [locationId, usgsSites]);
+    setSelectedSite(sites.length ? sites[0] : undefined);
+  }, [locationId, sites]);
 
   return (
     <ConditionCard
@@ -41,21 +55,31 @@ const WaterTempCard: React.FC<Props> = ({ locationId, usgsSites }) => {
       className="water-temp-summary"
       refresh={refresh}
     >
-      <div>
-        <div>{curValue}</div>
-        <MiniGraph
-          fetching={fetching}
-          error={error}
-          data={curDetail}
-          dependentAxisTickFormat={noDecimals}
-          className="water-temp-graph"
-          refresh={refresh}
-        />
-        {selectedUsgsSiteId && usgsSites.length > 1 && (
+      <div className="flex flex-col justify-between h-full">
+        {curValue ? (
+          <>
+            <div>{curValue}</div>
+            <MiniGraph
+              fetching={fetching}
+              error={error}
+              data={curDetail}
+              dependentAxisTickFormat={noDecimals}
+              className="water-temp-graph"
+              refresh={refresh}
+            />
+          </>
+        ) : (
+          <NoData />
+        )}
+        {selectedSite && (
           <UsgsSiteSelect
-            sites={usgsSites}
-            handleChange={(e) => setSelectedUsgsSiteId(e.target.value)}
-            selectedId={selectedUsgsSiteId}
+            sites={sites}
+            handleChange={(e) => {
+              const match = sites.find((site) => site.id === e.target.value);
+              setSelectedSite(match);
+            }}
+            selectedId={selectedSite.id}
+            fullWidth={true}
           />
         )}
       </div>

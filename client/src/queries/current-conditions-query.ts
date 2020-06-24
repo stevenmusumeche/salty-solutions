@@ -4,41 +4,57 @@ const CURRENT_CONDITIONS_QUERY = gql`
   query CurrentConditionsData(
     $locationId: ID!
     $usgsSiteId: ID
+    $includeUsgs: Boolean!
+    $noaaStationId: ID
+    $includeNoaa: Boolean!
     $startDate: String!
     $endDate: String!
   ) {
     location(id: $locationId) {
       id
-      wind {
-        summary {
-          mostRecent {
-            ...WindDetailFields2
-          }
-        }
-        detail(start: $startDate, end: $endDate) {
-          ...WindDetailFields2
-        }
-      }
-
       temperature {
-        summary {
-          mostRecent {
-            temperature {
-              degrees
-            }
-          }
-        }
-        detail(start: $startDate, end: $endDate) {
-          timestamp
-          temperature {
-            degrees
-          }
-        }
+        ...TemperatureDetailFields
       }
     }
 
-    usgsSite(siteId: $usgsSiteId) {
+    usgsSite(siteId: $usgsSiteId) @include(if: $includeUsgs) {
       ...UsgsSiteDetailFields
+    }
+
+    tidePreditionStation(stationId: $noaaStationId) @include(if: $includeNoaa) {
+      ...TidePredictionStationDetailFields
+    }
+  }
+
+  fragment TemperatureDetailFields on TemperatureResult {
+    summary {
+      mostRecent {
+        temperature {
+          degrees
+        }
+      }
+    }
+    detail(start: $startDate, end: $endDate) {
+      timestamp
+      temperature {
+        degrees
+      }
+    }
+  }
+
+  fragment WaterTemperatureDetailFields on WaterTemperature {
+    summary {
+      mostRecent {
+        temperature {
+          degrees
+        }
+      }
+    }
+    detail(start: $startDate, end: $endDate) {
+      timestamp
+      temperature {
+        degrees
+      }
     }
   }
 
@@ -57,20 +73,7 @@ const CURRENT_CONDITIONS_QUERY = gql`
       }
     }
     waterTemperature {
-      summary {
-        mostRecent {
-          timestamp
-          temperature {
-            degrees
-          }
-        }
-      }
-      detail(start: $startDate, end: $endDate) {
-        timestamp
-        temperature {
-          degrees
-        }
-      }
+      ...WaterTemperatureDetailFields
     }
     wind {
       summary {
@@ -81,6 +84,27 @@ const CURRENT_CONDITIONS_QUERY = gql`
       detail(start: $startDate, end: $endDate) {
         ...WindDetailFields2
       }
+    }
+  }
+
+  fragment TidePredictionStationDetailFields on TidePreditionStation {
+    id
+    name
+    wind {
+      summary {
+        mostRecent {
+          ...WindDetailFields2
+        }
+      }
+      detail(start: $startDate, end: $endDate) {
+        ...WindDetailFields2
+      }
+    }
+    temperature {
+      ...TemperatureDetailFields
+    }
+    waterTemperature {
+      ...WaterTemperatureDetailFields
     }
   }
 

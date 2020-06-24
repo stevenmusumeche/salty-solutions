@@ -3,7 +3,7 @@
 import Koa from "koa";
 import serverless from "serverless-http";
 import { ApolloServer } from "apollo-server-koa";
-import * as tideService from "./services/noaa/tide";
+import * as noaaService from "./services/noaa/client";
 import * as locationService from "./services/location";
 import * as sunMoonService from "./services/sun-and-moon";
 import * as weatherService from "./services/weather";
@@ -33,7 +33,7 @@ const IS_DEV =
 export interface Context {
   koaCtx: Koa.Context;
   services: {
-    tide: typeof tideService;
+    noaa: typeof noaaService;
     location: typeof locationService;
     sunMoon: typeof sunMoonService;
     weather: typeof weatherService;
@@ -72,7 +72,7 @@ const server = new ApolloServer({
     return {
       koaCtx,
       services: {
-        tide: tideService,
+        noaa: noaaService,
         location: locationService,
         sunMoon: sunMoonService,
         weather: weatherService,

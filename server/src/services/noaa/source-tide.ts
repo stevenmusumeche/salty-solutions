@@ -10,13 +10,8 @@ import {
 } from "date-fns";
 import { formatToTimeZone } from "date-fns-timezone";
 import querystring from "querystring";
-import { NoaaStationEntity, noaaStations } from "./source";
 
 axiosRetry(axios, { retries: 3, retryDelay: (retryCount) => retryCount * 500 });
-
-export const getStationById = (id: string): NoaaStationEntity | undefined => {
-  return noaaStations.find((tideStation) => tideStation.id === id);
-};
 
 export interface TideData {
   timestamp: string;

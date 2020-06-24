@@ -1,19 +1,27 @@
 import React, { ChangeEventHandler } from "react";
-import { UsgsSiteDetailFragment } from "@stevenmusumeche/salty-solutions-shared/dist/graphql";
+import {
+  UsgsSiteDetailFragment,
+  TideStationDetailFragment,
+} from "@stevenmusumeche/salty-solutions-shared/dist/graphql";
 
 const UsgsSiteSelect: React.FC<{
-  sites: UsgsSiteDetailFragment[];
+  sites: Array<UsgsSiteDetailFragment | TideStationDetailFragment>;
   handleChange: ChangeEventHandler<HTMLSelectElement>;
   selectedId: string;
   label?: string;
-}> = ({ sites, handleChange, selectedId, label }) => (
+  fullWidth?: boolean;
+}> = ({ sites, handleChange, selectedId, label, fullWidth = false }) => (
   <div className="py-2 text-sm">
     {label && (
       <label className="mr-2 inline-block uppercase leading-loose text-gray-700 text-sm">
         {label}
       </label>
     )}
-    <div className="inline-block rounded border-gray-300 border">
+    <div
+      className={`rounded border-gray-300 border ${
+        fullWidth ? "block" : "inline-block"
+      }`}
+    >
       <select
         onChange={handleChange}
         value={selectedId}

@@ -4,16 +4,28 @@ import {
 } from "../graphql";
 import { UseQueryState } from "urql";
 
-export function useTemperatureData(
-  locationId: string,
-  startDate: Date,
-  endDate: Date
-) {
+interface Input {
+  locationId: string;
+  startDate: Date;
+  endDate: Date;
+  noaaStationId?: string;
+}
+export function useTemperatureData({
+  locationId,
+  startDate,
+  endDate,
+  noaaStationId,
+}: Input) {
+  const includeNoaa = !!noaaStationId;
+
   const [result, refresh] = useCurrentConditionsDataQuery({
     variables: {
       locationId,
       startDate: startDate.toISOString(),
       endDate: endDate.toISOString(),
+      noaaStationId,
+      includeNoaa,
+      includeUsgs: false,
     },
   });
   const { curValue, curDetail } = extractData(result);
@@ -21,13 +33,16 @@ export function useTemperatureData(
 }
 
 function extractData(data: UseQueryState<CurrentConditionsDataQuery>) {
-  const curValue =
-    data?.data?.location?.temperature?.summary?.mostRecent &&
-    `${Math.round(
-      data.data.location.temperature.summary.mostRecent.temperature.degrees
-    )}°`;
+  // use either the NOAA or location field, depending on which was requested
+  const base =
+    data?.data?.tidePreditionStation?.temperature ||
+    data?.data?.location?.temperature;
 
-  const curDetail = data?.data?.location?.temperature?.detail?.map((data) => ({
+  const curValue =
+    base?.summary?.mostRecent &&
+    `${Math.round(base.summary.mostRecent.temperature.degrees)}°`;
+
+  const curDetail = base?.detail?.map((data) => ({
     y: data.temperature.degrees,
     x: data.timestamp,
   }));

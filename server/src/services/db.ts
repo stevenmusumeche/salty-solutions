@@ -86,3 +86,29 @@ export const batchWrite = async (
     );
   }
 };
+
+// todo: paging? only can return 1mb at a time
+export const queryTimeSeriesData = async <T>(
+  pk: string,
+  start: Date,
+  end: Date
+): Promise<T[]> => {
+  const result = await client
+    .query({
+      TableName: tableName,
+      KeyConditionExpression: "pk = :key AND sk BETWEEN :start AND :end",
+      ExpressionAttributeValues: {
+        ":key": pk,
+        ":start": start.getTime(),
+        ":end": end.getTime(),
+      },
+    })
+    .promise();
+
+  if (!result.Items) return [];
+
+  return result.Items.map((item) => ({
+    timestamp: new Date(item.sk).toISOString(),
+    ...item.data,
+  }));
+};

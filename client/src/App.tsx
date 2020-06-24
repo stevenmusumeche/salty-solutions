@@ -2,6 +2,7 @@ import { navigate, RouteComponentProps } from "@reach/router";
 import {
   useLocationsQuery,
   UsgsParam,
+  NoaaParam,
 } from "@stevenmusumeche/salty-solutions-shared/dist/graphql";
 import { startOfDay } from "date-fns";
 import React, { useEffect, useMemo, useReducer, useState } from "react";
@@ -96,7 +97,7 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
     setDate(date);
   };
 
-  const usgsSalinitySites = useMemo(() => {
+  const salinitySites = useMemo(() => {
     return (
       selectedLocation?.usgsSites.filter((site) =>
         site.availableParams.includes(UsgsParam.Salinity)
@@ -104,26 +105,52 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
     );
   }, [selectedLocation]);
 
-  const usgsWaterTempSites = useMemo(() => {
-    return (
+  const waterTempSites = useMemo(() => {
+    const usgs =
       selectedLocation?.usgsSites.filter((site) =>
         site.availableParams.includes(UsgsParam.WaterTemp)
-      ) || []
-    );
+      ) || [];
+
+    const noaa =
+      selectedLocation?.tidePreditionStations.filter((station) =>
+        station.availableParams.includes(NoaaParam.WaterTemperature)
+      ) || [];
+
+    return [...usgs, ...noaa];
   }, [selectedLocation]);
 
-  const usgsWaterHeightSites = useMemo(() => {
-    return (
+  const waterHeightSites = useMemo(() => {
+    const usgs =
       selectedLocation?.usgsSites.filter((site) =>
         site.availableParams.includes(UsgsParam.GuageHeight)
-      ) || []
-    );
+      ) || [];
+
+    const noaa =
+      selectedLocation?.tidePreditionStations.filter((station) =>
+        station.availableParams.includes(NoaaParam.WaterLevel)
+      ) || [];
+
+    return [...noaa, ...usgs];
   }, [selectedLocation]);
 
-  const usgsWindSites = useMemo(() => {
-    return (
+  const windSites = useMemo(() => {
+    const usgs =
       selectedLocation?.usgsSites.filter((site) =>
         site.availableParams.includes(UsgsParam.WindSpeed)
+      ) || [];
+
+    const noaa =
+      selectedLocation?.tidePreditionStations.filter((station) =>
+        station.availableParams.includes(NoaaParam.Wind)
+      ) || [];
+
+    return [...usgs, ...noaa];
+  }, [selectedLocation]);
+
+  const airTempSites = useMemo(() => {
+    return (
+      selectedLocation?.tidePreditionStations.filter((station) =>
+        station.availableParams.includes(NoaaParam.AirTemperature)
       ) || []
     );
   }, [selectedLocation]);
@@ -155,13 +182,10 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
       <div className="container p-4 md:p-0 md:mx-auto md:my-0 md:mt-8">
         <span id="current-conditions"></span>
         <div className="current-conditions-grid">
-          <WindCard locationId={locationId} usgsSites={usgsWindSites} />
-          <AirTempCard locationId={locationId} />
-          <WaterTempCard
-            locationId={locationId}
-            usgsSites={usgsWaterTempSites}
-          />
-          <SalinityCard locationId={locationId} usgsSites={usgsSalinitySites} />
+          <WindCard locationId={locationId} sites={windSites} />
+          <AirTempCard locationId={locationId} sites={airTempSites} />
+          <WaterTempCard locationId={locationId} sites={waterTempSites} />
+          <SalinityCard locationId={locationId} sites={salinitySites} />
         </div>
 
         <span id="tides"></span>
@@ -169,7 +193,7 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
           <Tides
             locationId={locationId}
             tideStations={selectedLocation.tidePreditionStations}
-            usgsSites={usgsWaterHeightSites}
+            sites={waterHeightSites}
             date={date}
             setActiveDate={handleDateChange}
           />

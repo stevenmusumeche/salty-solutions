@@ -4,7 +4,10 @@ const TIDE_QUERY = gql`
   query Tide(
     $locationId: ID!
     $tideStationId: ID!
-    $usgsSiteId: ID!
+    $usgsSiteId: ID
+    $includeUsgs: Boolean!
+    $noaaStationId: ID
+    $includeNoaa: Boolean!
     $startDate: String!
     $endDate: String!
   ) {
@@ -14,8 +17,14 @@ const TIDE_QUERY = gql`
         ...TideDetailFields
       }
     }
-    usgsSite(siteId: $usgsSiteId) {
+    usgsSite(siteId: $usgsSiteId) @include(if: $includeUsgs) {
       ...UsgsSiteFields
+    }
+    noaaWaterHeight: tidePreditionStation(stationId: $noaaStationId)
+      @include(if: $includeNoaa) {
+      waterHeight(start: $startDate, end: $endDate) {
+        ...WaterHeightFields
+      }
     }
     location(id: $locationId) {
       id
