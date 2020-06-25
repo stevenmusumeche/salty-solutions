@@ -92,7 +92,7 @@ async function fetchTideData(
     station: stationId,
     time_zone: "gmt",
     units: "english",
-    interval: onlyHighLow ? "hilo" : undefined, // only High/Low tide predictions vs 6-minute intervals
+    interval: onlyHighLow ? "hilo" : 6, // only High/Low tide predictions vs 6-minute intervals
     format: "json",
   };
 
