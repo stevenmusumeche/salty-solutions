@@ -40,7 +40,7 @@ const AirTempCard: React.FC<Props> = ({ locationId, sites }) => {
       error={error}
       className="air-temp-summary"
     >
-      <div className="flex flex-col justify-between h-full">
+      <div className="flex flex-col justify-between h-full w-full">
         {curValue ? (
           <>
             <div>{curValue}</div>
