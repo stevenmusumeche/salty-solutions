@@ -28,10 +28,6 @@ export function useSalinityData(
     stationName,
     refresh,
     ...result,
-    error:
-      curValue === null
-        ? new CombinedError({ graphQLErrors: ["no value"] })
-        : result.error,
   };
 }
 
