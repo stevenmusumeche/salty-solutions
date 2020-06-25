@@ -11,8 +11,7 @@ import {
   addDays,
   endOfDay,
   getHours,
-  isAfter,
-  isBefore,
+  isWithinInterval,
 } from "date-fns";
 import { buildDatasets } from "@stevenmusumeche/salty-solutions-shared/dist/tide-helpers";
 import {
@@ -20,6 +19,8 @@ import {
   TideDetailFieldsFragment,
   WaterHeightFieldsFragment,
 } from "@stevenmusumeche/salty-solutions-shared/dist/graphql";
+import { useMemo } from "react";
+import { useCallback } from "react";
 
 interface Props {
   sunData: SunDetailFieldsFragment[];
@@ -47,21 +48,33 @@ const MultiDayTideCharts: React.FC<Props> = ({
 
   const dayPadding = Math.floor(numDays / 2);
 
+  const rangeStartDate = subDays(activeDate, dayPadding);
+  const rangeEndDate = endOfDay(addDays(activeDate, dayPadding));
+
+  const isInRange = useCallback(
+    (date: Date): boolean => {
+      return isWithinInterval(date, {
+        start: rangeStartDate,
+        end: startOfDay(addDays(rangeEndDate, 1)),
+      });
+    },
+    [rangeEndDate, rangeStartDate]
+  );
+
+  const curRangeTides = useMemo(
+    () => rawTideData.filter((x) => isInRange(new Date(x.time))),
+    [isInRange, rawTideData]
+  );
+
+  const curRangeWaterHeight = useMemo(
+    () => rawWaterHeightData.filter((x) => isInRange(new Date(x.timestamp))),
+    [isInRange, rawWaterHeightData]
+  );
+
   const { tideData, waterHeightData, tideBoundaries } = buildDatasets(
     sunData[0], // not actually used here
-    rawTideData.filter(
-      (x) =>
-        isAfter(new Date(x.time), subDays(activeDate, dayPadding)) &&
-        isBefore(new Date(x.time), endOfDay(addDays(activeDate, dayPadding)))
-    ),
-    rawWaterHeightData.filter(
-      (x) =>
-        isAfter(new Date(x.timestamp), subDays(activeDate, dayPadding)) &&
-        isBefore(
-          new Date(x.timestamp),
-          endOfDay(addDays(activeDate, dayPadding))
-        )
-    )
+    curRangeTides,
+    curRangeWaterHeight
   );
   const { min, max } = tideBoundaries;
 
@@ -123,6 +136,9 @@ const MultiDayTideCharts: React.FC<Props> = ({
           bottom: isSmall ? 50 : 30,
           left: isSmall ? 65 : 30,
           right: isSmall ? 30 : 10,
+        }}
+        domain={{
+          x: [rangeStartDate, rangeEndDate],
         }}
       >
         {/* background colors for night */}

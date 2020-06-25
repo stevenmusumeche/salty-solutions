@@ -29,14 +29,14 @@ import {
 
 interface Props {
   sunData: SunDetailFieldsFragment;
-  tideData: TideDetailFieldsFragment[];
+  curDayTides: TideDetailFieldsFragment[];
   waterHeightData: WaterHeightFieldsFragment[];
   date: Date;
 }
 
 const MainTideChart: React.FC<Props> = ({
   sunData,
-  tideData: rawTideData,
+  curDayTides,
   waterHeightData: rawWaterHeightData,
   date,
 }) => {
@@ -50,7 +50,7 @@ const MainTideChart: React.FC<Props> = ({
     hiLowData,
     waterHeightData,
     tideBoundaries,
-  } = buildDatasets(sunData, rawTideData, rawWaterHeightData);
+  } = buildDatasets(sunData, curDayTides, rawWaterHeightData);
   const { min, max } = tideBoundaries;
 
   let timeTickValues = [];
@@ -71,6 +71,7 @@ const MainTideChart: React.FC<Props> = ({
         left: isSmall ? 50 : 30,
         right: isSmall ? 30 : 10,
       }}
+      domain={{ x: [startOfDay(date), endOfDay(date)] }}
     >
       {/* background colors for night */}
       <VictoryArea

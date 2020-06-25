@@ -2,9 +2,9 @@ import {
   addDays,
   addHours,
   format,
-  isSameDay,
   startOfDay,
   subDays,
+  isWithinInterval,
 } from "date-fns";
 import React, { ChangeEventHandler, useEffect, useState } from "react";
 import ErrorIcon from "../../assets/error.svg";
@@ -139,14 +139,20 @@ const Tides: React.FC<Props> = ({
       startOfDay(date).toISOString()
   )[0];
 
-  const curDayWaterHeight = waterHeightBase.filter((x) => {
-    return isSameDay(new Date(x.timestamp), date);
-  });
-
-  const curDayTides = tideResult.data.tidePreditionStation.tides.filter((x) =>
-    isSameDay(new Date(x.time), date)
+  const curDayWaterHeight = waterHeightBase.filter((x) =>
+    isWithinInterval(new Date(x.timestamp), {
+      start: startOfDay(date),
+      end: startOfDay(addDays(date, 1)),
+    })
   );
 
+  const allTides = tideResult.data.tidePreditionStation.tides;
+  const curDayTides = allTides.filter((x) =>
+    isWithinInterval(new Date(x.time), {
+      start: startOfDay(date),
+      end: startOfDay(addDays(date, 1)),
+    })
+  );
   const { hiLowData } = buildDatasets(sunData, curDayTides, curDayWaterHeight);
 
   let tickValues = [];
@@ -194,13 +200,13 @@ const Tides: React.FC<Props> = ({
       )}
       <MainTideChart
         sunData={sunData}
-        tideData={curDayTides}
+        curDayTides={curDayTides}
         waterHeightData={curDayWaterHeight}
         date={date}
       />
       <MultiDayTideCharts
         sunData={tideResult.data.location.sun}
-        tideData={tideResult.data.tidePreditionStation.tides}
+        tideData={allTides}
         waterHeightData={waterHeightBase}
         activeDate={date}
         setActiveDate={setActiveDate}
