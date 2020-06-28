@@ -174,6 +174,8 @@ const usgsSites: UsgsSiteEntity[] = [
       UsgsParams.WaterTemp,
       UsgsParams.GuageHeight,
       UsgsParams.Salinity,
+      UsgsParams.WindDirection,
+      UsgsParams.WindSpeed,
     ],
   },
   {
@@ -583,7 +585,7 @@ function buildQueries(
   salinity: Salinity[],
   waterTemp: WaterTemperature[],
   wind: Wind[]
-) {
+): WriteRequest[] {
   const waterHeightQueries = buildWaterHeightDynamoQueries(
     site.id,
     waterHeight
@@ -599,7 +601,7 @@ function buildQueries(
   ];
 }
 
-function buildWindDynamoQueries(siteId: string, wind: Wind[]) {
+function buildWindDynamoQueries(siteId: string, wind: Wind[]): WriteRequest[] {
   const queries = wind.map((data) => {
     const { timestamp, ...itemData } = data;
     const itemDate = new Date(timestamp);
@@ -620,7 +622,7 @@ function buildWindDynamoQueries(siteId: string, wind: Wind[]) {
 function buildWaterTempDynamoQueries(
   siteId: string,
   waterTemp: WaterTemperature[]
-) {
+): WriteRequest[] {
   const queries = waterTemp.map((data) => {
     const { timestamp, ...itemData } = data;
     const itemDate = new Date(timestamp);
@@ -638,7 +640,10 @@ function buildWaterTempDynamoQueries(
   return queries;
 }
 
-function buildSalinityDynamoQueries(siteId: string, salinity: Salinity[]) {
+function buildSalinityDynamoQueries(
+  siteId: string,
+  salinity: Salinity[]
+): WriteRequest[] {
   const queries = salinity.map((data) => {
     const { timestamp, ...itemData } = data;
     const itemDate = new Date(timestamp);
@@ -659,7 +664,7 @@ function buildSalinityDynamoQueries(siteId: string, salinity: Salinity[]) {
 function buildWaterHeightDynamoQueries(
   siteId: string,
   waterHeight: WaterHeight[]
-) {
+): WriteRequest[] {
   const queries = waterHeight.map((data) => {
     const { timestamp, ...itemData } = data;
     const itemDate = new Date(timestamp);

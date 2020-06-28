@@ -64,7 +64,7 @@ const WindCard: React.FC<Props> = ({ locationId, sites }) => {
       label="Wind (mph)"
       className="wind-summary"
     >
-      <div className="flex flex-col justify-between h-full">
+      <div className="flex flex-col justify-between h-full w-full">
         {curValue ? (
           <>
             <div>
