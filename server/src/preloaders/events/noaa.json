@@ -1,0 +1,16 @@
+{
+  "Records": [
+    {
+      "body": "{\"stationId\":\"8770570\",\"numHours\":48}"
+    },
+    {
+      "body": "{\"stationId\":\"8770822\",\"numHours\":48}"
+    },
+    {
+      "body": "{\"stationId\":\"8770475\",\"numHours\":48}"
+    },
+    {
+      "body": "{\"stationId\":\"8770520\",\"numHours\":48}"
+    }
+  ]
+}

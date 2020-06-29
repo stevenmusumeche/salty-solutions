@@ -32,9 +32,14 @@ https://w1.weather.gov/xml/current_obs/seek.php?state=la&Find=Find
 export const getForecast = async (
   location: LocationEntity
 ): Promise<WeatherForecast[]> => {
-  let url = `${location.weatherGov.apiBase}/forecast`;
-  const { data } = await axios.get(url);
-  return data.properties.periods.map(parseForecast);
+  try {
+    let url = `${location.weatherGov.apiBase}/forecast`;
+    const { data } = await axios.get(url);
+    return data.properties.periods.map(parseForecast);
+  } catch (e) {
+    console.warn("Error getting forecast for ", location.name);
+    return [];
+  }
 };
 
 export const getHourlyForecast = async (

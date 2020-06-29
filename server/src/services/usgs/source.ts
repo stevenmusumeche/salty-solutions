@@ -378,6 +378,15 @@ const usgsSites: UsgsSiteEntity[] = [
       UsgsParams.WindSpeed,
     ],
   },
+  {
+    id: "295744093303800",
+    name: "Cameron Parish",
+    availableParams: [
+      UsgsParams.WaterTemp,
+      UsgsParams.GuageHeight,
+      UsgsParams.Salinity,
+    ],
+  },
 ];
 
 // https://waterservices.usgs.gov/rest/IV-Service.html
@@ -385,7 +394,7 @@ const usgsSites: UsgsSiteEntity[] = [
 
 // go().catch((e) => console.log(e));
 
-async function go() {
+async function validateConfig() {
   for (const site of usgsSites) {
     console.log(site.name, site.id);
     const url = `https://waterservices.usgs.gov/nwis/iv/?format=json&sites=${site.id}&siteStatus=all`;

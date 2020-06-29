@@ -36,7 +36,7 @@ const SalinityCard: React.FC<Props> = ({ locationId, sites }) => {
       fetching={fetching}
       error={error}
     >
-      <div className="flex flex-col justify-between h-full">
+      <div className="flex flex-col justify-between h-full w-full">
         {curValue ? (
           <>
             <div>{curValue}</div>

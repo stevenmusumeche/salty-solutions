@@ -55,7 +55,7 @@ const WaterTempCard: React.FC<Props> = ({ locationId, sites }) => {
       className="water-temp-summary"
       refresh={refresh}
     >
-      <div className="flex flex-col justify-between h-full">
+      <div className="flex flex-col justify-between h-full w-full">
         {curValue ? (
           <>
             <div>{curValue}</div>

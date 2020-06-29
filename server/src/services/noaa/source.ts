@@ -20,6 +20,7 @@ type WriteRequest = DocumentClient.WriteRequest;
 // https://www.ndbc.noaa.gov/
 // https://tidesandcurrents.noaa.gov/api/
 // https://tidesandcurrents.noaa.gov/api/responseHelp.html
+// https://www.ndbc.noaa.gov/
 
 // tide stations in LA: https://tidesandcurrents.noaa.gov/tide_predictions.html?gid=1400
 // tide station map: https://tidesandcurrents.noaa.gov/map/index.html
@@ -414,7 +415,56 @@ export const noaaStations: NoaaStationEntity[] = [
     coords: { lat: 29.6666667, lon: -90.111667 },
     availableParams: [NoaaProduct.TidePrediction],
   },
+
+  {
+    id: "8770570",
+    name: "Sabine Pass North",
+    coords: { lat: 29.7283333, lon: -93.87 },
+    availableParams: [
+      NoaaProduct.TidePrediction,
+      NoaaProduct.WaterLevel,
+      NoaaProduct.Wind,
+      NoaaProduct.AirTemperature,
+      NoaaProduct.AirPressure,
+      NoaaProduct.WaterTemperature,
+    ],
+  },
+  {
+    id: "8770822",
+    name: "Texas Point, Sabine Pass",
+    coords: { lat: 29.6883333, lon: -93.84166666666667 },
+    availableParams: [
+      NoaaProduct.TidePrediction,
+      NoaaProduct.WaterLevel,
+      NoaaProduct.Wind,
+      NoaaProduct.AirTemperature,
+      NoaaProduct.AirPressure,
+      NoaaProduct.WaterTemperature,
+    ],
+  },
+  {
+    id: "8770475",
+    name: "Port Arthur",
+    coords: { lat: 29.8666667, lon: -93.93 },
+    availableParams: [
+      NoaaProduct.TidePrediction,
+      NoaaProduct.WaterLevel,
+      NoaaProduct.Wind,
+      NoaaProduct.AirTemperature,
+      NoaaProduct.AirPressure,
+      NoaaProduct.WaterTemperature,
+    ],
+  },
+  {
+    id: "8770520",
+    name: "Rainbow Bridge",
+    coords: { lat: 29.98, lon: -93.88166666666666 },
+    availableParams: [NoaaProduct.TidePrediction, NoaaProduct.WaterLevel],
+  },
 ];
+
+// to add for VBay: 8766072, 8764227, 8764314
+// to add for dularge: 8764227, 8764314
 
 export async function storeNoaaData(stationId: string, numHours = 24) {
   const station = getStationById(stationId);
