@@ -133,6 +133,14 @@ function buildGraphDisplayVal(
       }[]
     | null
 ) {
+  if (curDetail) {
+    // reduce the number of data points to display on the graph
+    const mod = Math.ceil(curDetail.length / 72);
+    if (mod > 1) {
+      curDetail = curDetail.filter((_, i) => i % mod === 0);
+    }
+  }
+
   let graphDisplayVal = null;
   if (fetching) {
     graphDisplayVal = null;

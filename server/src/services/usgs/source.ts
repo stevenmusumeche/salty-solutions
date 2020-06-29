@@ -5,6 +5,7 @@ import { subHours } from "date-fns";
 import orderBy from "lodash/orderBy";
 import { batchWrite } from "../db";
 import { Coords } from "../location";
+import { UsgsParam } from "../../generated/graphql";
 type WriteRequest = DocumentClient.WriteRequest;
 
 axiosRetry(axios, { retries: 3, retryDelay: (retryCount) => retryCount * 500 });
@@ -78,8 +79,7 @@ const usgsSites: UsgsSiteEntity[] = [
       lat: 29.3827778,
       lon: -90.7152778,
     },
-    // not current reporting
-    availableParams: [],
+    availableParams: [UsgsParams.GuageHeight],
   },
   {
     id: "073745257",
@@ -164,8 +164,7 @@ const usgsSites: UsgsSiteEntity[] = [
   {
     id: "07381328",
     name: "Houma Navigation Canal at Dulac",
-    // not currently reporting
-    availableParams: [],
+    availableParams: [UsgsParams.WindDirection, UsgsParams.WindSpeed],
   },
   {
     id: "073802516",
@@ -190,7 +189,11 @@ const usgsSites: UsgsSiteEntity[] = [
   {
     id: "073802514",
     name: "Barataria Waterway at Champagne Bay",
-    availableParams: [UsgsParams.WaterTemp, UsgsParams.GuageHeight],
+    availableParams: [
+      UsgsParams.WaterTemp,
+      UsgsParams.GuageHeight,
+      UsgsParams.Salinity,
+    ],
   },
   {
     id: "073802512",
@@ -204,12 +207,12 @@ const usgsSites: UsgsSiteEntity[] = [
   {
     id: "295206089402400",
     name: "Shell Beach, LA",
-    availableParams: [UsgsParams.GuageHeight],
+    availableParams: [],
   },
   {
     id: "073745235",
     name: "Bayou Dupre Sector Gate near Violet",
-    availableParams: [UsgsParams.GuageHeight],
+    availableParams: [],
   },
   {
     id: "07374526",
@@ -262,7 +265,7 @@ const usgsSites: UsgsSiteEntity[] = [
   {
     id: "300406090231600",
     name: "I-10 at Bonnne Carre Spillway",
-    availableParams: [UsgsParams.GuageHeight],
+    availableParams: [],
   },
   {
     id: "07374581",
@@ -296,7 +299,7 @@ const usgsSites: UsgsSiteEntity[] = [
   {
     id: "291042089153000",
     name: "Pilottown",
-    availableParams: [UsgsParams.GuageHeight],
+    availableParams: [],
   },
   {
     id: "073745258",
@@ -333,7 +336,7 @@ const usgsSites: UsgsSiteEntity[] = [
   {
     id: "285554089242400",
     name: "Pilots Station E, SW Pass",
-    availableParams: [UsgsParams.GuageHeight],
+    availableParams: [],
   },
   {
     id: "292800090060000",
@@ -371,12 +374,44 @@ const usgsSites: UsgsSiteEntity[] = [
       UsgsParams.WaterTemp,
       UsgsParams.GuageHeight,
       UsgsParams.Salinity,
+      UsgsParams.WindDirection,
+      UsgsParams.WindSpeed,
     ],
   },
 ];
 
 // https://waterservices.usgs.gov/rest/IV-Service.html
 // https://waterwatch.usgs.gov/?m=real&r=la
+
+// go().catch((e) => console.log(e));
+
+async function go() {
+  for (const site of usgsSites) {
+    console.log(site.name, site.id);
+    const url = `https://waterservices.usgs.gov/nwis/iv/?format=json&sites=${site.id}&siteStatus=all`;
+    const response = await axios.get(url);
+
+    for (const param of Object.keys(UsgsParams)) {
+      const cur = UsgsParams[param as UsgsParam];
+      const supportedParams = response.data.value.timeSeries.map(
+        (x: any) => x.variable.variableCode[0].value
+      );
+      if (
+        supportedParams.includes(cur) &&
+        !site.availableParams.includes(cur)
+      ) {
+        console.log("*****available", param);
+      }
+
+      if (
+        !supportedParams.includes(cur) &&
+        site.availableParams.includes(cur)
+      ) {
+        console.log("*****not available", param);
+      }
+    }
+  }
+}
 
 export const getSiteById = (id: string): UsgsSiteEntity | undefined => {
   return usgsSites.find((site) => site.id === id);

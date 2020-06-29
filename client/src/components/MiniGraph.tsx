@@ -22,7 +22,7 @@ const MiniGraph: React.FC<Props> = ({
   error,
   tickValues,
   className,
-  refresh
+  refresh,
 }) => {
   let displayVal = null;
   if (fetching) {
@@ -43,6 +43,12 @@ const MiniGraph: React.FC<Props> = ({
       </div>
     );
   } else if (data) {
+    // reduce the number of data points to display on the graph
+    const mod = Math.ceil(data.length / 72);
+    if (mod > 1) {
+      data = data.filter((_: any, i: number) => i % mod === 0);
+    }
+
     displayVal = (
       <VictoryChart
         padding={{ left: 55, top: 20, right: 30, bottom: 50 }}
@@ -52,13 +58,13 @@ const MiniGraph: React.FC<Props> = ({
         <VictoryAxis
           fixLabelOverlap={false}
           tickCount={2}
-          tickFormat={date => {
+          tickFormat={(date) => {
             const dayDiff = differenceInDays(new Date(date), new Date());
             return dayDiff === 0 ? "now" : `${dayDiff}d`;
           }}
           style={{
             tickLabels: { fontSize: 24 },
-            grid: { stroke: "#a0aec0", strokeDasharray: "6, 6" }
+            grid: { stroke: "#a0aec0", strokeDasharray: "6, 6" },
           }}
         />
         <VictoryAxis
@@ -74,7 +80,7 @@ const MiniGraph: React.FC<Props> = ({
           data={data}
           style={{
             data: { stroke: "#C68E37" },
-            parent: { border: "1px solid #ccc" }
+            parent: { border: "1px solid #ccc" },
           }}
         />
       </VictoryChart>

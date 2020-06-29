@@ -91,7 +91,7 @@ const locations: LocationEntity[] = [
       lat: 29.246742,
       lon: -90.661058,
     },
-    usgsSiteIds: ["073813498"],
+    usgsSiteIds: ["073813498", "07381324", "07381328"],
     weatherGov: {
       apiBase: "https://api.weather.gov/gridpoints/LIX/47,58",
       stationId: "KHUM",
@@ -177,6 +177,7 @@ const locations: LocationEntity[] = [
       "291929089562600",
       "073802514",
       "073802512",
+      "07380251",
     ],
     weatherGov: {
       apiBase: "https://api.weather.gov/gridpoints/LIX/73,58",
@@ -213,13 +214,13 @@ const locations: LocationEntity[] = [
     },
     usgsSiteIds: [
       "292952089453800",
-      "291042089153000",
+      //  "291042089153000",
       "073745258",
       "07380260",
       "07374550",
       "073745275",
       "07374527",
-      "285554089242400",
+      // "285554089242400",
     ],
     weatherGov: {
       apiBase: "https://api.weather.gov/gridpoints/LIX/97,61",
