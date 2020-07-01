@@ -599,14 +599,21 @@ async function scrapeBuoyData(
       let wind;
       let airTemperature;
       const timestamp = `${entry[0]}-${entry[1]}-${entry[2]}T${entry[3]}:${entry[4]}:00Z`;
-      if (station.availableParams.includes(NoaaProduct.Wind)) {
+      if (
+        station.availableParams.includes(NoaaProduct.Wind) &&
+        entry[5] !== "MM" &&
+        entry[6] !== "MM"
+      ) {
         wind = {
           directionDegrees: Number(entry[5]),
           direction: degreesToCompass(Number(entry[5])),
           speed: Math.round(metersPerSecondToMph(Number(entry[6])) * 10) / 10,
         };
       }
-      if (station.availableParams.includes(NoaaProduct.AirTemperature)) {
+      if (
+        station.availableParams.includes(NoaaProduct.AirTemperature) &&
+        entry[13] !== "MM"
+      ) {
         airTemperature = Number(celciusToFahrenheit(Number(entry[13])));
       }
       return { timestamp, wind, airTemperature };
