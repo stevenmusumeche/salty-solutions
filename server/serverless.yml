@@ -126,6 +126,23 @@ functions:
           batchSize: 1
           arn: ${cf:ss-queue-${self:provider.stage}.NoaaPreloaderQueueArn}
 
+  preload-noaa-buoy-producer:
+    handler: src/preloaders/producers.noaaBuoy
+    events:
+      - schedule:
+          name: NoaaBuoyPreloader-${self:provider.stage}
+          enabled: ${self:custom.schedule_enabled.${self:provider.stage}, false}
+          rate: rate(1 hour)
+    environment:
+      QUEUE_URL: ${cf:ss-queue-${self:provider.stage}.NoaaBuoyPreloaderQueueUrl}
+  preload-noaa-buoy-consumer:
+    handler: src/preloaders/consumers.noaaBuoy
+    timeout: 120
+    events:
+      - sqs:
+          batchSize: 1
+          arn: ${cf:ss-queue-${self:provider.stage}.NoaaBuoyPreloaderQueueArn}
+
   preload-tide-producer:
     handler: src/preloaders/producers.tide
     events:

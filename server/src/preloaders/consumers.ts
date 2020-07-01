@@ -1,7 +1,11 @@
 import { SQSHandler } from "aws-lambda";
 import { loadAndSave } from "../services/wind-finder";
 import { storeUsgsData } from "../services/usgs/source";
-import { storeNoaaData, storeTideData } from "../services/noaa/source";
+import {
+  storeNoaaData,
+  storeTideData,
+  storeBuoyData,
+} from "../services/noaa/source";
 
 export const tide: SQSHandler = async (event, ctx, cb) => {
   for (const record of event.Records) {
@@ -46,5 +50,14 @@ export const noaa: SQSHandler = async (event, ctx, cb) => {
     console.log("Preloading NOAA for", payload.stationId);
     await storeNoaaData(payload.stationId, payload.numHours);
     console.log("Finished preloading NOAA for", payload.stationId);
+  }
+};
+
+export const noaaBuoy: SQSHandler = async (event, ctx, cb) => {
+  for (const record of event.Records) {
+    const payload = JSON.parse(record.body);
+    console.log("Preloading NOAA Buoy for", payload.stationId);
+    await storeBuoyData(payload.stationId, payload.numHours);
+    console.log("Finished preloading NOAA Buoy for", payload.stationId);
   }
 };

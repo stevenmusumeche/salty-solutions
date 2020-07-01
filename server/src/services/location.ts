@@ -24,6 +24,7 @@ export interface LocationEntity {
   windfinder: {
     slug?: string;
   };
+  noaaBuoyIds?: string[];
 }
 
 const locations: LocationEntity[] = [
@@ -37,6 +38,7 @@ const locations: LocationEntity[] = [
       "8765568",
       "8764931",
       "8765026",
+      "8766072",
     ],
     marineZoneId: "GMZ435",
     coords: {
@@ -107,6 +109,8 @@ const locations: LocationEntity[] = [
       "8763206", // calliou boca
       "8763719", // ship shoal
       "8762928", // cocodrie
+      "8764314", // eugene island
+      "8764227", // Amerada Pass
     ],
     marineZoneId: "GMZ550",
     coords: {
@@ -159,6 +163,7 @@ const locations: LocationEntity[] = [
       "8761677",
       "8761742",
       "8762075",
+      "42093",
     ],
     marineZoneId: "gmz572",
     coords: {
@@ -335,12 +340,32 @@ const locations: LocationEntity[] = [
     nowcastSubdomain: "sn",
     windfinder: { slug: "sabine_pass_north" },
   },
+  {
+    id: "port-fourchon",
+    name: "Port Fourchon",
+    tideStationIds: ["8762075", "8762223", "8762481", "8762084", "8761826"],
+    noaaBuoyIds: ["KXPY", "LOPL1"],
+    marineZoneId: "gmz572",
+    coords: {
+      lat: 29.1056,
+      lon: -90.1944,
+    },
+    usgsSiteIds: ["07380249"],
+    weatherGov: {
+      apiBase: "https://api.weather.gov/gridpoints/LIX/65,52",
+      stationId: "KXPY",
+      radarSiteId: "KLIX",
+    },
+    nowcastSubdomain: "0",
+    modisArea: "USA7",
+    windfinder: { slug: "port_fourchon" },
+  },
 ];
 
-// sabine lake
 // bay gardene
+// PAC
+// leevile
 // breton island
-// port fouchon
 // golden meadow
 // Myrtle Grove
 // Happy Jack

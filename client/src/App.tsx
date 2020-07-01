@@ -130,7 +130,7 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
         station.availableParams.includes(NoaaParam.WaterLevel)
       ) || [];
 
-    return [...noaa, ...usgs];
+    return [...usgs, ...noaa];
   }, [selectedLocation]);
 
   const windSites = useMemo(() => {
@@ -151,6 +151,14 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
     return (
       selectedLocation?.tidePreditionStations.filter((station) =>
         station.availableParams.includes(NoaaParam.AirTemperature)
+      ) || []
+    );
+  }, [selectedLocation]);
+
+  const tideStations = useMemo(() => {
+    return (
+      selectedLocation?.tidePreditionStations.filter((station) =>
+        station.availableParams.includes(NoaaParam.TidePrediction)
       ) || []
     );
   }, [selectedLocation]);
@@ -192,7 +200,7 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
         <div className="bg-white rounded-lg shadow-md p-4 mb-4 md:mb-8">
           <Tides
             locationId={locationId}
-            tideStations={selectedLocation.tidePreditionStations}
+            tideStations={tideStations}
             sites={waterHeightSites}
             date={date}
             setActiveDate={handleDateChange}

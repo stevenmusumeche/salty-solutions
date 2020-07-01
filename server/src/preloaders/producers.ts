@@ -10,6 +10,7 @@ export const PRODUCER_NAMES = {
   windFinder: "wind-finder-preloader",
   usgs: "usgs-preloader",
   noaa: "noaa-preloader",
+  noaaBuoy: "noaa-buoy-preloader",
 };
 
 export const forecast: ScheduledHandler = async () => {
@@ -93,6 +94,25 @@ export const noaa: ScheduledHandler = async () => {
     await sendMessageBatch(
       process.env.QUEUE_URL!,
       PRODUCER_NAMES.noaa,
+      chunk.map((stationId) => ({ stationId, numHours: 24 }))
+    );
+  }
+};
+
+export const noaaBuoy: ScheduledHandler = async () => {
+  console.log("Preloading NOAA Buoy");
+
+  const uniqueStationIds = getAll().reduce((stations, location) => {
+    const locationBuoyIds = location.noaaBuoyIds || [];
+    locationBuoyIds.forEach((id) => stations.add(id));
+    return stations;
+  }, new Set());
+
+  const chunks = chunk([...uniqueStationIds], 10);
+  for (const chunk of chunks) {
+    await sendMessageBatch(
+      process.env.QUEUE_URL!,
+      PRODUCER_NAMES.noaaBuoy,
       chunk.map((stationId) => ({ stationId, numHours: 24 }))
     );
   }

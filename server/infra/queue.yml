@@ -72,6 +72,18 @@ Resources:
             - DeadLetterQueue
             - Arn
         maxReceiveCount: 3
+  NoaaBuoyPreloaderQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Join ["", ["noaa-buoy-preloader-", Ref: StageParam]]
+      VisibilityTimeout: 120
+      MessageRetentionPeriod: 43200 # 12 hours
+      RedrivePolicy:
+        deadLetterTargetArn:
+          Fn::GetAtt:
+            - DeadLetterQueue
+            - Arn
+        maxReceiveCount: 3
 Outputs:
   ForecastPreloaderQueueUrl:
     Value: !Ref ForecastPreloaderQueue
@@ -113,3 +125,11 @@ Outputs:
     Value: !GetAtt NoaaPreloaderQueue.Arn
     Export:
       Name: !Join ["-", [NoaaPreloaderQueueArn, Ref: StageParam]]
+  NoaaBuoyPreloaderQueueUrl:
+    Value: !Ref NoaaBuoyPreloaderQueue
+    Export:
+      Name: !Join ["-", [NoaaBuoyPreloaderQueueUrl, Ref: StageParam]]
+  NoaaBuoyPreloaderQueueArn:
+    Value: !GetAtt NoaaBuoyPreloaderQueue.Arn
+    Export:
+      Name: !Join ["-", [NoaaBuoyPreloaderQueueArn, Ref: StageParam]]

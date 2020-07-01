@@ -3,7 +3,7 @@ import {
   TideStationDetailFragment,
   UsgsSiteDetailFragment,
 } from "@stevenmusumeche/salty-solutions-shared/dist/graphql";
-import { differenceInDays, subHours } from "date-fns";
+import { subHours, differenceInHours } from "date-fns";
 import React, { useEffect, useMemo, useState } from "react";
 import { CombinedError } from "urql";
 import {
@@ -160,8 +160,15 @@ function buildGraphDisplayVal(
             fixLabelOverlap={false}
             tickCount={2}
             tickFormat={(date) => {
-              const dayDiff = differenceInDays(new Date(date), new Date());
-              return dayDiff === 0 ? "now" : `${dayDiff}d`;
+              const hourDiff = Math.abs(
+                differenceInHours(new Date(date), new Date())
+              );
+              if (hourDiff >= 46) {
+                return "-2d";
+              } else if (hourDiff >= 22) {
+                return "-1d";
+              }
+              return "now";
             }}
             style={{
               tickLabels: { fontSize: 24 },
