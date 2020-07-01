@@ -38,6 +38,7 @@ const locations: LocationEntity[] = [
       "8765568",
       "8764931",
       "8765026",
+      "8766072",
     ],
     marineZoneId: "GMZ435",
     coords: {
@@ -108,6 +109,8 @@ const locations: LocationEntity[] = [
       "8763206", // calliou boca
       "8763719", // ship shoal
       "8762928", // cocodrie
+      "8764314", // eugene island
+      "8764227", // Amerada Pass
     ],
     marineZoneId: "GMZ550",
     coords: {
@@ -160,6 +163,7 @@ const locations: LocationEntity[] = [
       "8761677",
       "8761742",
       "8762075",
+      "42093",
     ],
     marineZoneId: "gmz572",
     coords: {
@@ -340,7 +344,7 @@ const locations: LocationEntity[] = [
     id: "port-fourchon",
     name: "Port Fourchon",
     tideStationIds: ["8762075", "8762223", "8762481", "8762084", "8761826"],
-    noaaBuoyIds: ["KXPY"],
+    noaaBuoyIds: ["KXPY", "LOPL1"],
     marineZoneId: "gmz572",
     coords: {
       lat: 29.1056,

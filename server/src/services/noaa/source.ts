@@ -547,10 +547,62 @@ export const noaaStations: NoaaStationEntity[] = [
     availableParams: [NoaaProduct.Wind, NoaaProduct.AirTemperature],
     type: NoaaStationType.Buoy,
   },
+  {
+    id: "8766072",
+    name: "Freshwater Canal Locks",
+    coords: { lat: 29.551667, lon: -92.305 },
+    availableParams: [
+      NoaaProduct.TidePrediction,
+      NoaaProduct.WaterLevel,
+      NoaaProduct.Wind,
+      NoaaProduct.AirTemperature,
+      NoaaProduct.AirPressure,
+      NoaaProduct.WaterTemperature,
+    ],
+    type: NoaaStationType.Station,
+  },
+  {
+    id: "8764314",
+    name: "Eugene Island North",
+    coords: { lat: 29.366667, lon: -91.383333 },
+    availableParams: [
+      NoaaProduct.TidePrediction,
+      NoaaProduct.WaterLevel,
+      NoaaProduct.Wind,
+      NoaaProduct.AirTemperature,
+      NoaaProduct.AirPressure,
+      NoaaProduct.WaterTemperature,
+    ],
+    type: NoaaStationType.Station,
+  },
+  {
+    id: "8764227",
+    name: "Amerada Pass",
+    coords: { lat: 29.45, lon: -91.338333 },
+    availableParams: [
+      NoaaProduct.TidePrediction,
+      NoaaProduct.WaterLevel,
+      NoaaProduct.AirTemperature,
+      NoaaProduct.WaterTemperature,
+      NoaaProduct.AirPressure,
+    ],
+    type: NoaaStationType.Station,
+  },
+  {
+    id: "LOPL1",
+    name: "Louisiana Offshore Oil Port",
+    coords: { lat: 28.885, lon: -90.025 },
+    availableParams: [NoaaProduct.AirTemperature, NoaaProduct.Wind],
+    type: NoaaStationType.Buoy,
+  },
+  {
+    id: "42093",
+    name: "Grand Isle Outer",
+    coords: { lat: 29.017, lon: -89.832 },
+    availableParams: [NoaaProduct.WaterTemperature],
+    type: NoaaStationType.Buoy,
+  },
 ];
-
-// to add for VBay: 8766072, 8764227, 8764314
-// to add for dularge: 8764227, 8764314
 
 export async function storeNoaaData(stationId: string, numHours = 24) {
   const station = getStationById(stationId);
@@ -579,6 +631,7 @@ interface BuoyData {
   timestamp: string;
   wind?: { direction: string; directionDegrees: number; speed: number };
   airTemperature?: number;
+  waterTemperature?: number;
 }
 
 async function scrapeBuoyData(
@@ -598,6 +651,7 @@ async function scrapeBuoyData(
     .map((entry) => {
       let wind;
       let airTemperature;
+      let waterTemperature;
       const timestamp = `${entry[0]}-${entry[1]}-${entry[2]}T${entry[3]}:${entry[4]}:00Z`;
       if (
         station.availableParams.includes(NoaaProduct.Wind) &&
@@ -616,7 +670,13 @@ async function scrapeBuoyData(
       ) {
         airTemperature = Number(celciusToFahrenheit(Number(entry[13])));
       }
-      return { timestamp, wind, airTemperature };
+      if (
+        station.availableParams.includes(NoaaProduct.WaterTemperature) &&
+        entry[14] !== "MM"
+      ) {
+        waterTemperature = Number(celciusToFahrenheit(Number(entry[14])));
+      }
+      return { timestamp, wind, airTemperature, waterTemperature };
     })
     .filter((entry) =>
       isWithinInterval(new Date(entry.timestamp), { start, end })
@@ -652,6 +712,23 @@ async function scrapeBuoyData(
       .filter(notUndefined);
 
     returnData[NoaaProduct.AirTemperature] = airTemperature;
+  }
+
+  if (station.availableParams.includes(NoaaProduct.WaterTemperature)) {
+    const waterTemperature: TemperatureDetail[] = data
+      .map((datum) => {
+        if (!datum.waterTemperature) return;
+        return {
+          timestamp: datum.timestamp,
+          temperature: {
+            degrees: datum.waterTemperature,
+            unit: "F",
+          },
+        };
+      })
+      .filter(notUndefined);
+
+    returnData[NoaaProduct.WaterTemperature] = waterTemperature;
   }
 
   return returnData;

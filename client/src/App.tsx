@@ -130,7 +130,7 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
         station.availableParams.includes(NoaaParam.WaterLevel)
       ) || [];
 
-    return [...noaa, ...usgs];
+    return [...usgs, ...noaa];
   }, [selectedLocation]);
 
   const windSites = useMemo(() => {

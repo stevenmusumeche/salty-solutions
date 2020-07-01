@@ -1,16 +1,13 @@
 {
   "Records": [
     {
-      "body": "{\"stationId\":\"8770570\",\"numHours\":48}"
+      "body": "{\"stationId\":\"8766072\",\"numHours\":48}"
     },
     {
-      "body": "{\"stationId\":\"8770822\",\"numHours\":48}"
+      "body": "{\"stationId\":\"8764314\",\"numHours\":48}"
     },
     {
-      "body": "{\"stationId\":\"8770475\",\"numHours\":48}"
-    },
-    {
-      "body": "{\"stationId\":\"8770520\",\"numHours\":48}"
+      "body": "{\"stationId\":\"8764227\",\"numHours\":48}"
     }
   ]
 }

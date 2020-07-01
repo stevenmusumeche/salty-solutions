@@ -1,7 +1,10 @@
 {
   "Records": [
     {
-      "body": "{\"stationId\":\"KXPY\",\"numHours\":48}"
+      "body": "{\"stationId\":\"LOPL1\",\"numHours\":72}"
+    },
+    {
+      "body": "{\"stationId\":\"42093\",\"numHours\":72}"
     }
   ]
 }
