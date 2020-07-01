@@ -67,7 +67,7 @@ const locations: LocationEntity[] = [
     usgsSiteIds: ["08017118", "08017095", "08017044"],
     weatherGov: {
       apiBase: "https://api.weather.gov/gridpoints/LCH/54,83",
-      stationId: "KLCH",
+      stationId: "KUXL",
       radarSiteId: "LCH",
     },
     nowcastSubdomain: "cc",
@@ -360,10 +360,29 @@ const locations: LocationEntity[] = [
     modisArea: "USA7",
     windfinder: { slug: "port_fourchon" },
   },
+  {
+    id: "point-aux-chenes",
+    name: "Pointe-aux-Chenes",
+    tideStationIds: ["8762184", "8762928", "8762481"],
+    noaaBuoyIds: [],
+    marineZoneId: "GMZ550",
+    coords: {
+      lat: 29.497624,
+      lon: -90.555479,
+    },
+    usgsSiteIds: ["07381328", "07381324", "073813498"],
+    weatherGov: {
+      apiBase: "https://api.weather.gov/gridpoints/LIX/51,69",
+      stationId: "KHUM",
+      radarSiteId: "KLIX",
+    },
+    nowcastSubdomain: "0",
+    modisArea: "USA7",
+    windfinder: { slug: "bayou-petit-caillou-lapeyrouse" },
+  },
 ];
 
 // bay gardene
-// PAC
 // leevile
 // breton island
 // golden meadow

@@ -602,6 +602,13 @@ export const noaaStations: NoaaStationEntity[] = [
     availableParams: [NoaaProduct.WaterTemperature],
     type: NoaaStationType.Buoy,
   },
+  {
+    id: "8762184",
+    name: "Golden Meadow, Plaisance Canal",
+    coords: { lat: 29.373333, lon: -90.265 },
+    availableParams: [NoaaProduct.TidePrediction],
+    type: NoaaStationType.Station,
+  },
 ];
 
 export async function storeNoaaData(stationId: string, numHours = 24) {
