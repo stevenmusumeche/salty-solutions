@@ -6,7 +6,14 @@ import {
   buildDatasets,
   Y_PADDING,
 } from "@stevenmusumeche/salty-solutions-shared/dist/tide-helpers";
-import { addHours, endOfDay, format, isSameDay, startOfDay } from "date-fns";
+import {
+  addHours,
+  endOfDay,
+  format,
+  startOfDay,
+  isWithinInterval,
+  addDays,
+} from "date-fns";
 import React, { FC, useMemo } from "react";
 import { VictoryArea, VictoryAxis, VictoryChart } from "victory";
 import { renderBackgroundColor } from "./tide/tide-helpers";
@@ -25,7 +32,13 @@ const ForecastTide: FC<Props> = ({
   stationName,
 }) => {
   const curDayTideData = useMemo(
-    () => rawTideData.filter((x) => isSameDay(new Date(x.time), date)),
+    () =>
+      rawTideData.filter((x) =>
+        isWithinInterval(new Date(x.time), {
+          start: startOfDay(date),
+          end: startOfDay(addDays(date, 1)),
+        })
+      ),
     [rawTideData, date]
   );
 
@@ -141,7 +154,7 @@ const ChartLegend: FC<{ stationName: string }> = ({ stationName }) => {
   return (
     <div className="flex justify-center mt-2">
       <div
-        className="flex uppercase font-normal text-gray-600 leading-none uppercase"
+        className="flex uppercase font-normal text-gray-600 leading-none"
         style={{ fontSize: ".65rem" }}
       >
         <div className="flex items-center h-3">
