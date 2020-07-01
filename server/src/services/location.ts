@@ -24,6 +24,7 @@ export interface LocationEntity {
   windfinder: {
     slug?: string;
   };
+  noaaBuoyIds?: string[];
 }
 
 const locations: LocationEntity[] = [
@@ -335,12 +336,32 @@ const locations: LocationEntity[] = [
     nowcastSubdomain: "sn",
     windfinder: { slug: "sabine_pass_north" },
   },
+  {
+    id: "port-fourchon",
+    name: "Port Fourchon",
+    tideStationIds: ["8762075", "8762223", "8762481", "8762084", "8761826"],
+    noaaBuoyIds: ["KXPY"],
+    marineZoneId: "gmz572",
+    coords: {
+      lat: 29.1056,
+      lon: -90.1944,
+    },
+    usgsSiteIds: ["07380249"],
+    weatherGov: {
+      apiBase: "https://api.weather.gov/gridpoints/LIX/65,52",
+      stationId: "KXPY",
+      radarSiteId: "KLIX",
+    },
+    nowcastSubdomain: "0",
+    modisArea: "USA7",
+    windfinder: { slug: "port_fourchon" },
+  },
 ];
 
-// sabine lake
 // bay gardene
+// PAC
+// leevile
 // breton island
-// port fouchon
 // golden meadow
 // Myrtle Grove
 // Happy Jack

@@ -1,6 +1,6 @@
 import React from "react";
 import { VictoryChart, VictoryLine, VictoryAxis } from "victory";
-import { differenceInDays } from "date-fns";
+import { differenceInHours } from "date-fns";
 import { CombinedError, OperationContext } from "urql";
 import ErrorIcon from "../assets/error.svg";
 import MiniGraphWrapper from "./MiniGraphWrapper";
@@ -59,8 +59,15 @@ const MiniGraph: React.FC<Props> = ({
           fixLabelOverlap={false}
           tickCount={2}
           tickFormat={(date) => {
-            const dayDiff = differenceInDays(new Date(date), new Date());
-            return dayDiff === 0 ? "now" : `${dayDiff}d`;
+            const hourDiff = Math.abs(
+              differenceInHours(new Date(date), new Date())
+            );
+            if (hourDiff >= 46) {
+              return "-2d";
+            } else if (hourDiff >= 22) {
+              return "-1d";
+            }
+            return "now";
           }}
           style={{
             tickLabels: { fontSize: 24 },

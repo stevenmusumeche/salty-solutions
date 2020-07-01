@@ -1,7 +1,7 @@
 import { DocumentClient } from "aws-sdk/clients/dynamodb";
 import axios from "axios";
 import axiosRetry from "axios-retry";
-import { subHours } from "date-fns";
+import { subHours, isWithinInterval } from "date-fns";
 import { formatToTimeZone } from "date-fns-timezone";
 import querystring from "querystring";
 import {
@@ -15,6 +15,8 @@ import { degreesToCompass } from "../usgs/source";
 import { knotsToMph } from "../wind-finder";
 import { getTidePredictions } from "./source-tide";
 import { getStationById } from "./client";
+import { celciusToFahrenheit } from "../weather";
+import { notUndefined } from "../utils";
 type WriteRequest = DocumentClient.WriteRequest;
 
 // https://www.ndbc.noaa.gov/
@@ -37,6 +39,11 @@ enum NoaaProduct {
   TidePrediction = "predictions",
 }
 
+enum NoaaStationType {
+  Buoy,
+  Station,
+}
+
 export interface NoaaStationEntity {
   id: string;
   name: string;
@@ -45,6 +52,7 @@ export interface NoaaStationEntity {
     lon: number;
   };
   availableParams: NoaaProduct[];
+  type: NoaaStationType;
 }
 
 export const noaaStations: NoaaStationEntity[] = [
@@ -53,12 +61,14 @@ export const noaaStations: NoaaStationEntity[] = [
     name: "Southwest Pass, Vermilion Bay",
     coords: { lat: 29.58, lon: -92.035 },
     availableParams: [NoaaProduct.TidePrediction],
+    type: NoaaStationType.Station,
   },
   {
     id: "8765148",
     name: "Weeks Bay, LA",
     coords: { lat: 29.837, lon: -91.837 },
     availableParams: [NoaaProduct.TidePrediction],
+    type: NoaaStationType.Station,
   },
   {
     id: "8768094",
@@ -72,6 +82,7 @@ export const noaaStations: NoaaStationEntity[] = [
       NoaaProduct.WaterTemperature,
       NoaaProduct.AirPressure,
     ],
+    type: NoaaStationType.Station,
   },
   {
     id: "8767961",
@@ -82,6 +93,7 @@ export const noaaStations: NoaaStationEntity[] = [
       NoaaProduct.WaterLevel,
       NoaaProduct.WaterTemperature,
     ],
+    type: NoaaStationType.Station,
   },
   {
     id: "8767816",
@@ -94,84 +106,98 @@ export const noaaStations: NoaaStationEntity[] = [
       NoaaProduct.WaterTemperature,
       NoaaProduct.AirPressure,
     ],
+    type: NoaaStationType.Station,
   },
   {
     id: "8765251",
     name: "Cypremort Point",
     coords: { lat: 29.7133, lon: -91.88 },
     availableParams: [NoaaProduct.TidePrediction],
+    type: NoaaStationType.Station,
   },
   {
     id: "8764931",
     name: "Cote Blanche Island",
     coords: { lat: 29.735, lon: -91.7133 },
     availableParams: [NoaaProduct.TidePrediction],
+    type: NoaaStationType.Station,
   },
   {
     id: "8763206",
     name: "Caillou Boca",
     coords: { lat: 29.0633333, lon: -90.8066667 },
     availableParams: [NoaaProduct.TidePrediction],
+    type: NoaaStationType.Station,
   },
   {
     id: "8763506",
     name: "Raccoon Point, Isle Dernieres",
     coords: { lat: 29.0633333, lon: -90.9616667 },
     availableParams: [NoaaProduct.TidePrediction],
+    type: NoaaStationType.Station,
   },
   {
     id: "8762888",
     name: "E. Isle Dernieres, Lake Pelto",
     coords: { lat: 29.0716667, lon: -90.64 },
     availableParams: [NoaaProduct.TidePrediction],
+    type: NoaaStationType.Station,
   },
   {
     id: "8762928",
     name: "Cocodrie, Terrebonne Bay",
     coords: { lat: 29.245, lon: -90.6616667 },
     availableParams: [NoaaProduct.TidePrediction],
+    type: NoaaStationType.Station,
   },
   {
     id: "8762850",
     name: "Wine Island, Terrebonne Bay",
     coords: { lat: 29.0783333, lon: -90.5866667 },
     availableParams: [NoaaProduct.TidePrediction],
+    type: NoaaStationType.Station,
   },
   {
     id: "8762481",
     name: "Pelican Islands, Timbalier Bay",
     coords: { lat: 29.1283333, lon: -90.4233333 },
     availableParams: [NoaaProduct.TidePrediction],
+    type: NoaaStationType.Station,
   },
   {
     id: "8765568",
     name: "Lighthouse Point",
     coords: { lat: 29.5233333, lon: -92.0433333 },
     availableParams: [NoaaProduct.TidePrediction],
+    type: NoaaStationType.Station,
   },
   {
     id: "8764931",
     name: "Cote Blanche Island, West Cote Blanche Bay",
     coords: { lat: 29.735, lon: -91.7133333 },
     availableParams: [NoaaProduct.TidePrediction],
+    type: NoaaStationType.Station,
   },
   {
     id: "8765026",
     name: "Marsh Island, Atchafalaya Bay",
     coords: { lat: 29.485, lon: -91.7633333 },
     availableParams: [NoaaProduct.TidePrediction],
+    type: NoaaStationType.Station,
   },
   {
     id: "8761819",
     name: "Texaco Dock, Hackberry",
     coords: { lat: 29.4016667, lon: -90.0383333 },
     availableParams: [NoaaProduct.TidePrediction],
+    type: NoaaStationType.Station,
   },
   {
     id: "8762675",
     name: "Timbalier Island, Timbalier Bay",
     coords: { lat: 29.0866667, lon: -90.5266667 },
     availableParams: [NoaaProduct.TidePrediction],
+    type: NoaaStationType.Station,
   },
   {
     id: "8761305",
@@ -185,30 +211,35 @@ export const noaaStations: NoaaStationEntity[] = [
       NoaaProduct.WaterTemperature,
       NoaaProduct.AirPressure,
     ],
+    type: NoaaStationType.Station,
   },
   {
     id: "8761529",
     name: "Martello Castle, Lake Borgne",
     coords: { lat: 29.945, lon: -89.835 },
     availableParams: [NoaaProduct.TidePrediction],
+    type: NoaaStationType.Station,
   },
   {
     id: "8760742",
     name: "Comfort Island",
     coords: { lat: 29.8233333, lon: -89.27 },
     availableParams: [NoaaProduct.TidePrediction],
+    type: NoaaStationType.Station,
   },
   {
     id: "8761108",
     name: "Bay Gardene",
     coords: { lat: 29.5983333, lon: -89.6183333 },
     availableParams: [NoaaProduct.TidePrediction],
+    type: NoaaStationType.Station,
   },
   {
     id: "8760595",
     name: "Breton Island",
     coords: { lat: 29.4933333, lon: -89.1733333 },
     availableParams: [NoaaProduct.TidePrediction],
+    type: NoaaStationType.Station,
   },
   {
     id: "8761724",
@@ -220,36 +251,42 @@ export const noaaStations: NoaaStationEntity[] = [
       NoaaProduct.WaterLevel,
       NoaaProduct.WaterTemperature,
     ],
+    type: NoaaStationType.Station,
   },
   {
     id: "8761826",
     name: "Caminada Pass",
     coords: { lat: 29.21, lon: -90.04 },
     availableParams: [NoaaProduct.TidePrediction],
+    type: NoaaStationType.Station,
   },
   {
     id: "8761687",
     name: "Barataria Pass",
     coords: { lat: 29.275, lon: -89.945 },
     availableParams: [NoaaProduct.TidePrediction],
+    type: NoaaStationType.Station,
   },
   {
     id: "8761677",
     name: "Independence Island",
     coords: { lat: 29.31, lon: -89.9383333 },
     availableParams: [NoaaProduct.TidePrediction],
+    type: NoaaStationType.Station,
   },
   {
     id: "8761742",
     name: "Mendicant Island, Barataria Bay",
     coords: { lat: 29.3183333, lon: -89.98 },
     availableParams: [NoaaProduct.TidePrediction],
+    type: NoaaStationType.Station,
   },
   {
     id: "8762075",
     name: "Port Fourchon, Belle Pass",
     coords: { lat: 29.1133333, lon: -90.1983333 },
     availableParams: [NoaaProduct.TidePrediction, NoaaProduct.WaterLevel],
+    type: NoaaStationType.Station,
   },
   {
     id: "8760721",
@@ -263,24 +300,28 @@ export const noaaStations: NoaaStationEntity[] = [
       NoaaProduct.WaterTemperature,
       NoaaProduct.AirPressure,
     ],
+    type: NoaaStationType.Station,
   },
   {
     id: "8760736",
     name: "Joseph Bayou",
     coords: { lat: 29.0583333, lon: -89.2716667 },
     availableParams: [NoaaProduct.TidePrediction],
+    type: NoaaStationType.Station,
   },
   {
     id: "8760551",
     name: "South Pass",
     coords: { lat: 28.99, lon: -89.14 },
     availableParams: [NoaaProduct.TidePrediction],
+    type: NoaaStationType.Station,
   },
   {
     id: "8760579",
     name: "Port Eads, South Pass",
     coords: { lat: 29.015, lon: -89.16 },
     availableParams: [NoaaProduct.TidePrediction],
+    type: NoaaStationType.Station,
   },
   {
     id: "8760922",
@@ -293,60 +334,70 @@ export const noaaStations: NoaaStationEntity[] = [
       NoaaProduct.AirTemperature,
       NoaaProduct.AirPressure,
     ],
+    type: NoaaStationType.Station,
   },
   {
     id: "8760959",
     name: "Southwest Pass",
     coords: { lat: 28.9316667, lon: -89.4283333 },
     availableParams: [NoaaProduct.TidePrediction],
+    type: NoaaStationType.Station,
   },
   {
     id: "8760416",
     name: "Southeast Pass",
     coords: { lat: 29.1166667, lon: -89.045 },
     availableParams: [NoaaProduct.TidePrediction],
+    type: NoaaStationType.Station,
   },
   {
     id: "8760412",
     name: "North Pass, Pass a Loutre",
     coords: { lat: 29.205, lon: -89.0366667 },
     availableParams: [NoaaProduct.TidePrediction],
+    type: NoaaStationType.Station,
   },
   {
     id: "8760424",
     name: "Lonesome Bayou (Thomasin)",
     coords: { lat: 29.2283333, lon: -89.05 },
     availableParams: [NoaaProduct.TidePrediction],
+    type: NoaaStationType.Station,
   },
   {
     id: "8760841",
     name: "Jack Bay",
     coords: { lat: 29.3666667, lon: -89.345 },
     availableParams: [NoaaProduct.TidePrediction],
+    type: NoaaStationType.Station,
   },
   {
     id: "8760889",
     name: "Olga Compressor Station, Grand Bay",
     coords: { lat: 29.3866667, lon: -89.38 },
     availableParams: [NoaaProduct.TidePrediction],
+    type: NoaaStationType.Station,
   },
   {
     id: "8761212",
     name: "Empire Jetty",
     coords: { lat: 29.25, lon: -89.6083333 },
     availableParams: [NoaaProduct.TidePrediction],
+    type: NoaaStationType.Station,
   },
   {
     id: "8761402",
     name: "The Rigolets",
     coords: { lat: 30.1666667, lon: -89.7366667 },
     availableParams: [NoaaProduct.TidePrediction],
+    type: NoaaStationType.Station,
   },
   {
     id: "8761487",
     name: "Chef Menteur, Chef Menteur Pass",
     coords: { lat: 30.065, lon: -89.8 },
     availableParams: [NoaaProduct.TidePrediction],
+    type: NoaaStationType.Station,
   },
   {
     id: "8761927",
@@ -360,60 +411,70 @@ export const noaaStations: NoaaStationEntity[] = [
       NoaaProduct.WaterTemperature,
       NoaaProduct.AirPressure,
     ],
+    type: NoaaStationType.Station,
   },
   {
     id: "TEC4445",
     name: "Paris Road Bridge (ICWW)",
     coords: { lat: 30, lon: -89.9333333 },
     availableParams: [NoaaProduct.TidePrediction],
+    type: NoaaStationType.Station,
   },
   {
     id: "8761473",
     name: "Route 433, Bayou Bonfouca",
     coords: { lat: 30.2716667, lon: -89.7933333 },
     availableParams: [NoaaProduct.TidePrediction],
+    type: NoaaStationType.Station,
   },
   {
     id: "8761993",
     name: "Tchefuncta River, Lake Point",
     coords: { lat: 30.3783333, lon: -90.16 },
     availableParams: [NoaaProduct.TidePrediction],
+    type: NoaaStationType.Station,
   },
   {
     id: "8762372",
     name: "East Bank 1, Norco, Bayou LaBranche",
     coords: { lat: 30.05, lon: -90.3683333 },
     availableParams: [NoaaProduct.TidePrediction],
+    type: NoaaStationType.Station,
   },
   {
     id: "8762483",
     name: "I-10 Bonnet Carre Floodway",
     coords: { lat: 888, lon: 888 },
     availableParams: [NoaaProduct.TidePrediction, NoaaProduct.WaterLevel],
+    type: NoaaStationType.Station,
   },
   {
     id: "8763535",
     name: "Texas Gas Platform, Caillou Bay",
     coords: { lat: 29.175, lon: -90.9766667 },
     availableParams: [NoaaProduct.TidePrediction],
+    type: NoaaStationType.Station,
   },
   {
     id: "8763719",
     name: "Ship Shoal Light",
     coords: { lat: 28.915, lon: -91.0716667 },
     availableParams: [NoaaProduct.TidePrediction],
+    type: NoaaStationType.Station,
   },
   {
     id: "8761732",
     name: "Manilla, LA",
     coords: { lat: 29.4266667, lon: -89.97667 },
     availableParams: [NoaaProduct.TidePrediction],
+    type: NoaaStationType.Station,
   },
   {
     id: "8761899",
     name: "Lafitte, Barataria Waterway",
     coords: { lat: 29.6666667, lon: -90.111667 },
     availableParams: [NoaaProduct.TidePrediction],
+    type: NoaaStationType.Station,
   },
 
   {
@@ -428,6 +489,7 @@ export const noaaStations: NoaaStationEntity[] = [
       NoaaProduct.AirPressure,
       NoaaProduct.WaterTemperature,
     ],
+    type: NoaaStationType.Station,
   },
   {
     id: "8770822",
@@ -441,6 +503,7 @@ export const noaaStations: NoaaStationEntity[] = [
       NoaaProduct.AirPressure,
       NoaaProduct.WaterTemperature,
     ],
+    type: NoaaStationType.Station,
   },
   {
     id: "8770475",
@@ -454,12 +517,35 @@ export const noaaStations: NoaaStationEntity[] = [
       NoaaProduct.AirPressure,
       NoaaProduct.WaterTemperature,
     ],
+    type: NoaaStationType.Station,
   },
   {
     id: "8770520",
     name: "Rainbow Bridge",
     coords: { lat: 29.98, lon: -93.88166666666666 },
     availableParams: [NoaaProduct.TidePrediction, NoaaProduct.WaterLevel],
+    type: NoaaStationType.Station,
+  },
+  {
+    id: "8762223",
+    name: "East Timbalier Island, Timbalier Bay",
+    coords: { lat: 29.076667, lon: -90.285 },
+    availableParams: [NoaaProduct.TidePrediction],
+    type: NoaaStationType.Station,
+  },
+  {
+    id: "8762084",
+    name: "Leevile, Bayou Lafourche",
+    coords: { lat: 29.248333, lon: -90.211667 },
+    availableParams: [NoaaProduct.TidePrediction],
+    type: NoaaStationType.Station,
+  },
+  {
+    id: "KXPY",
+    name: "Port Fourchon Heliport",
+    coords: { lat: 29.123, lon: -90.202 },
+    availableParams: [NoaaProduct.Wind, NoaaProduct.AirTemperature],
+    type: NoaaStationType.Buoy,
   },
 ];
 
@@ -474,6 +560,94 @@ export async function storeNoaaData(stationId: string, numHours = 24) {
 
   const data = await scrapeData(station, startDate, endDate);
   await saveToDynamo(station, data);
+}
+
+export async function storeBuoyData(stationId: string, numHours = 24) {
+  const station = getStationById(stationId);
+  if (!station) {
+    throw new Error(`Unable to load NOAA buoy station for ${stationId}`);
+  }
+  const endDate = new Date();
+  const startDate = subHours(endDate, numHours);
+
+  const data = await scrapeBuoyData(station, startDate, endDate);
+
+  await saveToDynamo(station, data);
+}
+
+interface BuoyData {
+  timestamp: string;
+  wind?: { direction: string; directionDegrees: number; speed: number };
+  airTemperature?: number;
+}
+
+async function scrapeBuoyData(
+  station: NoaaStationEntity,
+  start: Date,
+  end: Date
+): Promise<ScrapedData> {
+  const url = `https://www.ndbc.noaa.gov/data/realtime2/${station.id}.txt`;
+  const response = await axios.get<string>(url);
+
+  const raw = response.data
+    .split("\n")
+    .slice(2)
+    .map((line) => line.split(/(\s+)/).filter((x) => x.trim().length > 0));
+
+  const data: BuoyData[] = raw
+    .map((entry) => {
+      let wind;
+      let airTemperature;
+      const timestamp = `${entry[0]}-${entry[1]}-${entry[2]}T${entry[3]}:${entry[4]}:00Z`;
+      if (station.availableParams.includes(NoaaProduct.Wind)) {
+        wind = {
+          directionDegrees: Number(entry[5]),
+          direction: degreesToCompass(Number(entry[5])),
+          speed: Math.round(metersPerSecondToMph(Number(entry[6])) * 10) / 10,
+        };
+      }
+      if (station.availableParams.includes(NoaaProduct.AirTemperature)) {
+        airTemperature = Number(celciusToFahrenheit(Number(entry[13])));
+      }
+      return { timestamp, wind, airTemperature };
+    })
+    .filter((entry) =>
+      isWithinInterval(new Date(entry.timestamp), { start, end })
+    );
+
+  const returnData: ScrapedData = {};
+  if (station.availableParams.includes(NoaaProduct.Wind)) {
+    const wind: WindDetail[] = data
+      .map((datum) => {
+        if (!datum.wind) return;
+        return {
+          timestamp: datum.timestamp,
+          ...datum.wind,
+        };
+      })
+      .filter(notUndefined);
+
+    returnData[NoaaProduct.Wind] = wind;
+  }
+
+  if (station.availableParams.includes(NoaaProduct.AirTemperature)) {
+    const airTemperature: TemperatureDetail[] = data
+      .map((datum) => {
+        if (!datum.airTemperature) return;
+        return {
+          timestamp: datum.timestamp,
+          temperature: {
+            degrees: datum.airTemperature,
+            unit: "F",
+          },
+        };
+      })
+      .filter(notUndefined);
+
+    returnData[NoaaProduct.AirTemperature] = airTemperature;
+  }
+
+  return returnData;
 }
 
 export async function storeTideData(
@@ -700,6 +874,10 @@ async function fetchDataForProduct(
   if (data.error) return [];
 
   return mappers[product](data);
+}
+
+export function metersPerSecondToMph(mps: number) {
+  return mps * 2.237;
 }
 
 interface WindApiResponse {

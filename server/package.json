@@ -38,6 +38,9 @@
     "cf:delete-db": "aws cloudformation delete-stack --stack-name ss-database-\"$STAGE\"",
     "cf:update-db": "aws cloudformation deploy --stack-name ss-database-\"$STAGE\" --template-file infra/database.yml --parameter-overrides StageParam=\"$STAGE\" --no-fail-on-empty-changeset",
     "cf:delete-queue": "aws cloudformation delete-stack --stack-name ss-queue-\"$STAGE\"",
-    "cf:update-queue": "aws cloudformation deploy --stack-name ss-queue-\"$STAGE\" --template-file infra/queue.yml --parameter-overrides StageParam=\"$STAGE\" --no-fail-on-empty-changeset"
+    "cf:update-queue": "aws cloudformation deploy --stack-name ss-queue-\"$STAGE\" --template-file infra/queue.yml --parameter-overrides StageParam=\"$STAGE\" --no-fail-on-empty-changeset",
+    "consumer:buoy": "sls invoke local -f preload-noaa-buoy-consumer --path ./src/preloaders/events/noaa-buoy.json",
+    "consumer:tide": "sls invoke local -f preload-tide-consumer --path ./src/preloaders/events/tide.json",
+    "consumer:windfinder": "sls invoke local -f preload-windfinder-consumer --path ./src/preloaders/events/windfinder.json"
   }
 }

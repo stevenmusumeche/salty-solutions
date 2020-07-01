@@ -46,7 +46,7 @@ const resolvers: Resolvers & { UsgsParam: Object; NoaaParam: Object } = {
       return { location };
     },
     tidePreditionStations: (location, { limit }, { services }) => {
-      return location.tideStationIds
+      return [...location.tideStationIds, ...(location.noaaBuoyIds || [])]
         .slice(0, limit || 99)
         .map((id) => services.noaa.getStationById(id))
         .filter(notUndefined);
