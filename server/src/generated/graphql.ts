@@ -223,7 +223,9 @@ export type Query = {
   locations: Array<Location>;
   location?: Maybe<Location>;
   tidePreditionStation?: Maybe<TidePreditionStation>;
+  tidePreditionStations: Array<TidePreditionStation>;
   usgsSite?: Maybe<UsgsSite>;
+  usgsSites: Array<UsgsSite>;
 };
 
 
@@ -332,6 +334,7 @@ export type TidePreditionStation = {
   waterTemperature?: Maybe<WaterTemperature>;
   salinity?: Maybe<Salinity>;
   waterHeight?: Maybe<Array<WaterHeight>>;
+  locations: Array<Location>;
 };
 
 
@@ -357,6 +360,7 @@ export enum UsgsParam {
 export type UsgsSite = {
   __typename?: 'UsgsSite';
   id: Scalars['ID'];
+  url: Scalars['String'];
   name: Scalars['String'];
   coords: Coords;
   waterHeight?: Maybe<Array<WaterHeight>>;
@@ -364,6 +368,7 @@ export type UsgsSite = {
   wind?: Maybe<Wind>;
   salinity?: Maybe<Salinity>;
   availableParams: Array<UsgsParam>;
+  locations: Array<Location>;
 };
 
 
@@ -774,7 +779,9 @@ export type QueryResolvers<ContextType = Context, ParentType extends ResolversPa
   locations?: Resolver<Array<ResolversTypes['Location']>, ParentType, ContextType>;
   location?: Resolver<Maybe<ResolversTypes['Location']>, ParentType, ContextType, RequireFields<QueryLocationArgs, 'id'>>;
   tidePreditionStation?: Resolver<Maybe<ResolversTypes['TidePreditionStation']>, ParentType, ContextType, RequireFields<QueryTidePreditionStationArgs, never>>;
+  tidePreditionStations?: Resolver<Array<ResolversTypes['TidePreditionStation']>, ParentType, ContextType>;
   usgsSite?: Resolver<Maybe<ResolversTypes['UsgsSite']>, ParentType, ContextType, RequireFields<QueryUsgsSiteArgs, never>>;
+  usgsSites?: Resolver<Array<ResolversTypes['UsgsSite']>, ParentType, ContextType>;
 };
 
 export type RainDetailResolvers<ContextType = Context, ParentType extends ResolversParentTypes['RainDetail'] = ResolversParentTypes['RainDetail']> = {
@@ -853,11 +860,13 @@ export type TidePreditionStationResolvers<ContextType = Context, ParentType exte
   waterTemperature?: Resolver<Maybe<ResolversTypes['WaterTemperature']>, ParentType, ContextType>;
   salinity?: Resolver<Maybe<ResolversTypes['Salinity']>, ParentType, ContextType>;
   waterHeight?: Resolver<Maybe<Array<ResolversTypes['WaterHeight']>>, ParentType, ContextType, RequireFields<TidePreditionStationWaterHeightArgs, 'start' | 'end'>>;
+  locations?: Resolver<Array<ResolversTypes['Location']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType>;
 };
 
 export type UsgsSiteResolvers<ContextType = Context, ParentType extends ResolversParentTypes['UsgsSite'] = ResolversParentTypes['UsgsSite']> = {
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   coords?: Resolver<ResolversTypes['Coords'], ParentType, ContextType>;
   waterHeight?: Resolver<Maybe<Array<ResolversTypes['WaterHeight']>>, ParentType, ContextType, RequireFields<UsgsSiteWaterHeightArgs, 'start' | 'end'>>;
@@ -865,6 +874,7 @@ export type UsgsSiteResolvers<ContextType = Context, ParentType extends Resolver
   wind?: Resolver<Maybe<ResolversTypes['Wind']>, ParentType, ContextType>;
   salinity?: Resolver<Maybe<ResolversTypes['Salinity']>, ParentType, ContextType>;
   availableParams?: Resolver<Array<ResolversTypes['UsgsParam']>, ParentType, ContextType>;
+  locations?: Resolver<Array<ResolversTypes['Location']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType>;
 };
 

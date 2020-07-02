@@ -1,8 +1,20 @@
-export { getSiteById } from "./source";
 import { queryTimeSeriesData } from "../db";
-import { WaterHeight, Salinity, WaterTemperature, Wind } from "./source";
+import {
+  WaterHeight,
+  Salinity,
+  WaterTemperature,
+  Wind,
+  UsgsSiteEntity,
+  usgsSites,
+} from "./source";
 import { subHours } from "date-fns";
 import { orderBy } from "lodash";
+
+export const getSiteById = (id: string): UsgsSiteEntity | undefined => {
+  return usgsSites.find((site) => site.id === id);
+};
+
+export const getSites = () => usgsSites;
 
 export const getWind = async (
   siteId: string,

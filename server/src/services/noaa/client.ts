@@ -14,6 +14,10 @@ export const getStationById = (id: string): NoaaStationEntity | undefined => {
   return noaaStations.find((tideStation) => tideStation.id === id);
 };
 
+export const getStations = (): NoaaStationEntity[] => {
+  return noaaStations;
+};
+
 export async function getTidePredictions(
   stationId: string,
   start: Date,

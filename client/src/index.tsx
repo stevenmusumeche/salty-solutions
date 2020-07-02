@@ -6,6 +6,7 @@ import { Provider as UrqlProvider, createClient, defaultExchanges } from "urql";
 import { devtoolsExchange } from "@urql/devtools";
 import { Router, Redirect, RouteComponentProps } from "@reach/router";
 import About from "./components/About";
+import Admin from "./components/Admin";
 import MediaQueryProvider from "./providers/WindowSizeProvider";
 import { useState } from "react";
 import "intersection-observer";
@@ -69,6 +70,7 @@ const Root = () => {
       <UrqlProvider value={client}>
         <Router>
           <About path="/about" />
+          <Admin path="/admin" />
           <App path="/:locationSlug" />
           <Home path="/" />
         </Router>

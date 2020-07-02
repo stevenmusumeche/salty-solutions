@@ -6,7 +6,7 @@ import Link from "./Link";
 
 const About: React.FC<RouteComponentProps> = () => (
   <Shell>
-    <div className="container mx-auto">
+    <div className="container mx-auto mt-8">
       <div className="forecast-wrapper">
         <img
           src={UrStupidFace}
