@@ -9,13 +9,13 @@ import {
   useAdminQuery,
 } from "@stevenmusumeche/salty-solutions-shared/dist/graphql";
 import {
-  useSalinitySites,
   useWindSites,
   useAirTempSites,
-  useWaterHeightSites,
   useWaterTempSites,
+  useWaterHeightSites,
+  useSalinitySites,
   useTideStationSites,
-} from "../App";
+} from "@stevenmusumeche/salty-solutions-shared/dist/hooks";
 
 const Admin: React.FC<RouteComponentProps> = () => {
   const [locations] = useLocationsQuery();
@@ -23,8 +23,6 @@ const Admin: React.FC<RouteComponentProps> = () => {
   const locationList = locations.data?.locations || [];
   const usgsSiteList = adminData.data?.usgsSites || [];
   const noaaStationList = adminData.data?.tidePreditionStations || [];
-
-  console.log(adminData);
 
   return (
     <Shell>

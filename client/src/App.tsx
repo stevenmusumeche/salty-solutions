@@ -1,13 +1,13 @@
 import { navigate, RouteComponentProps } from "@reach/router";
+import { useLocationsQuery } from "@stevenmusumeche/salty-solutions-shared/dist/graphql";
 import {
-  useLocationsQuery,
-  UsgsParam,
-  NoaaParam,
-  LocationDetailFragment,
-  Maybe,
-  UsgsSiteDetailFragment,
-  TideStationDetailFragment,
-} from "@stevenmusumeche/salty-solutions-shared/dist/graphql";
+  useSalinitySites,
+  useWaterTempSites,
+  useWaterHeightSites,
+  useWindSites,
+  useAirTempSites,
+  useTideStationSites,
+} from "@stevenmusumeche/salty-solutions-shared/dist/hooks";
 import { startOfDay } from "date-fns";
 import React, { useEffect, useMemo, useReducer, useState } from "react";
 import "./App.css";
@@ -204,86 +204,3 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
 };
 
 export default App;
-
-// todo: shared hook to be used by mobile
-export const useSalinitySites = (location?: Maybe<LocationDetailFragment>) => {
-  return useMemo(() => {
-    return (
-      location?.usgsSites.filter((site) =>
-        site.availableParams.includes(UsgsParam.Salinity)
-      ) || []
-    );
-  }, [location]);
-};
-
-export const useWindSites = (location?: Maybe<LocationDetailFragment>) => {
-  return useMemo(() => {
-    const usgs =
-      location?.usgsSites.filter((site) =>
-        site.availableParams.includes(UsgsParam.WindSpeed)
-      ) || [];
-
-    const noaa =
-      location?.tidePreditionStations.filter((station) =>
-        station.availableParams.includes(NoaaParam.Wind)
-      ) || [];
-
-    return [...usgs, ...noaa];
-  }, [location]);
-};
-
-export const useAirTempSites = (location?: Maybe<LocationDetailFragment>) => {
-  return useMemo(() => {
-    return (
-      location?.tidePreditionStations.filter((station) =>
-        station.availableParams.includes(NoaaParam.AirTemperature)
-      ) || []
-    );
-  }, [location]);
-};
-
-export const useWaterHeightSites = (
-  location?: Maybe<LocationDetailFragment>
-) => {
-  return useMemo(() => {
-    const usgs =
-      location?.usgsSites.filter((site) =>
-        site.availableParams.includes(UsgsParam.GuageHeight)
-      ) || [];
-
-    const noaa =
-      location?.tidePreditionStations.filter((station) =>
-        station.availableParams.includes(NoaaParam.WaterLevel)
-      ) || [];
-
-    return [...usgs, ...noaa];
-  }, [location]);
-};
-
-export const useWaterTempSites = (location?: Maybe<LocationDetailFragment>) => {
-  return useMemo(() => {
-    const usgs =
-      location?.usgsSites.filter((site) =>
-        site.availableParams.includes(UsgsParam.WaterTemp)
-      ) || [];
-
-    const noaa =
-      location?.tidePreditionStations.filter((station) =>
-        station.availableParams.includes(NoaaParam.WaterTemperature)
-      ) || [];
-
-    return [...usgs, ...noaa];
-  }, [location]);
-};
-
-export const useTideStationSites = (
-  location?: Maybe<LocationDetailFragment>
-) => {
-  return useMemo(() => {
-    return (
-      location?.tidePreditionStations.filter((station) =>
-        station.availableParams.includes(NoaaParam.TidePrediction)
-      ) || []
-    );
-  }, [location]);
-};
