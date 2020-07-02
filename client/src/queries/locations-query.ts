@@ -10,12 +10,14 @@ export const LOCATION_QUERY = gql`
     id
     name
     availableParams
+    url
   }
 
   fragment UsgsSiteDetail on UsgsSite {
     id
     name
     availableParams
+    url
   }
 
   fragment LocationDetail on Location {

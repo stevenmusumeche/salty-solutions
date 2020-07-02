@@ -220,7 +220,9 @@ export type Query = {
   locations: Array<Location>;
   location?: Maybe<Location>;
   tidePreditionStation?: Maybe<TidePreditionStation>;
+  tidePreditionStations: Array<TidePreditionStation>;
   usgsSite?: Maybe<UsgsSite>;
+  usgsSites: Array<UsgsSite>;
 };
 
 
@@ -329,6 +331,7 @@ export type TidePreditionStation = {
   waterTemperature?: Maybe<WaterTemperature>;
   salinity?: Maybe<Salinity>;
   waterHeight?: Maybe<Array<WaterHeight>>;
+  locations: Array<Location>;
 };
 
 
@@ -354,6 +357,7 @@ export enum UsgsParam {
 export type UsgsSite = {
   __typename?: 'UsgsSite';
   id: Scalars['ID'];
+  url: Scalars['String'];
   name: Scalars['String'];
   coords: Coords;
   waterHeight?: Maybe<Array<WaterHeight>>;
@@ -361,6 +365,7 @@ export type UsgsSite = {
   wind?: Maybe<Wind>;
   salinity?: Maybe<Salinity>;
   availableParams: Array<UsgsParam>;
+  locations: Array<Location>;
 };
 
 
@@ -434,6 +439,28 @@ export type WindSummary = {
   __typename?: 'WindSummary';
   mostRecent?: Maybe<WindDetail>;
 };
+
+export type AdminQueryVariables = {};
+
+
+export type AdminQuery = (
+  { __typename?: 'Query' }
+  & { tidePreditionStations: Array<(
+    { __typename?: 'TidePreditionStation' }
+    & { locations: Array<(
+      { __typename?: 'Location' }
+      & Pick<Location, 'id' | 'name'>
+    )> }
+    & TideStationDetailFragment
+  )>, usgsSites: Array<(
+    { __typename?: 'UsgsSite' }
+    & { locations: Array<(
+      { __typename?: 'Location' }
+      & Pick<Location, 'id' | 'name'>
+    )> }
+    & UsgsSiteDetailFragment
+  )> }
+);
 
 export type CombinedForecastV2QueryVariables = {
   locationId: Scalars['ID'];
@@ -671,12 +698,12 @@ export type LocationsQuery = (
 
 export type TideStationDetailFragment = (
   { __typename?: 'TidePreditionStation' }
-  & Pick<TidePreditionStation, 'id' | 'name' | 'availableParams'>
+  & Pick<TidePreditionStation, 'id' | 'name' | 'availableParams' | 'url'>
 );
 
 export type UsgsSiteDetailFragment = (
   { __typename?: 'UsgsSite' }
-  & Pick<UsgsSite, 'id' | 'name' | 'availableParams'>
+  & Pick<UsgsSite, 'id' | 'name' | 'availableParams' | 'url'>
 );
 
 export type LocationDetailFragment = (
@@ -986,6 +1013,7 @@ export const TideStationDetailFragmentDoc = gql`
   id
   name
   availableParams
+  url
 }
     `;
 export const UsgsSiteDetailFragmentDoc = gql`
@@ -993,6 +1021,7 @@ export const UsgsSiteDetailFragmentDoc = gql`
   id
   name
   availableParams
+  url
 }
     `;
 export const LocationDetailFragmentDoc = gql`
@@ -1060,6 +1089,29 @@ export const MoonDetailFieldsFragmentDoc = gql`
   illumination
 }
     `;
+export const AdminDocument = gql`
+    query Admin {
+  tidePreditionStations {
+    ...TideStationDetail
+    locations {
+      id
+      name
+    }
+  }
+  usgsSites {
+    ...UsgsSiteDetail
+    locations {
+      id
+      name
+    }
+  }
+}
+    ${TideStationDetailFragmentDoc}
+${UsgsSiteDetailFragmentDoc}`;
+
+export function useAdminQuery(options: Omit<Urql.UseQueryArgs<AdminQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<AdminQuery>({ query: AdminDocument, ...options });
+};
 export const CombinedForecastV2Document = gql`
     query CombinedForecastV2($locationId: ID!, $startDate: String!, $endDate: String!) {
   location(id: $locationId) {

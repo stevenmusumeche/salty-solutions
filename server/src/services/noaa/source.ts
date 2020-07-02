@@ -39,7 +39,7 @@ enum NoaaProduct {
   TidePrediction = "predictions",
 }
 
-enum NoaaStationType {
+export enum NoaaStationType {
   Buoy,
   Station,
 }
@@ -112,13 +112,6 @@ export const noaaStations: NoaaStationEntity[] = [
     id: "8765251",
     name: "Cypremort Point",
     coords: { lat: 29.7133, lon: -91.88 },
-    availableParams: [NoaaProduct.TidePrediction],
-    type: NoaaStationType.Station,
-  },
-  {
-    id: "8764931",
-    name: "Cote Blanche Island",
-    coords: { lat: 29.735, lon: -91.7133 },
     availableParams: [NoaaProduct.TidePrediction],
     type: NoaaStationType.Station,
   },

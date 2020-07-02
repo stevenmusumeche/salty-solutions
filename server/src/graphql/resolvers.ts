@@ -1,6 +1,7 @@
 import { Resolvers } from "../generated/graphql";
 import { ApolloError } from "apollo-server-koa";
 import { notUndefined } from "../services/utils";
+import { NoaaStationType } from "../services/noaa/source";
 
 const resolvers: Resolvers & { UsgsParam: Object; NoaaParam: Object } = {
   UsgsParam: {
@@ -34,11 +35,17 @@ const resolvers: Resolvers & { UsgsParam: Object; NoaaParam: Object } = {
         throw new ApolloError(`Unknown tide station ID ${stationId}`);
       return station;
     },
+    tidePreditionStations: (root, args, { services }) => {
+      return services.noaa.getStations();
+    },
     usgsSite: (_, { siteId }, { services }) => {
       if (!siteId) return null;
       const site = services.usgs.getSiteById(siteId);
       if (!site) throw new ApolloError(`Unknown USGS site ID ${siteId}`);
       return site;
+    },
+    usgsSites: (_, args, { services }) => {
+      return services.usgs.getSites();
     },
   },
   Location: {
@@ -116,6 +123,10 @@ const resolvers: Resolvers & { UsgsParam: Object; NoaaParam: Object } = {
   },
   TidePreditionStation: {
     url: (station) => {
+      if (station.type === NoaaStationType.Buoy) {
+        return `https://www.ndbc.noaa.gov/station_page.php?station=${station.id}`;
+      }
+
       return `https://tidesandcurrents.noaa.gov/stationhome.html?id=${station.id}`;
     },
     tides: async (station, args, { services }) => {
@@ -141,8 +152,16 @@ const resolvers: Resolvers & { UsgsParam: Object; NoaaParam: Object } = {
         new Date(args.end)
       );
     },
+    locations: async (station, args, { services }) => {
+      return services.location
+        .getAll()
+        .filter((location) => location.tideStationIds.includes(station.id));
+    },
   },
   UsgsSite: {
+    url: (station) => {
+      return `https://waterdata.usgs.gov/monitoring-location/${station.id}/`;
+    },
     waterHeight: async (site, args, { services }) => {
       return services.usgs.getWaterHeight(
         site.id,
@@ -158,6 +177,11 @@ const resolvers: Resolvers & { UsgsParam: Object; NoaaParam: Object } = {
     },
     wind: async (site, args, ctx) => {
       return { site };
+    },
+    locations: async (site, args, { services }) => {
+      return services.location
+        .getAll()
+        .filter((location) => location.usgsSiteIds.includes(site.id));
     },
   },
   Salinity: {

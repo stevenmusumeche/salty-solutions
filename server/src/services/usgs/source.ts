@@ -6,6 +6,7 @@ import orderBy from "lodash/orderBy";
 import { batchWrite } from "../db";
 import { Coords } from "../location";
 import { UsgsParam } from "../../generated/graphql";
+import { getSiteById } from "./client";
 type WriteRequest = DocumentClient.WriteRequest;
 
 axiosRetry(axios, { retries: 3, retryDelay: (retryCount) => retryCount * 500 });
@@ -25,7 +26,7 @@ export interface UsgsSiteEntity {
   availableParams: UsgsParams[];
 }
 
-const usgsSites: UsgsSiteEntity[] = [
+export const usgsSites: UsgsSiteEntity[] = [
   {
     id: "07387040",
     name: "Vermilion Bay near Cypremort Point",
@@ -224,15 +225,6 @@ const usgsSites: UsgsSiteEntity[] = [
     ],
   },
   {
-    id: "07374526",
-    name: "Black Bay near Stone Island",
-    availableParams: [
-      UsgsParams.WaterTemp,
-      UsgsParams.GuageHeight,
-      UsgsParams.Salinity,
-    ],
-  },
-  {
     id: "07374527",
     name: "Northeast Bay Gardene",
     availableParams: [
@@ -421,10 +413,6 @@ async function validateConfig() {
     }
   }
 }
-
-export const getSiteById = (id: string): UsgsSiteEntity | undefined => {
-  return usgsSites.find((site) => site.id === id);
-};
 
 export interface WaterHeight {
   timestamp: string;
