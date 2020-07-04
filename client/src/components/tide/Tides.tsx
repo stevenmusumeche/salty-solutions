@@ -249,7 +249,7 @@ const HighLowTable: React.FC<{
       ))}
 
       {sunData && sunData.nauticalDawn && (
-        <Pill label="Nautical Dawn" color="orange-700">
+        <Pill label="Naut Dawn" color="orange-700">
           {formatDate(sunData.nauticalDawn)}
         </Pill>
       )}
@@ -275,7 +275,7 @@ const HighLowTable: React.FC<{
         </Pill>
       )}
       {sunData && sunData.nauticalDusk && (
-        <Pill label="Nautical Dusk" color="orange-700">
+        <Pill label="Naut Dusk" color="orange-700">
           {formatDate(sunData.nauticalDusk)}
         </Pill>
       )}
@@ -306,12 +306,12 @@ const Pill: React.FC<{ label: string; color?: string; className?: string }> = ({
       style={{ flexBasis: "1" }}
     >
       <div
-        className={`py-1 px-2 bg-${color} text-white flex items-center justify-center uppercase flex-shrink-0 w-1/2 md:w-auto`}
+        className={`py-1 px-2 bg-${color} text-white flex items-center justify-center uppercase flex-shrink-0 w-3/5 md:w-auto`}
         style={{ fontSize: ".6rem" }}
       >
         {label}
       </div>
-      <div className="py-1 px-2 text-center leading-none self-center w-1/2 md:w-auto text-xs">
+      <div className="py-1 px-1 text-center leading-none self-center w-2/5 md:w-auto text-xs">
         {children}
       </div>
     </div>

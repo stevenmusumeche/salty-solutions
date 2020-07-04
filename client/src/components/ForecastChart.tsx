@@ -37,6 +37,8 @@ const ForecastChart: FC<Props> = ({ data, date }) => {
     return <EmptyChart yTickVals={yTickVals} />;
   }
 
+  const maxWind = Math.max(...chartData.map((datum) => datum.gustY + datum.y));
+
   return (
     <div className="px-4">
       <VictoryChart
@@ -44,6 +46,9 @@ const ForecastChart: FC<Props> = ({ data, date }) => {
         domainPadding={{ y: 10, x: 7 }}
         style={{ parent: { touchAction: "auto" } }}
         height={180}
+        maxDomain={{
+          y: maxWind > WIND_WARNING_MIN ? maxWind : WIND_WARNING_MIN,
+        }}
       >
         <VictoryAxis
           scale={{ x: "time" }}
@@ -76,7 +81,9 @@ const ForecastChart: FC<Props> = ({ data, date }) => {
                 data: {
                   width: 14,
                   fill: ({ datum }) => {
-                    return datum.y >= WIND_WARNING_MIN ? "#c53030" : "#2b6cb0";
+                    return datum.y + datum.gustY >= WIND_WARNING_MIN
+                      ? "#c53030"
+                      : "#2b6cb0";
                   },
                 },
               }}
@@ -93,10 +100,12 @@ const ForecastChart: FC<Props> = ({ data, date }) => {
               data: {
                 width: 14,
                 fill: ({ datum }) => {
-                  return datum.y >= WIND_WARNING_MIN ? "#c53030" : "#2b6cb0";
+                  return datum.y + datum.gustY >= WIND_WARNING_MIN
+                    ? "#c53030"
+                    : "#2b6cb0";
                 },
                 fillOpacity: ({ datum }) => {
-                  return datum.y >= WIND_WARNING_MIN ? 0.2 : 0.3;
+                  return datum.y + datum.gustY >= WIND_WARNING_MIN ? 0.2 : 0.3;
                 },
               },
             }}
@@ -229,7 +238,7 @@ const ChartLegend = () => {
   return (
     <div className="flex justify-center mt-2">
       <div
-        className="flex tracking-tight tracking-wide uppercase font-normal text-gray-600 leading-none uppercase"
+        className="flex tracking-wide font-normal text-gray-600 leading-none uppercase"
         style={{ fontSize: ".65rem" }}
       >
         <div className="flex items-center h-3">
