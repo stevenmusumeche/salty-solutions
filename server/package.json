@@ -42,9 +42,14 @@
     "producer:buoy": "sls invoke local -f preload-noaa-buoy-producer",
     "consumer:buoy": "sls invoke local -f preload-noaa-buoy-consumer --path ./src/preloaders/events/noaa-buoy.json",
     "consumer:buoy:logs": "sls logs -f preload-noaa-buoy-consumer",
+    "producer:noaa": "sls invoke local -f preload-noaa-producer",
     "consumer:noaa": "sls invoke local -f preload-noaa-consumer --path ./src/preloaders/events/noaa.json",
+    "producer:tide": "sls invoke local -f preload-tide-producer",
     "consumer:tide": "sls invoke local -f preload-tide-consumer --path ./src/preloaders/events/tide.json",
+    "producer:windfinder": "sls invoke local -f preload-windfinder-producer",
     "consumer:windfinder": "sls invoke local -f preload-windfinder-consumer --path ./src/preloaders/events/windfinder.json",
-    "consumer:usgs": "sls invoke local -f preload-usgs-consumer --path ./src/preloaders/events/usgs.json"
+    "producer:usgs": "sls invoke local -f preload-usgs-producer",
+    "consumer:usgs": "sls invoke local -f preload-usgs-consumer --path ./src/preloaders/events/usgs.json",
+    "producer:all": "yarn run producer:buoy & yarn run producer:noaa & yarn run producer:windfinder & yarn run producer:usgs"
   }
 }

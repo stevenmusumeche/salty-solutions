@@ -5,7 +5,6 @@ import {
   useWaterTempSites,
   useWaterHeightSites,
   useWindSites,
-  useAirTempSites,
   useTideStationSites,
 } from "@stevenmusumeche/salty-solutions-shared/dist/hooks";
 import { startOfDay } from "date-fns";
@@ -105,7 +104,6 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
   const waterTempSites = useWaterTempSites(selectedLocation);
   const waterHeightSites = useWaterHeightSites(selectedLocation);
   const windSites = useWindSites(selectedLocation);
-  const airTempSites = useAirTempSites(selectedLocation);
   const tideStations = useTideStationSites(selectedLocation);
 
   if (locations.fetching) {
@@ -136,7 +134,7 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
         <span id="current-conditions"></span>
         <div className="current-conditions-grid">
           <WindCard locationId={locationId} sites={windSites} />
-          <AirTempCard locationId={locationId} sites={airTempSites} />
+          <AirTempCard locationId={locationId} />
           <WaterTempCard locationId={locationId} sites={waterTempSites} />
           <SalinityCard locationId={locationId} sites={salinitySites} />
         </div>
