@@ -8,6 +8,17 @@ export default gql`
     tidePreditionStations: [TidePreditionStation!]!
     usgsSite(siteId: ID): UsgsSite
     usgsSites: [UsgsSite!]!
+    appVersion: AppVersion!
+  }
+
+  type AppVersion {
+    ios: SupportedVersion!
+    android: SupportedVersion!
+  }
+
+  type SupportedVersion {
+    minimumSupported: String!
+    current: String!
   }
 
   type Location {

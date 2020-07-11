@@ -47,6 +47,18 @@ const resolvers: Resolvers & { UsgsParam: Object; NoaaParam: Object } = {
     usgsSites: (_, args, { services }) => {
       return services.usgs.getSites();
     },
+    appVersion: () => {
+      return {
+        ios: {
+          minimumSupported: "1.0.24",
+          current: "1.0.25",
+        },
+        android: {
+          minimumSupported: "1.0.24",
+          current: "1.0.25",
+        },
+      };
+    },
   },
   Location: {
     temperature: async (location) => {

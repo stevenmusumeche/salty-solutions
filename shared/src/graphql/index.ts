@@ -17,6 +17,12 @@ export type AirPressure = {
   pressure: Scalars['Float'];
 };
 
+export type AppVersion = {
+  __typename?: 'AppVersion';
+  ios: SupportedVersion;
+  android: SupportedVersion;
+};
+
 export type CombinedForecastV2 = {
   __typename?: 'CombinedForecastV2';
   date: Scalars['String'];
@@ -223,6 +229,7 @@ export type Query = {
   tidePreditionStations: Array<TidePreditionStation>;
   usgsSite?: Maybe<UsgsSite>;
   usgsSites: Array<UsgsSite>;
+  appVersion: AppVersion;
 };
 
 
@@ -280,6 +287,12 @@ export type SunDetail = {
   dusk: Scalars['String'];
   nauticalDawn: Scalars['String'];
   nauticalDusk: Scalars['String'];
+};
+
+export type SupportedVersion = {
+  __typename?: 'SupportedVersion';
+  minimumSupported: Scalars['String'];
+  current: Scalars['String'];
 };
 
 export type Temperature = {
@@ -460,6 +473,23 @@ export type AdminQuery = (
     )> }
     & UsgsSiteDetailFragment
   )> }
+);
+
+export type AppVersionQueryVariables = {};
+
+
+export type AppVersionQuery = (
+  { __typename?: 'Query' }
+  & { appVersion: (
+    { __typename?: 'AppVersion' }
+    & { ios: (
+      { __typename?: 'SupportedVersion' }
+      & Pick<SupportedVersion, 'minimumSupported' | 'current'>
+    ), android: (
+      { __typename?: 'SupportedVersion' }
+      & Pick<SupportedVersion, 'minimumSupported' | 'current'>
+    ) }
+  ) }
 );
 
 export type CombinedForecastV2QueryVariables = {
@@ -1111,6 +1141,24 @@ ${UsgsSiteDetailFragmentDoc}`;
 
 export function useAdminQuery(options: Omit<Urql.UseQueryArgs<AdminQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<AdminQuery>({ query: AdminDocument, ...options });
+};
+export const AppVersionDocument = gql`
+    query AppVersion {
+  appVersion {
+    ios {
+      minimumSupported
+      current
+    }
+    android {
+      minimumSupported
+      current
+    }
+  }
+}
+    `;
+
+export function useAppVersionQuery(options: Omit<Urql.UseQueryArgs<AppVersionQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<AppVersionQuery>({ query: AppVersionDocument, ...options });
 };
 export const CombinedForecastV2Document = gql`
     query CombinedForecastV2($locationId: ID!, $startDate: String!, $endDate: String!) {

@@ -20,6 +20,12 @@ export type AirPressure = {
   pressure: Scalars['Float'];
 };
 
+export type AppVersion = {
+  __typename?: 'AppVersion';
+  ios: SupportedVersion;
+  android: SupportedVersion;
+};
+
 export type CombinedForecastV2 = {
   __typename?: 'CombinedForecastV2';
   date: Scalars['String'];
@@ -226,6 +232,7 @@ export type Query = {
   tidePreditionStations: Array<TidePreditionStation>;
   usgsSite?: Maybe<UsgsSite>;
   usgsSites: Array<UsgsSite>;
+  appVersion: AppVersion;
 };
 
 
@@ -283,6 +290,12 @@ export type SunDetail = {
   dusk: Scalars['String'];
   nauticalDawn: Scalars['String'];
   nauticalDusk: Scalars['String'];
+};
+
+export type SupportedVersion = {
+  __typename?: 'SupportedVersion';
+  minimumSupported: Scalars['String'];
+  current: Scalars['String'];
 };
 
 export type Temperature = {
@@ -566,6 +579,8 @@ export type ResolversTypes = {
   ModisMap: ResolverTypeWrapper<Partial<ModisMap>>;
   ModisSatellite: ResolverTypeWrapper<Partial<ModisSatellite>>;
   ModisMapEntry: ResolverTypeWrapper<Partial<ModisMapEntry>>;
+  AppVersion: ResolverTypeWrapper<Partial<AppVersion>>;
+  SupportedVersion: ResolverTypeWrapper<Partial<SupportedVersion>>;
   CurrentWind: ResolverTypeWrapper<Partial<CurrentWind>>;
   AirPressure: ResolverTypeWrapper<Partial<AirPressure>>;
 };
@@ -617,6 +632,8 @@ export type ResolversParentTypes = {
   ModisMap: Partial<ModisMap>;
   ModisSatellite: Partial<ModisSatellite>;
   ModisMapEntry: Partial<ModisMapEntry>;
+  AppVersion: Partial<AppVersion>;
+  SupportedVersion: Partial<SupportedVersion>;
   CurrentWind: Partial<CurrentWind>;
   AirPressure: Partial<AirPressure>;
 };
@@ -624,6 +641,12 @@ export type ResolversParentTypes = {
 export type AirPressureResolvers<ContextType = Context, ParentType extends ResolversParentTypes['AirPressure'] = ResolversParentTypes['AirPressure']> = {
   timestamp?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   pressure?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+};
+
+export type AppVersionResolvers<ContextType = Context, ParentType extends ResolversParentTypes['AppVersion'] = ResolversParentTypes['AppVersion']> = {
+  ios?: Resolver<ResolversTypes['SupportedVersion'], ParentType, ContextType>;
+  android?: Resolver<ResolversTypes['SupportedVersion'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType>;
 };
 
@@ -782,6 +805,7 @@ export type QueryResolvers<ContextType = Context, ParentType extends ResolversPa
   tidePreditionStations?: Resolver<Array<ResolversTypes['TidePreditionStation']>, ParentType, ContextType>;
   usgsSite?: Resolver<Maybe<ResolversTypes['UsgsSite']>, ParentType, ContextType, RequireFields<QueryUsgsSiteArgs, never>>;
   usgsSites?: Resolver<Array<ResolversTypes['UsgsSite']>, ParentType, ContextType>;
+  appVersion?: Resolver<ResolversTypes['AppVersion'], ParentType, ContextType>;
 };
 
 export type RainDetailResolvers<ContextType = Context, ParentType extends ResolversParentTypes['RainDetail'] = ResolversParentTypes['RainDetail']> = {
@@ -815,6 +839,12 @@ export type SunDetailResolvers<ContextType = Context, ParentType extends Resolve
   dusk?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   nauticalDawn?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   nauticalDusk?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+};
+
+export type SupportedVersionResolvers<ContextType = Context, ParentType extends ResolversParentTypes['SupportedVersion'] = ResolversParentTypes['SupportedVersion']> = {
+  minimumSupported?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  current?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType>;
 };
 
@@ -932,6 +962,7 @@ export type WindSummaryResolvers<ContextType = Context, ParentType extends Resol
 
 export type Resolvers<ContextType = Context> = {
   AirPressure?: AirPressureResolvers<ContextType>;
+  AppVersion?: AppVersionResolvers<ContextType>;
   CombinedForecastV2?: CombinedForecastV2Resolvers<ContextType>;
   Coords?: CoordsResolvers<ContextType>;
   CurrentWind?: CurrentWindResolvers<ContextType>;
@@ -956,6 +987,7 @@ export type Resolvers<ContextType = Context> = {
   SalinityDetail?: SalinityDetailResolvers<ContextType>;
   SalinitySummary?: SalinitySummaryResolvers<ContextType>;
   SunDetail?: SunDetailResolvers<ContextType>;
+  SupportedVersion?: SupportedVersionResolvers<ContextType>;
   Temperature?: TemperatureResolvers<ContextType>;
   TemperatureDetail?: TemperatureDetailResolvers<ContextType>;
   TemperatureResult?: TemperatureResultResolvers<ContextType>;
