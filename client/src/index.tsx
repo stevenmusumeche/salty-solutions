@@ -6,6 +6,7 @@ import { Provider as UrqlProvider, createClient, defaultExchanges } from "urql";
 import { devtoolsExchange } from "@urql/devtools";
 import { Router, Redirect, RouteComponentProps } from "@reach/router";
 import About from "./components/About";
+import Privacy from "./components/Privacy";
 import Admin from "./components/Admin";
 import MediaQueryProvider from "./providers/WindowSizeProvider";
 import { useState } from "react";
@@ -71,6 +72,7 @@ const Root = () => {
         <Router>
           <About path="/about" />
           <Admin path="/admin" />
+          <Privacy path="/privacy" />
           <App path="/:locationSlug" />
           <Home path="/" />
         </Router>
