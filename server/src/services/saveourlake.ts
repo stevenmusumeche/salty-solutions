@@ -6,6 +6,7 @@ import fs from "fs";
 import { exec } from "child_process";
 import { S3 } from "aws-sdk";
 import { getCacheVal, setCacheVal } from "./db";
+import { stringify } from "querystring";
 
 const s3 = new S3();
 
@@ -35,21 +36,40 @@ export async function getSalinityMap(
   return setCacheVal(cacheKey, s3Url);
 }
 
-// https://saveourlake.org/lpbf-programs/coastal/hydrocoast-maps/pontchartrain-basin/pontchartrain-basin-hydrocoast-map-archives/
+// https://scienceforourcoast.org/PC-programs/coastal/hydrocoast-maps/pontchartrain-basin/pontchartrain-basin-hydrocoast-map-archives/
 const getPdfUrl = async (location: LocationEntity): Promise<string> => {
+  // post to their server to get the html used to populate the salinity column
   const url =
-    "https://saveourlake.org/lpbf-programs/coastal/hydrocoast-maps/pontchartrain-basin/";
+    "https://scienceforourcoast.org/?task=wpdm_tree&ddl=0&orderby=modified&order=desc";
 
-  const result = await axios.get(url);
-  const $ = cheerio.load(result.data);
+  const result = await axios.post(url, stringify({ dir: "153" }), {
+    headers: {
+      "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+    },
+  });
+
+  let $ = cheerio.load(result.data);
 
   // salinity map URL has -3/? in it
   const salinityLinks = $("a")
     .map((i, el) => $(el).attr("href"))
     .get()
-    .filter((val) => /download.*?\-3\/\?/.test(val));
+    .filter((val) => /download.*?\-3\/$/.test(val));
 
-  return salinityLinks[0];
+  const pdfResult = await axios.get(salinityLinks[0]);
+  $ = cheerio.load(pdfResult.data);
+  const onClick = $(".wpdm-download-link")
+    .first()
+    .eq(0)
+    .attr("onclick") as string;
+
+  const matches = onClick.match(/location\.href='(?<pdfUrl>.*?)'/);
+
+  if (!matches || !matches.groups) {
+    throw new Error("Unable to determine Save Our Lake PDF url");
+  }
+
+  return matches.groups.pdfUrl;
 };
 
 const fetchPdf = async (url: string, output: string): Promise<void> => {
@@ -66,6 +86,10 @@ const fetchPdf = async (url: string, output: string): Promise<void> => {
 
 const convertPdfToJpg = async (pdf: string, jpg: string) => {
   const ghostscriptBinary = process.env.GHOSTSCRIPT_PATH || "/opt/bin/gs";
+  console.log(
+    `${ghostscriptBinary} -dSAFER -dBATCH -dNOPAUSE -sDEVICE=jpeg -r600 -sOutputFile=${jpg} -dDownScaleFactor=3 ${pdf}`
+  );
+
   await execAsync(
     `${ghostscriptBinary} -dSAFER -dBATCH -dNOPAUSE -sDEVICE=jpeg -r600 -sOutputFile=${jpg} -dDownScaleFactor=3 ${pdf}`
   );
