@@ -3388,6 +3388,15 @@
   resolved "https://npm.pkg.github.com/download/@stevenmusumeche/salty-solutions-shared/1.0.66/a1dc8ce4e39c5f0a697e11e9c96fb9c271f821832a2fa3240bc228e61de47d47#c953a8d9dc33f757b4bdc52c7241f10e477955da"
   integrity sha512-InU7x3bc0loF5B4DzWpzZueO5GhmqFgyCG6U8D/2hE4wAUmo4SZ/QNt3paqNuEeqIpYsKM62bhXUl9dWQA3m4A==
 
+"@stevenmusumeche/solunar@^1.0.4":
+  version "1.0.4"
+  resolved "https://npm.pkg.github.com/download/@stevenmusumeche/solunar/1.0.4/8718deb66f38633ec2ca42a8d48daf42a69d3c53932b466d961ec2a506541f6c#07e86abcb38cca396638ee92e65cb507d2ef5289"
+  integrity sha512-PHToIs5CXhw95cizM+O8hpijVQ5LxKMKHo7ibH0a42z211GxflQEnnaXxBbI8JS6hnmiS4tx6q0cOALWWdJoPw==
+  dependencies:
+    date-fns "^2.15.0"
+    date-fns-tz "^1.0.10"
+    suncalc "^1.8.0"
+
 "@svgr/babel-plugin-add-jsx-attribute@^4.2.0":
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/@svgr/babel-plugin-add-jsx-attribute/-/babel-plugin-add-jsx-attribute-4.2.0.tgz#dadcb6218503532d6884b210e7f3c502caaa44b1"
@@ -7136,6 +7145,11 @@ date-fns-timezone@^0.1.4:
     date-fns "^1.29.0"
     timezone-support "^1.5.5"
 
+date-fns-tz@^1.0.10:
+  version "1.0.10"
+  resolved "https://registry.yarnpkg.com/date-fns-tz/-/date-fns-tz-1.0.10.tgz#30fef0038f80534fddd8e133a6b8ca55ba313748"
+  integrity sha512-cHQAz0/9uDABaUNDM80Mj1FL4ODlxs1xEY4b0DQuAooO2UdNKvDkNbV8ogLnxLbv02Ru1HXFcot0pVvDRBgptg==
+
 date-fns@*:
   version "2.9.0"
   resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.9.0.tgz#d0b175a5c37ed5f17b97e2272bbc1fa5aec677d2"
@@ -7150,6 +7164,11 @@ date-fns@^2.14.0:
   version "2.14.0"
   resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.14.0.tgz#359a87a265bb34ef2e38f93ecf63ac453f9bc7ba"
   integrity sha512-1zD+68jhFgDIM0rF05rcwYO8cExdNqxjq4xP1QKM60Q45mnO6zaMWB4tOzrIr4M4GSLntsKeE4c9Bdl2jhL/yw==
+
+date-fns@^2.15.0:
+  version "2.15.0"
+  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.15.0.tgz#424de6b3778e4e69d3ff27046ec136af58ae5d5f"
+  integrity sha512-ZCPzAMJZn3rNUvvQIMlXhDr4A+Ar07eLeGsGREoWU19a3Pqf5oYa+ccd+B3F6XVtQY6HANMFdOQ8A+ipFnvJdQ==
 
 dayjs@^1.8.28:
   version "1.8.28"

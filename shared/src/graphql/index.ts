@@ -97,6 +97,7 @@ export type Location = {
   coords: Coords;
   sun?: Maybe<Array<SunDetail>>;
   moon?: Maybe<Array<MoonDetail>>;
+  solunar?: Maybe<Array<SolunarDetail>>;
   combinedForecastV2?: Maybe<Array<CombinedForecastV2>>;
   weatherForecast?: Maybe<Array<WeatherForecast>>;
   hourlyWeatherForecast?: Maybe<Array<WeatherForecast>>;
@@ -122,6 +123,12 @@ export type LocationSunArgs = {
 
 
 export type LocationMoonArgs = {
+  start: Scalars['String'];
+  end: Scalars['String'];
+};
+
+
+export type LocationSolunarArgs = {
   start: Scalars['String'];
   end: Scalars['String'];
 };
@@ -276,6 +283,22 @@ export type SalinitySummary = {
   __typename?: 'SalinitySummary';
   /** parts per thousand */
   mostRecent?: Maybe<SalinityDetail>;
+};
+
+export type SolunarDetail = {
+  __typename?: 'SolunarDetail';
+  date: Scalars['String'];
+  score: Scalars['Float'];
+  saltyScore: Scalars['Int'];
+  majorPeriods: Array<SolunarPeriod>;
+  minorPeriods: Array<SolunarPeriod>;
+};
+
+export type SolunarPeriod = {
+  __typename?: 'SolunarPeriod';
+  start: Scalars['String'];
+  end: Scalars['String'];
+  weight: Scalars['Int'];
 };
 
 export type SunDetail = {

@@ -100,6 +100,7 @@ export type Location = {
   coords: Coords;
   sun?: Maybe<Array<SunDetail>>;
   moon?: Maybe<Array<MoonDetail>>;
+  solunar?: Maybe<Array<SolunarDetail>>;
   combinedForecastV2?: Maybe<Array<CombinedForecastV2>>;
   weatherForecast?: Maybe<Array<WeatherForecast>>;
   hourlyWeatherForecast?: Maybe<Array<WeatherForecast>>;
@@ -125,6 +126,12 @@ export type LocationSunArgs = {
 
 
 export type LocationMoonArgs = {
+  start: Scalars['String'];
+  end: Scalars['String'];
+};
+
+
+export type LocationSolunarArgs = {
   start: Scalars['String'];
   end: Scalars['String'];
 };
@@ -279,6 +286,22 @@ export type SalinitySummary = {
   __typename?: 'SalinitySummary';
   /** parts per thousand */
   mostRecent?: Maybe<SalinityDetail>;
+};
+
+export type SolunarDetail = {
+  __typename?: 'SolunarDetail';
+  date: Scalars['String'];
+  score: Scalars['Float'];
+  saltyScore: Scalars['Int'];
+  majorPeriods: Array<SolunarPeriod>;
+  minorPeriods: Array<SolunarPeriod>;
+};
+
+export type SolunarPeriod = {
+  __typename?: 'SolunarPeriod';
+  start: Scalars['String'];
+  end: Scalars['String'];
+  weight: Scalars['Int'];
 };
 
 export type SunDetail = {
@@ -560,6 +583,8 @@ export type ResolversTypes = {
   UsgsParam: ResolverTypeWrapper<Partial<UsgsParam>>;
   SunDetail: ResolverTypeWrapper<Partial<SunDetail>>;
   MoonDetail: ResolverTypeWrapper<Partial<MoonDetail>>;
+  SolunarDetail: ResolverTypeWrapper<Partial<SolunarDetail>>;
+  SolunarPeriod: ResolverTypeWrapper<Partial<SolunarPeriod>>;
   CombinedForecastV2: ResolverTypeWrapper<Partial<CombinedForecastV2>>;
   ForecastWindDetailV2: ResolverTypeWrapper<Partial<ForecastWindDetailV2>>;
   WindDirection: ResolverTypeWrapper<Partial<WindDirection>>;
@@ -613,6 +638,8 @@ export type ResolversParentTypes = {
   UsgsParam: Partial<UsgsParam>;
   SunDetail: Partial<SunDetail>;
   MoonDetail: Partial<MoonDetail>;
+  SolunarDetail: Partial<SolunarDetail>;
+  SolunarPeriod: Partial<SolunarPeriod>;
   CombinedForecastV2: Partial<CombinedForecastV2>;
   ForecastWindDetailV2: Partial<ForecastWindDetailV2>;
   WindDirection: Partial<WindDirection>;
@@ -720,6 +747,7 @@ export type LocationResolvers<ContextType = Context, ParentType extends Resolver
   coords?: Resolver<ResolversTypes['Coords'], ParentType, ContextType>;
   sun?: Resolver<Maybe<Array<ResolversTypes['SunDetail']>>, ParentType, ContextType, RequireFields<LocationSunArgs, 'start' | 'end'>>;
   moon?: Resolver<Maybe<Array<ResolversTypes['MoonDetail']>>, ParentType, ContextType, RequireFields<LocationMoonArgs, 'start' | 'end'>>;
+  solunar?: Resolver<Maybe<Array<ResolversTypes['SolunarDetail']>>, ParentType, ContextType, RequireFields<LocationSolunarArgs, 'start' | 'end'>>;
   combinedForecastV2?: Resolver<Maybe<Array<ResolversTypes['CombinedForecastV2']>>, ParentType, ContextType, RequireFields<LocationCombinedForecastV2Args, 'start' | 'end'>>;
   weatherForecast?: Resolver<Maybe<Array<ResolversTypes['WeatherForecast']>>, ParentType, ContextType>;
   hourlyWeatherForecast?: Resolver<Maybe<Array<ResolversTypes['WeatherForecast']>>, ParentType, ContextType>;
@@ -828,6 +856,22 @@ export type SalinityDetailResolvers<ContextType = Context, ParentType extends Re
 
 export type SalinitySummaryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['SalinitySummary'] = ResolversParentTypes['SalinitySummary']> = {
   mostRecent?: Resolver<Maybe<ResolversTypes['SalinityDetail']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+};
+
+export type SolunarDetailResolvers<ContextType = Context, ParentType extends ResolversParentTypes['SolunarDetail'] = ResolversParentTypes['SolunarDetail']> = {
+  date?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  score?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  saltyScore?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  majorPeriods?: Resolver<Array<ResolversTypes['SolunarPeriod']>, ParentType, ContextType>;
+  minorPeriods?: Resolver<Array<ResolversTypes['SolunarPeriod']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+};
+
+export type SolunarPeriodResolvers<ContextType = Context, ParentType extends ResolversParentTypes['SolunarPeriod'] = ResolversParentTypes['SolunarPeriod']> = {
+  start?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  end?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  weight?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType>;
 };
 
@@ -986,6 +1030,8 @@ export type Resolvers<ContextType = Context> = {
   Salinity?: SalinityResolvers<ContextType>;
   SalinityDetail?: SalinityDetailResolvers<ContextType>;
   SalinitySummary?: SalinitySummaryResolvers<ContextType>;
+  SolunarDetail?: SolunarDetailResolvers<ContextType>;
+  SolunarPeriod?: SolunarPeriodResolvers<ContextType>;
   SunDetail?: SunDetailResolvers<ContextType>;
   SupportedVersion?: SupportedVersionResolvers<ContextType>;
   Temperature?: TemperatureResolvers<ContextType>;

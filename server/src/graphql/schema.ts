@@ -29,6 +29,7 @@ export default gql`
     coords: Coords!
     sun(start: String!, end: String!): [SunDetail!]
     moon(start: String!, end: String!): [MoonDetail!]
+    solunar(start: String!, end: String!): [SolunarDetail!]
     combinedForecastV2(start: String!, end: String!): [CombinedForecastV2!]
     weatherForecast: [WeatherForecast!]
     hourlyWeatherForecast: [WeatherForecast!]
@@ -165,6 +166,20 @@ export default gql`
     date: String!
     phase: String!
     illumination: Int!
+  }
+
+  type SolunarDetail {
+    date: String!
+    score: Float!
+    saltyScore: Int!
+    majorPeriods: [SolunarPeriod!]!
+    minorPeriods: [SolunarPeriod!]!
+  }
+
+  type SolunarPeriod {
+    start: String!
+    end: String!
+    weight: Int!
   }
 
   type WeatherForecast {

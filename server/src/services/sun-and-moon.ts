@@ -1,5 +1,6 @@
 import suncalc from "suncalc";
-import { addDays, startOfDay } from "date-fns";
+import { addDays, startOfDay, getDate, format, formatISO } from "date-fns";
+import { getSolunarData } from "@stevenmusumeche/solunar";
 
 export const getSunInfo = (
   start: Date,
@@ -27,7 +28,7 @@ export const getSunInfo = (
       sunset: result.sunset.toISOString(),
       dawn: result.dawn.toISOString(),
       dusk: result.dusk.toISOString(),
-      nauticalDusk: result.nauticalDusk.toISOString()
+      nauticalDusk: result.nauticalDusk.toISOString(),
     });
     cur = addDays(cur, 1);
   }
@@ -44,7 +45,7 @@ const getMoonInfoForDate = async (
   return {
     date: date.toISOString(),
     phase: calcPhaseName(data.phase),
-    illumination: Math.round(data.fraction * 100)
+    illumination: Math.round(data.fraction * 100),
   };
 };
 
@@ -60,8 +61,40 @@ export const getMoonInfo = async (
     dates.push(cur);
     cur = addDays(cur, 1);
   }
-  const promises = dates.map(date => getMoonInfoForDate(date, lat, long));
+  const promises = dates.map((date) => getMoonInfoForDate(date, lat, long));
   return Promise.all(promises);
+};
+
+export const getSolunarInfo = (
+  start: Date,
+  end: Date,
+  lat: number,
+  lon: number
+) => {
+  let dates = [];
+  let cur = start;
+  while (cur <= end) {
+    dates.push(cur);
+    cur = addDays(cur, 1);
+  }
+  return dates.map((date) => {
+    const data = getSolunarData(date, { lat, lon });
+    return {
+      date: formatISO(data.day.start),
+      score: data.dayScore,
+      saltyScore: data.dayScore,
+      majorPeriods: data.majorPeriods.map((x) => ({
+        ...x,
+        start: formatISO(x.start),
+        end: formatISO(x.end),
+      })),
+      minorPeriods: data.minorPeriods.map((x) => ({
+        ...x,
+        start: formatISO(x.start),
+        end: formatISO(x.end),
+      })),
+    };
+  });
 };
 
 function calcPhaseName(phase: number): string {
