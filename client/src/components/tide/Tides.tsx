@@ -220,14 +220,20 @@ const Tides: React.FC<Props> = ({
         setActiveDate={setActiveDate}
         numDays={isSmall ? 3 : 7}
       />
-      <div className="items-center justify-center flex mt-4">
-        <div className="w-4 h-4 md:w-6 md:h-6 mr-1 md:mr-2 rounded-sm bg-black flex-shrink-0"></div>
-        <div className="uppercase text-gray-700 text-sm">Predicted</div>
-        <div className="w-4 h-4 md:w-6 md:h-6 md:ml-4 ml-2 mr-1 md:mr-2 rounded-sm bg-blue-600 flex-shrink-0"></div>
-        <div className="uppercase text-gray-700 text-sm">Observed</div>
-        <div className="w-4 h-4 md:w-6 md:h-6 md:ml-4 ml-2 mr-1 md:mr-2 rounded-sm bg-teal-400 flex-shrink-0"></div>
-        <div className="uppercase text-gray-700 text-sm">
-          Solunar Feeding Period
+      <div className="items-center justify-center flex flex-wrap mt-4">
+        <div className="flex justify-center items-center">
+          <div className="w-4 h-4 md:w-6 md:h-6 mr-1 md:mr-2 rounded-sm bg-black flex-shrink-0"></div>
+          <div className="uppercase text-gray-700 text-sm">Predicted</div>
+        </div>
+        <div className="flex justify-center items-center">
+          <div className="w-4 h-4 md:w-6 md:h-6 md:ml-4 ml-2 mr-1 md:mr-2 rounded-sm bg-blue-600 flex-shrink-0"></div>
+          <div className="uppercase text-gray-700 text-sm">Observed</div>
+        </div>
+        <div className="flex justify-center items-center">
+          <div className="w-4 h-4 md:w-6 md:h-6 md:ml-4 ml-2 mr-1 md:mr-2 rounded-sm bg-teal-400 flex-shrink-0"></div>
+          <div className="uppercase text-gray-700 text-sm">
+            Solunar Feeding Period
+          </div>
         </div>
       </div>
       {isSmall && (

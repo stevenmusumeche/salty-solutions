@@ -217,11 +217,14 @@ const MainTideChart: React.FC<Props> = ({
         const diff = differenceInMinutes(end, start);
         const midPoint = addMinutes(start, diff / 2);
 
+        const fishWidth = isSmall ? "32px" : "15px";
+        const fishHeight = isSmall ? "105px" : "50px";
+
         let data = [];
         if (isSameDay(start, date)) {
           data.push({ x: start, y: y0 });
         }
-        if (isSameDay(midPoint, date)) {
+        if (!isSmall && isSameDay(midPoint, date)) {
           data.push({ x: midPoint, y: y0 });
         }
 
@@ -229,13 +232,15 @@ const MainTideChart: React.FC<Props> = ({
           <VictoryScatter
             key={period.start}
             data={data}
-            dataComponent={<Fish />}
+            dataComponent={<Fish width={fishWidth} fishHeight={fishHeight} />}
           />,
           period.weight > 0 ? (
             <VictoryScatter
               key={period.start}
               data={data}
-              dataComponent={<Fish offset={true} />}
+              dataComponent={
+                <Fish offset={true} width={fishWidth} fishHeight={fishHeight} />
+              }
             />
           ) : null,
         ];
@@ -243,6 +248,10 @@ const MainTideChart: React.FC<Props> = ({
 
       {solunarData.minorPeriods.map((period) => {
         const start = new Date(period.start);
+
+        const fishWidth = isSmall ? "22px" : "15px";
+        const fishHeight = isSmall ? "75px" : "50px";
+
         let data = [];
         if (isSameDay(start, date)) {
           data.push({ x: start, y: y0 });
@@ -251,7 +260,7 @@ const MainTideChart: React.FC<Props> = ({
           <VictoryScatter
             key={period.start}
             data={data}
-            dataComponent={<Fish />}
+            dataComponent={<Fish width={fishWidth} fishHeight={fishHeight} />}
           />
         );
       })}
@@ -304,19 +313,21 @@ const renderSolunarPeriod = (date: Date) => {
 const Fish: React.FC<any> = ({
   x,
   y,
-  datum,
-  index,
-  data,
   offset,
-  ...props
+  height = "50px",
+  width = "15px",
 }) => {
+  const { isSmall } = useBreakpoints();
+  let yAdjust = 0;
+  if (offset) yAdjust += isSmall ? 10 : 7;
+  if (isSmall) yAdjust += 2;
+
   return (
     <svg
-      height="50px"
-      width="15px"
+      height={height}
+      width={width}
       x={x + 1}
-      y={y - 29 - (offset ? 7 : 0)}
-      {...props}
+      y={y - 29 - yAdjust}
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 25 81 30"
       version="1.1"
