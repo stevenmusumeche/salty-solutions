@@ -3383,10 +3383,10 @@
   resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-0.7.0.tgz#9a06f4f137ee84d7df0460c1fdb1135ffa6c50fd"
   integrity sha512-ONhaKPIufzzrlNbqtWFFd+jlnemX6lJAgq9ZeiZtS7I1PIf/la7CW4m83rTXRnVnsMbW2k56pGYu7AUFJD9Pow==
 
-"@stevenmusumeche/salty-solutions-shared@^1.0.66":
-  version "1.0.66"
-  resolved "https://npm.pkg.github.com/download/@stevenmusumeche/salty-solutions-shared/1.0.66/a1dc8ce4e39c5f0a697e11e9c96fb9c271f821832a2fa3240bc228e61de47d47#c953a8d9dc33f757b4bdc52c7241f10e477955da"
-  integrity sha512-InU7x3bc0loF5B4DzWpzZueO5GhmqFgyCG6U8D/2hE4wAUmo4SZ/QNt3paqNuEeqIpYsKM62bhXUl9dWQA3m4A==
+"@stevenmusumeche/salty-solutions-shared@^1.0.70":
+  version "1.0.70"
+  resolved "https://npm.pkg.github.com/download/@stevenmusumeche/salty-solutions-shared/1.0.70/e7ae71217b5dc6179b7955acdcdb06b381655ffc14d450144ba0c52039e6c0a4#512d21e9fd9cf4f86f3b662d74d0a88146fb7584"
+  integrity sha512-8pdDItbRURO4eperVfUdUe6cj98BZjPW4wTJJuco661adDbLloDmN3S5J+D8sojnmUwI8BI6HWP3YUz5UJ3AcQ==
 
 "@stevenmusumeche/solunar@^1.0.4":
   version "1.0.4"

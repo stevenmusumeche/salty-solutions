@@ -1,6 +1,6 @@
 import React from "react";
 import { VictoryChart, VictoryAxis, VictoryLine, VictoryArea } from "victory";
-import { renderBackgroundColor, Y_PADDING } from "./tide-helpers";
+import { renderBackgroundColor } from "./tide-helpers";
 import useBreakpoints from "../../hooks/useBreakpoints";
 import {
   addHours,
@@ -13,7 +13,10 @@ import {
   getHours,
   isWithinInterval,
 } from "date-fns";
-import { buildDatasets } from "@stevenmusumeche/salty-solutions-shared/dist/tide-helpers";
+import {
+  buildDatasets,
+  Y_PADDING,
+} from "@stevenmusumeche/salty-solutions-shared/dist/tide-helpers";
 import {
   SunDetailFieldsFragment,
   TideDetailFieldsFragment,
@@ -160,7 +163,7 @@ const MultiDayTideCharts: React.FC<Props> = ({
               fill: "#4a5568",
             },
           }}
-          y0={() => (min < 0 ? min - Y_PADDING : 0)}
+          y0={() => (min - Y_PADDING > 0 ? 0 : min - Y_PADDING)}
         />
 
         {/* background colors for time periods like night, dusk, etc */}

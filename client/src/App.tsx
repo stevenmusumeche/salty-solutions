@@ -131,13 +131,13 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
       <JumpNav dispatch={dispatch} />
 
       <div className="container p-4 md:p-0 md:mx-auto md:my-0 md:mt-8">
-        <span id="current-conditions"></span>
+        {/* <span id="current-conditions"></span>
         <div className="current-conditions-grid">
           <WindCard locationId={locationId} sites={windSites} />
           <AirTempCard locationId={locationId} />
           <WaterTempCard locationId={locationId} sites={waterTempSites} />
           <SalinityCard locationId={locationId} sites={salinitySites} />
-        </div>
+        </div> */}
 
         <span id="tides"></span>
         <div className="bg-white rounded-lg shadow-md p-4 mb-4 md:mb-8">
@@ -150,7 +150,7 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
           />
         </div>
 
-        <Donate />
+        {/* <Donate />
 
         <span id="forecast"></span>
         <CombinedForecastV2 locationId={locationId} />
@@ -195,7 +195,7 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
           }
         >
           <HourlyForecast locationId={locationId} />
-        </CollapsibleSection>
+        </CollapsibleSection> */}
       </div>
     </Shell>
   );

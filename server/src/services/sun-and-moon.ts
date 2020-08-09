@@ -1,6 +1,6 @@
-import suncalc from "suncalc";
-import { addDays, startOfDay, getDate, format, formatISO } from "date-fns";
 import { getSolunarData } from "@stevenmusumeche/solunar";
+import { addDays, formatISO, startOfDay } from "date-fns";
+import suncalc from "suncalc";
 
 export const getSunInfo = (
   start: Date,

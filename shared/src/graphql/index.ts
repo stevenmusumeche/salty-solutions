@@ -878,6 +878,9 @@ export type TideQuery = (
     )>>, moon?: Maybe<Array<(
       { __typename?: 'MoonDetail' }
       & MoonDetailFieldsFragment
+    )>>, solunar?: Maybe<Array<(
+      { __typename?: 'SolunarDetail' }
+      & SolunarDetailFieldsFragment
     )>> }
   )> }
 );
@@ -909,6 +912,23 @@ export type SunDetailFieldsFragment = (
 export type MoonDetailFieldsFragment = (
   { __typename?: 'MoonDetail' }
   & Pick<MoonDetail, 'date' | 'phase' | 'illumination'>
+);
+
+export type SolunarDetailFieldsFragment = (
+  { __typename?: 'SolunarDetail' }
+  & Pick<SolunarDetail, 'date' | 'score'>
+  & { majorPeriods: Array<(
+    { __typename?: 'SolunarPeriod' }
+    & SolunarPeriodFieldsFragment
+  )>, minorPeriods: Array<(
+    { __typename?: 'SolunarPeriod' }
+    & SolunarPeriodFieldsFragment
+  )> }
+);
+
+export type SolunarPeriodFieldsFragment = (
+  { __typename?: 'SolunarPeriod' }
+  & Pick<SolunarPeriod, 'start' | 'end' | 'weight'>
 );
 
 export const CombinedForecastV2DetailFragmentDoc = gql`
@@ -1142,6 +1162,25 @@ export const MoonDetailFieldsFragmentDoc = gql`
   illumination
 }
     `;
+export const SolunarPeriodFieldsFragmentDoc = gql`
+    fragment SolunarPeriodFields on SolunarPeriod {
+  start
+  end
+  weight
+}
+    `;
+export const SolunarDetailFieldsFragmentDoc = gql`
+    fragment SolunarDetailFields on SolunarDetail {
+  date
+  score
+  majorPeriods {
+    ...SolunarPeriodFields
+  }
+  minorPeriods {
+    ...SolunarPeriodFields
+  }
+}
+    ${SolunarPeriodFieldsFragmentDoc}`;
 export const AdminDocument = gql`
     query Admin {
   tidePreditionStations {
@@ -1337,13 +1376,17 @@ export const TideDocument = gql`
     moon(start: $startDate, end: $endDate) {
       ...MoonDetailFields
     }
+    solunar(start: $startDate, end: $endDate) {
+      ...SolunarDetailFields
+    }
   }
 }
     ${TideDetailFieldsFragmentDoc}
 ${UsgsSiteFieldsFragmentDoc}
 ${WaterHeightFieldsFragmentDoc}
 ${SunDetailFieldsFragmentDoc}
-${MoonDetailFieldsFragmentDoc}`;
+${MoonDetailFieldsFragmentDoc}
+${SolunarDetailFieldsFragmentDoc}`;
 
 export function useTideQuery(options: Omit<Urql.UseQueryArgs<TideQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<TideQuery>({ query: TideDocument, ...options });

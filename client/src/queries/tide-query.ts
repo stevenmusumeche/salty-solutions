@@ -34,6 +34,9 @@ const TIDE_QUERY = gql`
       moon(start: $startDate, end: $endDate) {
         ...MoonDetailFields
       }
+      solunar(start: $startDate, end: $endDate) {
+        ...SolunarDetailFields
+      }
     }
   }
 
@@ -69,5 +72,22 @@ const TIDE_QUERY = gql`
     date
     phase
     illumination
+  }
+
+  fragment SolunarDetailFields on SolunarDetail {
+    date
+    score
+    majorPeriods {
+      ...SolunarPeriodFields
+    }
+    minorPeriods {
+      ...SolunarPeriodFields
+    }
+  }
+
+  fragment SolunarPeriodFields on SolunarPeriod {
+    start
+    end
+    weight
   }
 `;

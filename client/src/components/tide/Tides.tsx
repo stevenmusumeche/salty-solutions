@@ -99,6 +99,7 @@ const Tides: React.FC<Props> = ({
     !tideResult.data.location ||
     !tideResult.data.location.sun ||
     !tideResult.data.location.moon ||
+    !tideResult.data.location.solunar ||
     !waterHeightBase
   ) {
     return (
@@ -134,6 +135,12 @@ const Tides: React.FC<Props> = ({
   if (!sunData) return <Fetching />;
 
   const moonData = tideResult.data.location.moon.filter(
+    (x) =>
+      startOfDay(new Date(x.date)).toISOString() ===
+      startOfDay(date).toISOString()
+  )[0];
+
+  const solunarData = tideResult.data.location.solunar.filter(
     (x) =>
       startOfDay(new Date(x.date)).toISOString() ===
       startOfDay(date).toISOString()
@@ -203,6 +210,7 @@ const Tides: React.FC<Props> = ({
         curDayTides={curDayTides}
         waterHeightData={curDayWaterHeight}
         date={date}
+        solunarData={solunarData}
       />
       <MultiDayTideCharts
         sunData={tideResult.data.location.sun}
@@ -217,6 +225,10 @@ const Tides: React.FC<Props> = ({
         <div className="uppercase text-gray-700 text-sm">Predicted</div>
         <div className="w-4 h-4 md:w-6 md:h-6 md:ml-4 ml-2 mr-1 md:mr-2 rounded-sm bg-blue-600 flex-shrink-0"></div>
         <div className="uppercase text-gray-700 text-sm">Observed</div>
+        <div className="w-4 h-4 md:w-6 md:h-6 md:ml-4 ml-2 mr-1 md:mr-2 rounded-sm bg-teal-400 flex-shrink-0"></div>
+        <div className="uppercase text-gray-700 text-sm">
+          Solunar Feeding Period
+        </div>
       </div>
       {isSmall && (
         <HighLowTable
