@@ -22,6 +22,8 @@ import {
   useTideQuery,
   SunDetailFieldsFragment,
   MoonDetailFieldsFragment,
+  SolunarDetailFieldsFragment,
+  SolunarPeriodFieldsFragment,
 } from "@stevenmusumeche/salty-solutions-shared/dist/graphql";
 
 interface Props {
@@ -203,6 +205,7 @@ const Tides: React.FC<Props> = ({
           hiLowData={hiLowData}
           sunData={sunData}
           moonData={moonData}
+          solunarData={solunarData}
         />
       )}
       <MainTideChart
@@ -230,10 +233,8 @@ const Tides: React.FC<Props> = ({
           <div className="uppercase text-gray-700 text-sm">Observed</div>
         </div>
         <div className="flex justify-center items-center">
-          <div className="w-4 h-4 md:w-6 md:h-6 md:ml-4 ml-2 mr-1 md:mr-2 rounded-sm bg-teal-400 flex-shrink-0"></div>
-          <div className="uppercase text-gray-700 text-sm">
-            Solunar Feeding Period
-          </div>
+          <div className="w-4 h-4 md:w-6 md:h-6 md:ml-4 ml-2 mr-1 md:mr-2 rounded-sm bg-teal-600 flex-shrink-0"></div>
+          <div className="uppercase text-gray-700 text-sm">Feeding Period</div>
         </div>
       </div>
       {isSmall && (
@@ -241,6 +242,7 @@ const Tides: React.FC<Props> = ({
           hiLowData={hiLowData}
           sunData={sunData}
           moonData={moonData}
+          solunarData={solunarData}
         />
       )}
     </>
@@ -253,9 +255,17 @@ const HighLowTable: React.FC<{
   hiLowData: any[];
   sunData?: SunDetailFieldsFragment;
   moonData: MoonDetailFieldsFragment;
-}> = ({ hiLowData, sunData, moonData }) => {
+  solunarData: SolunarDetailFieldsFragment;
+}> = ({ hiLowData, sunData, moonData, solunarData }) => {
   const formatDate = (x: string) => (
     <div className="lowercase">{format(new Date(x), "h:mma")}</div>
+  );
+
+  const formatPeriod = (period: SolunarPeriodFieldsFragment) => (
+    <div className="lowercase my-1">
+      {format(new Date(period.start), "h:mma")}-
+      {format(new Date(period.end), "h:mma")}
+    </div>
   );
 
   return (
@@ -308,6 +318,24 @@ const HighLowTable: React.FC<{
           </div>
         </Pill>
       )}
+      <Pill
+        color="teal-600"
+        className="col-span-2 moon-pill"
+        label={`Major Feeding`}
+      >
+        {solunarData.majorPeriods.map((period, i) => {
+          return formatPeriod(period);
+        })}
+      </Pill>
+      <Pill
+        color="teal-600"
+        className="col-span-2 moon-pill"
+        label={`Minor Feeding`}
+      >
+        {solunarData.minorPeriods.map((period, i) => {
+          return formatPeriod(period);
+        })}
+      </Pill>
     </div>
   );
 };
