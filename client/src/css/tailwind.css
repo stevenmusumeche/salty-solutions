@@ -250,13 +250,3 @@ html {
   height: 152px; /* fixed header height*/
   margin: -152px 0 0; /* negative fixed header height */
 }
-
-@media (max-width: 767px) {
-  .moon-pill > div:first-child {
-    @apply py-1 px-5 w-auto;
-  }
-
-  .moon-pill > div:last-child {
-    @apply w-full;
-  }
-}
