@@ -36,6 +36,7 @@ provider:
         - ${cf:ss-queue-${self:provider.stage}.WindFinderPreloaderQueueArn}
         - ${cf:ss-queue-${self:provider.stage}.UsgsPreloaderQueueArn}
         - ${cf:ss-queue-${self:provider.stage}.NoaaPreloaderQueueArn}
+        - ${cf:ss-queue-${self:provider.stage}.NoaaBuoyPreloaderQueueArn}
     - Effect: Allow
       Action:
         - s3:*
