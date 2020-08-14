@@ -623,6 +623,7 @@ export async function storeBuoyData(stationId: string, numHours = 24) {
   const startDate = subHours(endDate, numHours);
 
   const data = await scrapeBuoyData(station, startDate, endDate);
+  console.log(data);
 
   await saveToDynamo(station, data);
 }
@@ -655,12 +656,13 @@ async function scrapeBuoyData(
       const timestamp = `${entry[0]}-${entry[1]}-${entry[2]}T${entry[3]}:${entry[4]}:00Z`;
       if (
         station.availableParams.includes(NoaaProduct.Wind) &&
-        entry[5] !== "MM" &&
         entry[6] !== "MM"
       ) {
+        const direction = entry[5] === "MM" ? 0 : entry[5];
+
         wind = {
-          directionDegrees: Number(entry[5]),
-          direction: degreesToCompass(Number(entry[5])),
+          directionDegrees: Number(direction),
+          direction: degreesToCompass(Number(direction)),
           speed: Math.round(metersPerSecondToMph(Number(entry[6])) * 10) / 10,
         };
       }
