@@ -181,7 +181,7 @@ const Tides: React.FC<Props> = ({
             onChange={setActiveDate}
             value={date}
             clearIcon={null}
-            className="inline-block"
+            className="tide-date-picker"
           />
         </div>
         <div className="md:ml-4 md:mb-4">
@@ -252,7 +252,7 @@ const HighLowTable: React.FC<{
   );
 
   const formatPeriod = (period: SolunarPeriodFieldsFragment) => (
-    <div className="lowercase my-1">
+    <div className="lowercase my-1" key={period.start}>
       {format(new Date(period.start), "h:mma")}-
       {format(new Date(period.end), "h:mma")}
     </div>

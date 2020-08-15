@@ -63,6 +63,8 @@ const ForecastTide: FC<Props> = ({
   );
   const { min, max } = tideBoundaries;
 
+  const y0 = min - Y_PADDING > 0 ? 0 : min - Y_PADDING;
+
   return (
     <div className="mx-4 mt-1">
       <VictoryChart
@@ -97,7 +99,7 @@ const ForecastTide: FC<Props> = ({
               fill: "#4a5568",
             },
           }}
-          y0={() => (min < 0 ? min - Y_PADDING : 0)}
+          y0={() => y0}
         />
 
         {/* background colors for time periods like night, dusk, etc */}
@@ -131,7 +133,7 @@ const ForecastTide: FC<Props> = ({
         {/* actual tide line */}
         <VictoryArea
           data={tideData}
-          y0={() => (min < 0 ? min - Y_PADDING : 0)}
+          y0={() => y0}
           scale={{ x: "time", y: "linear" }}
           interpolation={"natural"}
           style={{

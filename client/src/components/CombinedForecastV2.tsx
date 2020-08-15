@@ -31,6 +31,7 @@ const CombinedForecastV2: FC<Props> = ({ locationId }) => {
 
   let sunData = forecast.data?.location?.sun || [];
   let tideData = forecast.data?.location?.tidePreditionStations[0]?.tides || [];
+  let solunarData = forecast.data?.location?.solunar || [];
   let tideStationName =
     forecast.data?.location?.tidePreditionStations[0].name || "";
 
@@ -65,7 +66,11 @@ const CombinedForecastV2: FC<Props> = ({ locationId }) => {
                 date={date}
                 sunData={sunData}
               />
-              <ForecastSun sunData={sunData} date={date} />
+              <ForecastSun
+                sunData={sunData}
+                solunarData={solunarData}
+                date={date}
+              />
               <ForecastText day={datum.day} night={datum.night} />
             </div>
           </CardWrapper>

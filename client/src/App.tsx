@@ -137,7 +137,7 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
           <AirTempCard locationId={locationId} />
           <WaterTempCard locationId={locationId} sites={waterTempSites} />
           <SalinityCard locationId={locationId} sites={salinitySites} />
-        </div> */}
+        </div>
 
         <span id="tides"></span>
         <div className="bg-white rounded-lg shadow-md p-4 mb-4 md:mb-8">
@@ -150,12 +150,12 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
           />
         </div>
 
-        {/* <Donate />
+        <Donate /> */}
 
         <span id="forecast"></span>
         <CombinedForecastV2 locationId={locationId} />
 
-        <span id="radar"></span>
+        {/* <span id="radar"></span>
         <CollapsibleSection
           title="Radar"
           visible={sections.radar}

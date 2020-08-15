@@ -540,6 +540,9 @@ export type CombinedForecastV2Query = (
     )>, sun?: Maybe<Array<(
       { __typename?: 'SunDetail' }
       & SunDetailFieldsFragment
+    )>>, solunar?: Maybe<Array<(
+      { __typename?: 'SolunarDetail' }
+      & SolunarDetailFieldsFragment
     )>> }
   )> }
 );
@@ -1239,11 +1242,15 @@ export const CombinedForecastV2Document = gql`
     sun(start: $startDate, end: $endDate) {
       ...SunDetailFields
     }
+    solunar(start: $startDate, end: $endDate) {
+      ...SolunarDetailFields
+    }
   }
 }
     ${CombinedForecastV2DetailFragmentDoc}
 ${TideDetailFieldsFragmentDoc}
-${SunDetailFieldsFragmentDoc}`;
+${SunDetailFieldsFragmentDoc}
+${SolunarDetailFieldsFragmentDoc}`;
 
 export function useCombinedForecastV2Query(options: Omit<Urql.UseQueryArgs<CombinedForecastV2QueryVariables>, 'query'> = {}) {
   return Urql.useQuery<CombinedForecastV2Query>({ query: CombinedForecastV2Document, ...options });

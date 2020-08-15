@@ -200,8 +200,7 @@ const renderSolunarPeriod = (
   y0: number,
   type: "major" | "minor"
 ) => {
-  let height = y0 + (type === "major" ? 0.15 : 0.075);
-  if (period.weight > 0) height += 0.075;
+  let height = y0 + 0.2;
 
   return (
     <VictoryArea
@@ -221,7 +220,8 @@ const renderSolunarPeriod = (
       scale={{ x: "time", y: "linear" }}
       style={{
         data: {
-          fill: "rgba(49, 151, 149, .9)",
+          strokeWidth: 0,
+          fill: "rgba(49, 151, 149, .7)",
         },
       }}
     />

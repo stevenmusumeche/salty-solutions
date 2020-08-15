@@ -118,8 +118,11 @@ html {
   top: 100% !important;
 }
 
-.react-date-picker__wrapper {
-  @apply bg-white rounded border border-gray-300 h-8 px-2 w-auto;
+.tide-date-picker {
+  @apply inline-block;
+}
+.tide-date-picker .react-date-picker__wrapper {
+  @apply bg-white rounded border border-gray-300 h-8 px-1 w-auto text-sm;
 }
 
 .react-date-picker__inputGroup {
