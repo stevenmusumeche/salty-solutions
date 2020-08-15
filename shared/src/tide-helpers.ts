@@ -13,7 +13,7 @@ import {
   TideDetail,
 } from "./graphql";
 
-export const Y_PADDING = 0.3;
+export const Y_PADDING = 0.4;
 
 export const buildDatasets = (
   sunData: SunDetailFieldsFragment,
@@ -97,7 +97,7 @@ function calcTideBoundaries(
         min: cur.min < tide.height ? cur.min : tide.height,
       };
     },
-    { max: 0, min: 0 }
+    { max: 0, min: 99 }
   );
 
   return waterHeightData.reduce((cur, waterHeight) => {

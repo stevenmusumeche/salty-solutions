@@ -1,4 +1,15 @@
 import {
+  SolunarDetailFieldsFragment,
+  SolunarPeriodFieldsFragment,
+  SunDetailFieldsFragment,
+  TideDetailFieldsFragment,
+  WaterHeightFieldsFragment,
+} from "@stevenmusumeche/salty-solutions-shared/dist/graphql";
+import {
+  buildDatasets,
+  Y_PADDING,
+} from "@stevenmusumeche/salty-solutions-shared/dist/tide-helpers";
+import {
   addHours,
   endOfDay,
   format,
@@ -14,24 +25,15 @@ import {
   VictoryLine,
   VictoryScatter,
 } from "victory";
-
 import useBreakpoints from "../../hooks/useBreakpoints";
-import {
-  buildDatasets,
-  Y_PADDING,
-} from "@stevenmusumeche/salty-solutions-shared/dist/tide-helpers";
 import { renderBackgroundColor } from "./tide-helpers";
-import {
-  SunDetailFieldsFragment,
-  TideDetailFieldsFragment,
-  WaterHeightFieldsFragment,
-} from "@stevenmusumeche/salty-solutions-shared/dist/graphql";
 
 interface Props {
   sunData: SunDetailFieldsFragment;
   curDayTides: TideDetailFieldsFragment[];
   waterHeightData: WaterHeightFieldsFragment[];
   date: Date;
+  solunarData: SolunarDetailFieldsFragment;
 }
 
 const MainTideChart: React.FC<Props> = ({
@@ -39,6 +41,7 @@ const MainTideChart: React.FC<Props> = ({
   curDayTides,
   waterHeightData: rawWaterHeightData,
   date,
+  solunarData,
 }) => {
   const { isSmall } = useBreakpoints();
 
@@ -57,6 +60,8 @@ const MainTideChart: React.FC<Props> = ({
   for (let i = 0; i <= 24; i += isSmall ? 4 : 2) {
     timeTickValues.push(addHours(startOfDay(date), i));
   }
+
+  const y0 = min - Y_PADDING > 0 ? 0 : min - Y_PADDING;
 
   return (
     <VictoryChart
@@ -89,7 +94,7 @@ const MainTideChart: React.FC<Props> = ({
             fill: "#4a5568",
           },
         }}
-        y0={() => (min < 0 ? min - Y_PADDING : 0)}
+        y0={() => y0}
       />
 
       {/* background colors for time periods like night, dusk, etc */}
@@ -115,11 +120,6 @@ const MainTideChart: React.FC<Props> = ({
       <VictoryAxis
         dependentAxis
         style={{
-          grid: {
-            stroke: "718096",
-            strokeWidth: (y) => (isSmall ? 0 : y === 0 && min < 0 ? 2 : 1),
-            strokeDasharray: (y) => (y === 0 && min < 0 ? "12 6" : "2 10"),
-          },
           tickLabels: { fontSize: isSmall ? 20 : 8 },
         }}
         tickCount={isSmall ? 6 : 10}
@@ -182,8 +182,47 @@ const MainTideChart: React.FC<Props> = ({
           }}
         />
       )}
+
+      {solunarData.majorPeriods.map((period) =>
+        renderSolunarPeriod(period, y0)
+      )}
+      {solunarData.minorPeriods.map((period) =>
+        renderSolunarPeriod(period, y0)
+      )}
     </VictoryChart>
   );
 };
 
 export default MainTideChart;
+
+const renderSolunarPeriod = (
+  period: SolunarPeriodFieldsFragment,
+  y0: number
+) => {
+  let height = y0 + 0.2;
+
+  return (
+    <VictoryArea
+      key={period.start}
+      data={[
+        {
+          x: new Date(period.start),
+          y: height,
+          y0: y0,
+        },
+        {
+          x: new Date(period.end),
+          y: height,
+          y0: y0,
+        },
+      ]}
+      scale={{ x: "time", y: "linear" }}
+      style={{
+        data: {
+          strokeWidth: 0,
+          fill: "rgba(49, 151, 149, .7)",
+        },
+      }}
+    />
+  );
+};

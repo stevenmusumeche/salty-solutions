@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@stevenmusumeche/solunar": "^1.0.4",
     "@types/graphql": "^14.2.1",
     "@types/suncalc": "^1.8.0",
     "apollo-server-koa": "^2.14.2",

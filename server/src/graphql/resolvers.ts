@@ -91,6 +91,14 @@ const resolvers: Resolvers & { UsgsParam: Object; NoaaParam: Object } = {
         location.coords.lon
       );
     },
+    solunar: async (location, args, { services }) => {
+      return services.sunMoon.getSolunarInfo(
+        new Date(args.start),
+        new Date(args.end),
+        location.coords.lat,
+        location.coords.lon
+      );
+    },
     combinedForecastV2: async (location, args, { services }) => {
       return services.combinedForecast.getCombinedForecastV2(
         location,

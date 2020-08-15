@@ -22,6 +22,8 @@ import {
   useTideQuery,
   SunDetailFieldsFragment,
   MoonDetailFieldsFragment,
+  SolunarDetailFieldsFragment,
+  SolunarPeriodFieldsFragment,
 } from "@stevenmusumeche/salty-solutions-shared/dist/graphql";
 
 interface Props {
@@ -99,6 +101,7 @@ const Tides: React.FC<Props> = ({
     !tideResult.data.location ||
     !tideResult.data.location.sun ||
     !tideResult.data.location.moon ||
+    !tideResult.data.location.solunar ||
     !waterHeightBase
   ) {
     return (
@@ -139,6 +142,12 @@ const Tides: React.FC<Props> = ({
       startOfDay(date).toISOString()
   )[0];
 
+  const solunarData = tideResult.data.location.solunar.filter(
+    (x) =>
+      startOfDay(new Date(x.date)).toISOString() ===
+      startOfDay(date).toISOString()
+  )[0];
+
   const curDayWaterHeight = waterHeightBase.filter((x) =>
     isWithinInterval(new Date(x.timestamp), {
       start: startOfDay(date),
@@ -172,7 +181,7 @@ const Tides: React.FC<Props> = ({
             onChange={setActiveDate}
             value={date}
             clearIcon={null}
-            className="inline-block"
+            className="tide-date-picker"
           />
         </div>
         <div className="md:ml-4 md:mb-4">
@@ -191,18 +200,12 @@ const Tides: React.FC<Props> = ({
           />
         </div>
       </div>
-      {!isSmall && (
-        <HighLowTable
-          hiLowData={hiLowData}
-          sunData={sunData}
-          moonData={moonData}
-        />
-      )}
       <MainTideChart
         sunData={sunData}
         curDayTides={curDayTides}
         waterHeightData={curDayWaterHeight}
         date={date}
+        solunarData={solunarData}
       />
       <MultiDayTideCharts
         sunData={tideResult.data.location.sun}
@@ -212,19 +215,26 @@ const Tides: React.FC<Props> = ({
         setActiveDate={setActiveDate}
         numDays={isSmall ? 3 : 7}
       />
-      <div className="items-center justify-center flex mt-4">
-        <div className="w-4 h-4 md:w-6 md:h-6 mr-1 md:mr-2 rounded-sm bg-black flex-shrink-0"></div>
-        <div className="uppercase text-gray-700 text-sm">Predicted</div>
-        <div className="w-4 h-4 md:w-6 md:h-6 md:ml-4 ml-2 mr-1 md:mr-2 rounded-sm bg-blue-600 flex-shrink-0"></div>
-        <div className="uppercase text-gray-700 text-sm">Observed</div>
+      <div className="items-center justify-center flex flex-wrap mt-4">
+        <div className="flex justify-center items-center">
+          <div className="w-4 h-4 md:w-6 md:h-6 mr-1 md:mr-2 rounded-sm bg-black flex-shrink-0"></div>
+          <div className="uppercase text-gray-700 text-sm">Predicted</div>
+        </div>
+        <div className="flex justify-center items-center">
+          <div className="w-4 h-4 md:w-6 md:h-6 md:ml-4 ml-2 mr-1 md:mr-2 rounded-sm bg-blue-600 flex-shrink-0"></div>
+          <div className="uppercase text-gray-700 text-sm">Observed</div>
+        </div>
+        <div className="flex justify-center items-center">
+          <div className="w-4 h-4 md:w-6 md:h-6 md:ml-4 ml-2 mr-1 md:mr-2 rounded-sm bg-teal-600 bg-opacity-75 flex-shrink-0"></div>
+          <div className="uppercase text-gray-700 text-sm">Feeding Period</div>
+        </div>
       </div>
-      {isSmall && (
-        <HighLowTable
-          hiLowData={hiLowData}
-          sunData={sunData}
-          moonData={moonData}
-        />
-      )}
+      <HighLowTable
+        hiLowData={hiLowData}
+        sunData={sunData}
+        moonData={moonData}
+        solunarData={solunarData}
+      />
     </>
   );
 };
@@ -235,61 +245,69 @@ const HighLowTable: React.FC<{
   hiLowData: any[];
   sunData?: SunDetailFieldsFragment;
   moonData: MoonDetailFieldsFragment;
-}> = ({ hiLowData, sunData, moonData }) => {
+  solunarData: SolunarDetailFieldsFragment;
+}> = ({ hiLowData, sunData, moonData, solunarData }) => {
   const formatDate = (x: string) => (
     <div className="lowercase">{format(new Date(x), "h:mma")}</div>
   );
 
+  const formatPeriod = (period: SolunarPeriodFieldsFragment) => (
+    <div className="lowercase my-1" key={period.start}>
+      {format(new Date(period.start), "h:mma")}-
+      {format(new Date(period.end), "h:mma")}
+    </div>
+  );
+
   return (
-    <div className="mt-4 md:mt-0 text-gray-700 grid grid-cols-2 md:flex md:flex-wrap md:items-center md:justify-center">
-      {hiLowData.map(({ x, y, type }, i) => (
-        <Pill key={i} label={`${type} Tide`}>
-          {formatDate(x)}
+    <div className="mt-4 md:mt-8 text-gray-700 grid grid-cols-1 md:grid-cols-3 md:gap-8">
+      <div>
+        {moonData && moonData.phase && (
+          <Pill label="Moon Phase" color="blue-800">
+            <div className="flex items-center justify-center">
+              {moonData.phase} <MoonPhase phase={moonData.phase} />
+            </div>
+          </Pill>
+        )}
+        <Pill color="teal-600" label={`Major Feeding`}>
+          {solunarData.majorPeriods.map((period, i) => {
+            return formatPeriod(period);
+          })}
         </Pill>
-      ))}
-
-      {sunData && sunData.nauticalDawn && (
-        <Pill label="Naut Dawn" color="orange-700">
-          {formatDate(sunData.nauticalDawn)}
+        <Pill color="teal-600" label={`Minor Feeding`}>
+          {solunarData.minorPeriods.map((period, i) => {
+            return formatPeriod(period);
+          })}
         </Pill>
-      )}
-
-      {sunData && sunData.dawn && (
-        <Pill label="Dawn" color="orange-700">
-          {formatDate(sunData.dawn)}
-        </Pill>
-      )}
-      {sunData && sunData.sunrise && (
-        <Pill label="Sunrise" color="orange-700">
-          {formatDate(sunData.sunrise)}
-        </Pill>
-      )}
-      {sunData && sunData.sunset && (
-        <Pill label="Sunset" color="orange-700">
-          {formatDate(sunData.sunset)}
-        </Pill>
-      )}
-      {sunData && sunData.dusk && (
-        <Pill label="Dusk" color="orange-700">
-          {formatDate(sunData.dusk)}
-        </Pill>
-      )}
-      {sunData && sunData.nauticalDusk && (
-        <Pill label="Naut Dusk" color="orange-700">
-          {formatDate(sunData.nauticalDusk)}
-        </Pill>
-      )}
-      {moonData && moonData.phase && (
-        <Pill
-          label="Moon Phase"
-          color="blue-800"
-          className="col-span-2 moon-pill"
-        >
-          <div className="flex items-center justify-center">
-            {moonData.phase} <MoonPhase phase={moonData.phase} />
-          </div>
-        </Pill>
-      )}
+      </div>
+      <div>
+        {sunData && sunData.nauticalDawn && (
+          <Pill label="Nautical Dawn" color="orange-700">
+            {formatDate(sunData.nauticalDawn)}
+          </Pill>
+        )}
+        {sunData && sunData.sunrise && (
+          <Pill label="Sunrise" color="orange-700">
+            {formatDate(sunData.sunrise)}
+          </Pill>
+        )}
+        {sunData && sunData.sunset && (
+          <Pill label="Sunset" color="orange-700">
+            {formatDate(sunData.sunset)}
+          </Pill>
+        )}
+        {sunData && sunData.nauticalDusk && (
+          <Pill label="Nautical Dusk" color="orange-700">
+            {formatDate(sunData.nauticalDusk)}
+          </Pill>
+        )}
+      </div>
+      <div>
+        {hiLowData.map(({ x, y, type }, i) => (
+          <Pill key={i} label={`${type} Tide`}>
+            {formatDate(x)}
+          </Pill>
+        ))}
+      </div>
     </div>
   );
 };
@@ -302,16 +320,15 @@ const Pill: React.FC<{ label: string; color?: string; className?: string }> = ({
 }) => {
   return (
     <div
-      className={`flex items-stretch mr-2 border border-${color} rounded mb-2 ${className}`}
+      className={`grid grid-cols-2 mr-2 border border-${color} rounded mb-2 ${className} text-sm`}
       style={{ flexBasis: "1" }}
     >
       <div
-        className={`py-1 px-2 bg-${color} text-white flex items-center justify-center uppercase flex-shrink-0 w-3/5 md:w-auto`}
-        style={{ fontSize: ".6rem" }}
+        className={`py-1 px-1 md:px-2 bg-${color} text-white flex items-center justify-center uppercase tracking-widest font-light`}
       >
         {label}
       </div>
-      <div className="py-1 px-1 text-center leading-none self-center w-2/5 md:w-auto text-xs">
+      <div className="py-1 px-1 text-center leading-none self-center text-base">
         {children}
       </div>
     </div>

@@ -21,6 +21,9 @@ export const COMBINED_FORECAST_V2_QUERY = gql`
       sun(start: $startDate, end: $endDate) {
         ...SunDetailFields
       }
+      solunar(start: $startDate, end: $endDate) {
+        ...SolunarDetailFields
+      }
     }
   }
 

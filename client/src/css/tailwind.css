@@ -118,8 +118,11 @@ html {
   top: 100% !important;
 }
 
-.react-date-picker__wrapper {
-  @apply bg-white rounded border border-gray-300 h-8 px-2 w-auto;
+.tide-date-picker {
+  @apply inline-block;
+}
+.tide-date-picker .react-date-picker__wrapper {
+  @apply bg-white rounded border border-gray-300 h-8 px-1 w-auto text-sm;
 }
 
 .react-date-picker__inputGroup {
@@ -249,14 +252,4 @@ html {
   display: block;
   height: 152px; /* fixed header height*/
   margin: -152px 0 0; /* negative fixed header height */
-}
-
-@media (max-width: 767px) {
-  .moon-pill > div:first-child {
-    @apply py-1 px-5 w-auto;
-  }
-
-  .moon-pill > div:last-child {
-    @apply w-full;
-  }
 }

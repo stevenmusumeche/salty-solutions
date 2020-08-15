@@ -1,7 +1,6 @@
 import React from "react";
 import { VictoryArea } from "victory";
-
-export const Y_PADDING = 0.3;
+import { Y_PADDING } from "@stevenmusumeche/salty-solutions-shared/dist/tide-helpers";
 
 export const renderBackgroundColor = (
   data: any[],
@@ -24,7 +23,7 @@ export const renderBackgroundColor = (
           fill: color,
         },
       }}
-      y0={() => (minValue < 0 ? minValue - Y_PADDING : 0)}
+      y0={() => (minValue - Y_PADDING > 0 ? 0 : minValue - Y_PADDING)}
     />
   );
 };
