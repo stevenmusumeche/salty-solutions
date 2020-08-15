@@ -5,12 +5,14 @@ import {
   isBefore,
   startOfDay,
   subMinutes,
+  isWithinInterval,
 } from "date-fns";
 import {
   SunDetailFieldsFragment,
   TideDetailFieldsFragment,
   WaterHeightFieldsFragment,
   TideDetail,
+  SolunarDetailFieldsFragment,
 } from "./graphql";
 
 export const Y_PADDING = 0.4;
@@ -18,7 +20,8 @@ export const Y_PADDING = 0.4;
 export const buildDatasets = (
   sunData: SunDetailFieldsFragment,
   tideDetails: TideDetailFieldsFragment[],
-  waterHeight: WaterHeightFieldsFragment[]
+  waterHeight: WaterHeightFieldsFragment[],
+  solunarDetails?: SolunarDetailFieldsFragment
 ) => {
   const dayStart = subMinutes(startOfDay(new Date(sunData.sunrise)), 10);
   const dayEnd = addMinutes(endOfDay(new Date(sunData.sunrise)), 10);
@@ -62,6 +65,23 @@ export const buildDatasets = (
     .filter((tide) => tide.type !== "intermediate")
     .map(toVictory);
 
+  let tidesWithinSolunarPeriod: Array<typeof tideData> = [];
+  if (solunarDetails && solunarDetails.majorPeriods) {
+    const solunarPeriods = [
+      ...solunarDetails.majorPeriods,
+      ...solunarDetails.minorPeriods,
+    ];
+
+    tidesWithinSolunarPeriod = solunarPeriods.map((period) =>
+      tideData.filter((tideDatum) =>
+        isWithinInterval(tideDatum.x, {
+          start: new Date(period.start),
+          end: new Date(period.end),
+        })
+      )
+    );
+  }
+
   const waterHeightData = waterHeight.map((data) => ({
     x: new Date(data.timestamp),
     y: data.height,
@@ -83,6 +103,7 @@ export const buildDatasets = (
     hiLowData,
     waterHeightData,
     tideBoundaries,
+    tidesWithinSolunarPeriod,
   };
 };
 

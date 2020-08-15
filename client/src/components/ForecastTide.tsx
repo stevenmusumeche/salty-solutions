@@ -2,7 +2,6 @@ import {
   SunDetailFieldsFragment,
   TideDetailFieldsFragment,
   SolunarDetailFieldsFragment,
-  SolunarPeriodFieldsFragment,
 } from "@stevenmusumeche/salty-solutions-shared/dist/graphql";
 import {
   buildDatasets,
@@ -71,12 +70,16 @@ const ForecastTide: FC<Props> = ({
     [date]
   );
 
-  const { tideData, tideBoundaries, daylight } = useMemo(
-    () => buildDatasets(curDaySunData, curDayTideData, []),
-    [curDaySunData, curDayTideData]
+  const {
+    tideData,
+    tideBoundaries,
+    daylight,
+    tidesWithinSolunarPeriod,
+  } = useMemo(
+    () => buildDatasets(curDaySunData, curDayTideData, [], curDaySolunarData),
+    [curDaySunData, curDayTideData, curDaySolunarData]
   );
   const { min, max } = tideBoundaries;
-
   const y0 = min - Y_PADDING > 0 ? 0 : min - Y_PADDING;
 
   return (
@@ -160,12 +163,23 @@ const ForecastTide: FC<Props> = ({
           }}
         />
 
-        {curDaySolunarData.majorPeriods.map((period) =>
-          renderSolunarPeriod(period, y0, max, "major")
-        )}
-        {curDaySolunarData.minorPeriods.map((period) =>
-          renderSolunarPeriod(period, y0, max, "minor")
-        )}
+        {/* solunar periods */}
+        {tidesWithinSolunarPeriod.map((tides, i) => (
+          <VictoryArea
+            key={i}
+            data={tides}
+            y0={() => y0}
+            scale={{ x: "time", y: "linear" }}
+            interpolation={"natural"}
+            style={{
+              data: {
+                stroke: "#2c5282",
+                strokeWidth: 1,
+                fill: "rgba(255,255,255, .25)",
+              },
+            }}
+          />
+        ))}
       </VictoryChart>
       <ChartLegend stationName={stationName} />
     </div>
@@ -206,40 +220,5 @@ const ChartLegend: FC<{ stationName: string }> = ({ stationName }) => {
         </div>
       </div>
     </div>
-  );
-};
-
-const renderSolunarPeriod = (
-  period: SolunarPeriodFieldsFragment,
-  y0: number,
-  max: number,
-  type: "major" | "minor"
-) => {
-  let height = max + Y_PADDING; // y0 + 0.2;
-
-  return (
-    <VictoryArea
-      key={period.start}
-      data={[
-        {
-          x: new Date(period.start),
-          y: height,
-          y0,
-        },
-        {
-          x: new Date(period.end),
-          y: height,
-          y0,
-        },
-      ]}
-      scale={{ x: "time", y: "linear" }}
-      style={{
-        data: {
-          strokeWidth: 0,
-          // fill: "rgba(49, 151, 149, .7)",
-          fill: "rgba(255,255,255, .3)",
-        },
-      }}
-    />
   );
 };

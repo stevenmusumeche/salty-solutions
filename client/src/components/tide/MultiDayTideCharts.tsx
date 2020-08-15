@@ -21,6 +21,7 @@ import {
   SunDetailFieldsFragment,
   TideDetailFieldsFragment,
   WaterHeightFieldsFragment,
+  SolunarDetailFieldsFragment,
 } from "@stevenmusumeche/salty-solutions-shared/dist/graphql";
 import { useMemo } from "react";
 import { useCallback } from "react";
@@ -32,6 +33,7 @@ interface Props {
   activeDate: Date;
   numDays: number;
   setActiveDate: (date: Date) => void;
+  solunarData: SolunarDetailFieldsFragment[];
 }
 
 interface Entry {
@@ -46,6 +48,7 @@ const MultiDayTideCharts: React.FC<Props> = ({
   activeDate,
   setActiveDate,
   numDays,
+  solunarData: rawSolunarData,
 }) => {
   const { isSmall } = useBreakpoints();
 
@@ -82,6 +85,8 @@ const MultiDayTideCharts: React.FC<Props> = ({
   const { min, max } = tideBoundaries;
 
   let daylights: Entry[][] = [];
+  let solunars: any[][] = [];
+  let midnights: Date[] = [];
   let timeTickValues = [];
   for (let i = -1 * dayPadding; i <= dayPadding; i++) {
     const curDate = subDays(new Date(activeDate), i);
@@ -103,13 +108,20 @@ const MultiDayTideCharts: React.FC<Props> = ({
       isSameDay(new Date(x.time), curDate)
     );
 
-    const { daylight } = buildDatasets(
+    const curDaySolunarData: SolunarDetailFieldsFragment =
+      rawSolunarData.filter((x) => isSameDay(new Date(x.date), curDate))[0] ||
+      {};
+
+    const { daylight, tidesWithinSolunarPeriod } = buildDatasets(
       curSunData,
       curDayTides,
-      curDayWaterHeight
+      curDayWaterHeight,
+      curDaySolunarData
     );
 
     daylights.push(daylight);
+    solunars.push(tidesWithinSolunarPeriod);
+    midnights.push(endOfDay(curDate));
 
     timeTickValues.push(startOfDay(curDate));
     timeTickValues.push(addHours(startOfDay(curDate), 12));
@@ -202,8 +214,43 @@ const MultiDayTideCharts: React.FC<Props> = ({
         />
 
         {/* actual tide line */}
-        <VictoryLine
+        <VictoryArea
           data={tideData}
+          scale={{ x: "time", y: "linear" }}
+          interpolation={"natural"}
+          style={{
+            data: {
+              stroke: "#2c5282",
+              strokeWidth: isSmall ? 4 : 2,
+              fill: "#5f8dc1",
+            },
+          }}
+          y0={() => (min - Y_PADDING > 0 ? 0 : min - Y_PADDING)}
+        />
+
+        {/* solunar periods */}
+        {solunars.map((solunar, j) =>
+          solunar.map((tides, i) => (
+            <VictoryArea
+              key={`${j}-${i}`}
+              data={tides}
+              y0={() => (min - Y_PADDING > 0 ? 0 : min - Y_PADDING)}
+              scale={{ x: "time", y: "linear" }}
+              interpolation={"natural"}
+              style={{
+                data: {
+                  fill: "rgba(255,255,255, .25)",
+                  stroke: "#2c5282",
+                  strokeWidth: isSmall ? 4 : 2,
+                },
+              }}
+            />
+          ))
+        )}
+
+        {/* observed water height */}
+        <VictoryLine
+          data={waterHeightData}
           scale={{ x: "time", y: "linear" }}
           interpolation={"natural"}
           style={{
@@ -213,18 +260,14 @@ const MultiDayTideCharts: React.FC<Props> = ({
             },
           }}
         />
-        {/* observed water height */}
-        <VictoryLine
-          data={waterHeightData}
-          scale={{ x: "time", y: "linear" }}
-          interpolation={"natural"}
-          style={{
-            data: {
-              strokeWidth: isSmall ? 4 : 2,
-              stroke: "#3182ce",
-            },
-          }}
-        />
+
+        {midnights.map((midnight) => (
+          <VictoryLine
+            key={midnight.toISOString()}
+            x={() => midnight}
+            style={{ data: { stroke: "white", strokeWidth: isSmall ? 4 : 1 } }}
+          />
+        ))}
       </VictoryChart>
     </div>
   );

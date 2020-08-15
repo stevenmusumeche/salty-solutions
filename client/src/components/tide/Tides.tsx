@@ -25,6 +25,7 @@ import {
   SolunarDetailFieldsFragment,
   SolunarPeriodFieldsFragment,
 } from "@stevenmusumeche/salty-solutions-shared/dist/graphql";
+import Stars from "../Stars";
 
 interface Props {
   tideStations: TideStationDetailFragment[];
@@ -214,18 +215,19 @@ const Tides: React.FC<Props> = ({
         activeDate={date}
         setActiveDate={setActiveDate}
         numDays={isSmall ? 3 : 7}
+        solunarData={tideResult.data.location.solunar}
       />
       <div className="items-center justify-center flex flex-wrap mt-4">
         <div className="flex justify-center items-center">
-          <div className="w-4 h-4 md:w-6 md:h-6 mr-1 md:mr-2 rounded-sm bg-black flex-shrink-0"></div>
+          <div className="w-4 h-4 md:w-6 md:h-6 mr-1 md:mr-2 rounded-sm bg-blue-600 flex-shrink-0"></div>
           <div className="uppercase text-gray-700 text-sm">Predicted</div>
         </div>
         <div className="flex justify-center items-center">
-          <div className="w-4 h-4 md:w-6 md:h-6 md:ml-4 ml-2 mr-1 md:mr-2 rounded-sm bg-blue-600 flex-shrink-0"></div>
+          <div className="w-4 h-4 md:w-6 md:h-6 md:ml-4 ml-2 mr-1 md:mr-2 rounded-sm bg-black flex-shrink-0"></div>
           <div className="uppercase text-gray-700 text-sm">Observed</div>
         </div>
         <div className="flex justify-center items-center">
-          <div className="w-4 h-4 md:w-6 md:h-6 md:ml-4 ml-2 mr-1 md:mr-2 rounded-sm bg-teal-600 bg-opacity-75 flex-shrink-0"></div>
+          <div className="w-4 h-4 md:w-6 md:h-6 md:ml-4 ml-2 mr-1 md:mr-2 rounded-sm bg-blue-600 bg-opacity-25 flex-shrink-0"></div>
           <div className="uppercase text-gray-700 text-sm">Feeding Period</div>
         </div>
       </div>
@@ -261,13 +263,11 @@ const HighLowTable: React.FC<{
   return (
     <div className="mt-4 md:mt-8 text-gray-700 grid grid-cols-1 md:grid-cols-3 md:gap-8">
       <div>
-        {moonData && moonData.phase && (
-          <Pill label="Moon Phase" color="blue-800">
-            <div className="flex items-center justify-center">
-              {moonData.phase} <MoonPhase phase={moonData.phase} />
-            </div>
-          </Pill>
-        )}
+        <Pill color="teal-600" label={`Solunar Score`}>
+          <div className="mx-auto w-2/3">
+            <Stars score={solunarData.score} />
+          </div>
+        </Pill>
         <Pill color="teal-600" label={`Major Feeding`}>
           {solunarData.majorPeriods.map((period, i) => {
             return formatPeriod(period);
@@ -307,6 +307,13 @@ const HighLowTable: React.FC<{
             {formatDate(x)}
           </Pill>
         ))}
+        {moonData && moonData.phase && (
+          <Pill label="Moon Phase" color="blue-800">
+            <div className="flex items-center justify-center">
+              {moonData.phase} <MoonPhase phase={moonData.phase} />
+            </div>
+          </Pill>
+        )}
       </div>
     </div>
   );

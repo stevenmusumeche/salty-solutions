@@ -1,6 +1,5 @@
 import {
   SolunarDetailFieldsFragment,
-  SolunarPeriodFieldsFragment,
   SunDetailFieldsFragment,
   TideDetailFieldsFragment,
   WaterHeightFieldsFragment,
@@ -53,7 +52,8 @@ const MainTideChart: React.FC<Props> = ({
     hiLowData,
     waterHeightData,
     tideBoundaries,
-  } = buildDatasets(sunData, curDayTides, rawWaterHeightData);
+    tidesWithinSolunarPeriod,
+  } = buildDatasets(sunData, curDayTides, rawWaterHeightData, solunarData);
   const { min, max } = tideBoundaries;
 
   let timeTickValues = [];
@@ -126,29 +126,20 @@ const MainTideChart: React.FC<Props> = ({
         crossAxis={false}
       />
       {/* actual tide line */}
-      <VictoryLine
+      <VictoryArea
         data={tideData}
         scale={{ x: "time", y: "linear" }}
         interpolation={"natural"}
         style={{
           data: {
+            stroke: "#2c5282",
             strokeWidth: isSmall ? 2 : 1,
-            stroke: "black",
+            fill: "#5f8dc1",
           },
         }}
+        y0={() => y0}
       />
-      {/* observed water height */}
-      <VictoryLine
-        data={waterHeightData}
-        scale={{ x: "time", y: "linear" }}
-        interpolation={"natural"}
-        style={{
-          data: {
-            strokeWidth: isSmall ? 2 : 1,
-            stroke: "#3182ce",
-          },
-        }}
-      />
+
       {/* hi and low tide labels */}
       {!isSmall && (
         <VictoryScatter
@@ -183,46 +174,38 @@ const MainTideChart: React.FC<Props> = ({
         />
       )}
 
-      {solunarData.majorPeriods.map((period) =>
-        renderSolunarPeriod(period, y0)
-      )}
-      {solunarData.minorPeriods.map((period) =>
-        renderSolunarPeriod(period, y0)
-      )}
+      {/* solunar periods */}
+      {tidesWithinSolunarPeriod.map((tides, i) => (
+        <VictoryArea
+          key={i}
+          data={tides}
+          y0={() => y0}
+          scale={{ x: "time", y: "linear" }}
+          interpolation={"natural"}
+          style={{
+            data: {
+              fill: "rgba(255,255,255, .25)",
+              stroke: "#2c5282",
+              strokeWidth: isSmall ? 2 : 1,
+            },
+          }}
+        />
+      ))}
+
+      {/* observed water height */}
+      <VictoryLine
+        data={waterHeightData}
+        scale={{ x: "time", y: "linear" }}
+        interpolation={"natural"}
+        style={{
+          data: {
+            strokeWidth: isSmall ? 2 : 1,
+            stroke: "black",
+          },
+        }}
+      />
     </VictoryChart>
   );
 };
 
 export default MainTideChart;
-
-const renderSolunarPeriod = (
-  period: SolunarPeriodFieldsFragment,
-  y0: number
-) => {
-  let height = y0 + 0.2;
-
-  return (
-    <VictoryArea
-      key={period.start}
-      data={[
-        {
-          x: new Date(period.start),
-          y: height,
-          y0: y0,
-        },
-        {
-          x: new Date(period.end),
-          y: height,
-          y0: y0,
-        },
-      ]}
-      scale={{ x: "time", y: "linear" }}
-      style={{
-        data: {
-          strokeWidth: 0,
-          fill: "rgba(49, 151, 149, .7)",
-        },
-      }}
-    />
-  );
-};
