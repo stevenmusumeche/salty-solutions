@@ -225,7 +225,7 @@ const Tides: React.FC<Props> = ({
           <div className="uppercase text-gray-700 text-sm">Observed</div>
         </div>
         <div className="flex justify-center items-center">
-          <div className="w-4 h-4 md:w-6 md:h-6 md:ml-4 ml-2 mr-1 md:mr-2 rounded-sm bg-teal-600 flex-shrink-0"></div>
+          <div className="w-4 h-4 md:w-6 md:h-6 md:ml-4 ml-2 mr-1 md:mr-2 rounded-sm bg-teal-600 bg-opacity-75 flex-shrink-0"></div>
           <div className="uppercase text-gray-700 text-sm">Feeding Period</div>
         </div>
       </div>
@@ -311,95 +311,6 @@ const HighLowTable: React.FC<{
     </div>
   );
 };
-
-// const HighLowTable: React.FC<{
-//   hiLowData: any[];
-//   sunData?: SunDetailFieldsFragment;
-//   moonData: MoonDetailFieldsFragment;
-//   solunarData: SolunarDetailFieldsFragment;
-// }> = ({ hiLowData, sunData, moonData, solunarData }) => {
-//   const formatDate = (x: string) => (
-//     <div className="lowercase">{format(new Date(x), "h:mma")}</div>
-//   );
-
-//   const formatPeriod = (period: SolunarPeriodFieldsFragment) => (
-//     <div className="lowercase my-1">
-//       {format(new Date(period.start), "h:mma")}-
-//       {format(new Date(period.end), "h:mma")}
-//     </div>
-//   );
-
-//   return (
-//     <div className="mt-4 text-gray-700 grid grid-cols-2 md:flex md:flex-wrap md:items-center md:justify-center">
-//       {hiLowData.map(({ x, y, type }, i) => (
-//         <Pill key={i} label={`${type} Tide`}>
-//           {formatDate(x)}
-//         </Pill>
-//       ))}
-
-//       {sunData && sunData.nauticalDawn && (
-//         <Pill label="Naut Dawn" color="orange-700">
-//           {formatDate(sunData.nauticalDawn)}
-//         </Pill>
-//       )}
-
-//       {sunData && sunData.dawn && (
-//         <Pill label="Dawn" color="orange-700">
-//           {formatDate(sunData.dawn)}
-//         </Pill>
-//       )}
-//       {sunData && sunData.sunrise && (
-//         <Pill label="Sunrise" color="orange-700">
-//           {formatDate(sunData.sunrise)}
-//         </Pill>
-//       )}
-//       {sunData && sunData.sunset && (
-//         <Pill label="Sunset" color="orange-700">
-//           {formatDate(sunData.sunset)}
-//         </Pill>
-//       )}
-//       {sunData && sunData.dusk && (
-//         <Pill label="Dusk" color="orange-700">
-//           {formatDate(sunData.dusk)}
-//         </Pill>
-//       )}
-//       {sunData && sunData.nauticalDusk && (
-//         <Pill label="Naut Dusk" color="orange-700">
-//           {formatDate(sunData.nauticalDusk)}
-//         </Pill>
-//       )}
-//       {moonData && moonData.phase && (
-//         <Pill
-//           label="Moon Phase"
-//           color="blue-800"
-//           className="col-span-2 moon-pill"
-//         >
-//           <div className="flex items-center justify-center">
-//             {moonData.phase} <MoonPhase phase={moonData.phase} />
-//           </div>
-//         </Pill>
-//       )}
-//       <Pill
-//         color="teal-600"
-//         className="col-span-2 moon-pill"
-//         label={`Major Feeding`}
-//       >
-//         {solunarData.majorPeriods.map((period, i) => {
-//           return formatPeriod(period);
-//         })}
-//       </Pill>
-//       <Pill
-//         color="teal-600"
-//         className="col-span-2 moon-pill"
-//         label={`Minor Feeding`}
-//       >
-//         {solunarData.minorPeriods.map((period, i) => {
-//           return formatPeriod(period);
-//         })}
-//       </Pill>
-//     </div>
-//   );
-// };
 
 const Pill: React.FC<{ label: string; color?: string; className?: string }> = ({
   label,

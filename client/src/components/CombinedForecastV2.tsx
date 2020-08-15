@@ -65,6 +65,7 @@ const CombinedForecastV2: FC<Props> = ({ locationId }) => {
                 stationName={tideStationName}
                 date={date}
                 sunData={sunData}
+                solunarData={solunarData}
               />
               <ForecastSun
                 sunData={sunData}

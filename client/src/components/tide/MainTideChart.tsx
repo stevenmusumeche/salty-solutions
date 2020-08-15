@@ -184,10 +184,10 @@ const MainTideChart: React.FC<Props> = ({
       )}
 
       {solunarData.majorPeriods.map((period) =>
-        renderSolunarPeriod(period, y0, "major")
+        renderSolunarPeriod(period, y0)
       )}
       {solunarData.minorPeriods.map((period) =>
-        renderSolunarPeriod(period, y0, "minor")
+        renderSolunarPeriod(period, y0)
       )}
     </VictoryChart>
   );
@@ -197,8 +197,7 @@ export default MainTideChart;
 
 const renderSolunarPeriod = (
   period: SolunarPeriodFieldsFragment,
-  y0: number,
-  type: "major" | "minor"
+  y0: number
 ) => {
   let height = y0 + 0.2;
 
@@ -209,12 +208,12 @@ const renderSolunarPeriod = (
         {
           x: new Date(period.start),
           y: height,
-          y0,
+          y0: y0,
         },
         {
           x: new Date(period.end),
           y: height,
-          y0,
+          y0: y0,
         },
       ]}
       scale={{ x: "time", y: "linear" }}

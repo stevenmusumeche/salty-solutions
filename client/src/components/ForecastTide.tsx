@@ -1,6 +1,8 @@
 import {
   SunDetailFieldsFragment,
   TideDetailFieldsFragment,
+  SolunarDetailFieldsFragment,
+  SolunarPeriodFieldsFragment,
 } from "@stevenmusumeche/salty-solutions-shared/dist/graphql";
 import {
   buildDatasets,
@@ -22,6 +24,7 @@ interface Props {
   stationName: string;
   tideData: TideDetailFieldsFragment[];
   sunData: SunDetailFieldsFragment[];
+  solunarData: SolunarDetailFieldsFragment[];
   date: Date;
 }
 
@@ -30,6 +33,7 @@ const ForecastTide: FC<Props> = ({
   sunData,
   date,
   stationName,
+  solunarData,
 }) => {
   const curDayTideData = useMemo(
     () =>
@@ -50,6 +54,16 @@ const ForecastTide: FC<Props> = ({
           startOfDay(date).toISOString()
       )[0] || {},
     [sunData, date]
+  );
+
+  const curDaySolunarData: SolunarDetailFieldsFragment = useMemo(
+    () =>
+      solunarData.filter(
+        (x) =>
+          startOfDay(new Date(x.date)).toISOString() ===
+          startOfDay(date).toISOString()
+      )[0] || {},
+    [solunarData, date]
   );
 
   const yTickVals = useMemo(
@@ -82,6 +96,7 @@ const ForecastTide: FC<Props> = ({
           left: 28,
           right: 25,
         }}
+        domain={{ x: [startOfDay(date), endOfDay(date)] }}
       >
         {/* background colors for night */}
         <VictoryArea
@@ -144,6 +159,13 @@ const ForecastTide: FC<Props> = ({
             },
           }}
         />
+
+        {curDaySolunarData.majorPeriods.map((period) =>
+          renderSolunarPeriod(period, y0, max, "major")
+        )}
+        {curDaySolunarData.minorPeriods.map((period) =>
+          renderSolunarPeriod(period, y0, max, "minor")
+        )}
       </VictoryChart>
       <ChartLegend stationName={stationName} />
     </div>
@@ -154,19 +176,70 @@ export default ForecastTide;
 
 const ChartLegend: FC<{ stationName: string }> = ({ stationName }) => {
   return (
-    <div className="flex justify-center mt-2">
-      <div
-        className="flex uppercase font-normal text-gray-600 leading-none"
-        style={{ fontSize: ".65rem" }}
-      >
-        <div className="flex items-center h-3">
-          <div
-            className="w-3 h-3 mr-1 rounded-sm bg-blue-700 flex-shrink-0"
-            style={{ opacity: 0.75 }}
-          ></div>
-          <div className="">Tides for {stationName}</div>
+    <div>
+      <div className="flex justify-center mt-2">
+        <div
+          className="flex uppercase font-normal text-gray-600 leading-none"
+          style={{ fontSize: ".65rem" }}
+        >
+          <div className="flex items-center h-3">
+            <div
+              className="w-3 h-3 mr-1 rounded-sm bg-blue-700 flex-shrink-0"
+              style={{ opacity: 0.75 }}
+            ></div>
+            <div className="">Tides for {stationName}</div>
+          </div>
+        </div>
+      </div>
+      <div className="flex justify-center mt-2">
+        <div
+          className="flex uppercase font-normal text-gray-600 leading-none"
+          style={{ fontSize: ".65rem" }}
+        >
+          <div className="flex items-center h-3">
+            <div
+              className="w-3 h-3 mr-1 rounded-sm bg-opacity-25 bg-blue-600 flex-shrink-0"
+              style={{ opacity: 0.7 }}
+            ></div>
+            <div className="">Solunar Feeding Periods</div>
+          </div>
         </div>
       </div>
     </div>
+  );
+};
+
+const renderSolunarPeriod = (
+  period: SolunarPeriodFieldsFragment,
+  y0: number,
+  max: number,
+  type: "major" | "minor"
+) => {
+  let height = max + Y_PADDING; // y0 + 0.2;
+
+  return (
+    <VictoryArea
+      key={period.start}
+      data={[
+        {
+          x: new Date(period.start),
+          y: height,
+          y0,
+        },
+        {
+          x: new Date(period.end),
+          y: height,
+          y0,
+        },
+      ]}
+      scale={{ x: "time", y: "linear" }}
+      style={{
+        data: {
+          strokeWidth: 0,
+          // fill: "rgba(49, 151, 149, .7)",
+          fill: "rgba(255,255,255, .3)",
+        },
+      }}
+    />
   );
 };
