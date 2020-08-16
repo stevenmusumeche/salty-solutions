@@ -102,29 +102,6 @@ const MainTideChart: React.FC<Props> = ({
       {renderBackgroundColor(dawn, "#a0aec0", min)}
       {renderBackgroundColor(dusk, "#a0aec0", min)}
 
-      {/* time x-axis */}
-      <VictoryAxis
-        style={{
-          grid: {
-            strokeWidth: 1,
-            stroke: "#718096",
-            strokeDasharray: isSmall ? "2 4" : "2 10",
-          },
-          tickLabels: { fontSize: isSmall ? 20 : 8 },
-        }}
-        tickFormat={(date) => format(new Date(date), "ha").toLowerCase()}
-        tickValues={timeTickValues}
-        offsetY={30}
-      />
-      {/* tide height y-axis */}
-      <VictoryAxis
-        dependentAxis
-        style={{
-          tickLabels: { fontSize: isSmall ? 20 : 8 },
-        }}
-        tickCount={isSmall ? 6 : 10}
-        crossAxis={false}
-      />
       {/* actual tide line */}
       <VictoryArea
         data={tideData}
@@ -138,6 +115,37 @@ const MainTideChart: React.FC<Props> = ({
           },
         }}
         y0={() => y0}
+      />
+
+      {/* solunar periods */}
+      {tidesWithinSolunarPeriod.map((tides, i) => (
+        <VictoryArea
+          key={i}
+          data={tides}
+          y0={() => y0}
+          scale={{ x: "time", y: "linear" }}
+          interpolation={"natural"}
+          style={{
+            data: {
+              fill: "rgba(255,255,255, .25)",
+              stroke: "#2c5282",
+              strokeWidth: isSmall ? 2 : 1,
+            },
+          }}
+        />
+      ))}
+
+      {/* observed water height */}
+      <VictoryLine
+        data={waterHeightData}
+        scale={{ x: "time", y: "linear" }}
+        interpolation={"natural"}
+        style={{
+          data: {
+            strokeWidth: isSmall ? 2 : 1,
+            stroke: "black",
+          },
+        }}
       />
 
       {/* hi and low tide labels */}
@@ -174,35 +182,28 @@ const MainTideChart: React.FC<Props> = ({
         />
       )}
 
-      {/* solunar periods */}
-      {tidesWithinSolunarPeriod.map((tides, i) => (
-        <VictoryArea
-          key={i}
-          data={tides}
-          y0={() => y0}
-          scale={{ x: "time", y: "linear" }}
-          interpolation={"natural"}
-          style={{
-            data: {
-              fill: "rgba(255,255,255, .25)",
-              stroke: "#2c5282",
-              strokeWidth: isSmall ? 2 : 1,
-            },
-          }}
-        />
-      ))}
-
-      {/* observed water height */}
-      <VictoryLine
-        data={waterHeightData}
-        scale={{ x: "time", y: "linear" }}
-        interpolation={"natural"}
+      {/* time x-axis */}
+      <VictoryAxis
         style={{
-          data: {
-            strokeWidth: isSmall ? 2 : 1,
+          grid: {
+            strokeWidth: 1,
             stroke: "black",
+            strokeDasharray: isSmall ? "1 10" : "1 20",
           },
+          tickLabels: { fontSize: isSmall ? 20 : 8 },
         }}
+        tickFormat={(date) => format(new Date(date), "ha").toLowerCase()}
+        tickValues={timeTickValues}
+        offsetY={30}
+      />
+      {/* tide height y-axis */}
+      <VictoryAxis
+        dependentAxis
+        style={{
+          tickLabels: { fontSize: isSmall ? 20 : 8 },
+        }}
+        tickCount={isSmall ? 6 : 10}
+        crossAxis={false}
       />
     </VictoryChart>
   );
