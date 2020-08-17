@@ -127,6 +127,8 @@ const MultiDayTideCharts: React.FC<Props> = ({
     timeTickValues.push(addHours(startOfDay(curDate), 12));
   }
 
+  const y0 = min - Y_PADDING > 0 ? 0 : min - Y_PADDING;
+
   return (
     <div className="relative mt-4 md:mt-0">
       {/* overlay for clicking to a day */}
@@ -175,7 +177,7 @@ const MultiDayTideCharts: React.FC<Props> = ({
               fill: "#4a5568",
             },
           }}
-          y0={() => (min - Y_PADDING > 0 ? 0 : min - Y_PADDING)}
+          y0={() => y0}
         />
 
         {/* background colors for time periods like night, dusk, etc */}
@@ -186,11 +188,6 @@ const MultiDayTideCharts: React.FC<Props> = ({
         {/* time x-axis */}
         <VictoryAxis
           style={{
-            grid: {
-              // only show gridlines on midnight
-              strokeWidth: (date) => (getHours(new Date(date)) === 0 ? 1 : 0),
-              stroke: "white",
-            },
             tickLabels: { fontSize: isSmall ? 42 : 12 },
           }}
           // only show label at noon (center of the day block)
@@ -225,7 +222,7 @@ const MultiDayTideCharts: React.FC<Props> = ({
               fill: "#5f8dc1",
             },
           }}
-          y0={() => (min - Y_PADDING > 0 ? 0 : min - Y_PADDING)}
+          y0={() => y0}
         />
 
         {/* solunar periods */}
@@ -234,7 +231,6 @@ const MultiDayTideCharts: React.FC<Props> = ({
             <VictoryArea
               key={`${j}-${i}`}
               data={tides}
-              y0={() => (min - Y_PADDING > 0 ? 0 : min - Y_PADDING)}
               scale={{ x: "time", y: "linear" }}
               interpolation={"natural"}
               style={{
@@ -244,6 +240,7 @@ const MultiDayTideCharts: React.FC<Props> = ({
                   strokeWidth: isSmall ? 4 : 2,
                 },
               }}
+              y0={() => y0}
             />
           ))
         )}
