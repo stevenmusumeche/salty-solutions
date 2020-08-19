@@ -70,11 +70,12 @@ const schema = makeExecutableSchema({
   typeDefs,
   resolvers: resolvers as any,
 });
-traceResolvers(schema);
+
+if (process.env.AWS_LAMBDA_FUNCTION_NAME) {
+  traceResolvers(schema);
+}
 
 const server = new ApolloServer({
-  // typeDefs,
-  // resolvers: resolvers as any,
   schema,
   context: ({ ctx: koaCtx }): Context => {
     return {
@@ -97,8 +98,8 @@ const server = new ApolloServer({
     };
   },
   extensions: [() => new FormatErrorWithContextExtension(formatError)],
-  playground: true, // IS_DEV,
-  introspection: true, // IS_DEV
+  playground: IS_DEV,
+  introspection: IS_DEV,
 });
 
 const app = new Koa();
