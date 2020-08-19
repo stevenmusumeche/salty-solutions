@@ -47,8 +47,7 @@ provider:
   environment:
     SERVERLESS_STAGE: ${self:provider.stage}
     ROLLBAR_KEY: ${env:ROLLBAR_KEY}
-    # DATABASE_TABLE_NAME: ${cf:ss-database-${self:provider.stage}.MainTableName}
-    DATABASE_TABLE_NAME: ${cf:ss-database-prod.MainTableName}
+    DATABASE_TABLE_NAME: ${cf:ss-database-${self:provider.stage}.MainTableName}
 
 functions:
   graphql:
