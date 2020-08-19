@@ -10,6 +10,9 @@ provider:
   runtime: nodejs12.x
   stage: ${opt:stage, 'dev'}
   timeout: 500
+  tracing:
+    lambda: true
+
   iamRoleStatements:
     - Effect: Allow
       Action:

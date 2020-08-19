@@ -1,10 +1,12 @@
 {
   "dependencies": {
+    "@lifeomic/graphql-resolvers-xray-tracing": "^4.0.0",
     "@stevenmusumeche/solunar": "^1.0.4",
     "@types/graphql": "^14.2.1",
     "@types/suncalc": "^1.8.0",
     "apollo-server-koa": "^2.14.2",
     "aws-sdk": "^2.691.0",
+    "aws-xray-sdk-core": "^3.1.0",
     "axios": "^0.19.2",
     "axios-retry": "^3.1.8",
     "cheerio": "^1.0.0-rc.3",
