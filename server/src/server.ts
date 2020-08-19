@@ -2,7 +2,7 @@
 
 import Koa from "koa";
 import serverless from "serverless-http";
-import { ApolloServer } from "apollo-server-koa";
+import { ApolloServer, makeExecutableSchema } from "apollo-server-koa";
 import * as noaaService from "./services/noaa/client";
 import * as locationService from "./services/location";
 import * as sunMoonService from "./services/sun-and-moon";
@@ -20,6 +20,7 @@ import Rollbar from "rollbar";
 // @ts-ignore
 import { FormatErrorWithContextExtension } from "graphql-format-error-context-extension";
 import { createDataLoaders } from "./dataloaders";
+import traceResolvers from "@lifeomic/graphql-resolvers-xray-tracing";
 
 var rollbar = new Rollbar({
   accessToken: process.env.ROLLBAR_KEY,
@@ -65,9 +66,16 @@ const formatError = (error: any, context: Context) => {
   return error;
 };
 
-const server = new ApolloServer({
+const schema = makeExecutableSchema({
   typeDefs,
   resolvers: resolvers as any,
+});
+traceResolvers(schema);
+
+const server = new ApolloServer({
+  // typeDefs,
+  // resolvers: resolvers as any,
+  schema,
   context: ({ ctx: koaCtx }): Context => {
     return {
       koaCtx,
