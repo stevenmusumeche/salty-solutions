@@ -42,7 +42,7 @@ const ForecastChart: FC<Props> = ({ data, date }) => {
   return (
     <div className="px-4">
       <VictoryChart
-        padding={{ left: 28, top: 35, right: 25, bottom: 25 }}
+        padding={{ left: 28, top: 45, right: 25, bottom: 25 }}
         domainPadding={{ y: 10, x: 7 }}
         style={{ parent: { touchAction: "auto" } }}
         height={180}

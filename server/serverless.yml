@@ -43,6 +43,7 @@ provider:
         - ${cf:ss-queue-${self:provider.stage}.WeatherConditionPreloaderQueueArn}
         - ${cf:ss-queue-${self:provider.stage}.WeatherForecastPreloaderQueueArn}
         - ${cf:ss-queue-${self:provider.stage}.WeatherForecastHourlyPreloaderQueueArn}
+        - ${cf:ss-queue-${self:provider.stage}.MarineForecastPreloaderQueueArn}
     - Effect: Allow
       Action:
         - s3:*
@@ -217,6 +218,23 @@ functions:
       - sqs:
           batchSize: 1
           arn: ${cf:ss-queue-${self:provider.stage}.WeatherForecastHourlyPreloaderQueueArn}
+
+  preload-marine-forecast-producer:
+    handler: src/preloaders/producers.marineForecast
+    events:
+      - schedule:
+          name: MarineForecastPreloader-${self:provider.stage}
+          enabled: ${self:custom.schedule_enabled.${self:provider.stage}, false}
+          rate: rate(2 hours)
+    environment:
+      QUEUE_URL: ${cf:ss-queue-${self:provider.stage}.MarineForecastPreloaderQueueUrl}
+  preload-marine-forecast-consumer:
+    handler: src/preloaders/consumers.marineForecast
+    timeout: 120
+    events:
+      - sqs:
+          batchSize: 1
+          arn: ${cf:ss-queue-${self:provider.stage}.MarineForecastPreloaderQueueArn}
 
 custom:
   serverless-offline:

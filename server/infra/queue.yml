@@ -121,6 +121,18 @@ Resources:
             - DeadLetterQueue
             - Arn
         maxReceiveCount: 3
+  MarineForecastPreloaderQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Join ["", ["marine-forecast-preloader-", Ref: StageParam]]
+      VisibilityTimeout: 120
+      MessageRetentionPeriod: 43200 # 12 hours
+      RedrivePolicy:
+        deadLetterTargetArn:
+          Fn::GetAtt:
+            - DeadLetterQueue
+            - Arn
+        maxReceiveCount: 3
 
 Outputs:
   ForecastPreloaderQueueUrl:
@@ -197,3 +209,11 @@ Outputs:
     Export:
       Name:
         !Join ["-", [WeatherForecastHourlyPreloaderQueueArn, Ref: StageParam]]
+  MarineForecastPreloaderQueueUrl:
+    Value: !Ref MarineForecastPreloaderQueue
+    Export:
+      Name: !Join ["-", [MarineForecastPreloaderQueueUrl, Ref: StageParam]]
+  MarineForecastPreloaderQueueArn:
+    Value: !GetAtt MarineForecastPreloaderQueue.Arn
+    Export:
+      Name: !Join ["-", [MarineForecastPreloaderQueueArn, Ref: StageParam]]

@@ -1,6 +1,7 @@
 import { SQSHandler } from "aws-lambda";
 import { loadAndSave } from "../services/wind-finder";
 import { storeUsgsData } from "../services/usgs/source";
+import { storeMarineForecast } from "../services/marine/source";
 import {
   storeNoaaData,
   storeTideData,
@@ -96,6 +97,18 @@ export const weatherForecastHourly: SQSHandler = async (event, ctx, cb) => {
     console.log(
       "Finished preloading hourly weather forecast for",
       payload.locationId
+    );
+  }
+};
+
+export const marineForecast: SQSHandler = async (event, ctx, cb) => {
+  for (const record of event.Records) {
+    const payload = JSON.parse(record.body);
+    console.log("Preloading marine forecast for", payload.marineZoneId);
+    await storeMarineForecast(payload.marineZoneId);
+    console.log(
+      "Finished preloading marine forecast for",
+      payload.marineZoneId
     );
   }
 };

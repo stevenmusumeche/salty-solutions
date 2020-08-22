@@ -1,10 +1,20 @@
-import { parseForecast } from "./marine";
+import { parseForecast } from "./source";
 import cases from "jest-in-case";
 
 // around X feet/foot
 // less than x foot/feet
 // X feet/foot or less
 // x to y feet
+
+let originalConsole: any;
+beforeAll(() => {
+  originalConsole = console.error;
+  console.error = jest.fn() as any;
+});
+
+afterAll(() => {
+  console.error = originalConsole;
+});
 
 describe("marine forecast water condition parsing", () => {
   cases(
@@ -95,11 +105,21 @@ describe("marine forecast water condition parsing", () => {
           "Lake waters choppy decreasing to a light chop after midnight.",
         expected: "choppy",
       },
+      {
+        forecast:
+          "tropical storm conditions possible. Thunderstorms likely in the evening. Showers likely through the night. Chance of thunderstorms after midnight.",
+        expected: "rough",
+      },
+      {
+        forecast:
+          "hurricane conditions possible. Showers and chance of thunderstorms.",
+        expected: "rough",
+      },
     ]
   );
 });
 
-describe.only("marine forecast wind speed parsing", () => {
+describe("marine forecast wind speed parsing", () => {
   cases(
     "all",
     (opts) => {
@@ -141,6 +161,16 @@ describe.only("marine forecast wind speed parsing", () => {
       {
         forecast: "East winds 20 knots easing to 15 to 20 knots",
         expected: { from: 20, to: 20 },
+      },
+      {
+        forecast:
+          "tropical storm conditions possible. Thunderstorms likely in the evening. Showers likely through the night. Chance of thunderstorms after midnight.",
+        expected: { from: 34, to: 63 },
+      },
+      {
+        forecast:
+          "hurricane conditions possible. Showers and chance of thunderstorms.",
+        expected: { from: 64, to: 64 },
       },
     ]
   );

@@ -59,6 +59,8 @@
     "producer:weather:forecast": "sls invoke local -f preload-weather-forecast-producer",
     "consumer:weather:forecast": "sls invoke local -f preload-weather-forecast-consumer --path ./src/preloaders/events/weather-forecast.json",
     "producer:weather:forecast:hourly": "sls invoke local -f preload-weather-forecast-hourly-producer",
-    "consumer:weather:forecast:hourly": "sls invoke local -f preload-weather-forecast-hourly-consumer --path ./src/preloaders/events/weather-forecast.json"
+    "consumer:weather:forecast:hourly": "sls invoke local -f preload-weather-forecast-hourly-consumer --path ./src/preloaders/events/weather-forecast.json",
+    "producer:marine:forecast": "sls invoke local -f preload-marine-forecast-producer",
+    "consumer:marine:forecast": "sls invoke local -f preload-marine-forecast-consumer --path ./src/preloaders/events/marine-forecast.json"
   }
 }

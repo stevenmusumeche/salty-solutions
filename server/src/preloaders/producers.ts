@@ -14,6 +14,7 @@ export const PRODUCER_NAMES = {
   weatherConditions: "weather-conditions-preloader",
   weatherForecast: "weather-forecast-preloader",
   weatherForecastHourly: "weather-forecast-hourly-preloader",
+  marineForecast: "marine-forecast-preloader",
 };
 
 export const forecast: ScheduledHandler = async () => {
@@ -159,6 +160,23 @@ export const weatherForecastHourly: ScheduledHandler = async () => {
       process.env.QUEUE_URL!,
       PRODUCER_NAMES.weatherForecastHourly,
       chunk.map((locationId) => ({ locationId }))
+    );
+  }
+};
+
+export const marineForecast: ScheduledHandler = async () => {
+  console.log("Preloading Marine Forecast");
+
+  const uniqueMarineZoneIds = new Set(
+    getAll().map((location) => location.marineZoneId)
+  );
+
+  const chunks = chunk([...uniqueMarineZoneIds], 10);
+  for (const chunk of chunks) {
+    await sendMessageBatch(
+      process.env.QUEUE_URL!,
+      PRODUCER_NAMES.marineForecast,
+      chunk.map((marineZoneId) => ({ marineZoneId }))
     );
   }
 };
