@@ -6,6 +6,7 @@ import {
   storeTideData,
   storeBuoyData,
 } from "../services/noaa/source";
+import { storeWeatherConditions } from "../services/weather/source";
 
 export const tide: SQSHandler = async (event, ctx, cb) => {
   for (const record of event.Records) {
@@ -59,5 +60,17 @@ export const noaaBuoy: SQSHandler = async (event, ctx, cb) => {
     console.log("Preloading NOAA Buoy for", payload.stationId);
     await storeBuoyData(payload.stationId, payload.numHours);
     console.log("Finished preloading NOAA Buoy for", payload.stationId);
+  }
+};
+
+export const weatherConditions: SQSHandler = async (event, ctx, cb) => {
+  for (const record of event.Records) {
+    const payload = JSON.parse(record.body);
+    console.log("Preloading weather conditions for", payload.locationId);
+    await storeWeatherConditions(payload.locationId, payload.numHours);
+    console.log(
+      "Finished preloading weahter conditions for",
+      payload.locationId
+    );
   }
 };

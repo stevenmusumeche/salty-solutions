@@ -84,6 +84,18 @@ Resources:
             - DeadLetterQueue
             - Arn
         maxReceiveCount: 3
+  WeatherConditionPreloaderQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Join ["", ["weather-condition-preloader-", Ref: StageParam]]
+      VisibilityTimeout: 120
+      MessageRetentionPeriod: 43200 # 12 hours
+      RedrivePolicy:
+        deadLetterTargetArn:
+          Fn::GetAtt:
+            - DeadLetterQueue
+            - Arn
+        maxReceiveCount: 3
 Outputs:
   ForecastPreloaderQueueUrl:
     Value: !Ref ForecastPreloaderQueue
@@ -133,3 +145,11 @@ Outputs:
     Value: !GetAtt NoaaBuoyPreloaderQueue.Arn
     Export:
       Name: !Join ["-", [NoaaBuoyPreloaderQueueArn, Ref: StageParam]]
+  WeatherConditionPreloaderQueueUrl:
+    Value: !Ref WeatherConditionPreloaderQueue
+    Export:
+      Name: !Join ["-", [WeatherConditionPreloaderQueueUrl, Ref: StageParam]]
+  WeatherConditionPreloaderQueueArn:
+    Value: !GetAtt WeatherConditionPreloaderQueue.Arn
+    Export:
+      Name: !Join ["-", [WeatherConditionPreloaderQueueArn, Ref: StageParam]]
