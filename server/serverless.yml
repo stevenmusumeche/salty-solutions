@@ -40,6 +40,7 @@ provider:
         - ${cf:ss-queue-${self:provider.stage}.UsgsPreloaderQueueArn}
         - ${cf:ss-queue-${self:provider.stage}.NoaaPreloaderQueueArn}
         - ${cf:ss-queue-${self:provider.stage}.NoaaBuoyPreloaderQueueArn}
+        - ${cf:ss-queue-${self:provider.stage}.WeatherConditionPreloaderQueueArn}
     - Effect: Allow
       Action:
         - s3:*
@@ -163,6 +164,23 @@ functions:
       - sqs:
           batchSize: 1
           arn: ${cf:ss-queue-${self:provider.stage}.TidePreloaderQueueArn}
+
+  preload-weather-conditions-producer:
+    handler: src/preloaders/producers.weatherConditions
+    events:
+      - schedule:
+          name: WeatherConditionPreloader-${self:provider.stage}
+          enabled: ${self:custom.schedule_enabled.${self:provider.stage}, false}
+          rate: rate(20 minutes)
+    environment:
+      QUEUE_URL: ${cf:ss-queue-${self:provider.stage}.TidePreloaderQueueUrl}
+  preload-weather-conditions-consumer:
+    handler: src/preloaders/consumers.weatherConditions
+    timeout: 300
+    events:
+      - sqs:
+          batchSize: 1
+          arn: ${cf:ss-queue-${self:provider.stage}.WeatherConditionPreloaderQueueArn}
 
 custom:
   serverless-offline:
