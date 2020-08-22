@@ -176,7 +176,7 @@ functions:
       QUEUE_URL: ${cf:ss-queue-${self:provider.stage}.TidePreloaderQueueUrl}
   preload-weather-conditions-consumer:
     handler: src/preloaders/consumers.weatherConditions
-    timeout: 300
+    timeout: 120
     events:
       - sqs:
           batchSize: 1
