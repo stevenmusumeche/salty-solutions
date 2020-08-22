@@ -96,6 +96,44 @@ Resources:
             - DeadLetterQueue
             - Arn
         maxReceiveCount: 3
+  WeatherForecastPreloaderQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Join ["", ["weather-forecast-preloader-", Ref: StageParam]]
+      VisibilityTimeout: 120
+      MessageRetentionPeriod: 43200 # 12 hours
+      RedrivePolicy:
+        deadLetterTargetArn:
+          Fn::GetAtt:
+            - DeadLetterQueue
+            - Arn
+        maxReceiveCount: 3
+  WeatherForecastHourlyPreloaderQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName:
+        !Join ["", ["weather-forecast-hourly-preloader-", Ref: StageParam]]
+      VisibilityTimeout: 120
+      MessageRetentionPeriod: 43200 # 12 hours
+      RedrivePolicy:
+        deadLetterTargetArn:
+          Fn::GetAtt:
+            - DeadLetterQueue
+            - Arn
+        maxReceiveCount: 3
+  MarineForecastPreloaderQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Join ["", ["marine-forecast-preloader-", Ref: StageParam]]
+      VisibilityTimeout: 120
+      MessageRetentionPeriod: 43200 # 12 hours
+      RedrivePolicy:
+        deadLetterTargetArn:
+          Fn::GetAtt:
+            - DeadLetterQueue
+            - Arn
+        maxReceiveCount: 3
+
 Outputs:
   ForecastPreloaderQueueUrl:
     Value: !Ref ForecastPreloaderQueue
@@ -153,3 +191,29 @@ Outputs:
     Value: !GetAtt WeatherConditionPreloaderQueue.Arn
     Export:
       Name: !Join ["-", [WeatherConditionPreloaderQueueArn, Ref: StageParam]]
+  WeatherForecastPreloaderQueueUrl:
+    Value: !Ref WeatherForecastPreloaderQueue
+    Export:
+      Name: !Join ["-", [WeatherForecastPreloaderQueueUrl, Ref: StageParam]]
+  WeatherForecastPreloaderQueueArn:
+    Value: !GetAtt WeatherForecastPreloaderQueue.Arn
+    Export:
+      Name: !Join ["-", [WeatherForecastPreloaderQueueArn, Ref: StageParam]]
+  WeatherForecastHourlyPreloaderQueueUrl:
+    Value: !Ref WeatherForecastHourlyPreloaderQueue
+    Export:
+      Name:
+        !Join ["-", [WeatherForecastHourlyPreloaderQueueUrl, Ref: StageParam]]
+  WeatherForecastHourlyPreloaderQueueArn:
+    Value: !GetAtt WeatherForecastHourlyPreloaderQueue.Arn
+    Export:
+      Name:
+        !Join ["-", [WeatherForecastHourlyPreloaderQueueArn, Ref: StageParam]]
+  MarineForecastPreloaderQueueUrl:
+    Value: !Ref MarineForecastPreloaderQueue
+    Export:
+      Name: !Join ["-", [MarineForecastPreloaderQueueUrl, Ref: StageParam]]
+  MarineForecastPreloaderQueueArn:
+    Value: !GetAtt MarineForecastPreloaderQueue.Arn
+    Export:
+      Name: !Join ["-", [MarineForecastPreloaderQueueArn, Ref: StageParam]]

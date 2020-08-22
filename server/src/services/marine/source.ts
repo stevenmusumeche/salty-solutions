@@ -1,10 +1,12 @@
+import { DocumentClient } from "aws-sdk/clients/dynamodb";
 import axios from "axios";
 import axiosRetry from "axios-retry";
-import { parseWindDirection } from "./utils";
 import cheerio from "cheerio";
-import { LocationEntity, makeCacheKey } from "./location";
-import { parseFromTimeZone, formatToTimeZone } from "date-fns-timezone";
 import { addDays, format, startOfDay } from "date-fns";
+import { parseFromTimeZone } from "date-fns-timezone";
+import { put } from "../db";
+import { parseWindDirection } from "../utils";
+type PutItemInputAttributeMap = DocumentClient.PutItemInputAttributeMap;
 
 axiosRetry(axios, { retries: 3, retryDelay: (retryCount) => retryCount * 500 });
 
@@ -22,12 +24,39 @@ export interface MarineForecast {
   };
 }
 
-export const getForecast = async (
-  location: LocationEntity
+export const storeMarineForecast = async (marineZoneId: string) => {
+  const data = await fetchForecast(marineZoneId);
+  await saveMarineForecastToDynamo(marineZoneId, data);
+};
+
+async function saveMarineForecastToDynamo(
+  marineZoneId: string,
+  data: MarineForecast[]
+) {
+  const item = buildMarineForecastQuery(marineZoneId, data);
+  await put(item);
+}
+
+function buildMarineForecastQuery(
+  marineZoneId: string,
+  data: MarineForecast[]
+): PutItemInputAttributeMap {
+  return {
+    Item: {
+      pk: `marine-forecast-${marineZoneId}`,
+      sk: new Date().getTime(),
+      updatedAt: new Date().toISOString(),
+      data,
+      ttl: addDays(new Date(), 30).getTime(),
+    },
+  };
+}
+
+const fetchForecast = async (
+  marineZoneId: string
 ): Promise<MarineForecast[]> => {
-  // todo cache
   try {
-    const url = `https://marine.weather.gov/MapClick.php?zoneid=${location.marineZoneId}&zflg=1`;
+    const url = `https://marine.weather.gov/MapClick.php?zoneid=${marineZoneId}&zflg=1`;
     const { data } = await axios.get(url);
     const $ = cheerio.load(data);
     return $(".row-forecast", "#detailed-forecast-body")
@@ -53,7 +82,11 @@ export function parseForecast(
   retVal.waterCondition = parseWaterCondition(forecastText);
 
   const windRegex = /(?<direction>[\w]+) winds(?<qualifier> around| up to| near| rising to| building to)? ((?<speed>[\d]+)|((?<speedStart>[\d]+) to (?<speedEnd>[\d]+))) knots( becoming)?/im;
+  const hurricaneRegex = /hurricane/im;
+  const tropicalStormRegex = /tropical storm/im;
   let matches = forecastText.match(windRegex);
+  let hurricaneMatches = forecastText.match(hurricaneRegex);
+  let tropicalStormMatches = forecastText.match(tropicalStormRegex);
 
   if (matches && matches.groups) {
     retVal.windDirection = parseWindDirection(matches.groups.direction);
@@ -72,6 +105,10 @@ export function parseForecast(
           from: Number(matches.groups.speedStart),
           to: Number(matches.groups.speedEnd),
         };
+  } else if (hurricaneMatches) {
+    retVal.windSpeed = { from: 64, to: 64 };
+  } else if (tropicalStormMatches) {
+    retVal.windSpeed = { from: 34, to: 63 };
   } else {
     console.error({
       message: "Unable to parse wind speed/direction from marine forecast",
@@ -84,8 +121,10 @@ export function parseForecast(
 function parseWaterCondition(forecastText: string): string | void {
   const inshoreRegex = /(Bay|Lake|Nearshore) waters a? ?(?<data>.*?)(\.| decreasing| increasing)/im;
   const offshoreRegex = /(seas|waves) (?<qualifier>(around)|(less than)|(building to) )?(?<numbers>.*?)(\.|(?<postQualifier>( or less)|( with occasional.*?))\.)/im;
+  const stormRegex = /(tropical storm)|(hurricane)/im;
   const inshoreMatches = forecastText.match(inshoreRegex);
   const offshoreMatches = forecastText.match(offshoreRegex);
+  const stormMatches = forecastText.match(stormRegex);
   if (inshoreMatches && inshoreMatches.groups) {
     return inshoreMatches.groups.data;
   } else if (offshoreMatches && offshoreMatches.groups) {
@@ -105,6 +144,8 @@ function parseWaterCondition(forecastText: string): string | void {
     } else {
       return `${from}-${to}`;
     }
+  } else if (stormMatches) {
+    return "rough";
   } else {
     console.error({ message: "Unable to parse water condition", forecastText });
   }

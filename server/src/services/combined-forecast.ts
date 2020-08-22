@@ -1,20 +1,19 @@
-import { LocationEntity, makeCacheKey } from "./location";
-import { getForecast as getMarineForecast } from "./marine";
-import { getForecast as getWeatherForecast } from "./weather";
-import { CombinedForecastV2 } from "../generated/graphql";
-import { getCacheVal, setCacheVal } from "./db";
-import { getData } from "./wind-finder";
 import {
   addDays,
-  format,
-  isBefore,
-  isAfter,
-  isEqual,
   differenceInDays,
+  format,
+  isAfter,
+  isBefore,
+  isEqual,
   subSeconds,
 } from "date-fns";
+import { CombinedForecastV2 } from "../generated/graphql";
+import { LocationEntity } from "./location";
+import { getForecast as getMarineForecast } from "./marine/client";
 import { degreesToCompass } from "./usgs/source";
 import { notUndefined } from "./utils";
+import { getForecast as getWeatherForecast } from "./weather/client";
+import { getData } from "./wind-finder";
 
 /**
  * Combined forecast using windfinder data
@@ -24,11 +23,9 @@ export const getCombinedForecastV2 = async (
   start: Date,
   end: Date
 ): Promise<CombinedForecastV2[]> => {
-  // todo add caching
-
   const [windFinderData, weather, marine] = await Promise.all([
     getData(location, start, end),
-    getWeatherForecast(location),
+    getWeatherForecast(location.id),
     getMarineForecast(location),
   ]);
 
