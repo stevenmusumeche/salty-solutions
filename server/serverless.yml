@@ -173,7 +173,7 @@ functions:
           enabled: ${self:custom.schedule_enabled.${self:provider.stage}, false}
           rate: rate(20 minutes)
     environment:
-      QUEUE_URL: ${cf:ss-queue-${self:provider.stage}.TidePreloaderQueueUrl}
+      QUEUE_URL: ${cf:ss-queue-${self:provider.stage}.WeatherConditionPreloaderQueueUrl}
   preload-weather-conditions-consumer:
     handler: src/preloaders/consumers.weatherConditions
     timeout: 120
