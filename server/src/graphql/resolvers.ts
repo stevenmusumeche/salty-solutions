@@ -107,10 +107,10 @@ const resolvers: Resolvers & { UsgsParam: Object; NoaaParam: Object } = {
       );
     },
     weatherForecast: async (location, args, { services }) => {
-      return services.weather.getForecast(location);
+      return services.weather.getForecast(location.id);
     },
     hourlyWeatherForecast: async (location, args, { services }) => {
-      return services.weather.getHourlyForecast(location);
+      return services.weather.getHourlyForecast(location.id);
     },
     marineForecast: async (location, args, { services }) => {
       return services.marine.getForecast(location);
@@ -263,15 +263,14 @@ const resolvers: Resolvers & { UsgsParam: Object; NoaaParam: Object } = {
     },
   },
   Wind: {
-    detail: async (parent, args, { services, loaders }) => {
+    detail: async (parent, args, { services }) => {
       // weather
       if (parent.location) {
-        const result = await loaders.conditionsLoader.load({
-          location: parent.location,
-          start: new Date(args.start),
-          end: new Date(args.end),
-        });
-        return result.wind;
+        return services.weather.getWind(
+          parent.location.id,
+          new Date(args.start),
+          new Date(args.end)
+        );
       }
 
       // usgs
@@ -294,14 +293,13 @@ const resolvers: Resolvers & { UsgsParam: Object; NoaaParam: Object } = {
 
       throw new Error("No parent");
     },
-    summary: async (parent, args, { services, loaders }) => {
+    summary: async (parent, args, { services }) => {
       // weather
       if (parent.location) {
-        const result = await loaders.latestConditionsLoader.load(
-          parent.location
-        );
+        const data = await services.weather.getWindLatest(parent.location.id);
+
         return {
-          mostRecent: result.wind,
+          mostRecent: data,
         };
       }
 
@@ -324,15 +322,14 @@ const resolvers: Resolvers & { UsgsParam: Object; NoaaParam: Object } = {
   },
 
   TemperatureResult: {
-    detail: async (temperature, args, { loaders, services }) => {
+    detail: async (temperature, args, { services }) => {
       // weather
       if (temperature.location) {
-        const data = await loaders.conditionsLoader.load({
-          location: temperature.location,
-          start: new Date(args.start),
-          end: new Date(args.end),
-        });
-        return data.temperature;
+        return services.weather.getTemperature(
+          temperature.location.id,
+          new Date(args.start),
+          new Date(args.end)
+        );
       }
 
       // noaa
@@ -343,22 +340,24 @@ const resolvers: Resolvers & { UsgsParam: Object; NoaaParam: Object } = {
           new Date(args.end)
         );
       }
+
+      throw new Error("no parent for temperature");
     },
-    summary: async (temperature, __, { loaders, services }) => {
+    summary: async (temperature, __, { services }) => {
       // weather
       if (temperature.location) {
-        const data = await loaders.latestConditionsLoader.load(
-          temperature.location
+        const data = await services.weather.getTemperatureLatest(
+          temperature.location.id
         );
 
-        if (!data.temperature) {
+        if (!data) {
           return { mostRecent: null };
         }
 
         return {
           mostRecent: {
-            timestamp: data.temperature.timestamp,
-            temperature: data.temperature.temperature,
+            timestamp: data.timestamp,
+            temperature: data.temperature,
           },
         };
       }

@@ -6,7 +6,7 @@ import { ApolloServer, makeExecutableSchema } from "apollo-server-koa";
 import * as noaaService from "./services/noaa/client";
 import * as locationService from "./services/location";
 import * as sunMoonService from "./services/sun-and-moon";
-import * as weatherService from "./services/weather";
+import * as weatherService from "./services/weather/client";
 import * as marineService from "./services/marine";
 import * as usgsService from "./services/usgs/client";
 import * as radarService from "./services/radar";
@@ -19,7 +19,6 @@ import resolvers from "./graphql/resolvers";
 import Rollbar from "rollbar";
 // @ts-ignore
 import { FormatErrorWithContextExtension } from "graphql-format-error-context-extension";
-import { createDataLoaders } from "./dataloaders";
 import traceResolvers from "@lifeomic/graphql-resolvers-xray-tracing";
 
 var rollbar = new Rollbar({
@@ -46,7 +45,6 @@ export interface Context {
     modis: typeof modisService;
     saveOurLake: typeof saveOurLakeService;
   };
-  loaders: ReturnType<typeof createDataLoaders>;
   pass: any;
 }
 
@@ -93,7 +91,6 @@ const server = new ApolloServer({
         modis: modisService,
         saveOurLake: saveOurLakeService,
       },
-      loaders: createDataLoaders(),
       pass: {},
     };
   },

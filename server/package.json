@@ -55,6 +55,10 @@
     "consumer:usgs": "sls invoke local -f preload-usgs-consumer --path ./src/preloaders/events/usgs.json",
     "producer:all": "yarn run producer:buoy & yarn run producer:noaa & yarn run producer:windfinder & yarn run producer:usgs",
     "producer:weather:conditions": "sls invoke local -f preload-weather-conditions-producer",
-    "consumer:weather:conditions": "sls invoke local -f preload-weather-conditions-consumer --path ./src/preloaders/events/weather-conditions.json"
+    "consumer:weather:conditions": "sls invoke local -f preload-weather-conditions-consumer --path ./src/preloaders/events/weather-conditions.json",
+    "producer:weather:forecast": "sls invoke local -f preload-weather-forecast-producer",
+    "consumer:weather:forecast": "sls invoke local -f preload-weather-forecast-consumer --path ./src/preloaders/events/weather-forecast.json",
+    "producer:weather:forecast:hourly": "sls invoke local -f preload-weather-forecast-hourly-producer",
+    "consumer:weather:forecast:hourly": "sls invoke local -f preload-weather-forecast-hourly-consumer --path ./src/preloaders/events/weather-forecast.json"
   }
 }

@@ -12,6 +12,8 @@ export const PRODUCER_NAMES = {
   noaa: "noaa-preloader",
   noaaBuoy: "noaa-buoy-preloader",
   weatherConditions: "weather-conditions-preloader",
+  weatherForecast: "weather-forecast-preloader",
+  weatherForecastHourly: "weather-forecast-hourly-preloader",
 };
 
 export const forecast: ScheduledHandler = async () => {
@@ -129,6 +131,34 @@ export const weatherConditions: ScheduledHandler = async () => {
       process.env.QUEUE_URL!,
       PRODUCER_NAMES.weatherConditions,
       chunk.map((locationId) => ({ locationId, numHours: 6 }))
+    );
+  }
+};
+
+export const weatherForecast: ScheduledHandler = async () => {
+  console.log("Preloading Weather Forecast");
+
+  const allLocationIds = getAll().map((location) => location.id);
+  const chunks = chunk([...allLocationIds], 10);
+  for (const chunk of chunks) {
+    await sendMessageBatch(
+      process.env.QUEUE_URL!,
+      PRODUCER_NAMES.weatherForecast,
+      chunk.map((locationId) => ({ locationId }))
+    );
+  }
+};
+
+export const weatherForecastHourly: ScheduledHandler = async () => {
+  console.log("Preloading Hourly Weather Forecast");
+
+  const allLocationIds = getAll().map((location) => location.id);
+  const chunks = chunk([...allLocationIds], 10);
+  for (const chunk of chunks) {
+    await sendMessageBatch(
+      process.env.QUEUE_URL!,
+      PRODUCER_NAMES.weatherForecastHourly,
+      chunk.map((locationId) => ({ locationId }))
     );
   }
 };

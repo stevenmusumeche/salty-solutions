@@ -7,6 +7,7 @@ export const client = new DynamoDB.DocumentClient({ service: dynamodb });
 import { subMinutes, addDays } from "date-fns";
 import { DocumentClient } from "aws-sdk/clients/dynamodb";
 type WriteRequest = DocumentClient.WriteRequest;
+type PutItemInputAttributeMap = DocumentClient.PutItemInputAttributeMap;
 
 export const tableName = process.env.DATABASE_TABLE_NAME!;
 
@@ -85,6 +86,15 @@ export const batchWrite = async (
       })
     );
   }
+};
+
+export const put = async (item: PutItemInputAttributeMap) => {
+  const result = await client
+    .put({
+      Item: item.Item,
+      TableName: tableName,
+    })
+    .promise();
 };
 
 // todo: paging? only can return 1mb at a time

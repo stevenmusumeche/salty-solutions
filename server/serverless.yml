@@ -41,6 +41,8 @@ provider:
         - ${cf:ss-queue-${self:provider.stage}.NoaaPreloaderQueueArn}
         - ${cf:ss-queue-${self:provider.stage}.NoaaBuoyPreloaderQueueArn}
         - ${cf:ss-queue-${self:provider.stage}.WeatherConditionPreloaderQueueArn}
+        - ${cf:ss-queue-${self:provider.stage}.WeatherForecastPreloaderQueueArn}
+        - ${cf:ss-queue-${self:provider.stage}.WeatherForecastHourlyPreloaderQueueArn}
     - Effect: Allow
       Action:
         - s3:*
@@ -181,6 +183,40 @@ functions:
       - sqs:
           batchSize: 1
           arn: ${cf:ss-queue-${self:provider.stage}.WeatherConditionPreloaderQueueArn}
+
+  preload-weather-forecast-producer:
+    handler: src/preloaders/producers.weatherForecast
+    events:
+      - schedule:
+          name: WeatherForecastPreloader-${self:provider.stage}
+          enabled: ${self:custom.schedule_enabled.${self:provider.stage}, false}
+          rate: rate(2 hours)
+    environment:
+      QUEUE_URL: ${cf:ss-queue-${self:provider.stage}.WeatherForecastPreloaderQueueUrl}
+  preload-weather-forecast-consumer:
+    handler: src/preloaders/consumers.weatherForecast
+    timeout: 120
+    events:
+      - sqs:
+          batchSize: 1
+          arn: ${cf:ss-queue-${self:provider.stage}.WeatherForecastPreloaderQueueArn}
+
+  preload-weather-forecast-hourly-producer:
+    handler: src/preloaders/producers.weatherForecastHourly
+    events:
+      - schedule:
+          name: WeatherForecastHourlyPreloader-${self:provider.stage}
+          enabled: ${self:custom.schedule_enabled.${self:provider.stage}, false}
+          rate: rate(2 hours)
+    environment:
+      QUEUE_URL: ${cf:ss-queue-${self:provider.stage}.WeatherForecastHourlyPreloaderQueueUrl}
+  preload-weather-forecast-hourly-consumer:
+    handler: src/preloaders/consumers.weatherForecastHourly
+    timeout: 120
+    events:
+      - sqs:
+          batchSize: 1
+          arn: ${cf:ss-queue-${self:provider.stage}.WeatherForecastHourlyPreloaderQueueArn}
 
 custom:
   serverless-offline:

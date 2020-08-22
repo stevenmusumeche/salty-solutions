@@ -4,7 +4,7 @@ import { format, isAfter, parse } from "date-fns";
 import { parseFromTimeZone } from "date-fns-timezone";
 import { batchWrite, client, tableName } from "./db";
 import { LocationEntity } from "./location";
-import { celciusToFahrenheit } from "./weather";
+import { celciusToFahrenheit } from "./weather/client";
 
 export async function loadAndSave(siteTag: string) {
   const data = await scrapeData(siteTag);

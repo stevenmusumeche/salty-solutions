@@ -1,6 +1,7 @@
 import { LocationEntity, makeCacheKey } from "./location";
 import { getForecast as getMarineForecast } from "./marine";
-import { getForecast as getWeatherForecast } from "./weather";
+// import { getForecast as getWeatherForecast } from "./weather";
+import { getForecast as getWeatherForecast } from "./weather/client";
 import { CombinedForecastV2 } from "../generated/graphql";
 import { getCacheVal, setCacheVal } from "./db";
 import { getData } from "./wind-finder";
@@ -24,11 +25,9 @@ export const getCombinedForecastV2 = async (
   start: Date,
   end: Date
 ): Promise<CombinedForecastV2[]> => {
-  // todo add caching
-
   const [windFinderData, weather, marine] = await Promise.all([
     getData(location, start, end),
-    getWeatherForecast(location),
+    getWeatherForecast(location.id),
     getMarineForecast(location),
   ]);
 

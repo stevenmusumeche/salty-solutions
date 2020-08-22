@@ -15,7 +15,7 @@ import { degreesToCompass } from "../usgs/source";
 import { knotsToMph } from "../wind-finder";
 import { getTidePredictions } from "./source-tide";
 import { getStationById } from "./client";
-import { celciusToFahrenheit } from "../weather";
+import { celciusToFahrenheit } from "../weather/client";
 import { notUndefined } from "../utils";
 type WriteRequest = DocumentClient.WriteRequest;
 
