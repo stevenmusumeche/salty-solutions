@@ -128,7 +128,7 @@ export const weatherConditions: ScheduledHandler = async () => {
     await sendMessageBatch(
       process.env.QUEUE_URL!,
       PRODUCER_NAMES.weatherConditions,
-      chunk.map((locationId) => ({ locationId, numHours: 48 }))
+      chunk.map((locationId) => ({ locationId, numHours: 6 }))
     );
   }
 };
