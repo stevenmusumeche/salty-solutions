@@ -38,8 +38,8 @@ const ForecastTide: FC<Props> = ({
     () =>
       rawTideData.filter((x) =>
         isWithinInterval(new Date(x.time), {
-          start: startOfDay(date),
-          end: startOfDay(addDays(date, 1)),
+          start: addHours(startOfDay(date), -2),
+          end: addHours(startOfDay(addDays(date, 1)), 2),
         })
       ),
     [rawTideData, date]

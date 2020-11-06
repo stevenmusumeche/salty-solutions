@@ -12,7 +12,7 @@ import {
 } from "victory";
 import { noDecimals } from "../hooks/utils";
 
-const WIND_WARNING_MIN = 20;
+const WIND_WARNING_MIN = 25;
 
 interface Props {
   data: CombinedForecastV2DetailFragment;
