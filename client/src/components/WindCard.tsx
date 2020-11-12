@@ -3,7 +3,7 @@ import {
   TideStationDetailFragment,
   UsgsSiteDetailFragment,
 } from "@stevenmusumeche/salty-solutions-shared/dist/graphql";
-import { subHours, differenceInHours } from "date-fns";
+import { subHours, differenceInHours, format } from "date-fns";
 import React, { useEffect, useMemo, useState } from "react";
 import { CombinedError } from "urql";
 import {
@@ -19,6 +19,7 @@ import ConditionCard from "./ConditionCard";
 import MiniGraphWrapper from "./MiniGraphWrapper";
 import UsgsSiteSelect from "./UsgsSiteSelect";
 import NoData from "./NoData";
+import Modal from "./Modal";
 
 interface Props {
   locationId: string;
@@ -28,6 +29,7 @@ const WindCard: React.FC<Props> = ({ locationId, sites }) => {
   const [selectedSite, setSelectedSite] = useState(() =>
     sites.length ? sites[0] : undefined
   );
+  const [showModal, setShowModal] = useState(false);
 
   const date = useMemo(() => new Date(), []);
 
@@ -55,49 +57,78 @@ const WindCard: React.FC<Props> = ({ locationId, sites }) => {
     setSelectedSite(sites.length ? sites[0] : undefined);
   }, [locationId, sites]);
 
-  let graphDisplayVal = buildGraphDisplayVal(fetching, error, curDetail);
-
   return (
-    <ConditionCard
-      fetching={fetching}
-      error={error}
-      label="Wind (mph)"
-      className="wind-summary"
-    >
-      <div className="flex flex-col justify-between h-full w-full">
-        {curValue ? (
-          <>
-            <div>
-              {curValue}
-              <div className="absolute right-0 top-0 p-2 text-lg md:text-2xl">
-                {curDirectionValue}
+    <>
+      <ConditionCard
+        fetching={fetching}
+        error={error}
+        label="Wind (mph)"
+        className="wind-summary"
+      >
+        <div className="flex flex-col justify-between h-full w-full">
+          {curValue ? (
+            <>
+              <div>
+                {curValue}
+                <div className="absolute right-0 top-0 p-2 text-lg md:text-2xl">
+                  {curDirectionValue}
+                </div>
               </div>
+              <div
+                onClick={() => setShowModal(true)}
+                className="cursor-pointer"
+              >
+                {buildGraphDisplayVal(fetching, error, curDetail)}
+              </div>
+            </>
+          ) : (
+            <NoData />
+          )}
+          {selectedSite && (
+            <UsgsSiteSelect
+              sites={sites}
+              handleChange={(e) => {
+                const match = sites.find((site) => site.id === e.target.value);
+                setSelectedSite(match);
+              }}
+              selectedId={selectedSite.id}
+              fullWidth={true}
+            />
+          )}
+        </div>
+      </ConditionCard>
+      {showModal && (
+        <Modal title={`Wind (mph)`} close={() => setShowModal(false)}>
+          <>
+            <h3 className="text-base md:text-xl text-center">
+              {selectedSite?.name}
+            </h3>
+            <div className="text-sm">
+              {buildGraphDisplayVal(fetching, error, curDetail, true)}
             </div>
-            <div>{graphDisplayVal}</div>
           </>
-        ) : (
-          <NoData />
-        )}
-        {selectedSite && (
-          <UsgsSiteSelect
-            sites={sites}
-            handleChange={(e) => {
-              const match = sites.find((site) => site.id === e.target.value);
-              setSelectedSite(match);
-            }}
-            selectedId={selectedSite.id}
-            fullWidth={true}
-          />
-        )}
-      </div>
-    </ConditionCard>
+        </Modal>
+      )}
+    </>
   );
 };
 
 export default WindCard;
 
-const ArrowPoint: React.FC<any> = ({ x, y, datum, index, data, ...props }) => {
-  if (index % Math.floor(data.length / 10) !== 0) return null;
+const ArrowPoint: React.FC<any> = ({
+  x,
+  y,
+  datum,
+  index,
+  data,
+  fullScreen,
+  ...props
+}) => {
+  if (index % Math.floor(data.length / (fullScreen ? 20 : 10)) !== 0)
+    return null;
+
+  const offsetX = fullScreen ? x - 6 : x - 12;
+  const offsetY = fullScreen ? y - 5 : y - 19;
 
   return (
     <svg
@@ -105,8 +136,8 @@ const ArrowPoint: React.FC<any> = ({ x, y, datum, index, data, ...props }) => {
       viewBox="0 0 512 512"
       width="1em"
       height="1em"
-      x={x - 12}
-      y={y - 19}
+      x={offsetX}
+      y={offsetY}
       {...props}
     >
       <path
@@ -131,7 +162,8 @@ function buildGraphDisplayVal(
         directionDegrees: number;
         direction: string;
       }[]
-    | null
+    | null,
+  fullScreen?: boolean
 ) {
   if (curDetail) {
     // reduce the number of data points to display on the graph
@@ -158,39 +190,51 @@ function buildGraphDisplayVal(
         >
           <VictoryAxis
             fixLabelOverlap={false}
-            tickCount={2}
-            tickFormat={(date) => {
-              const hourDiff = Math.abs(
-                differenceInHours(new Date(date), new Date())
-              );
+            tickCount={fullScreen ? 8 : 2}
+            tickFormat={(date: string) => {
+              const dateObj = new Date(date);
+              if (fullScreen) {
+                return format(dateObj, "ccc") + "\n" + format(dateObj, "ha");
+              }
+
+              const hourDiff = Math.abs(differenceInHours(dateObj, new Date()));
               if (hourDiff >= 46) {
                 return "-2d";
-              } else if (hourDiff >= 22) {
+              } else if (hourDiff >= 18) {
                 return "-1d";
               }
               return "now";
             }}
             style={{
-              tickLabels: { fontSize: 24 },
-              grid: { stroke: "#a0aec0", strokeDasharray: "6, 6" },
+              tickLabels: { fontSize: fullScreen ? 8 : 24 },
+              grid: {
+                stroke: "#a0aec0",
+                strokeDasharray: "6, 6",
+                strokeWidth: fullScreen ? 0.5 : 1,
+              },
             }}
           />
           <VictoryAxis
             scale={{ x: "time" }}
             dependentAxis
-            style={{ tickLabels: { fontSize: 24 } }}
+            style={{ tickLabels: { fontSize: fullScreen ? 8 : 24 } }}
             tickFormat={noDecimals}
           />
           <VictoryGroup data={curDetail}>
             <VictoryLine
               interpolation="natural"
               style={{
-                data: { stroke: "#C68E37" },
+                data: { stroke: "#C68E37", strokeWidth: fullScreen ? 1 : 2 },
                 parent: { border: "1px solid #ccc" },
               }}
             />
             <VictoryScatter
-              dataComponent={<ArrowPoint style={{ fontSize: "2rem" }} />}
+              dataComponent={
+                <ArrowPoint
+                  fullScreen={fullScreen}
+                  style={{ fontSize: fullScreen ? "0.75rem" : "2rem" }}
+                />
+              }
             />
           </VictoryGroup>
         </VictoryChart>

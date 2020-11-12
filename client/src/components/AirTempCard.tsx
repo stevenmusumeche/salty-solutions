@@ -1,10 +1,11 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import ConditionCard from "./ConditionCard";
 import { hooks } from "@stevenmusumeche/salty-solutions-shared";
 import { subHours } from "date-fns";
 import MiniGraph from "./MiniGraph";
 import { noDecimals } from "../hooks/utils";
 import NoData from "./NoData";
+import Modal from "./Modal";
 
 interface Props {
   locationId: string;
@@ -12,6 +13,7 @@ interface Props {
 
 const AirTempCard: React.FC<Props> = ({ locationId }) => {
   const date = useMemo(() => new Date(), []);
+  const [showModal, setShowModal] = useState(false);
 
   const { curValue, curDetail, fetching, error } = hooks.useTemperatureData({
     locationId,
@@ -20,30 +22,50 @@ const AirTempCard: React.FC<Props> = ({ locationId }) => {
   });
 
   return (
-    <ConditionCard
-      label="Air Temperature (F)"
-      fetching={fetching}
-      error={error}
-      className="air-temp-summary"
-    >
-      <div className="flex flex-col justify-between h-full w-full">
-        {curValue ? (
-          <>
-            <div>{curValue}</div>
-            <MiniGraph
-              fetching={fetching}
-              error={error}
-              data={curDetail}
-              dependentAxisTickFormat={noDecimals}
-              className="air-temp-graph"
-            />
-          </>
-        ) : (
-          <NoData />
-        )}
-        <div style={{ height: 40 }} />
-      </div>
-    </ConditionCard>
+    <>
+      <ConditionCard
+        label="Air Temperature (F)"
+        fetching={fetching}
+        error={error}
+        className="air-temp-summary"
+      >
+        <div className="flex flex-col justify-between h-full w-full">
+          {curValue ? (
+            <>
+              <div>{curValue}</div>
+
+              <div
+                onClick={() => setShowModal(true)}
+                className="cursor-pointer"
+              >
+                <MiniGraph
+                  fetching={fetching}
+                  error={error}
+                  data={curDetail}
+                  dependentAxisTickFormat={noDecimals}
+                  className="air-temp-graph"
+                />
+              </div>
+            </>
+          ) : (
+            <NoData />
+          )}
+          <div style={{ height: 40 }} />
+        </div>
+      </ConditionCard>
+      {showModal && (
+        <Modal title="Air Temperature (F)" close={() => setShowModal(false)}>
+          <MiniGraph
+            fetching={fetching}
+            error={error}
+            data={curDetail}
+            dependentAxisTickFormat={noDecimals}
+            fullScreen={true}
+            tickCount={8}
+          />
+        </Modal>
+      )}
+    </>
   );
 };
 

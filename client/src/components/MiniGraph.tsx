@@ -1,6 +1,6 @@
 import React from "react";
 import { VictoryChart, VictoryLine, VictoryAxis } from "victory";
-import { differenceInHours } from "date-fns";
+import { differenceInHours, format } from "date-fns";
 import { CombinedError, OperationContext } from "urql";
 import ErrorIcon from "../assets/error.svg";
 import MiniGraphWrapper from "./MiniGraphWrapper";
@@ -13,6 +13,8 @@ interface Props {
   error?: CombinedError;
   className?: string;
   refresh?: (opts?: Partial<OperationContext> | undefined) => void;
+  fullScreen?: boolean;
+  tickCount?: number;
 }
 
 const MiniGraph: React.FC<Props> = ({
@@ -23,6 +25,8 @@ const MiniGraph: React.FC<Props> = ({
   tickValues,
   className,
   refresh,
+  fullScreen = false,
+  tickCount = 2,
 }) => {
   let displayVal = null;
   if (fetching) {
@@ -57,28 +61,35 @@ const MiniGraph: React.FC<Props> = ({
       >
         <VictoryAxis
           fixLabelOverlap={false}
-          tickCount={2}
-          tickFormat={(date) => {
-            const hourDiff = Math.abs(
-              differenceInHours(new Date(date), new Date())
-            );
+          tickCount={tickCount}
+          tickFormat={(date: string) => {
+            const dateObj = new Date(date);
+            if (fullScreen) {
+              return format(dateObj, "ccc") + "\n" + format(dateObj, "ha");
+            }
+
+            const hourDiff = Math.abs(differenceInHours(dateObj, new Date()));
             if (hourDiff >= 46) {
               return "-2d";
-            } else if (hourDiff >= 22) {
+            } else if (hourDiff >= 18) {
               return "-1d";
             }
             return "now";
           }}
           style={{
-            tickLabels: { fontSize: 24 },
-            grid: { stroke: "#a0aec0", strokeDasharray: "6, 6" },
+            tickLabels: { fontSize: fullScreen ? 8 : 24 },
+            grid: {
+              stroke: "#a0aec0",
+              strokeDasharray: "6, 6",
+              strokeWidth: fullScreen ? 0.5 : 1,
+            },
           }}
         />
         <VictoryAxis
           scale={{ x: "time" }}
           dependentAxis
           tickCount={5}
-          style={{ tickLabels: { fontSize: 24 } }}
+          style={{ tickLabels: { fontSize: fullScreen ? 8 : 24 } }}
           tickFormat={dependentAxisTickFormat}
           tickValues={tickValues}
         />
@@ -86,7 +97,7 @@ const MiniGraph: React.FC<Props> = ({
           interpolation="natural"
           data={data}
           style={{
-            data: { stroke: "#C68E37" },
+            data: { stroke: "#C68E37", strokeWidth: fullScreen ? 1 : 2 },
             parent: { border: "1px solid #ccc" },
           }}
         />

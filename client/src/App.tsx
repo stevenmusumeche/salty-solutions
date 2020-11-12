@@ -1,31 +1,25 @@
 import { navigate, RouteComponentProps } from "@reach/router";
 import { useLocationsQuery } from "@stevenmusumeche/salty-solutions-shared/dist/graphql";
 import {
-  useSalinitySites,
-  useWaterTempSites,
-  useWaterHeightSites,
-  useWindSites,
   useTideStationSites,
+  useWaterHeightSites,
 } from "@stevenmusumeche/salty-solutions-shared/dist/hooks";
 import { startOfDay } from "date-fns";
 import React, { useEffect, useMemo, useReducer, useState } from "react";
 import "./App.css";
-import AirTempCard from "./components/AirTempCard";
 import AppHeader from "./components/AppHeader";
 import CollapsibleSection from "./components/CollapsibleSection";
 import CombinedForecastV2 from "./components/CombinedForecastV2";
+import CurrentConditions from "./components/CurrentConditions";
 import DarkSkyRadar from "./components/DarkSkyRadar";
 import Donate from "./components/Donate";
 import HourlyForecast from "./components/HourlyForecast";
 import JumpNav from "./components/JumpNav";
 import ModisMap from "./components/ModisMap";
 import NotFound from "./components/NotFound";
-import SalinityCard from "./components/SalinityCard";
 import { SalinityMap } from "./components/SalinityMap";
 import Shell from "./components/Shell";
 import Tides from "./components/tide/Tides";
-import WaterTempCard from "./components/WaterTempCard";
-import WindCard from "./components/WindCard";
 
 export interface Action {
   type: string;
@@ -100,10 +94,7 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
     setDate(date);
   };
 
-  const salinitySites = useSalinitySites(selectedLocation);
-  const waterTempSites = useWaterTempSites(selectedLocation);
   const waterHeightSites = useWaterHeightSites(selectedLocation);
-  const windSites = useWindSites(selectedLocation);
   const tideStations = useTideStationSites(selectedLocation);
 
   if (locations.fetching) {
@@ -131,13 +122,7 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
       <JumpNav dispatch={dispatch} />
 
       <div className="container p-4 md:p-0 md:mx-auto md:my-0 md:mt-8">
-        <span id="current-conditions"></span>
-        <div className="current-conditions-grid">
-          <WindCard locationId={locationId} sites={windSites} />
-          <AirTempCard locationId={locationId} />
-          <WaterTempCard locationId={locationId} sites={waterTempSites} />
-          <SalinityCard locationId={locationId} sites={salinitySites} />
-        </div>
+        <CurrentConditions location={selectedLocation} />
 
         <span id="tides"></span>
         <div className="bg-white rounded-lg shadow-md p-4 mb-4 md:mb-8">

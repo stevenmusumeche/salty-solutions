@@ -10,6 +10,7 @@ import {
   TideStationDetailFragment,
 } from "@stevenmusumeche/salty-solutions-shared/dist/graphql";
 import NoData from "./NoData";
+import Modal from "./Modal";
 
 interface Props {
   locationId: string;
@@ -20,6 +21,7 @@ const WaterTempCard: React.FC<Props> = ({ locationId, sites }) => {
   const [selectedSite, setSelectedSite] = useState(() =>
     sites.length ? sites[0] : undefined
   );
+  const [showModal, setShowModal] = useState(false);
 
   const date = useMemo(() => new Date(), []);
 
@@ -48,42 +50,69 @@ const WaterTempCard: React.FC<Props> = ({ locationId, sites }) => {
   }, [locationId, sites]);
 
   return (
-    <ConditionCard
-      label="Water Temperature (F)"
-      fetching={fetching}
-      error={error}
-      className="water-temp-summary"
-      refresh={refresh}
-    >
-      <div className="flex flex-col justify-between h-full w-full">
-        {curValue ? (
+    <>
+      <ConditionCard
+        label="Water Temperature (F)"
+        fetching={fetching}
+        error={error}
+        className="water-temp-summary"
+        refresh={refresh}
+      >
+        <div className="flex flex-col justify-between h-full w-full">
+          {curValue ? (
+            <>
+              <div>{curValue}</div>
+              <div
+                onClick={() => setShowModal(true)}
+                className="cursor-pointer"
+              >
+                <MiniGraph
+                  fetching={fetching}
+                  error={error}
+                  data={curDetail}
+                  dependentAxisTickFormat={noDecimals}
+                  className="water-temp-graph"
+                  refresh={refresh}
+                />
+              </div>
+            </>
+          ) : (
+            <NoData />
+          )}
+          {selectedSite && (
+            <UsgsSiteSelect
+              sites={sites}
+              handleChange={(e) => {
+                const match = sites.find((site) => site.id === e.target.value);
+                setSelectedSite(match);
+              }}
+              selectedId={selectedSite.id}
+              fullWidth={true}
+            />
+          )}
+        </div>
+      </ConditionCard>
+      {showModal && (
+        <Modal
+          title={`Water Temperature (F)`}
+          close={() => setShowModal(false)}
+        >
           <>
-            <div>{curValue}</div>
+            <h3 className="text-base md:text-xl text-center">
+              {selectedSite?.name}
+            </h3>
             <MiniGraph
               fetching={fetching}
               error={error}
               data={curDetail}
               dependentAxisTickFormat={noDecimals}
-              className="water-temp-graph"
-              refresh={refresh}
+              fullScreen={true}
+              tickCount={8}
             />
           </>
-        ) : (
-          <NoData />
-        )}
-        {selectedSite && (
-          <UsgsSiteSelect
-            sites={sites}
-            handleChange={(e) => {
-              const match = sites.find((site) => site.id === e.target.value);
-              setSelectedSite(match);
-            }}
-            selectedId={selectedSite.id}
-            fullWidth={true}
-          />
-        )}
-      </div>
-    </ConditionCard>
+        </Modal>
+      )}
+    </>
   );
 };
 
