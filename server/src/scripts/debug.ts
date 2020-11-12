@@ -2,19 +2,16 @@ import { query } from "@urql/exchange-graphcache";
 import { endOfDay, startOfDay } from "date-fns";
 import { queryTimeSeriesData } from "../services/db";
 import { getTidePredictions } from "../services/noaa/source-tide";
-import { scrapeData } from "../services/wind-finder";
 
 async function main() {
-  try {
-    const result = await scrapeData("caillou-lake");
-
-    for (let item of result) {
-      console.log(item);
-    }
-  } catch (e) {
-    console.error(e);
-  }
-
+  // try {
+  //   const result = await scrapeData("caillou-lake");
+  //   for (let item of result) {
+  //     console.log(item);
+  //   }
+  // } catch (e) {
+  //   console.error(e);
+  // }
   // const data = await getTidePredictions(
   //   startOfDay(new Date()),
   //   endOfDay(new Date()),
