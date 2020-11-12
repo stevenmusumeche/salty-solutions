@@ -163,7 +163,6 @@ const locations: LocationEntity[] = [
       "8761677",
       "8761742",
       "8762075",
-      "42093",
     ],
     marineZoneId: "gmz572",
     coords: {
