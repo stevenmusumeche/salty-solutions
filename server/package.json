@@ -49,6 +49,7 @@
     "consumer:noaa": "sls invoke local -f preload-noaa-consumer --path ./src/preloaders/events/noaa.json",
     "producer:tide": "sls invoke local -f preload-tide-producer",
     "consumer:tide": "sls invoke local -f preload-tide-consumer --path ./src/preloaders/events/tide.json",
+    "consumer:tide:logs": "sls logs -f preload-tide-consumer --stage=prod --startTime=24h",
     "producer:windfinder": "sls invoke local -f preload-windfinder-producer",
     "consumer:windfinder": "sls invoke local -f preload-windfinder-consumer --path ./src/preloaders/events/windfinder.json",
     "producer:usgs": "sls invoke local -f preload-usgs-producer",
