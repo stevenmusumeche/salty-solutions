@@ -2,16 +2,17 @@ import { query } from "@urql/exchange-graphcache";
 import { endOfDay, startOfDay } from "date-fns";
 import { queryTimeSeriesData } from "../services/db";
 import { getTidePredictions } from "../services/noaa/source-tide";
+import { scrapeData } from "../services/wind-finder";
 
 async function main() {
-  const result = await queryTimeSeriesData(
-    "noaa-predictions-8763535",
-    startOfDay(new Date("2020-11-22")),
-    endOfDay(new Date("2020-11-22"))
-  );
+  try {
+    const result = await scrapeData("caillou-lake");
 
-  for (let item of result) {
-    console.log(item);
+    for (let item of result) {
+      console.log(item);
+    }
+  } catch (e) {
+    console.error(e);
   }
 
   // const data = await getTidePredictions(

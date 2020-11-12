@@ -126,7 +126,7 @@ async function fetchAndParse(url: string): Promise<WindFinderResult[]> {
   const parsed = $(".forecast-day")
     .map((i, dayEl) => {
       return {
-        date: $(".weathertable__header h4", dayEl).text().trim(),
+        date: $(".weathertable__headline", dayEl).text().trim(),
         timePeriods: $(".weathertable__row", dayEl)
           .map((j, timeEl) => {
             function extract(selector: string) {
