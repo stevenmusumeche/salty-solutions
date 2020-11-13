@@ -36,7 +36,6 @@ export default gql`
     marineForecast: [MarineForecast!]
     wind: Wind
     temperature: TemperatureResult!
-    maps: Maps
     dataSources: DataSources
     modisMaps(numDays: Int): [ModisMap!]!
     salinityMap: String!
@@ -79,7 +78,7 @@ export default gql`
     marineZoneId: String!
     usgsSiteId: String!
     weatherStationId: String!
-    weatherRadarSiteId: String!
+    weatherRadarSiteId: String! # deprecated
   }
 
   type CombinedForecastV2 {
@@ -97,24 +96,6 @@ export default gql`
     short: String
     detailed: String
     marine: String
-  }
-
-  type Maps {
-    radar(numImages: Int): [Map!]!
-    overlays: Overlays!
-  }
-
-  type Overlays {
-    topo: String!
-    counties: String!
-    rivers: String!
-    highways: String!
-    cities: String!
-  }
-
-  type Map {
-    imageUrl: String!
-    timestamp: String!
   }
 
   type TemperatureResult {

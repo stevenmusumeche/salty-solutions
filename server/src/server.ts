@@ -9,7 +9,6 @@ import * as sunMoonService from "./services/sun-and-moon";
 import * as weatherService from "./services/weather/client";
 import * as marineService from "./services/marine/client";
 import * as usgsService from "./services/usgs/client";
-import * as radarService from "./services/radar";
 import * as combinedForecastService from "./services/combined-forecast";
 import * as nowcastService from "./services/nowcast";
 import * as modisService from "./services/modis";
@@ -39,7 +38,6 @@ export interface Context {
     weather: typeof weatherService;
     marine: typeof marineService;
     usgs: typeof usgsService;
-    radar: typeof radarService;
     combinedForecast: typeof combinedForecastService;
     nowcast: typeof nowcastService;
     modis: typeof modisService;
@@ -85,7 +83,6 @@ const server = new ApolloServer({
         weather: weatherService,
         marine: marineService,
         usgs: usgsService,
-        radar: radarService,
         combinedForecast: combinedForecastService,
         nowcast: nowcastService,
         modis: modisService,

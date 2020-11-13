@@ -104,7 +104,6 @@ export type Location = {
   marineForecast?: Maybe<Array<MarineForecast>>;
   wind?: Maybe<Wind>;
   temperature: TemperatureResult;
-  maps?: Maybe<Maps>;
   dataSources?: Maybe<DataSources>;
   modisMaps: Array<ModisMap>;
   salinityMap: Scalars['String'];
@@ -142,23 +141,6 @@ export type LocationCombinedForecastV2Args = {
 
 export type LocationModisMapsArgs = {
   numDays?: Maybe<Scalars['Int']>;
-};
-
-export type Map = {
-  __typename?: 'Map';
-  imageUrl: Scalars['String'];
-  timestamp: Scalars['String'];
-};
-
-export type Maps = {
-  __typename?: 'Maps';
-  radar: Array<Map>;
-  overlays: Overlays;
-};
-
-
-export type MapsRadarArgs = {
-  numImages?: Maybe<Scalars['Int']>;
 };
 
 export type MarineForecast = {
@@ -218,15 +200,6 @@ export enum NoaaParam {
   AirPressure = 'AirPressure',
   TidePrediction = 'TidePrediction'
 }
-
-export type Overlays = {
-  __typename?: 'Overlays';
-  topo: Scalars['String'];
-  counties: Scalars['String'];
-  rivers: Scalars['String'];
-  highways: Scalars['String'];
-  cities: Scalars['String'];
-};
 
 export type Query = {
   __typename?: 'Query';
@@ -777,34 +750,6 @@ export type LocationDetailFragment = (
   )> }
 );
 
-export type MapsQueryVariables = {
-  locationId: Scalars['ID'];
-};
-
-
-export type MapsQuery = (
-  { __typename?: 'Query' }
-  & { location?: Maybe<(
-    { __typename?: 'Location' }
-    & Pick<Location, 'id'>
-    & { maps?: Maybe<(
-      { __typename?: 'Maps' }
-      & { radar: Array<(
-        { __typename?: 'Map' }
-        & Pick<Map, 'timestamp' | 'imageUrl'>
-      )>, overlays: (
-        { __typename?: 'Overlays' }
-        & OverlayMapsFragment
-      ) }
-    )> }
-  )> }
-);
-
-export type OverlayMapsFragment = (
-  { __typename?: 'Overlays' }
-  & Pick<Overlays, 'topo' | 'counties' | 'rivers' | 'highways' | 'cities'>
-);
-
 export type ModisMapQueryVariables = {
   locationId: Scalars['ID'];
 };
@@ -1117,15 +1062,6 @@ export const LocationDetailFragmentDoc = gql`
 }
     ${TideStationDetailFragmentDoc}
 ${UsgsSiteDetailFragmentDoc}`;
-export const OverlayMapsFragmentDoc = gql`
-    fragment OverlayMaps on Overlays {
-  topo
-  counties
-  rivers
-  highways
-  cities
-}
-    `;
 export const TideDetailFieldsFragmentDoc = gql`
     fragment TideDetailFields on TideDetail {
   time
@@ -1301,26 +1237,6 @@ export const LocationsDocument = gql`
 
 export function useLocationsQuery(options: Omit<Urql.UseQueryArgs<LocationsQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<LocationsQuery>({ query: LocationsDocument, ...options });
-};
-export const MapsDocument = gql`
-    query Maps($locationId: ID!) {
-  location(id: $locationId) {
-    id
-    maps {
-      radar(numImages: 8) {
-        timestamp
-        imageUrl
-      }
-      overlays {
-        ...OverlayMaps
-      }
-    }
-  }
-}
-    ${OverlayMapsFragmentDoc}`;
-
-export function useMapsQuery(options: Omit<Urql.UseQueryArgs<MapsQueryVariables>, 'query'> = {}) {
-  return Urql.useQuery<MapsQuery>({ query: MapsDocument, ...options });
 };
 export const ModisMapDocument = gql`
     query ModisMap($locationId: ID!) {

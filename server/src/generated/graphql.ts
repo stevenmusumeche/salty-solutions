@@ -107,7 +107,6 @@ export type Location = {
   marineForecast?: Maybe<Array<MarineForecast>>;
   wind?: Maybe<Wind>;
   temperature: TemperatureResult;
-  maps?: Maybe<Maps>;
   dataSources?: Maybe<DataSources>;
   modisMaps: Array<ModisMap>;
   salinityMap: Scalars['String'];
@@ -145,23 +144,6 @@ export type LocationCombinedForecastV2Args = {
 
 export type LocationModisMapsArgs = {
   numDays?: Maybe<Scalars['Int']>;
-};
-
-export type Map = {
-  __typename?: 'Map';
-  imageUrl: Scalars['String'];
-  timestamp: Scalars['String'];
-};
-
-export type Maps = {
-  __typename?: 'Maps';
-  radar: Array<Map>;
-  overlays: Overlays;
-};
-
-
-export type MapsRadarArgs = {
-  numImages?: Maybe<Scalars['Int']>;
 };
 
 export type MarineForecast = {
@@ -221,15 +203,6 @@ export enum NoaaParam {
   AirPressure = 'AirPressure',
   TidePrediction = 'TidePrediction'
 }
-
-export type Overlays = {
-  __typename?: 'Overlays';
-  topo: Scalars['String'];
-  counties: Scalars['String'];
-  rivers: Scalars['String'];
-  highways: Scalars['String'];
-  cities: Scalars['String'];
-};
 
 export type Query = {
   __typename?: 'Query';
@@ -597,9 +570,6 @@ export type ResolversTypes = {
   MarineForecast: ResolverTypeWrapper<Partial<MarineForecast>>;
   MarineForecastTimePeriod: ResolverTypeWrapper<Partial<MarineForecastTimePeriod>>;
   MarineForecastDetail: ResolverTypeWrapper<Partial<MarineForecastDetail>>;
-  Maps: ResolverTypeWrapper<Partial<Maps> & {location: LocationEntity}>;
-  Map: ResolverTypeWrapper<Partial<Map>>;
-  Overlays: ResolverTypeWrapper<Partial<Overlays>>;
   DataSources: ResolverTypeWrapper<Partial<DataSources>>;
   ModisMap: ResolverTypeWrapper<Partial<ModisMap>>;
   ModisSatellite: ResolverTypeWrapper<Partial<ModisSatellite>>;
@@ -652,9 +622,6 @@ export type ResolversParentTypes = {
   MarineForecast: Partial<MarineForecast>;
   MarineForecastTimePeriod: Partial<MarineForecastTimePeriod>;
   MarineForecastDetail: Partial<MarineForecastDetail>;
-  Maps: Partial<Maps> & {location: LocationEntity};
-  Map: Partial<Map>;
-  Overlays: Partial<Overlays>;
   DataSources: Partial<DataSources>;
   ModisMap: Partial<ModisMap>;
   ModisSatellite: Partial<ModisSatellite>;
@@ -754,22 +721,9 @@ export type LocationResolvers<ContextType = Context, ParentType extends Resolver
   marineForecast?: Resolver<Maybe<Array<ResolversTypes['MarineForecast']>>, ParentType, ContextType>;
   wind?: Resolver<Maybe<ResolversTypes['Wind']>, ParentType, ContextType>;
   temperature?: Resolver<ResolversTypes['TemperatureResult'], ParentType, ContextType>;
-  maps?: Resolver<Maybe<ResolversTypes['Maps']>, ParentType, ContextType>;
   dataSources?: Resolver<Maybe<ResolversTypes['DataSources']>, ParentType, ContextType>;
   modisMaps?: Resolver<Array<ResolversTypes['ModisMap']>, ParentType, ContextType, RequireFields<LocationModisMapsArgs, never>>;
   salinityMap?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
-};
-
-export type MapResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Map'] = ResolversParentTypes['Map']> = {
-  imageUrl?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  timestamp?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
-};
-
-export type MapsResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Maps'] = ResolversParentTypes['Maps']> = {
-  radar?: Resolver<Array<ResolversTypes['Map']>, ParentType, ContextType, RequireFields<MapsRadarArgs, never>>;
-  overlays?: Resolver<ResolversTypes['Overlays'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType>;
 };
 
@@ -814,15 +768,6 @@ export type MoonDetailResolvers<ContextType = Context, ParentType extends Resolv
   date?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   phase?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   illumination?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
-};
-
-export type OverlaysResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Overlays'] = ResolversParentTypes['Overlays']> = {
-  topo?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  counties?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  rivers?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  highways?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  cities?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType>;
 };
 
@@ -1016,15 +961,12 @@ export type Resolvers<ContextType = Context> = {
   ForecastWindDetailV2?: ForecastWindDetailV2Resolvers<ContextType>;
   ForecastWindSpeedDetail?: ForecastWindSpeedDetailResolvers<ContextType>;
   Location?: LocationResolvers<ContextType>;
-  Map?: MapResolvers<ContextType>;
-  Maps?: MapsResolvers<ContextType>;
   MarineForecast?: MarineForecastResolvers<ContextType>;
   MarineForecastDetail?: MarineForecastDetailResolvers<ContextType>;
   MarineForecastTimePeriod?: MarineForecastTimePeriodResolvers<ContextType>;
   ModisMap?: ModisMapResolvers<ContextType>;
   ModisMapEntry?: ModisMapEntryResolvers<ContextType>;
   MoonDetail?: MoonDetailResolvers<ContextType>;
-  Overlays?: OverlaysResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   RainDetail?: RainDetailResolvers<ContextType>;
   Salinity?: SalinityResolvers<ContextType>;

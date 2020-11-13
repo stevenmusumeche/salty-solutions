@@ -16,7 +16,6 @@ export interface LocationEntity {
   weatherGov: {
     apiBase: string;
     stationId: string;
-    radarSiteId: string;
   };
   nowcastSubdomain?: string;
   saveOurLake?: boolean;
@@ -25,12 +24,14 @@ export interface LocationEntity {
     slug?: string;
   };
   noaaBuoyIds?: string[];
+  state: "LA" | "TX";
 }
 
 const locations: LocationEntity[] = [
   {
     id: "cypremort-point",
     name: "Cypremort Point",
+    state: "LA",
     tideStationIds: [
       "8765251",
       "8765148",
@@ -49,7 +50,6 @@ const locations: LocationEntity[] = [
     weatherGov: {
       apiBase: "https://api.weather.gov/gridpoints/LCH/112,73",
       stationId: "KARA",
-      radarSiteId: "LCH",
     },
     nowcastSubdomain: "0",
     modisArea: "USA7",
@@ -58,6 +58,7 @@ const locations: LocationEntity[] = [
   {
     id: "calcasieu-lake",
     name: "Calcasieu Lake",
+    state: "LA",
     tideStationIds: ["8768094", "8767961", "8767816"],
     marineZoneId: "GMZ432",
     coords: {
@@ -68,7 +69,6 @@ const locations: LocationEntity[] = [
     weatherGov: {
       apiBase: "https://api.weather.gov/gridpoints/LCH/54,83",
       stationId: "KUXL",
-      radarSiteId: "LCH",
     },
     nowcastSubdomain: "cc",
     modisArea: "USA7",
@@ -77,6 +77,7 @@ const locations: LocationEntity[] = [
   {
     id: "cocodrie",
     name: "Cocodrie/Dulac",
+    state: "LA",
     tideStationIds: [
       "8762928",
       "8762888",
@@ -94,7 +95,6 @@ const locations: LocationEntity[] = [
     weatherGov: {
       apiBase: "https://api.weather.gov/gridpoints/LIX/47,58",
       stationId: "KHUM",
-      radarSiteId: "LIX",
     },
     nowcastSubdomain: "0",
     modisArea: "USA7",
@@ -103,6 +103,7 @@ const locations: LocationEntity[] = [
   {
     id: "dularge",
     name: "Dularge",
+    state: "LA",
     tideStationIds: [
       "8763535", // calliou lake
       "8763506", // raccoon
@@ -121,7 +122,6 @@ const locations: LocationEntity[] = [
     weatherGov: {
       apiBase: "https://api.weather.gov/gridpoints/LIX/42,65",
       stationId: "KHUM",
-      radarSiteId: "LIX",
     },
     nowcastSubdomain: "0",
     modisArea: "USA7",
@@ -130,6 +130,7 @@ const locations: LocationEntity[] = [
   {
     id: "hopedale",
     name: "Hopedale/Shell Beach",
+    state: "LA",
     tideStationIds: ["8761305", "8761529", "8760742", "8761108", "8760595"],
     marineZoneId: "GMZ536",
     coords: {
@@ -147,7 +148,6 @@ const locations: LocationEntity[] = [
     weatherGov: {
       apiBase: "https://api.weather.gov/gridpoints/LIX/85,84",
       stationId: "KNBG",
-      radarSiteId: "LIX",
     },
     saveOurLake: true,
     modisArea: "USA7",
@@ -156,6 +156,7 @@ const locations: LocationEntity[] = [
   {
     id: "grand-isle",
     name: "Grand Isle",
+    state: "LA",
     tideStationIds: [
       "8761724",
       "8761826",
@@ -180,7 +181,6 @@ const locations: LocationEntity[] = [
     weatherGov: {
       apiBase: "https://api.weather.gov/gridpoints/LIX/73,58",
       stationId: "KGAO",
-      radarSiteId: "LIX",
     },
     nowcastSubdomain: "0",
     modisArea: "USA7",
@@ -189,6 +189,7 @@ const locations: LocationEntity[] = [
   {
     id: "venice",
     name: "Venice",
+    state: "LA",
     tideStationIds: [
       "8760721",
       "8760736",
@@ -222,7 +223,6 @@ const locations: LocationEntity[] = [
     weatherGov: {
       apiBase: "https://api.weather.gov/gridpoints/LIX/97,61",
       stationId: "KMIS",
-      radarSiteId: "LIX",
     },
     modisArea: "USA7",
     saveOurLake: true,
@@ -231,6 +231,7 @@ const locations: LocationEntity[] = [
   {
     id: "lake-ponchartrain",
     name: "Lake Ponchartrain",
+    state: "LA",
     tideStationIds: [
       "8761402",
       "8761487",
@@ -262,7 +263,6 @@ const locations: LocationEntity[] = [
     weatherGov: {
       apiBase: "https://api.weather.gov/gridpoints/LIX/70,93",
       stationId: "KASD",
-      radarSiteId: "LIX",
     },
     modisArea: "USA7",
     saveOurLake: true,
@@ -271,6 +271,7 @@ const locations: LocationEntity[] = [
   {
     id: "rigolets",
     name: "Rigolets",
+    state: "LA",
     tideStationIds: ["8761402", "8761487", "8761473"],
     marineZoneId: "GMZ534",
     coords: {
@@ -286,7 +287,6 @@ const locations: LocationEntity[] = [
     weatherGov: {
       apiBase: "https://api.weather.gov/gridpoints/LIX/82,99",
       stationId: "KASD",
-      radarSiteId: "LIX",
     },
     modisArea: "USA7",
     saveOurLake: true,
@@ -295,6 +295,7 @@ const locations: LocationEntity[] = [
   {
     id: "lafitte",
     name: "Lafitte",
+    state: "LA",
     tideStationIds: ["8761732", "8761899", "8761819"],
     marineZoneId: "GMZ552",
     coords: {
@@ -312,7 +313,6 @@ const locations: LocationEntity[] = [
     weatherGov: {
       apiBase: "https://api.weather.gov/gridpoints/LIX/68,77",
       stationId: "KGAO",
-      radarSiteId: "LIX",
     },
     modisArea: "USA7",
     saveOurLake: false,
@@ -322,6 +322,7 @@ const locations: LocationEntity[] = [
   {
     id: "sabine-lake",
     name: "Sabine Lake",
+    state: "LA",
     tideStationIds: ["8770570", "8770822", "8770475", "8770520"],
     marineZoneId: "GMZ450",
     coords: {
@@ -332,7 +333,6 @@ const locations: LocationEntity[] = [
     weatherGov: {
       apiBase: "https://api.weather.gov/gridpoints/LCH/33,71",
       stationId: "KBPT",
-      radarSiteId: "LCH",
     },
     modisArea: "USA7",
     saveOurLake: false,
@@ -342,6 +342,7 @@ const locations: LocationEntity[] = [
   {
     id: "port-fourchon",
     name: "Port Fourchon",
+    state: "LA",
     tideStationIds: ["8762075", "8762223", "8762481", "8762084", "8761826"],
     noaaBuoyIds: ["KXPY", "LOPL1"],
     marineZoneId: "gmz572",
@@ -353,7 +354,6 @@ const locations: LocationEntity[] = [
     weatherGov: {
       apiBase: "https://api.weather.gov/gridpoints/LIX/65,52",
       stationId: "KXPY",
-      radarSiteId: "KLIX",
     },
     nowcastSubdomain: "0",
     modisArea: "USA7",
@@ -362,6 +362,7 @@ const locations: LocationEntity[] = [
   {
     id: "point-aux-chenes",
     name: "Pointe-aux-Chenes",
+    state: "LA",
     tideStationIds: ["8762184", "8762928", "8762481"],
     noaaBuoyIds: [],
     marineZoneId: "GMZ550",
@@ -373,20 +374,73 @@ const locations: LocationEntity[] = [
     weatherGov: {
       apiBase: "https://api.weather.gov/gridpoints/LIX/51,69",
       stationId: "KHUM",
-      radarSiteId: "KLIX",
     },
     nowcastSubdomain: "0",
     modisArea: "USA7",
     windfinder: { slug: "bayou-petit-caillou-lapeyrouse" },
   },
+  {
+    id: "leeville",
+    name: "Leeville",
+    state: "LA",
+    tideStationIds: ["8762084", "8762075", "8762184", "8762223"],
+    noaaBuoyIds: [],
+    marineZoneId: "GMZ552",
+    coords: {
+      lat: 29.2499,
+      lon: -90.2119,
+    },
+    usgsSiteIds: ["07380249"],
+    weatherGov: {
+      apiBase: "https://api.weather.gov/gridpoints/LIX/64,58",
+      stationId: "KGAO",
+    },
+    nowcastSubdomain: "0",
+    modisArea: "USA7",
+    windfinder: { slug: "port_fourchon" },
+  },
+  {
+    id: "golden-meadow",
+    name: "Golden Meadow",
+    state: "LA",
+    tideStationIds: ["8762184", "8762084", "8762481"],
+    noaaBuoyIds: [],
+    marineZoneId: "GMZ552",
+    coords: {
+      lat: 29.3791,
+      lon: -90.2601,
+    },
+    usgsSiteIds: ["07380249"],
+    weatherGov: {
+      apiBase: "https://api.weather.gov/gridpoints/LIX/62,64",
+      stationId: "KGAO",
+    },
+    nowcastSubdomain: "0",
+    modisArea: "USA7",
+    windfinder: { slug: "galliano_south_lafourche_airport" },
+  },
+  {
+    id: "pointe-a-la-hache",
+    name: "Pointe a La Hache",
+    state: "LA",
+    tideStationIds: ["8761108", "8760721"],
+    noaaBuoyIds: [],
+    marineZoneId: "GMZ536",
+    coords: {
+      lat: 29.5751,
+      lon: -89.7902,
+    },
+    usgsSiteIds: ["292952089453800"],
+    weatherGov: {
+      apiBase: "https://api.weather.gov/gridpoints/LIX/80,73",
+      stationId: "KLNQ",
+    },
+    modisArea: "USA7",
+    saveOurLake: true,
+    windfinder: { slug: "bay-gardene_point-a-la-hache" },
+  },
 ];
 
-// bay gardene
-// leevile
-// breton island
-// golden meadow
-// Myrtle Grove
-// Happy Jack
 // Isle of Pitre, Cat Island, Ship Island, and Back Bay Biloxi, Bay St. Louis.
 
 // https://www.facebook.com/groups/154496828630117/permalink/362118351201296/
@@ -409,7 +463,7 @@ export const getDataSources = (location: LocationEntity) => ({
   marineZoneId: location.marineZoneId,
   usgsSiteIds: location.usgsSiteIds,
   weatherStationId: location.weatherGov.stationId,
-  weatherRadarSiteId: location.weatherGov.radarSiteId,
+  weatherRadarSiteId: "deprecated",
 });
 
 export const makeCacheKey = (location: LocationEntity, key: string) => {

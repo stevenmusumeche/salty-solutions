@@ -16,7 +16,6 @@ generates:
       defaultMapper: Partial<{T}>
       mappers:
         TemperatureResult: "Partial<{T}> & {location?: LocationEntity, station?: NoaaStationEntity}"
-        Maps: "Partial<{T}> & {location: LocationEntity}"
         Location: ../services/location#LocationEntity
         TidePreditionStation: ../services/noaa/source#NoaaStationEntity
         UsgsSite: ../services/usgs/source#UsgsSiteEntity

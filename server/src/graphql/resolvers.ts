@@ -118,13 +118,6 @@ const resolvers: Resolvers & { UsgsParam: Object; NoaaParam: Object } = {
     wind: async (location) => {
       return { location };
     },
-    maps: async (location, args, { services }) => {
-      return {
-        location,
-
-        overlays: services.radar.getOverlays(location),
-      };
-    },
     dataSources: async (location, args, { services }) => {
       return services.location.getDataSources(location);
     },
@@ -372,11 +365,6 @@ const resolvers: Resolvers & { UsgsParam: Object; NoaaParam: Object } = {
       }
 
       throw new Error("No parent");
-    },
-  },
-  Maps: {
-    radar: (maps, args, { services }) => {
-      return services.radar.getRadarImages(maps.location, args.numImages);
     },
   },
 };
