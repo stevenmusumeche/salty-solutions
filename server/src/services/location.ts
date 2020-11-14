@@ -322,7 +322,7 @@ const locations: LocationEntity[] = [
   {
     id: "sabine-lake",
     name: "Sabine Lake",
-    state: "LA",
+    state: "TX",
     tideStationIds: ["8770570", "8770822", "8770475", "8770520"],
     marineZoneId: "GMZ450",
     coords: {
