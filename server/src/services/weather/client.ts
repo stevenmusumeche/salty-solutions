@@ -32,13 +32,15 @@ export async function getTemperature(
 ): Promise<TemperatureDetail[]> {
   const pk = `weather-condition-temperature-${locationId}`;
   const result = await queryTimeSeriesData<any>(pk, start, end);
-  return result.map((x) => ({
-    ...x,
-    temperature: {
-      degrees: x.degrees,
-      unit: x.unit,
-    },
-  }));
+  return result
+    .filter((x) => x.degrees !== 32) // ignore false reading of 32 degrees F
+    .map((x) => ({
+      ...x,
+      temperature: {
+        degrees: x.degrees,
+        unit: x.unit,
+      },
+    }));
 }
 
 export const getTemperatureLatest = async (locationId: string) => {

@@ -555,6 +555,7 @@ export type CurrentConditionsDataQueryVariables = {
   includeUsgs: Scalars['Boolean'];
   noaaStationId?: Maybe<Scalars['ID']>;
   includeNoaa: Scalars['Boolean'];
+  includeLocationWind?: Maybe<Scalars['Boolean']>;
   startDate: Scalars['String'];
   endDate: Scalars['String'];
 };
@@ -568,7 +569,19 @@ export type CurrentConditionsDataQuery = (
     & { temperature: (
       { __typename?: 'TemperatureResult' }
       & TemperatureDetailFieldsFragment
-    ) }
+    ), locationWind?: Maybe<(
+      { __typename?: 'Wind' }
+      & { summary: (
+        { __typename?: 'WindSummary' }
+        & { mostRecent?: Maybe<(
+          { __typename?: 'WindDetail' }
+          & WindDetailFields2Fragment
+        )> }
+      ), detail?: Maybe<Array<(
+        { __typename?: 'WindDetail' }
+        & WindDetailFields2Fragment
+      )>> }
+    )> }
   )>, usgsSite?: Maybe<(
     { __typename?: 'UsgsSite' }
     & UsgsSiteDetailFieldsFragment
@@ -1192,11 +1205,21 @@ export function useCombinedForecastV2Query(options: Omit<Urql.UseQueryArgs<Combi
   return Urql.useQuery<CombinedForecastV2Query>({ query: CombinedForecastV2Document, ...options });
 };
 export const CurrentConditionsDataDocument = gql`
-    query CurrentConditionsData($locationId: ID!, $usgsSiteId: ID, $includeUsgs: Boolean!, $noaaStationId: ID, $includeNoaa: Boolean!, $startDate: String!, $endDate: String!) {
+    query CurrentConditionsData($locationId: ID!, $usgsSiteId: ID, $includeUsgs: Boolean!, $noaaStationId: ID, $includeNoaa: Boolean!, $includeLocationWind: Boolean = false, $startDate: String!, $endDate: String!) {
   location(id: $locationId) {
     id
     temperature {
       ...TemperatureDetailFields
+    }
+    locationWind: wind @include(if: $includeLocationWind) {
+      summary {
+        mostRecent {
+          ...WindDetailFields2
+        }
+      }
+      detail(start: $startDate, end: $endDate) {
+        ...WindDetailFields2
+      }
     }
   }
   usgsSite(siteId: $usgsSiteId) @include(if: $includeUsgs) {
@@ -1207,6 +1230,7 @@ export const CurrentConditionsDataDocument = gql`
   }
 }
     ${TemperatureDetailFieldsFragmentDoc}
+${WindDetailFields2FragmentDoc}
 ${UsgsSiteDetailFieldsFragmentDoc}
 ${TidePredictionStationDetailFieldsFragmentDoc}`;
 

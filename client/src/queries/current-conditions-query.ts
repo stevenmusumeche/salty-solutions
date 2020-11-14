@@ -7,6 +7,7 @@ const CURRENT_CONDITIONS_QUERY = gql`
     $includeUsgs: Boolean!
     $noaaStationId: ID
     $includeNoaa: Boolean!
+    $includeLocationWind: Boolean = false
     $startDate: String!
     $endDate: String!
   ) {
@@ -14,6 +15,16 @@ const CURRENT_CONDITIONS_QUERY = gql`
       id
       temperature {
         ...TemperatureDetailFields
+      }
+      locationWind: wind @include(if: $includeLocationWind) {
+        summary {
+          mostRecent {
+            ...WindDetailFields2
+          }
+        }
+        detail(start: $startDate, end: $endDate) {
+          ...WindDetailFields2
+        }
       }
     }
 

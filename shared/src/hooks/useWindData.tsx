@@ -21,12 +21,14 @@ export function useCurrentWindData({
 }: Input) {
   const includeUsgs = !!usgsSiteId;
   const includeNoaa = !!noaaStationId;
+  const includeLocationWind = !includeUsgs && !includeNoaa;
 
   const [result, executeQuery] = useCurrentConditionsDataQuery({
     variables: {
       locationId,
       usgsSiteId,
       includeUsgs,
+      includeLocationWind,
       noaaStationId,
       includeNoaa,
       startDate: startDate.toISOString(),
@@ -46,10 +48,11 @@ export function useCurrentWindData({
 }
 
 function extractData(windData: UseQueryState<CurrentConditionsDataQuery>) {
-  // use either the USGS or the NOAA field, depending on which was requested
+  // use either the USGS or the NOAA field (or location fallback), depending on which was requested
   const base =
     windData?.data?.usgsSite?.wind ||
-    windData?.data?.tidePreditionStation?.wind;
+    windData?.data?.tidePreditionStation?.wind ||
+    windData?.data?.location?.locationWind;
 
   const curValue =
     base?.summary.mostRecent && noDecimals(base?.summary.mostRecent.speed);

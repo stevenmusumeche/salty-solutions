@@ -84,7 +84,7 @@ const WindCard: React.FC<Props> = ({ locationId, sites }) => {
           ) : (
             <NoData />
           )}
-          {selectedSite && (
+          {selectedSite ? (
             <UsgsSiteSelect
               sites={sites}
               handleChange={(e) => {
@@ -94,6 +94,8 @@ const WindCard: React.FC<Props> = ({ locationId, sites }) => {
               selectedId={selectedSite.id}
               fullWidth={true}
             />
+          ) : (
+            <div style={{ height: 40 }} />
           )}
         </div>
       </ConditionCard>
