@@ -23,6 +23,7 @@ export const LOCATION_QUERY = gql`
   fragment LocationDetail on Location {
     id
     name
+    state
     coords {
       lat
       lon

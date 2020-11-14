@@ -95,6 +95,7 @@ export type Location = {
   __typename?: 'Location';
   id: Scalars['ID'];
   name: Scalars['String'];
+  state: Scalars['String'];
   tidePreditionStations: Array<TidePreditionStation>;
   usgsSites: Array<UsgsSite>;
   coords: Coords;
@@ -709,6 +710,7 @@ export type ForecastWindSpeedDetailResolvers<ContextType = Context, ParentType e
 export type LocationResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Location'] = ResolversParentTypes['Location']> = {
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  state?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   tidePreditionStations?: Resolver<Array<ResolversTypes['TidePreditionStation']>, ParentType, ContextType, RequireFields<LocationTidePreditionStationsArgs, never>>;
   usgsSites?: Resolver<Array<ResolversTypes['UsgsSite']>, ParentType, ContextType>;
   coords?: Resolver<ResolversTypes['Coords'], ParentType, ContextType>;

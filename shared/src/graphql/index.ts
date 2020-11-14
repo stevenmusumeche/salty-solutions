@@ -92,6 +92,7 @@ export type Location = {
   __typename?: 'Location';
   id: Scalars['ID'];
   name: Scalars['String'];
+  state: Scalars['String'];
   tidePreditionStations: Array<TidePreditionStation>;
   usgsSites: Array<UsgsSite>;
   coords: Coords;
@@ -750,7 +751,7 @@ export type UsgsSiteDetailFragment = (
 
 export type LocationDetailFragment = (
   { __typename?: 'Location' }
-  & Pick<Location, 'id' | 'name'>
+  & Pick<Location, 'id' | 'name' | 'state'>
   & { coords: (
     { __typename?: 'Coords' }
     & Pick<Coords, 'lat' | 'lon'>
@@ -1062,6 +1063,7 @@ export const LocationDetailFragmentDoc = gql`
     fragment LocationDetail on Location {
   id
   name
+  state
   coords {
     lat
     lon

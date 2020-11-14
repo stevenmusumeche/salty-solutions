@@ -24,6 +24,7 @@ export default gql`
   type Location {
     id: ID!
     name: String!
+    state: String!
     tidePreditionStations(limit: Int): [TidePreditionStation!]!
     usgsSites: [UsgsSite!]!
     coords: Coords!
