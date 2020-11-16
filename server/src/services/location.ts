@@ -450,7 +450,7 @@ const locations: LocationEntity[] = [
       lat: 29.3013,
       lon: -94.7977,
     },
-    usgsSiteIds: ["08042558", "08077637"],
+    usgsSiteIds: ["08077637"],
     weatherGov: {
       apiBase: "https://api.weather.gov/gridpoints/HGX/86,75",
       stationId: "KGLS",
