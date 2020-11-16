@@ -110,9 +110,9 @@ export const usgsSites: UsgsSiteEntity[] = [
     name: "Port Sulphur",
     coords: { lat: 29.4977778, lon: -89.7605556 },
     availableParams: [
-      UsgsParams.WaterTemp,
-      UsgsParams.GuageHeight,
-      UsgsParams.Salinity,
+      // UsgsParams.WaterTemp,
+      // UsgsParams.GuageHeight,
+      // UsgsParams.Salinity,
     ],
   },
   {
