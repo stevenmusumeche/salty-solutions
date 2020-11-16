@@ -682,6 +682,61 @@ export const noaaStations: NoaaStationEntity[] = [
     ],
     type: NoaaStationType.Buoy,
   },
+  {
+    id: "8772471",
+    name: "Freeport SPIP, Freeport Harbor",
+    coords: { lat: 28.935, lon: -95.295 },
+    availableParams: [
+      NoaaProduct.TidePrediction,
+      NoaaProduct.WaterLevel,
+      NoaaProduct.Wind,
+      NoaaProduct.AirTemperature,
+      // NoaaProduct.WaterTemperature,
+      NoaaProduct.AirPressure,
+    ],
+    type: NoaaStationType.Station,
+  },
+  {
+    id: "8772447",
+    name: "Freeport",
+    coords: { lat: 28.9433, lon: -95.30166 },
+    availableParams: [NoaaProduct.TidePrediction],
+    type: NoaaStationType.Station,
+  },
+  {
+    id: "8772132",
+    name: "Christmas Bay",
+    coords: { lat: 29.0416, lon: -95.175 },
+    availableParams: [NoaaProduct.TidePrediction],
+    type: NoaaStationType.Station,
+  },
+  {
+    id: "8771972",
+    name: "San Luis Pass",
+    coords: { lat: 29.095, lon: -95.113 },
+    availableParams: [
+      NoaaProduct.TidePrediction,
+      NoaaProduct.Wind,
+      NoaaProduct.AirTemperature,
+      NoaaProduct.WaterTemperature,
+      NoaaProduct.AirPressure,
+    ],
+    type: NoaaStationType.Station,
+  },
+  {
+    id: "8772985",
+    name: "Sargent",
+    coords: { lat: 28.7716, lon: -95.6167 },
+    availableParams: [
+      NoaaProduct.TidePrediction,
+      NoaaProduct.WaterLevel,
+      NoaaProduct.Wind,
+      NoaaProduct.AirTemperature,
+      NoaaProduct.WaterTemperature,
+      NoaaProduct.AirPressure,
+    ],
+    type: NoaaStationType.Station,
+  },
 ];
 
 export async function storeNoaaData(stationId: string, numHours = 24) {

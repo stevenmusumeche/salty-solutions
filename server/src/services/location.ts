@@ -443,7 +443,14 @@ const locations: LocationEntity[] = [
     id: "galveston",
     name: "Galveston",
     state: "TX",
-    tideStationIds: ["8771450", "8771013", "8770613", "8770971", "8771341"],
+    tideStationIds: [
+      "8771450",
+      "8771013",
+      "8770613",
+      "8770971",
+      "8771341",
+      "8771972",
+    ],
     noaaBuoyIds: ["42035"],
     marineZoneId: "GMZ335",
     coords: {
@@ -457,6 +464,26 @@ const locations: LocationEntity[] = [
     },
     modisArea: "USA7",
     windfinder: { slug: "port_bolivar_crystal_beach" },
+    nowcastSubdomain: "gb",
+  },
+  {
+    id: "freeport",
+    name: "Freeport",
+    state: "TX",
+    tideStationIds: ["8772471", "8772447", "8772132", "8771972", "8772985"],
+    noaaBuoyIds: [],
+    marineZoneId: "GMZ335",
+    coords: {
+      lat: 28.9541,
+      lon: -95.3597,
+    },
+    usgsSiteIds: [],
+    weatherGov: {
+      apiBase: "https://api.weather.gov/gridpoints/HGX/64,60",
+      stationId: "KLBX",
+    },
+    modisArea: "USA7",
+    windfinder: { slug: "surfside_beach_freeport" },
     nowcastSubdomain: "gb",
   },
 ];
