@@ -430,7 +430,7 @@ const locations: LocationEntity[] = [
       lat: 29.5751,
       lon: -89.7902,
     },
-    usgsSiteIds: ["292952089453800"],
+    usgsSiteIds: ["292952089453800", "073745258", "073745275"],
     weatherGov: {
       apiBase: "https://api.weather.gov/gridpoints/LIX/80,73",
       stationId: "KLNQ",
