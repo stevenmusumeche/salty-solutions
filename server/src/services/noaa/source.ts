@@ -476,11 +476,11 @@ export const noaaStations: NoaaStationEntity[] = [
     coords: { lat: 29.7283333, lon: -93.87 },
     availableParams: [
       NoaaProduct.TidePrediction,
-      NoaaProduct.WaterLevel,
-      NoaaProduct.Wind,
-      NoaaProduct.AirTemperature,
-      NoaaProduct.AirPressure,
-      NoaaProduct.WaterTemperature,
+      // NoaaProduct.WaterLevel,
+      // NoaaProduct.Wind,
+      // NoaaProduct.AirTemperature,
+      // NoaaProduct.AirPressure,
+      // NoaaProduct.WaterTemperature,
     ],
     type: NoaaStationType.Station,
   },
@@ -602,6 +602,86 @@ export const noaaStations: NoaaStationEntity[] = [
     availableParams: [NoaaProduct.TidePrediction],
     type: NoaaStationType.Station,
   },
+  {
+    id: "8771450",
+    name: "Galveston Pier 21",
+    coords: { lat: 29.31, lon: -94.793 },
+    availableParams: [
+      NoaaProduct.TidePrediction,
+      NoaaProduct.WaterLevel,
+      NoaaProduct.Wind,
+      NoaaProduct.AirTemperature,
+      NoaaProduct.WaterTemperature,
+      NoaaProduct.AirPressure,
+    ],
+    type: NoaaStationType.Station,
+  },
+  {
+    id: "8770971",
+    name: "Rollover Pass",
+    coords: { lat: 29.515, lon: -94.513 },
+    availableParams: [
+      NoaaProduct.Wind,
+      NoaaProduct.WaterTemperature,
+      NoaaProduct.AirPressure,
+      NoaaProduct.TidePrediction,
+      NoaaProduct.WaterLevel,
+    ],
+    type: NoaaStationType.Station,
+  },
+  {
+    id: "8771341",
+    name: "Galveston Bay Entrance (North Jetty)",
+    coords: { lat: 29.357, lon: -94.725 },
+    availableParams: [
+      NoaaProduct.Wind,
+      NoaaProduct.WaterTemperature,
+      NoaaProduct.AirPressure,
+      NoaaProduct.WaterLevel,
+      NoaaProduct.AirTemperature,
+      NoaaProduct.TidePrediction,
+    ],
+    type: NoaaStationType.Station,
+  },
+  {
+    id: "8771013",
+    name: "Eagle Point",
+    coords: { lat: 29.481, lon: -94.917 },
+    availableParams: [
+      NoaaProduct.Wind,
+      NoaaProduct.WaterTemperature,
+      NoaaProduct.AirPressure,
+      NoaaProduct.AirTemperature,
+      NoaaProduct.WaterLevel,
+      NoaaProduct.TidePrediction,
+    ],
+    type: NoaaStationType.Station,
+  },
+  {
+    id: "8770613",
+    name: "Morgans Point",
+    coords: { lat: 29.682, lon: -94.985 },
+    availableParams: [
+      NoaaProduct.Wind,
+      NoaaProduct.WaterTemperature,
+      NoaaProduct.AirPressure,
+      NoaaProduct.AirTemperature,
+      NoaaProduct.WaterLevel,
+      NoaaProduct.TidePrediction,
+    ],
+    type: NoaaStationType.Station,
+  },
+  {
+    id: "42035",
+    name: "22 NM East of Galveston",
+    coords: { lat: 29.215, lon: -94.429 },
+    availableParams: [
+      NoaaProduct.Wind,
+      NoaaProduct.WaterTemperature,
+      NoaaProduct.AirPressure,
+    ],
+    type: NoaaStationType.Buoy,
+  },
 ];
 
 export async function storeNoaaData(stationId: string, numHours = 24) {
@@ -623,7 +703,6 @@ export async function storeBuoyData(stationId: string, numHours = 24) {
   const startDate = subHours(endDate, numHours);
 
   const data = await scrapeBuoyData(station, startDate, endDate);
-  console.log(data);
 
   await saveToDynamo(station, data);
 }

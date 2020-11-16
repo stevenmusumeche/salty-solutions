@@ -22,7 +22,7 @@ const SalinityCard: React.FC<Props> = ({ locationId, sites }) => {
 
   const { curValue, curDetail, fetching, error } = hooks.useSalinityData(
     locationId,
-    selectedSite.id,
+    selectedSite?.id,
     subHours(date, 48),
     date
   );

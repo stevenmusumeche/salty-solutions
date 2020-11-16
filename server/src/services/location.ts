@@ -323,7 +323,7 @@ const locations: LocationEntity[] = [
     id: "sabine-lake",
     name: "Sabine Lake",
     state: "TX",
-    tideStationIds: ["8770570", "8770822", "8770475", "8770520"],
+    tideStationIds: ["8770822", "8770570", "8770475", "8770520"],
     marineZoneId: "GMZ450",
     coords: {
       lat: 29.732984,
@@ -438,6 +438,26 @@ const locations: LocationEntity[] = [
     modisArea: "USA7",
     saveOurLake: true,
     windfinder: { slug: "bay-gardene_point-a-la-hache" },
+  },
+  {
+    id: "galveston",
+    name: "Galveston",
+    state: "TX",
+    tideStationIds: ["8771450", "8771013", "8770613", "8770971", "8771341"],
+    noaaBuoyIds: ["42035"],
+    marineZoneId: "GMZ335",
+    coords: {
+      lat: 29.3013,
+      lon: -94.7977,
+    },
+    usgsSiteIds: ["08042558", "08077637"],
+    weatherGov: {
+      apiBase: "https://api.weather.gov/gridpoints/HGX/86,75",
+      stationId: "KGLS",
+    },
+    modisArea: "USA7",
+    windfinder: { slug: "port_bolivar_crystal_beach" },
+    nowcastSubdomain: "gb",
   },
 ];
 

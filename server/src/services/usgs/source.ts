@@ -11,6 +11,9 @@ type WriteRequest = DocumentClient.WriteRequest;
 
 axiosRetry(axios, { retries: 3, retryDelay: (retryCount) => retryCount * 500 });
 
+// https://waterservices.usgs.gov/rest/IV-Service.html
+// https://waterwatch.usgs.gov/?m=real&r=la
+
 enum UsgsParams {
   WaterTemp = "00010",
   WindSpeed = "00035",
@@ -373,16 +376,19 @@ export const usgsSites: UsgsSiteEntity[] = [
   {
     id: "295744093303800",
     name: "Cameron Parish",
-    availableParams: [
-      UsgsParams.WaterTemp,
-      UsgsParams.GuageHeight,
-      UsgsParams.Salinity,
-    ],
+    availableParams: [UsgsParams.WaterTemp, UsgsParams.Salinity],
+  },
+  {
+    id: "08042558",
+    name: "W Fk Double Bayou at Eagle Ferry Rd",
+    availableParams: [UsgsParams.GuageHeight],
+  },
+  {
+    id: "08077637",
+    name: "Clear Lake Second Outflow Channel at Kemah, TX",
+    availableParams: [UsgsParams.WindSpeed, UsgsParams.WindDirection],
   },
 ];
-
-// https://waterservices.usgs.gov/rest/IV-Service.html
-// https://waterwatch.usgs.gov/?m=real&r=la
 
 // go().catch((e) => console.log(e));
 

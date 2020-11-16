@@ -1,7 +1,19 @@
 {
   "Records": [
     {
-      "body": "{\"stationId\":\"LOPL1\",\"numHours\":72}"
+      "body": "{\"stationId\":\"RLOT2\",\"numHours\":72}"
+    },
+    {
+      "body": "{\"stationId\":\"GNJT2\",\"numHours\":72}"
+    },
+    {
+      "body": "{\"stationId\":\"EPTT2\",\"numHours\":72}"
+    },
+    {
+      "body": "{\"stationId\":\"MGPT2\",\"numHours\":72}"
+    },
+    {
+      "body": "{\"stationId\":\"42035\",\"numHours\":72}"
     }
   ]
 }

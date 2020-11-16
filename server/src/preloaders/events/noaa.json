@@ -1,13 +1,7 @@
 {
   "Records": [
     {
-      "body": "{\"stationId\":\"8766072\",\"numHours\":48}"
-    },
-    {
-      "body": "{\"stationId\":\"8764314\",\"numHours\":48}"
-    },
-    {
-      "body": "{\"stationId\":\"8764227\",\"numHours\":48}"
+      "body": "{\"stationId\":\"8771341\",\"numHours\":72}"
     }
   ]
 }
