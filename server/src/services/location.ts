@@ -486,6 +486,63 @@ const locations: LocationEntity[] = [
     windfinder: { slug: "surfside_beach_freeport" },
     nowcastSubdomain: "gb",
   },
+  {
+    id: "matagorda",
+    name: "Matagorda",
+    state: "TX",
+    tideStationIds: [
+      "8773146",
+      "8773767",
+      "8772985",
+      "8773701",
+      "8773259",
+      "8774230",
+      "8773037",
+    ],
+    noaaBuoyIds: ["KBQX"],
+    marineZoneId: "GMZ330",
+    coords: {
+      lat: 28.6911,
+      lon: -95.9683,
+    },
+    usgsSiteIds: [],
+    weatherGov: {
+      apiBase: "https://api.weather.gov/gridpoints/HGX/41,49",
+      stationId: "KLBX",
+    },
+    modisArea: "USA7",
+    windfinder: { slug: "matagorda_little-boggy-creek" },
+    nowcastSubdomain: "ma",
+  },
+  {
+    id: "corpus-christi",
+    name: "Corpus Christi",
+    state: "TX",
+    tideStationIds: [
+      "8775296",
+      "8775283",
+      "8775237",
+      "8775241",
+      "8775083",
+      "8775792",
+      "8774770",
+      "8775870",
+      "8776139",
+    ],
+    noaaBuoyIds: [],
+    marineZoneId: "GMZ230",
+    coords: {
+      lat: 27.8006,
+      lon: -97.3964,
+    },
+    usgsSiteIds: [],
+    weatherGov: {
+      apiBase: "https://api.weather.gov/gridpoints/CRP/111,33",
+      stationId: "KCRP",
+    },
+    modisArea: "USA6",
+    windfinder: { slug: "texas_state_aquarium" },
+  },
 ];
 
 // Isle of Pitre, Cat Island, Ship Island, and Back Bay Biloxi, Bay St. Louis.
@@ -495,7 +552,6 @@ const locations: LocationEntity[] = [
 // ideas:
 // show tide stations on a map
 // barometric pressure
-// salinity tables? not sure what that is
 // river guage info - The Atchafalaya river at butte Larose is pertinent to us here on vermilion bay.
 
 export const getAll = (): LocationEntity[] =>
