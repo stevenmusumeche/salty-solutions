@@ -13,7 +13,7 @@ export async function getSalinityMap(
   const cachedData = await getCacheVal<string>(cacheKey, 6 * 60); // fresh for 6 hours
   if (cachedData) return cachedData;
 
-  const url = `https://tidesandcurrents.noaa.gov/ofs/ofs_animation.shtml?ofsregion=ng&subdomain=${location.nowcastSubdomain}&model_type=salinity_nowcast`;
+  const url = `https://tidesandcurrents.noaa.gov/ofs/ofs_mapplots.html?ofsregion=ng&subdomain=${location.nowcastSubdomain}&model_type=salinity_nowcast`;
   const result = await axios.get(url);
   const $ = cheerio.load(result.data);
   const options = $("option", "select#Slider")
