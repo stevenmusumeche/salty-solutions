@@ -11,7 +11,7 @@ provider:
   stage: ${opt:stage, 'dev'}
   timeout: 500
   tracing:
-    lambda: true
+    lambda: false
 
   iamRoleStatements:
     - Effect: Allow
