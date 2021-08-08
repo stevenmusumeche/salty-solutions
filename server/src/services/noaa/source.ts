@@ -30,7 +30,7 @@ type WriteRequest = DocumentClient.WriteRequest;
 
 axiosRetry(axios, { retries: 3, retryDelay: (retryCount) => retryCount * 500 });
 
-enum NoaaProduct {
+export enum NoaaProduct {
   Wind = "wind",
   WaterLevel = "water_level",
   AirTemperature = "air_temperature",
@@ -54,6 +54,24 @@ export interface NoaaStationEntity {
   availableParams: NoaaProduct[];
   type: NoaaStationType;
 }
+
+// dynamo primary keys
+export const noaaDynamoKeys: Record<
+  NoaaProduct,
+  (stationId: string) => string
+> = {
+  [NoaaProduct.AirPressure]: (stationId: string) =>
+    `noaa-air_pressure-${stationId}`,
+  [NoaaProduct.AirTemperature]: (stationId: string) =>
+    `noaa-air_temperature-${stationId}`,
+  [NoaaProduct.TidePrediction]: (stationId: string) =>
+    `noaa-predictions-${stationId}`,
+  [NoaaProduct.WaterLevel]: (stationId: string) =>
+    `noaa-water_level-${stationId}`,
+  [NoaaProduct.WaterTemperature]: (stationId: string) =>
+    `noaa-water_temperature-${stationId}`,
+  [NoaaProduct.Wind]: (stationId: string) => `noaa-wind-${stationId}`,
+};
 
 export const noaaStations: NoaaStationEntity[] = [
   {

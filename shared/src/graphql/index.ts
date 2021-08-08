@@ -202,6 +202,12 @@ export enum NoaaParam {
   TidePrediction = 'TidePrediction'
 }
 
+export type NoaaParamInfo = {
+  __typename?: 'NoaaParamInfo';
+  id: NoaaParam;
+  latestDataDate?: Maybe<Scalars['String']>;
+};
+
 export type Query = {
   __typename?: 'Query';
   locations: Array<Location>;
@@ -336,6 +342,7 @@ export type TidePreditionStation = {
   coords: Coords;
   tides?: Maybe<Array<TideDetail>>;
   availableParams: Array<NoaaParam>;
+  availableParamsV2: Array<NoaaParamInfo>;
   wind?: Maybe<Wind>;
   temperature?: Maybe<TemperatureResult>;
   waterTemperature?: Maybe<WaterTemperature>;
@@ -364,6 +371,12 @@ export enum UsgsParam {
   Salinity = 'Salinity'
 }
 
+export type UsgsParamInfo = {
+  __typename?: 'UsgsParamInfo';
+  id: UsgsParam;
+  latestDataDate?: Maybe<Scalars['String']>;
+};
+
 export type UsgsSite = {
   __typename?: 'UsgsSite';
   id: Scalars['ID'];
@@ -375,6 +388,7 @@ export type UsgsSite = {
   wind?: Maybe<Wind>;
   salinity?: Maybe<Salinity>;
   availableParams: Array<UsgsParam>;
+  availableParamsV2: Array<UsgsParamInfo>;
   locations: Array<Location>;
 };
 
@@ -741,12 +755,20 @@ export type LocationsQuery = (
 
 export type TideStationDetailFragment = (
   { __typename?: 'TidePreditionStation' }
-  & Pick<TidePreditionStation, 'id' | 'name' | 'availableParams' | 'url'>
+  & Pick<TidePreditionStation, 'id' | 'name' | 'url'>
+  & { availableParamsV2: Array<(
+    { __typename?: 'NoaaParamInfo' }
+    & Pick<NoaaParamInfo, 'id' | 'latestDataDate'>
+  )> }
 );
 
 export type UsgsSiteDetailFragment = (
   { __typename?: 'UsgsSite' }
-  & Pick<UsgsSite, 'id' | 'name' | 'availableParams' | 'url'>
+  & Pick<UsgsSite, 'id' | 'name' | 'url'>
+  & { availableParamsV2: Array<(
+    { __typename?: 'UsgsParamInfo' }
+    & Pick<UsgsParamInfo, 'id' | 'latestDataDate'>
+  )> }
 );
 
 export type LocationDetailFragment = (
@@ -1047,7 +1069,10 @@ export const TideStationDetailFragmentDoc = gql`
     fragment TideStationDetail on TidePreditionStation {
   id
   name
-  availableParams
+  availableParamsV2 {
+    id
+    latestDataDate
+  }
   url
 }
     `;
@@ -1055,7 +1080,10 @@ export const UsgsSiteDetailFragmentDoc = gql`
     fragment UsgsSiteDetail on UsgsSite {
   id
   name
-  availableParams
+  availableParamsV2 {
+    id
+    latestDataDate
+  }
   url
 }
     `;

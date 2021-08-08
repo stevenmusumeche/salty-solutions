@@ -164,8 +164,8 @@ const NoaaStation: React.FC<{
       <div className="">
         <h3 className="text-xl mb-4">Available Readings</h3>
         <ul className="list-disc list-inside mb-8 text-sm">
-          {station.availableParams.map((param) => (
-            <li key={param}>{param}</li>
+          {station.availableParamsV2.map((param) => (
+            <li key={param.id}>{param.id}</li>
           ))}
         </ul>
       </div>
@@ -202,8 +202,8 @@ const UsgsSite: React.FC<{
       <div className="">
         <h3 className="text-xl mb-4">Available Readings</h3>
         <ul className="list-disc list-inside mb-8 text-sm">
-          {site.availableParams.map((param) => (
-            <li key={param}>{param}</li>
+          {site.availableParamsV2.map((param) => (
+            <li key={param.id}>{param.id}</li>
           ))}
         </ul>
       </div>

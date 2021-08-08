@@ -1,4 +1,9 @@
-import { NoaaStationEntity, noaaStations } from "./source";
+import {
+  noaaDynamoKeys,
+  NoaaProduct,
+  NoaaStationEntity,
+  noaaStations,
+} from "./source";
 import { TideData } from "./source-tide";
 import { queryTimeSeriesData } from "../db";
 import {
@@ -33,7 +38,7 @@ export const getWind = async (
   start: Date,
   end: Date
 ): Promise<WindDetail[]> => {
-  const pk = `noaa-wind-${stationId}`;
+  const pk = noaaDynamoKeys[NoaaProduct.Wind](stationId);
   return queryTimeSeriesData<WindDetail>(pk, start, end);
 };
 
@@ -50,7 +55,7 @@ export const getTemperature = async (
   start: Date,
   end: Date
 ): Promise<TemperatureDetail[]> => {
-  const pk = `noaa-air_temperature-${stationId}`;
+  const pk = noaaDynamoKeys[NoaaProduct.AirTemperature](stationId);
   return queryTimeSeriesData<TemperatureDetail>(pk, start, end);
 };
 
@@ -71,7 +76,7 @@ export const getWaterTemperature = async (
   start: Date,
   end: Date
 ): Promise<TemperatureDetail[]> => {
-  const pk = `noaa-water_temperature-${stationId}`;
+  const pk = noaaDynamoKeys[NoaaProduct.WaterTemperature](stationId);
   return queryTimeSeriesData<TemperatureDetail>(pk, start, end);
 };
 
@@ -92,7 +97,7 @@ export const getWaterHeight = async (
   start: Date,
   end: Date
 ): Promise<WaterHeight[]> => {
-  const pk = `noaa-water_level-${stationId}`;
+  const pk = noaaDynamoKeys[NoaaProduct.WaterLevel](stationId);
   return queryTimeSeriesData<WaterHeight>(pk, start, end);
 };
 

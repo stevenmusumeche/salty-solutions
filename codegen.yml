@@ -19,6 +19,8 @@ generates:
         Location: ../services/location#LocationEntity
         TidePreditionStation: ../services/noaa/source#NoaaStationEntity
         UsgsSite: ../services/usgs/source#UsgsSiteEntity
+        UsgsParamInfo: "Partial<{T}> & {site: UsgsSiteEntity}"
+        NoaaParamInfo: "Partial<{T}> & {station: NoaaStationEntity}"
         WaterTemperature: "Partial<{T}> & {site?: UsgsSiteEntity, station?: NoaaStationEntity}"
         Salinity: "Partial<{T}> & {site: UsgsSiteEntity}"
         Wind: "Partial<{T}> & {location?: LocationEntity, site?: UsgsSiteEntity, station?: NoaaStationEntity}"
