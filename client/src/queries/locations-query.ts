@@ -9,14 +9,20 @@ export const LOCATION_QUERY = gql`
   fragment TideStationDetail on TidePreditionStation {
     id
     name
-    availableParams
+    availableParamsV2 {
+      id
+      latestDataDate
+    }
     url
   }
 
   fragment UsgsSiteDetail on UsgsSite {
     id
     name
-    availableParams
+    availableParamsV2 {
+      id
+      latestDataDate
+    }
     url
   }
 

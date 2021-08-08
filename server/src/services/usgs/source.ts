@@ -14,13 +14,22 @@ axiosRetry(axios, { retries: 3, retryDelay: (retryCount) => retryCount * 500 });
 // https://waterservices.usgs.gov/rest/IV-Service.html
 // https://waterwatch.usgs.gov/?m=real&r=la
 
-enum UsgsParams {
+export enum UsgsParams {
   WaterTemp = "00010",
   WindSpeed = "00035",
   WindDirection = "00036",
   GuageHeight = "00065",
   Salinity = "00480",
 }
+
+// dynamo primary keys
+export const usgsDynamoKeys: Record<UsgsParams, (siteId: string) => string> = {
+  [UsgsParams.WindSpeed]: (siteId: string) => `usgs-wind-${siteId}`,
+  [UsgsParams.WindDirection]: (siteId: string) => `usgs-wind-${siteId}`,
+  [UsgsParams.GuageHeight]: (siteId: string) => `usgs-water-height-${siteId}`,
+  [UsgsParams.Salinity]: (siteId: string) => `usgs-salinity-${siteId}`,
+  [UsgsParams.WaterTemp]: (siteId: string) => `usgs-water-temp-${siteId}`,
+};
 
 export interface UsgsSiteEntity {
   id: string;

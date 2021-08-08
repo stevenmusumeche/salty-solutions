@@ -13,6 +13,8 @@ import * as combinedForecastService from "./services/combined-forecast";
 import * as nowcastService from "./services/nowcast";
 import * as modisService from "./services/modis";
 import * as saveOurLakeService from "./services/saveourlake";
+import latestUsgsLoader from "./loaders/latest-usgs";
+import latestNoaaLoader from "./loaders/latest-noaa";
 import typeDefs from "./graphql/schema";
 import resolvers from "./graphql/resolvers";
 import Rollbar from "rollbar";
@@ -42,6 +44,10 @@ export interface Context {
     nowcast: typeof nowcastService;
     modis: typeof modisService;
     saveOurLake: typeof saveOurLakeService;
+  };
+  loaders: {
+    latestUsgs: typeof latestUsgsLoader;
+    latestNoaa: typeof latestNoaaLoader;
   };
   pass: any;
 }
@@ -87,6 +93,10 @@ const server = new ApolloServer({
         nowcast: nowcastService,
         modis: modisService,
         saveOurLake: saveOurLakeService,
+      },
+      loaders: {
+        latestUsgs: latestUsgsLoader,
+        latestNoaa: latestNoaaLoader,
       },
       pass: {},
     };

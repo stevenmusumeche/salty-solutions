@@ -52,7 +52,13 @@ export default gql`
     wind: Wind
     salinity: Salinity
     availableParams: [UsgsParam!]!
+    availableParamsV2: [UsgsParamInfo!]!
     locations: [Location!]!
+  }
+
+  type UsgsParamInfo {
+    id: UsgsParam!
+    latestDataDate: String
   }
 
   type ModisMap {
@@ -120,12 +126,18 @@ export default gql`
     coords: Coords!
     tides(start: String!, end: String!): [TideDetail!]
     availableParams: [NoaaParam!]!
+    availableParamsV2: [NoaaParamInfo!]!
     wind: Wind
     temperature: TemperatureResult
     waterTemperature: WaterTemperature
     salinity: Salinity
     waterHeight(start: String!, end: String!): [WaterHeight!]
     locations: [Location!]!
+  }
+
+  type NoaaParamInfo {
+    id: NoaaParam!
+    latestDataDate: String
   }
 
   type TideDetail {

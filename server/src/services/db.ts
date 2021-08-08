@@ -39,6 +39,35 @@ export const getCacheVal = async <T>(
   }
 };
 
+export const getLatestValue = async <T>(
+  key: string
+): Promise<{ key: string; createdAt: Date; data: T } | void> => {
+  try {
+    const result = await client
+      .query({
+        TableName: tableName,
+        KeyConditionExpression: "pk = :key",
+        ExpressionAttributeValues: {
+          ":key": key,
+        },
+        Limit: 1,
+        ScanIndexForward: false,
+      })
+      .promise();
+
+    if (result.Count === 0) return;
+
+    const item = result.Items![0];
+    const data = item.data as T;
+
+    return { data, key, createdAt: new Date(item.sk) };
+  } catch (e) {
+    console.log("Error fetching latest value", e);
+
+    return;
+  }
+};
+
 export const setCacheVal = async <T>(key: string, data: T): Promise<T> => {
   await client
     .put({

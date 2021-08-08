@@ -205,6 +205,12 @@ export enum NoaaParam {
   TidePrediction = 'TidePrediction'
 }
 
+export type NoaaParamInfo = {
+  __typename?: 'NoaaParamInfo';
+  id: NoaaParam;
+  latestDataDate?: Maybe<Scalars['String']>;
+};
+
 export type Query = {
   __typename?: 'Query';
   locations: Array<Location>;
@@ -339,6 +345,7 @@ export type TidePreditionStation = {
   coords: Coords;
   tides?: Maybe<Array<TideDetail>>;
   availableParams: Array<NoaaParam>;
+  availableParamsV2: Array<NoaaParamInfo>;
   wind?: Maybe<Wind>;
   temperature?: Maybe<TemperatureResult>;
   waterTemperature?: Maybe<WaterTemperature>;
@@ -367,6 +374,12 @@ export enum UsgsParam {
   Salinity = 'Salinity'
 }
 
+export type UsgsParamInfo = {
+  __typename?: 'UsgsParamInfo';
+  id: UsgsParam;
+  latestDataDate?: Maybe<Scalars['String']>;
+};
+
 export type UsgsSite = {
   __typename?: 'UsgsSite';
   id: Scalars['ID'];
@@ -378,6 +391,7 @@ export type UsgsSite = {
   wind?: Maybe<Wind>;
   salinity?: Maybe<Salinity>;
   availableParams: Array<UsgsParam>;
+  availableParamsV2: Array<UsgsParamInfo>;
   locations: Array<Location>;
 };
 
@@ -541,6 +555,7 @@ export type ResolversTypes = {
   Float: ResolverTypeWrapper<Partial<Scalars['Float']>>;
   TideDetail: ResolverTypeWrapper<Partial<TideDetail>>;
   NoaaParam: ResolverTypeWrapper<Partial<NoaaParam>>;
+  NoaaParamInfo: ResolverTypeWrapper<Partial<NoaaParamInfo> & {station: NoaaStationEntity}>;
   Wind: ResolverTypeWrapper<Partial<Wind> & {location?: LocationEntity, site?: UsgsSiteEntity, station?: NoaaStationEntity}>;
   WindSummary: ResolverTypeWrapper<Partial<WindSummary>>;
   WindDetail: ResolverTypeWrapper<Partial<WindDetail>>;
@@ -555,6 +570,7 @@ export type ResolversTypes = {
   WaterHeight: ResolverTypeWrapper<Partial<WaterHeight>>;
   UsgsSite: ResolverTypeWrapper<UsgsSiteEntity>;
   UsgsParam: ResolverTypeWrapper<Partial<UsgsParam>>;
+  UsgsParamInfo: ResolverTypeWrapper<Partial<UsgsParamInfo> & {site: UsgsSiteEntity}>;
   SunDetail: ResolverTypeWrapper<Partial<SunDetail>>;
   MoonDetail: ResolverTypeWrapper<Partial<MoonDetail>>;
   SolunarDetail: ResolverTypeWrapper<Partial<SolunarDetail>>;
@@ -593,6 +609,7 @@ export type ResolversParentTypes = {
   Float: Partial<Scalars['Float']>;
   TideDetail: Partial<TideDetail>;
   NoaaParam: Partial<NoaaParam>;
+  NoaaParamInfo: Partial<NoaaParamInfo> & {station: NoaaStationEntity};
   Wind: Partial<Wind> & {location?: LocationEntity, site?: UsgsSiteEntity, station?: NoaaStationEntity};
   WindSummary: Partial<WindSummary>;
   WindDetail: Partial<WindDetail>;
@@ -607,6 +624,7 @@ export type ResolversParentTypes = {
   WaterHeight: Partial<WaterHeight>;
   UsgsSite: UsgsSiteEntity;
   UsgsParam: Partial<UsgsParam>;
+  UsgsParamInfo: Partial<UsgsParamInfo> & {site: UsgsSiteEntity};
   SunDetail: Partial<SunDetail>;
   MoonDetail: Partial<MoonDetail>;
   SolunarDetail: Partial<SolunarDetail>;
@@ -773,6 +791,12 @@ export type MoonDetailResolvers<ContextType = Context, ParentType extends Resolv
   __isTypeOf?: IsTypeOfResolverFn<ParentType>;
 };
 
+export type NoaaParamInfoResolvers<ContextType = Context, ParentType extends ResolversParentTypes['NoaaParamInfo'] = ResolversParentTypes['NoaaParamInfo']> = {
+  id?: Resolver<ResolversTypes['NoaaParam'], ParentType, ContextType>;
+  latestDataDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+};
+
 export type QueryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   locations?: Resolver<Array<ResolversTypes['Location']>, ParentType, ContextType>;
   location?: Resolver<Maybe<ResolversTypes['Location']>, ParentType, ContextType, RequireFields<QueryLocationArgs, 'id'>>;
@@ -876,12 +900,19 @@ export type TidePreditionStationResolvers<ContextType = Context, ParentType exte
   coords?: Resolver<ResolversTypes['Coords'], ParentType, ContextType>;
   tides?: Resolver<Maybe<Array<ResolversTypes['TideDetail']>>, ParentType, ContextType, RequireFields<TidePreditionStationTidesArgs, 'start' | 'end'>>;
   availableParams?: Resolver<Array<ResolversTypes['NoaaParam']>, ParentType, ContextType>;
+  availableParamsV2?: Resolver<Array<ResolversTypes['NoaaParamInfo']>, ParentType, ContextType>;
   wind?: Resolver<Maybe<ResolversTypes['Wind']>, ParentType, ContextType>;
   temperature?: Resolver<Maybe<ResolversTypes['TemperatureResult']>, ParentType, ContextType>;
   waterTemperature?: Resolver<Maybe<ResolversTypes['WaterTemperature']>, ParentType, ContextType>;
   salinity?: Resolver<Maybe<ResolversTypes['Salinity']>, ParentType, ContextType>;
   waterHeight?: Resolver<Maybe<Array<ResolversTypes['WaterHeight']>>, ParentType, ContextType, RequireFields<TidePreditionStationWaterHeightArgs, 'start' | 'end'>>;
   locations?: Resolver<Array<ResolversTypes['Location']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+};
+
+export type UsgsParamInfoResolvers<ContextType = Context, ParentType extends ResolversParentTypes['UsgsParamInfo'] = ResolversParentTypes['UsgsParamInfo']> = {
+  id?: Resolver<ResolversTypes['UsgsParam'], ParentType, ContextType>;
+  latestDataDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType>;
 };
 
@@ -895,6 +926,7 @@ export type UsgsSiteResolvers<ContextType = Context, ParentType extends Resolver
   wind?: Resolver<Maybe<ResolversTypes['Wind']>, ParentType, ContextType>;
   salinity?: Resolver<Maybe<ResolversTypes['Salinity']>, ParentType, ContextType>;
   availableParams?: Resolver<Array<ResolversTypes['UsgsParam']>, ParentType, ContextType>;
+  availableParamsV2?: Resolver<Array<ResolversTypes['UsgsParamInfo']>, ParentType, ContextType>;
   locations?: Resolver<Array<ResolversTypes['Location']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType>;
 };
@@ -969,6 +1001,7 @@ export type Resolvers<ContextType = Context> = {
   ModisMap?: ModisMapResolvers<ContextType>;
   ModisMapEntry?: ModisMapEntryResolvers<ContextType>;
   MoonDetail?: MoonDetailResolvers<ContextType>;
+  NoaaParamInfo?: NoaaParamInfoResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   RainDetail?: RainDetailResolvers<ContextType>;
   Salinity?: SalinityResolvers<ContextType>;
@@ -984,6 +1017,7 @@ export type Resolvers<ContextType = Context> = {
   TemperatureSummary?: TemperatureSummaryResolvers<ContextType>;
   TideDetail?: TideDetailResolvers<ContextType>;
   TidePreditionStation?: TidePreditionStationResolvers<ContextType>;
+  UsgsParamInfo?: UsgsParamInfoResolvers<ContextType>;
   UsgsSite?: UsgsSiteResolvers<ContextType>;
   WaterHeight?: WaterHeightResolvers<ContextType>;
   WaterTemperature?: WaterTemperatureResolvers<ContextType>;

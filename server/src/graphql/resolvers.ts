@@ -1,7 +1,8 @@
-import { Resolvers } from "../generated/graphql";
+import { NoaaParam, Resolvers, UsgsParam } from "../generated/graphql";
 import { ApolloError } from "apollo-server-koa";
 import { notUndefined } from "../services/utils";
-import { NoaaStationType } from "../services/noaa/source";
+import { NoaaProduct, NoaaStationType } from "../services/noaa/source";
+import { UsgsParams } from "../services/usgs/source";
 
 const resolvers: Resolvers & { UsgsParam: Object; NoaaParam: Object } = {
   UsgsParam: {
@@ -170,6 +171,14 @@ const resolvers: Resolvers & { UsgsParam: Object; NoaaParam: Object } = {
         .getAll()
         .filter((location) => location.tideStationIds.includes(station.id));
     },
+    availableParamsV2: async (station) => {
+      return station.availableParams.map((param) => {
+        return {
+          id: param as unknown as NoaaParam,
+          station,
+        };
+      });
+    },
   },
   UsgsSite: {
     url: (station) => {
@@ -195,6 +204,34 @@ const resolvers: Resolvers & { UsgsParam: Object; NoaaParam: Object } = {
       return services.location
         .getAll()
         .filter((location) => location.usgsSiteIds.includes(site.id));
+    },
+    availableParamsV2: async (site) => {
+      return site.availableParams.map((param) => {
+        return {
+          id: param as unknown as UsgsParam,
+          site,
+        };
+      });
+    },
+  },
+  UsgsParamInfo: {
+    latestDataDate: async (parent, args, { loaders }) => {
+      if (!parent.id || !parent.site) return null;
+
+      return loaders.latestUsgs.load({
+        siteId: parent.site.id,
+        param: parent.id as unknown as UsgsParams,
+      });
+    },
+  },
+  NoaaParamInfo: {
+    latestDataDate: async (parent, args, { loaders }) => {
+      if (!parent.id || !parent.station) return null;
+
+      return loaders.latestNoaa.load({
+        siteId: parent.station.id,
+        param: parent.id as unknown as NoaaProduct,
+      });
     },
   },
   Salinity: {

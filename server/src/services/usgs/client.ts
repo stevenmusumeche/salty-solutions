@@ -6,6 +6,8 @@ import {
   Wind,
   UsgsSiteEntity,
   usgsSites,
+  usgsDynamoKeys,
+  UsgsParams,
 } from "./source";
 import { subHours } from "date-fns";
 import { orderBy } from "lodash";
@@ -21,7 +23,7 @@ export const getWind = async (
   start: Date,
   end: Date
 ): Promise<Wind[]> => {
-  const pk = `usgs-wind-${siteId}`;
+  const pk = usgsDynamoKeys[UsgsParams.WindDirection](siteId);
   return queryTimeSeriesData<Wind>(pk, start, end);
 };
 
@@ -38,7 +40,7 @@ export const getWaterHeight = async (
   start: Date,
   end: Date
 ): Promise<WaterHeight[]> => {
-  const pk = `usgs-water-height-${siteId}`;
+  const pk = usgsDynamoKeys[UsgsParams.GuageHeight](siteId);
   return queryTimeSeriesData<WaterHeight>(pk, start, end);
 };
 
@@ -47,7 +49,7 @@ export const getSalinity = (
   start: Date,
   end: Date
 ): Promise<Salinity[]> => {
-  const pk = `usgs-salinity-${siteId}`;
+  const pk = usgsDynamoKeys[UsgsParams.Salinity](siteId);
   return queryTimeSeriesData<Salinity>(pk, start, end);
 };
 
@@ -64,7 +66,7 @@ export const getWaterTemperature = async (
   start: Date,
   end: Date
 ): Promise<WaterTemperature[]> => {
-  const pk = `usgs-water-temp-${siteId}`;
+  const pk = usgsDynamoKeys[UsgsParams.WaterTemp](siteId);
   return queryTimeSeriesData<WaterTemperature>(pk, start, end);
 };
 
