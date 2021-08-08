@@ -72,8 +72,6 @@ const resolvers: Resolvers & { UsgsParam: Object; NoaaParam: Object } = {
         .filter(notUndefined);
     },
     usgsSites: (location, _, { services }) => {
-      console.log(location);
-
       return location.usgsSiteIds
         .map((id) => services.usgs.getSiteById(id))
         .filter(notUndefined);
