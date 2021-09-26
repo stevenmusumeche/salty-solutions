@@ -1171,63 +1171,6 @@ async function scrapeData(
   return returnVal;
 }
 
-// async function updateStationSupportData() {
-//   for (const station of noaaStations) {
-//     let windData = await fetchDataForProduct(
-//       NoaaProduct.Wind,
-//       station.id,
-//       subDays(new Date(), 1),
-//       new Date()
-//     );
-//     const hasWind = windData.length > 0;
-
-//     const waterLevelData = await fetchDataForProduct(
-//       NoaaProduct.WaterLevel,
-//       station.id,
-//       subDays(new Date(), 1),
-//       new Date()
-//     );
-//     const hasWaterLevel = waterLevelData.length > 0;
-
-//     const airTempData = await fetchDataForProduct(
-//       NoaaProduct.AirTemperature,
-//       station.id,
-//       subDays(new Date(), 1),
-//       new Date()
-//     );
-//     const hasAirTemp = airTempData.length > 0;
-
-//     const waterTempData = await fetchDataForProduct(
-//       NoaaProduct.WaterTemperature,
-//       station.id,
-//       subDays(new Date(), 1),
-//       new Date()
-//     );
-//     const hasWaterTemp = waterTempData.length > 0;
-
-//     const airPressureData = await fetchDataForProduct(
-//       NoaaProduct.AirPressure,
-//       station.id,
-//       subDays(new Date(), 1),
-//       new Date()
-//     );
-//     const hasAirPressure = airPressureData.length > 0;
-
-//     console.log(`  {
-//       id: "${station.id}",
-//       name: "${station.name}",
-//       coords: { lat: ${station.coords.lat}, lon: ${station.coords.lon} },
-//       supportedProducts: [NoaaProduct.TidePrediction, ${
-//         hasWind ? `NoaaProduct.Wind,` : ""
-//       }${hasWaterLevel ? "NoaaProduct.WaterLevel," : ""}${
-//       hasAirTemp ? "NoaaProduct.AirTemperature," : ""
-//     }${hasWaterTemp ? "NoaaProduct.WaterTemperature," : ""}${
-//       hasAirPressure ? "NoaaProduct.AirPressure," : ""
-//     }],
-//     },`);
-//   }
-// }
-
 const mappers = {
   [NoaaProduct.Wind]: (data: WindApiResponse): WindDetail[] => {
     return data.data.map((datum) => {
