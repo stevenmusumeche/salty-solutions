@@ -86,10 +86,6 @@ const fetchPdf = async (url: string, output: string): Promise<void> => {
 
 const convertPdfToJpg = async (pdf: string, jpg: string) => {
   const ghostscriptBinary = process.env.GHOSTSCRIPT_PATH || "/opt/bin/gs";
-  console.log(
-    `${ghostscriptBinary} -dSAFER -dBATCH -dNOPAUSE -sDEVICE=jpeg -r600 -sOutputFile=${jpg} -dDownScaleFactor=3 ${pdf}`
-  );
-
   await execAsync(
     `${ghostscriptBinary} -dSAFER -dBATCH -dNOPAUSE -sDEVICE=jpeg -r600 -sOutputFile=${jpg} -dDownScaleFactor=3 ${pdf}`
   );

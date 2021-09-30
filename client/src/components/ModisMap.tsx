@@ -9,15 +9,19 @@ import ForwardIcon from "../assets/forward.svg";
 import useBreakpoints from "../hooks/useBreakpoints";
 import EmptyBox from "./EmptyBox";
 import startCase from "lodash/startCase";
+import { useAuth0 } from "@auth0/auth0-react";
+import LoginTeaser from "./LoginTeaser";
 
 interface Props {
   locationId: string;
 }
 
 const ModisMap: React.FC<Props> = ({ locationId }) => {
+  const { isAuthenticated } = useAuth0();
   const { isAtLeastMedium } = useBreakpoints();
   const [modisMap, refresh] = graphql.useModisMapQuery({
     variables: { locationId },
+    pause: !isAuthenticated,
   });
   const [curIndex, setCurIndex] = useState(0);
 
@@ -118,10 +122,25 @@ const ModisMap: React.FC<Props> = ({ locationId }) => {
     );
   }
 
+  function renderTeaser() {
+    return (
+      <div>
+        <div className="text-center text-lg mb-4 font-semibold">
+          Find clean water with real-time satellite imagery
+        </div>
+        <div className="mb-8 text-left">
+          MODIS is an extensive program using sensors on two satellites that
+          each provide complete daily coverage of the earth.
+        </div>
+        <LoginTeaser message="Login for free to access satellite imagery." />
+      </div>
+    );
+  }
+
   return (
     <>
-      <div className="mb-8 bg-white rounded-lg shadow-md z-0 text-white p-8 inline-flex items-center justify-center text-gray-900 text-center w-full md:w-200">
-        {renderMap(modisMap)}
+      <div className="mb-8 bg-white rounded-lg shadow-md z-0 p-8 inline-flex items-center justify-center text-gray-900 text-center w-full md:w-200">
+        {isAuthenticated ? renderMap(modisMap) : renderTeaser()}
       </div>
     </>
   );
