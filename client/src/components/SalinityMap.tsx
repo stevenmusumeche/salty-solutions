@@ -86,7 +86,7 @@ export const SalinityMap: React.FC<Props> = ({ locationId }) => {
       <div
         style={{
           minHeight: isAuthenticated ? (isSmall ? 180 : 500) : "none",
-          width: isAuthenticated ? "auto" : 800,
+          maxWidth: isAuthenticated ? "auto" : 800,
         }}
         className="mb-8 bg-white rounded-lg shadow-md relative z-0 text-white inline-flex items-start justify-center p-8 salinity-map-wrapper"
       >

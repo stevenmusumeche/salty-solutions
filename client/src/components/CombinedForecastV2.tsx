@@ -91,7 +91,7 @@ const CombinedForecastV2: FC<Props> = ({ locationId }) => {
       {!isAuthenticated && (
         <CardWrapper stretch={false}>
           <Header>Want more?</Header>
-          <div className="px-8 py-16">
+          <div className="p-8 md:py-16">
             <LoginTeaser message="Login for free to access the full 9-day forecast." />
           </div>
         </CardWrapper>
