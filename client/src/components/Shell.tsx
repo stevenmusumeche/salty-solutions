@@ -7,12 +7,12 @@ import Logo from "../assets/logos/logo.svg";
 const Shell: React.FC<{ header?: ReactNode }> = ({ children, header }) => (
   <div className="min-h-screen flex flex-col">
     <HeaderWrapper>
-      <div className="container mx-auto flex items-center justify-between h-full">
+      <div className="container mx-auto flex items-stretch justify-between h-full">
         <div className="">
           <ReachLink to="/">
             <img
               src={Logo}
-              className="block mr-6 w-full md:w-auto md:h-16 md:-ml-1"
+              className="block mr-6 w-full md:w-auto md:h-12 md:-ml-1"
               style={{ maxWidth: "40vw" }}
               alt="salty solutions logo"
             />

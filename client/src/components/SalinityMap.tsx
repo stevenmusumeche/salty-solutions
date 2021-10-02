@@ -7,14 +7,18 @@ import {
   SalinityMapQuery,
   useSalinityMapQuery,
 } from "@stevenmusumeche/salty-solutions-shared/dist/graphql";
+import { useAuth0 } from "@auth0/auth0-react";
+import LoginTeaser from "./LoginTeaser";
 
 interface Props {
   locationId: string;
 }
 
 export const SalinityMap: React.FC<Props> = ({ locationId }) => {
+  const { isAuthenticated } = useAuth0();
   const [salinityMap, refresh] = useSalinityMapQuery({
     variables: { locationId },
+    pause: !isAuthenticated,
   });
 
   const { isSmall } = useBreakpoints();
@@ -61,13 +65,32 @@ export const SalinityMap: React.FC<Props> = ({ locationId }) => {
     );
   }
 
+  function renderTeaser() {
+    return (
+      <div className="text-black w-full">
+        <div className="text-center text-lg mb-4 font-semibold">
+          Find water with ideal salinity
+        </div>
+        <div className="mb-8 text-left">
+          Improve your fishing trips by focusing on areas with ideal salinity.
+          When targeting speckled trout or redfish, part of the equation is the
+          presence of salty water.
+        </div>
+        <LoginTeaser message="Login for free to access salinity maps." />
+      </div>
+    );
+  }
+
   return (
     <>
       <div
-        style={{ minHeight: isSmall ? 180 : 500 }}
+        style={{
+          minHeight: isAuthenticated ? (isSmall ? 180 : 500) : "none",
+          maxWidth: isAuthenticated ? "auto" : 800,
+        }}
         className="mb-8 bg-white rounded-lg shadow-md relative z-0 text-white inline-flex items-start justify-center p-8 salinity-map-wrapper"
       >
-        {renderMap(salinityMap)}
+        {isAuthenticated ? renderMap(salinityMap) : renderTeaser()}
       </div>
     </>
   );
