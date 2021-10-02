@@ -149,7 +149,9 @@ const locations: LocationEntity[] = [
       apiBase: "https://api.weather.gov/gridpoints/LIX/85,84",
       stationId: "KNBG",
     },
-    saveOurLake: true,
+    // these are no longer being produced
+    saveOurLake: false,
+    nowcastSubdomain: "0",
     modisArea: "USA7",
     windfinder: { slug: "shell_beach" },
   },
@@ -225,7 +227,9 @@ const locations: LocationEntity[] = [
       stationId: "KMIS",
     },
     modisArea: "USA7",
-    saveOurLake: true,
+    // these are no longer being produced
+    saveOurLake: false,
+    nowcastSubdomain: "0",
     windfinder: { slug: "pilottown" },
   },
   {
@@ -265,7 +269,9 @@ const locations: LocationEntity[] = [
       stationId: "KASD",
     },
     modisArea: "USA7",
-    saveOurLake: true,
+    // these are no longer being produced
+    saveOurLake: false,
+    nowcastSubdomain: "0",
     windfinder: { slug: "lakefront_new_orleans" },
   },
   {
@@ -289,7 +295,9 @@ const locations: LocationEntity[] = [
       stationId: "KASD",
     },
     modisArea: "USA7",
-    saveOurLake: true,
+    // these are no longer being produced
+    saveOurLake: false,
+    nowcastSubdomain: "0",
     windfinder: { slug: "lake_pontchartrain_rigolets" },
   },
   {
@@ -443,7 +451,9 @@ const locations: LocationEntity[] = [
       stationId: "KLNQ",
     },
     modisArea: "USA7",
-    saveOurLake: true,
+    // these are no longer being produced
+    saveOurLake: false,
+    nowcastSubdomain: "0",
     windfinder: { slug: "bay-gardene_point-a-la-hache" },
   },
   {
