@@ -140,7 +140,6 @@ function addNoaaRecencyData(
   paramType: NoaaParam
 ) {
   const paramInfo = getNoaaParam(station.availableParamsV2, paramType);
-  console.log(station.name, paramType, paramInfo?.latestDataDate);
   let hasRecentData = false;
   if (paramInfo && paramInfo.latestDataDate) {
     const latest = new Date(paramInfo.latestDataDate);

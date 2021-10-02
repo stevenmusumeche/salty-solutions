@@ -20,6 +20,7 @@ import NotFound from "./components/NotFound";
 import { SalinityMap } from "./components/SalinityMap";
 import Shell from "./components/Shell";
 import Tides from "./components/tide/Tides";
+import { useAuth0 } from "@auth0/auth0-react";
 
 export interface Action {
   type: string;
@@ -66,6 +67,7 @@ const sectionReducer = (state: State, action: Action) => {
 const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
   locationSlug,
 }) => {
+  const { isLoading: isAuth0Loading } = useAuth0();
   const [sections, dispatch] = useReducer(sectionReducer, initialState);
   const [locations] = useLocationsQuery();
   const [locationId, setLocationId] = useState(locationSlug!);
@@ -97,7 +99,7 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
   const waterHeightSites = useWaterHeightSites(selectedLocation);
   const tideStations = useTideStationSites(selectedLocation);
 
-  if (locations.fetching) {
+  if (locations.fetching || isAuth0Loading) {
     return null;
   }
 
@@ -106,21 +108,17 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
   }
 
   return (
-    <Shell
-      header={
-        <AppHeader
-          locations={locations}
-          setLocationId={(id) => {
-            setLocationId(id);
-            window.scrollTo({ top: 0 });
-            navigate(`/${id}`);
-          }}
-          activeLocationId={locationId}
-        />
-      }
-    >
-      <JumpNav dispatch={dispatch} />
-
+    <Shell header={<AppHeader />}>
+      <JumpNav
+        dispatch={dispatch}
+        locations={locations}
+        setLocationId={(id) => {
+          setLocationId(id);
+          window.scrollTo({ top: 0 });
+          navigate(`/${id}`);
+        }}
+        activeLocationId={locationId}
+      />
       <div className="container p-4 md:p-0 md:mx-auto md:my-0 md:mt-8">
         <CurrentConditions location={selectedLocation} />
 

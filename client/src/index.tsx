@@ -11,47 +11,13 @@ import Admin from "./components/Admin";
 import MediaQueryProvider from "./providers/WindowSizeProvider";
 import { useState } from "react";
 import "intersection-observer";
+import { Auth0Provider } from "@auth0/auth0-react";
 
 export const INITIAL_LOCATION = "calcasieu-lake";
 
 const client = createClient({
   url: (process.env.REACT_APP_API_URL as string) || "http://localhost:4000/api",
   exchanges: [devtoolsExchange, ...defaultExchanges],
-  // exchanges: [
-  //   devtoolsExchange,
-  //   dedupExchange,
-  //   cacheExchange({
-  //     keys: {
-  //       Coords: () => null,
-  //       TideDetail: () => null,
-  //       Wind: () => null,
-  //       WindSummary: () => null,
-  //       WindDetail: () => null,
-  //       TemperatureResult: () => null,
-  //       TemperatureSummary: () => null,
-  //       TemperatureDetail: () => null,
-  //       Temperature: () => null,
-  //       WindDirection: () => null,
-  //       RainDetail: () => null,
-  //       ForecastWindDetailV2: () => null,
-  //       Salinity: () => null,
-  //       SalinitySummary: () => null,
-  //       SalinityDetail: () => null,
-  //       WaterHeight: () => null,
-  //       WaterTemperature: () => null,
-  //       WaterTemperatureSummary: () => null,
-  //       SunDetail: () => null,
-  //       CombinedForecastV2: (data: any) => data.date,
-  //       ForecastDescription: () => null,
-  //       MoonDetail: () => null,
-  //       ModisMapEntry: (data: any) => data.url,
-  //       ModisMap: (data: any) => data.date,
-  //       WeatherForecast: () => null,
-  //       ForecastWindSpeedDetail: () => null,
-  //     },
-  //   }),
-  //   fetchExchange,
-  // ],
 });
 
 const Home: React.FC<RouteComponentProps> = () => {
@@ -67,17 +33,23 @@ const Home: React.FC<RouteComponentProps> = () => {
 
 const Root = () => {
   return (
-    <MediaQueryProvider>
-      <UrqlProvider value={client}>
-        <Router>
-          <About path="/about" />
-          <Admin path="/admin" />
-          <Privacy path="/privacy" />
-          <App path="/:locationSlug" />
-          <Home path="/" />
-        </Router>
-      </UrqlProvider>
-    </MediaQueryProvider>
+    <Auth0Provider
+      domain="dev-nzoppbnb.us.auth0.com"
+      clientId="sckIN4Lc5FJ2XPsZ4r72OkRVBx242OOw"
+      redirectUri={window.location.origin}
+    >
+      <MediaQueryProvider>
+        <UrqlProvider value={client}>
+          <Router>
+            <About path="/about" />
+            <Admin path="/admin" />
+            <Privacy path="/privacy" />
+            <App path="/:locationSlug" />
+            <Home path="/" />
+          </Router>
+        </UrqlProvider>
+      </MediaQueryProvider>
+    </Auth0Provider>
   );
 };
 

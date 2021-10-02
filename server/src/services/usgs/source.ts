@@ -403,7 +403,6 @@ export const usgsSites: UsgsSiteEntity[] = [
 
 async function validateConfig() {
   for (const site of usgsSites) {
-    console.log(site.name, site.id);
     const url = `https://waterservices.usgs.gov/nwis/iv/?format=json&sites=${site.id}&siteStatus=all`;
     const response = await axios.get(url);
 
