@@ -17,7 +17,7 @@ export const INITIAL_LOCATION = "calcasieu-lake";
 
 const client = createClient({
   url: (process.env.REACT_APP_API_URL as string) || "http://localhost:4000/api",
-  exchanges: [devtoolsExchange, ...defaultExchanges],
+  exchanges: [devtoolsExchange as any, ...defaultExchanges],
 });
 
 const Home: React.FC<RouteComponentProps> = () => {
