@@ -111,7 +111,7 @@ app.use(async (ctx, next) => {
   try {
     await next();
   } catch (err) {
-    rollbar.error(err, ctx.request);
+    rollbar.error(err as any, ctx.request);
   }
 });
 server.applyMiddleware({ app, path: "/api", cors: true });
