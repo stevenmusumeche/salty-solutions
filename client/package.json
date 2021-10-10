@@ -20,7 +20,7 @@
     "react-date-picker": "7.10.0",
     "react-dom": "^16.13.1",
     "react-magnifier": "3.0.4",
-    "react-scripts": "^3.4.1",
+    "react-scripts": "4.0.3",
     "source-map-explorer": "^2.0.1",
     "victory": "^34.3.9",
     "whatwg-fetch": "^3.0.0"
