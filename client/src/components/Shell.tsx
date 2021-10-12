@@ -5,7 +5,7 @@ import { Link as ReachLink } from "@reach/router";
 import Logo from "../assets/logos/logo.svg";
 
 const Shell: React.FC<{ header?: ReactNode }> = ({ children, header }) => (
-  <div className="min-h-screen flex flex-col">
+  <div className="bg-gray-300 min-h-screen flex flex-col">
     <HeaderWrapper>
       <div className="container mx-auto flex items-stretch justify-between h-full">
         <div className="">

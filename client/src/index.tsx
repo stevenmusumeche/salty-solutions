@@ -12,6 +12,7 @@ import MediaQueryProvider from "./providers/WindowSizeProvider";
 import { useState } from "react";
 import "intersection-observer";
 import { Auth0Provider } from "@auth0/auth0-react";
+import EmbedCurrentConditions from "./components/embeds/EmbedCurrentConditions";
 
 export const INITIAL_LOCATION = "calcasieu-lake";
 
@@ -44,6 +45,7 @@ const Root = () => {
             <About path="/about" />
             <Admin path="/admin" />
             <Privacy path="/privacy" />
+            <EmbedCurrentConditions path="/embed/now" />
             <App path="/:locationSlug" />
             <Home path="/" />
           </Router>

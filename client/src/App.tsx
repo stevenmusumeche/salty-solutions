@@ -21,6 +21,7 @@ import { SalinityMap } from "./components/SalinityMap";
 import Shell from "./components/Shell";
 import Tides from "./components/tide/Tides";
 import { useAuth0 } from "@auth0/auth0-react";
+import { useRemoveLoader } from "./hooks/useRemoveLoader";
 
 export interface Action {
   type: string;
@@ -71,12 +72,7 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
   const [sections, dispatch] = useReducer(sectionReducer, initialState);
   const [locations] = useLocationsQuery();
   const [locationId, setLocationId] = useState(locationSlug!);
-  useEffect(() => {
-    const $el = document.getElementById("pre-app-loader");
-    if ($el) {
-      $el.remove();
-    }
-  }, []);
+  useRemoveLoader();
 
   useEffect(() => {
     if (!locationSlug) return;

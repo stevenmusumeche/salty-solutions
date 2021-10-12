@@ -18,7 +18,7 @@
     "url": "https://github.com/stevenmusumeche/salty-solutions.git"
   },
   "devDependencies": {
-    "typescript": "3.9"
+    "typescript": "^4.1.2"
   },
   "peerDependencies": {
     "date-fns": "^1.30.1",
