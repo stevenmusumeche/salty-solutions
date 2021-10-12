@@ -2822,11 +2822,6 @@
   dependencies:
     "@sinonjs/commons" "^1.7.0"
 
-"@stevenmusumeche/salty-solutions-shared@^1.1.2":
-  version "1.1.2"
-  resolved "https://npm.pkg.github.com/download/@stevenmusumeche/salty-solutions-shared/1.1.2/0bdd555e320c9d5101c10f44ad25bc9b685df8f26cfdee0dcdc26d5148444d85#5be79c26966cc46de15cfc0db99ada03064c282a"
-  integrity sha512-qOjT5ZjrIDx84WDTZ5ZU6Qe8oqBJFE9Vz+bQIm1SszOXCRY2XFrHtQuTbqACLlxn3vPA4YRsK3Ffmahf1i202Q==
-
 "@stevenmusumeche/solunar@^1.0.4":
   version "1.0.4"
   resolved "https://npm.pkg.github.com/download/@stevenmusumeche/solunar/1.0.4/8718deb66f38633ec2ca42a8d48daf42a69d3c53932b466d961ec2a506541f6c#07e86abcb38cca396638ee92e65cb507d2ef5289"
@@ -17476,7 +17471,7 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
-typescript@^4.4.3:
+typescript@^4.1.2:
   version "4.4.3"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.4.3.tgz#bdc5407caa2b109efd4f82fe130656f977a29324"
   integrity sha512-4xfscpisVgqqDfPaJo5vkd+Qd/ItkoagnHpufr+i2QCHBsNYp+G7UAoyFl8aPtx879u38wPV65rZ8qbGZijalA==
