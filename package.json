@@ -6,8 +6,7 @@
   "private": true,
   "workspaces": [
     "server",
-    "client",
-    "shared"
+    "client"
   ],
   "scripts": {
     "test": "jest",
