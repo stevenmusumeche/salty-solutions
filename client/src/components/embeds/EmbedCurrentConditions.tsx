@@ -27,9 +27,11 @@ const EmbedCurrentConditions: React.FC<RouteComponentProps> = () => {
 
   return (
     <EmbedWrapper>
-      <div className="md:flex items-center justify-between bg-gray-700 text-gray-200 p-2">
+      <div className="md:flex items-center justify-between bg-gray-700 text-gray-200 py-2 px-5">
         <div>
-          <div className="text-xl">Current Conditions for {location.name}</div>
+          <div className="text-lg md:text-xl">
+            Conditions for {location.name}
+          </div>
           <div className="text-sm">
             Provided by{" "}
             <a
@@ -52,7 +54,7 @@ const EmbedCurrentConditions: React.FC<RouteComponentProps> = () => {
           </a>
         </div>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 items-center justify-center flex-grow">
         <WindCard locationId={location.id} sites={windSites} />
         <AirTempCard locationId={location.id} />
         <WaterTempCard locationId={location.id} sites={waterTempSites} />
