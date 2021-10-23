@@ -12,9 +12,14 @@ import Modal from "./Modal";
 interface Props {
   locationId: string;
   sites: UsgsSiteDetailFragment[];
+  allowZoom?: boolean;
 }
 
-const SalinityCard: React.FC<Props> = ({ locationId, sites }) => {
+const SalinityCard: React.FC<Props> = ({
+  locationId,
+  sites,
+  allowZoom = true,
+}) => {
   const [selectedSite, setSelectedSite] = useState(sites[0]);
   const [showModal, setShowModal] = useState(false);
 
@@ -44,8 +49,8 @@ const SalinityCard: React.FC<Props> = ({ locationId, sites }) => {
             <>
               <div>{curValue}</div>
               <div
-                onClick={() => setShowModal(true)}
-                className="cursor-pointer"
+                onClick={() => allowZoom && setShowModal(true)}
+                className={`${allowZoom ? "cursor-pointer" : ""}`}
               >
                 <MiniGraph
                   fetching={fetching}

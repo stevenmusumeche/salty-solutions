@@ -15,9 +15,14 @@ import Modal from "./Modal";
 interface Props {
   locationId: string;
   sites: Array<UsgsSiteDetailFragment | TideStationDetailFragment>;
+  allowZoom?: boolean;
 }
 
-const WaterTempCard: React.FC<Props> = ({ locationId, sites }) => {
+const WaterTempCard: React.FC<Props> = ({
+  locationId,
+  sites,
+  allowZoom = true,
+}) => {
   const [selectedSite, setSelectedSite] = useState(() =>
     sites.length ? sites[0] : undefined
   );
@@ -25,25 +30,20 @@ const WaterTempCard: React.FC<Props> = ({ locationId, sites }) => {
 
   const date = useMemo(() => new Date(), []);
 
-  const {
-    curValue,
-    curDetail,
-    fetching,
-    error,
-    refresh,
-  } = hooks.useWaterTemperatureData({
-    locationId,
-    startDate: subHours(date, 48),
-    endDate: date,
-    usgsSiteId:
-      selectedSite && selectedSite.__typename === "UsgsSite"
-        ? selectedSite.id
-        : undefined,
-    noaaStationId:
-      selectedSite && selectedSite.__typename === "TidePreditionStation"
-        ? selectedSite.id
-        : undefined,
-  });
+  const { curValue, curDetail, fetching, error, refresh } =
+    hooks.useWaterTemperatureData({
+      locationId,
+      startDate: subHours(date, 48),
+      endDate: date,
+      usgsSiteId:
+        selectedSite && selectedSite.__typename === "UsgsSite"
+          ? selectedSite.id
+          : undefined,
+      noaaStationId:
+        selectedSite && selectedSite.__typename === "TidePreditionStation"
+          ? selectedSite.id
+          : undefined,
+    });
 
   useEffect(() => {
     setSelectedSite(sites.length ? sites[0] : undefined);
@@ -63,8 +63,8 @@ const WaterTempCard: React.FC<Props> = ({ locationId, sites }) => {
             <>
               <div>{curValue}</div>
               <div
-                onClick={() => setShowModal(true)}
-                className="cursor-pointer"
+                onClick={() => allowZoom && setShowModal(true)}
+                className={`${allowZoom ? "cursor-pointer" : ""}`}
               >
                 <MiniGraph
                   fetching={fetching}

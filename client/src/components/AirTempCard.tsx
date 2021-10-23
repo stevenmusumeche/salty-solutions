@@ -9,9 +9,10 @@ import Modal from "./Modal";
 
 interface Props {
   locationId: string;
+  allowZoom?: boolean;
 }
 
-const AirTempCard: React.FC<Props> = ({ locationId }) => {
+const AirTempCard: React.FC<Props> = ({ locationId, allowZoom = true }) => {
   const date = useMemo(() => new Date(), []);
   const [showModal, setShowModal] = useState(false);
 
@@ -35,8 +36,8 @@ const AirTempCard: React.FC<Props> = ({ locationId }) => {
               <div>{curValue}</div>
 
               <div
-                onClick={() => setShowModal(true)}
-                className="cursor-pointer"
+                onClick={() => allowZoom && setShowModal(true)}
+                className={`${allowZoom ? "cursor-pointer" : ""}`}
               >
                 <MiniGraph
                   fetching={fetching}

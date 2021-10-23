@@ -5,7 +5,6 @@ import {
   useWindSites,
 } from "@stevenmusumeche/salty-solutions-shared/dist/hooks";
 import React from "react";
-// import Logo from "../../assets/logos/logo-white-bg.svg";
 import Logo from "../../assets/logos/logo.svg";
 import { useEmbedLocation } from "../../hooks/useEmbedLocation";
 import { useRemoveLoader } from "../../hooks/useRemoveLoader";
@@ -27,7 +26,7 @@ const EmbedCurrentConditions: React.FC<RouteComponentProps> = () => {
 
   return (
     <EmbedWrapper>
-      <div className="md:flex items-center justify-between bg-gray-700 text-gray-200 py-2 px-5">
+      <div className="md:flex items-center justify-between bg-gray-700 text-gray-200 py-2 px-5 rounded">
         <div>
           <div className="text-lg md:text-xl">
             Conditions for {location.name}
@@ -54,11 +53,23 @@ const EmbedCurrentConditions: React.FC<RouteComponentProps> = () => {
           </a>
         </div>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 items-center justify-center flex-grow">
-        <WindCard locationId={location.id} sites={windSites} />
-        <AirTempCard locationId={location.id} />
-        <WaterTempCard locationId={location.id} sites={waterTempSites} />
-        <SalinityCard locationId={location.id} sites={salinitySites} />
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 py-4 px-2 items-center justify-center flex-grow">
+        <WindCard
+          locationId={location.id}
+          sites={windSites}
+          allowZoom={false}
+        />
+        <AirTempCard locationId={location.id} allowZoom={false} />
+        <WaterTempCard
+          locationId={location.id}
+          sites={waterTempSites}
+          allowZoom={false}
+        />
+        <SalinityCard
+          locationId={location.id}
+          sites={salinitySites}
+          allowZoom={false}
+        />
       </div>
     </EmbedWrapper>
   );
