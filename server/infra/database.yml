@@ -24,6 +24,21 @@ Resources:
       TimeToLiveSpecification:
         AttributeName: ttl
         Enabled: true
+  UserTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      BillingMode: PAY_PER_REQUEST
+      TableName: !Join ["", ["ss-user-", Ref: StageParam]]
+      AttributeDefinitions:
+        - AttributeName: pk
+          AttributeType: S
+        - AttributeName: sk
+          AttributeType: S
+      KeySchema:
+        - AttributeName: pk
+          KeyType: HASH
+        - AttributeName: sk
+          KeyType: RANGE
 Outputs:
   MainTableName:
     Value: !Ref MainTable
@@ -33,3 +48,11 @@ Outputs:
     Value: !GetAtt MainTable.Arn
     Export:
       Name: !Join ["-", [MainTableArn, Ref: StageParam]]
+  UserTableName:
+    Value: !Ref UserTable
+    Export:
+      Name: !Join ["-", [UserTableName, Ref: StageParam]]
+  UserTableArn:
+    Value: !GetAtt UserTable.Arn
+    Export:
+      Name: !Join ["-", [UserTableArn, Ref: StageParam]]
