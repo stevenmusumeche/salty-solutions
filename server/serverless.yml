@@ -24,7 +24,9 @@ provider:
         - dynamodb:DeleteItem
         - dynamodb:DescribeTimeToLive
         - dynamodb:BatchWriteItem
-      Resource: ${cf:ss-database-${self:provider.stage}.MainTableArn}
+      Resource: 
+        - ${cf:ss-database-${self:provider.stage}.MainTableArn}
+        - ${cf:ss-database-${self:provider.stage}.UserTableArn}
     - Effect: Allow
       Action:
         - sqs:SendMessage
@@ -52,6 +54,7 @@ provider:
     SERVERLESS_STAGE: ${self:provider.stage}
     ROLLBAR_KEY: ${env:ROLLBAR_KEY}
     DATABASE_TABLE_NAME: ${cf:ss-database-${self:provider.stage}.MainTableName}
+    DATABASE_USER_TABLE_NAME: ${cf:ss-database-${self:provider.stage}.UserTableName}
     AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
 
 functions:
