@@ -9,6 +9,51 @@ export default gql`
     usgsSite(siteId: ID): UsgsSite
     usgsSites: [UsgsSite!]!
     appVersion: AppVersion!
+    user(userId: ID!): User
+  }
+
+  type Mutation {
+    userLoggedIn(input: UserLoggedInInput!): UserLoggedInResponse!
+  }
+
+  type User {
+    id: ID!
+    email: String!
+    name: String!
+    picture: String
+    purchases: [UserPurchase!]!
+  }
+
+  type UserPurchase {
+    id: ID!
+    item: PurchasableItem!
+    priceCents: Int!
+    platform: Platform!
+    isActive: Boolean!
+    purchaseDate: String!
+    endDate: String
+  }
+
+  enum PurchasableItem {
+    PREMIUM_V1
+  }
+
+  enum Platform {
+    WEB
+    IOS
+    ANDROID
+  }
+
+  input UserLoggedInInput {
+    id: String!
+    email: String!
+    name: String!
+    picture: String
+    platform: Platform!
+  }
+
+  type UserLoggedInResponse {
+    user: User!
   }
 
   type AppVersion {

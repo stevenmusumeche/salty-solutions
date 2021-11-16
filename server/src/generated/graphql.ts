@@ -4,6 +4,9 @@ import { NoaaStationEntity } from '../services/noaa/source';
 import { UsgsSiteEntity } from '../services/usgs/source';
 import { Context } from '../server';
 export type Maybe<T> = T | null;
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?: T[X] } & { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -196,6 +199,16 @@ export type MoonDetail = {
   illumination: Scalars['Int'];
 };
 
+export type Mutation = {
+  __typename?: 'Mutation';
+  userLoggedIn: UserLoggedInResponse;
+};
+
+
+export type MutationUserLoggedInArgs = {
+  input: UserLoggedInInput;
+};
+
 export enum NoaaParam {
   Wind = 'Wind',
   WaterLevel = 'WaterLevel',
@@ -211,6 +224,16 @@ export type NoaaParamInfo = {
   latestDataDate?: Maybe<Scalars['String']>;
 };
 
+export enum Platform {
+  Web = 'WEB',
+  Ios = 'IOS',
+  Android = 'ANDROID'
+}
+
+export enum PurchasableItem {
+  PremiumV1 = 'PREMIUM_V1'
+}
+
 export type Query = {
   __typename?: 'Query';
   locations: Array<Location>;
@@ -220,6 +243,7 @@ export type Query = {
   usgsSite?: Maybe<UsgsSite>;
   usgsSites: Array<UsgsSite>;
   appVersion: AppVersion;
+  user?: Maybe<User>;
 };
 
 
@@ -235,6 +259,11 @@ export type QueryTidePreditionStationArgs = {
 
 export type QueryUsgsSiteArgs = {
   siteId?: Maybe<Scalars['ID']>;
+};
+
+
+export type QueryUserArgs = {
+  userId: Scalars['ID'];
 };
 
 export type RainDetail = {
@@ -366,6 +395,39 @@ export type TidePreditionStationWaterHeightArgs = {
   end: Scalars['String'];
 };
 
+export type User = {
+  __typename?: 'User';
+  id: Scalars['ID'];
+  email: Scalars['String'];
+  name: Scalars['String'];
+  picture?: Maybe<Scalars['String']>;
+  purchases: Array<UserPurchase>;
+};
+
+export type UserLoggedInInput = {
+  id: Scalars['String'];
+  email: Scalars['String'];
+  name: Scalars['String'];
+  picture?: Maybe<Scalars['String']>;
+  platform: Platform;
+};
+
+export type UserLoggedInResponse = {
+  __typename?: 'UserLoggedInResponse';
+  user: User;
+};
+
+export type UserPurchase = {
+  __typename?: 'UserPurchase';
+  id: Scalars['ID'];
+  item: PurchasableItem;
+  priceCents: Scalars['Int'];
+  platform: Platform;
+  isActive: Scalars['Boolean'];
+  purchaseDate: Scalars['String'];
+  endDate?: Maybe<Scalars['String']>;
+};
+
 export enum UsgsParam {
   WaterTemp = 'WaterTemp',
   WindSpeed = 'WindSpeed',
@@ -472,6 +534,10 @@ export type WindSummary = {
 export type ResolverTypeWrapper<T> = Promise<T> | T;
 
 
+export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
+  resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
+};
+
 export type LegacyStitchingResolver<TResult, TParent, TContext, TArgs> = {
   fragment: string;
   resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
@@ -484,6 +550,7 @@ export type NewStitchingResolver<TResult, TParent, TContext, TArgs> = {
 export type StitchingResolver<TResult, TParent, TContext, TArgs> = LegacyStitchingResolver<TResult, TParent, TContext, TArgs> | NewStitchingResolver<TResult, TParent, TContext, TArgs>;
 export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
   | ResolverFn<TResult, TParent, TContext, TArgs>
+  | ResolverWithResolve<TResult, TParent, TContext, TArgs>
   | StitchingResolver<TResult, TParent, TContext, TArgs>;
 
 export type ResolverFn<TResult, TParent, TContext, TArgs> = (
@@ -531,7 +598,7 @@ export type TypeResolveFn<TTypes, TParent = {}, TContext = {}> = (
   info: GraphQLResolveInfo
 ) => Maybe<TTypes> | Promise<Maybe<TTypes>>;
 
-export type IsTypeOfResolverFn<T = {}> = (obj: T, info: GraphQLResolveInfo) => boolean | Promise<boolean>;
+export type IsTypeOfResolverFn<T = {}, TContext = {}> = (obj: T, context: TContext, info: GraphQLResolveInfo) => boolean | Promise<boolean>;
 
 export type NextResolverFn<T> = () => Promise<T>;
 
@@ -593,8 +660,15 @@ export type ResolversTypes = {
   ModisMapEntry: ResolverTypeWrapper<Partial<ModisMapEntry>>;
   AppVersion: ResolverTypeWrapper<Partial<AppVersion>>;
   SupportedVersion: ResolverTypeWrapper<Partial<SupportedVersion>>;
-  CurrentWind: ResolverTypeWrapper<Partial<CurrentWind>>;
+  User: ResolverTypeWrapper<Partial<User>>;
+  UserPurchase: ResolverTypeWrapper<Partial<UserPurchase>>;
+  PurchasableItem: ResolverTypeWrapper<Partial<PurchasableItem>>;
+  Platform: ResolverTypeWrapper<Partial<Platform>>;
+  Mutation: ResolverTypeWrapper<{}>;
+  UserLoggedInInput: ResolverTypeWrapper<Partial<UserLoggedInInput>>;
+  UserLoggedInResponse: ResolverTypeWrapper<Partial<UserLoggedInResponse>>;
   AirPressure: ResolverTypeWrapper<Partial<AirPressure>>;
+  CurrentWind: ResolverTypeWrapper<Partial<CurrentWind>>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -608,7 +682,6 @@ export type ResolversParentTypes = {
   Coords: Partial<Coords>;
   Float: Partial<Scalars['Float']>;
   TideDetail: Partial<TideDetail>;
-  NoaaParam: Partial<NoaaParam>;
   NoaaParamInfo: Partial<NoaaParamInfo> & {station: NoaaStationEntity};
   Wind: Partial<Wind> & {location?: LocationEntity, site?: UsgsSiteEntity, station?: NoaaStationEntity};
   WindSummary: Partial<WindSummary>;
@@ -623,7 +696,6 @@ export type ResolversParentTypes = {
   SalinityDetail: Partial<SalinityDetail>;
   WaterHeight: Partial<WaterHeight>;
   UsgsSite: UsgsSiteEntity;
-  UsgsParam: Partial<UsgsParam>;
   UsgsParamInfo: Partial<UsgsParamInfo> & {site: UsgsSiteEntity};
   SunDetail: Partial<SunDetail>;
   MoonDetail: Partial<MoonDetail>;
@@ -643,24 +715,28 @@ export type ResolversParentTypes = {
   MarineForecastDetail: Partial<MarineForecastDetail>;
   DataSources: Partial<DataSources>;
   ModisMap: Partial<ModisMap>;
-  ModisSatellite: Partial<ModisSatellite>;
   ModisMapEntry: Partial<ModisMapEntry>;
   AppVersion: Partial<AppVersion>;
   SupportedVersion: Partial<SupportedVersion>;
-  CurrentWind: Partial<CurrentWind>;
+  User: Partial<User>;
+  UserPurchase: Partial<UserPurchase>;
+  Mutation: {};
+  UserLoggedInInput: Partial<UserLoggedInInput>;
+  UserLoggedInResponse: Partial<UserLoggedInResponse>;
   AirPressure: Partial<AirPressure>;
+  CurrentWind: Partial<CurrentWind>;
 };
 
 export type AirPressureResolvers<ContextType = Context, ParentType extends ResolversParentTypes['AirPressure'] = ResolversParentTypes['AirPressure']> = {
   timestamp?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   pressure?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type AppVersionResolvers<ContextType = Context, ParentType extends ResolversParentTypes['AppVersion'] = ResolversParentTypes['AppVersion']> = {
   ios?: Resolver<ResolversTypes['SupportedVersion'], ParentType, ContextType>;
   android?: Resolver<ResolversTypes['SupportedVersion'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type CombinedForecastV2Resolvers<ContextType = Context, ParentType extends ResolversParentTypes['CombinedForecastV2'] = ResolversParentTypes['CombinedForecastV2']> = {
@@ -672,20 +748,20 @@ export type CombinedForecastV2Resolvers<ContextType = Context, ParentType extend
   day?: Resolver<ResolversTypes['ForecastDescription'], ParentType, ContextType>;
   night?: Resolver<ResolversTypes['ForecastDescription'], ParentType, ContextType>;
   rain?: Resolver<Array<ResolversTypes['RainDetail']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type CoordsResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Coords'] = ResolversParentTypes['Coords']> = {
   lat?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   lon?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type CurrentWindResolvers<ContextType = Context, ParentType extends ResolversParentTypes['CurrentWind'] = ResolversParentTypes['CurrentWind']> = {
   speed?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   direction?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   directionDegrees?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type DataSourcesResolvers<ContextType = Context, ParentType extends ResolversParentTypes['DataSources'] = ResolversParentTypes['DataSources']> = {
@@ -694,21 +770,21 @@ export type DataSourcesResolvers<ContextType = Context, ParentType extends Resol
   usgsSiteId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   weatherStationId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   weatherRadarSiteId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type ForecastDescriptionResolvers<ContextType = Context, ParentType extends ResolversParentTypes['ForecastDescription'] = ResolversParentTypes['ForecastDescription']> = {
   short?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   detailed?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   marine?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type ForecastWaveDetailResolvers<ContextType = Context, ParentType extends ResolversParentTypes['ForecastWaveDetail'] = ResolversParentTypes['ForecastWaveDetail']> = {
   timestamp?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   height?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   direction?: Resolver<ResolversTypes['WindDirection'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type ForecastWindDetailV2Resolvers<ContextType = Context, ParentType extends ResolversParentTypes['ForecastWindDetailV2'] = ResolversParentTypes['ForecastWindDetailV2']> = {
@@ -716,13 +792,13 @@ export type ForecastWindDetailV2Resolvers<ContextType = Context, ParentType exte
   base?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   gusts?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   direction?: Resolver<ResolversTypes['WindDirection'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type ForecastWindSpeedDetailResolvers<ContextType = Context, ParentType extends ResolversParentTypes['ForecastWindSpeedDetail'] = ResolversParentTypes['ForecastWindSpeedDetail']> = {
   from?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   to?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type LocationResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Location'] = ResolversParentTypes['Location']> = {
@@ -744,13 +820,13 @@ export type LocationResolvers<ContextType = Context, ParentType extends Resolver
   dataSources?: Resolver<Maybe<ResolversTypes['DataSources']>, ParentType, ContextType>;
   modisMaps?: Resolver<Array<ResolversTypes['ModisMap']>, ParentType, ContextType, RequireFields<LocationModisMapsArgs, never>>;
   salinityMap?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type MarineForecastResolvers<ContextType = Context, ParentType extends ResolversParentTypes['MarineForecast'] = ResolversParentTypes['MarineForecast']> = {
   timePeriod?: Resolver<ResolversTypes['MarineForecastTimePeriod'], ParentType, ContextType>;
   forecast?: Resolver<ResolversTypes['MarineForecastDetail'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type MarineForecastDetailResolvers<ContextType = Context, ParentType extends ResolversParentTypes['MarineForecastDetail'] = ResolversParentTypes['MarineForecastDetail']> = {
@@ -758,14 +834,14 @@ export type MarineForecastDetailResolvers<ContextType = Context, ParentType exte
   waterCondition?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   windSpeed?: Resolver<Maybe<ResolversTypes['ForecastWindSpeedDetail']>, ParentType, ContextType>;
   windDirection?: Resolver<Maybe<ResolversTypes['WindDirection']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type MarineForecastTimePeriodResolvers<ContextType = Context, ParentType extends ResolversParentTypes['MarineForecastTimePeriod'] = ResolversParentTypes['MarineForecastTimePeriod']> = {
   text?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   date?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   isDaytime?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type ModisMapResolvers<ContextType = Context, ParentType extends ResolversParentTypes['ModisMap'] = ResolversParentTypes['ModisMap']> = {
@@ -774,27 +850,31 @@ export type ModisMapResolvers<ContextType = Context, ParentType extends Resolver
   small?: Resolver<ResolversTypes['ModisMapEntry'], ParentType, ContextType>;
   medium?: Resolver<ResolversTypes['ModisMapEntry'], ParentType, ContextType>;
   large?: Resolver<ResolversTypes['ModisMapEntry'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type ModisMapEntryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['ModisMapEntry'] = ResolversParentTypes['ModisMapEntry']> = {
   url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   width?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   height?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type MoonDetailResolvers<ContextType = Context, ParentType extends ResolversParentTypes['MoonDetail'] = ResolversParentTypes['MoonDetail']> = {
   date?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   phase?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   illumination?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type MutationResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
+  userLoggedIn?: Resolver<ResolversTypes['UserLoggedInResponse'], ParentType, ContextType, RequireFields<MutationUserLoggedInArgs, 'input'>>;
 };
 
 export type NoaaParamInfoResolvers<ContextType = Context, ParentType extends ResolversParentTypes['NoaaParamInfo'] = ResolversParentTypes['NoaaParamInfo']> = {
   id?: Resolver<ResolversTypes['NoaaParam'], ParentType, ContextType>;
   latestDataDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type QueryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
@@ -805,29 +885,30 @@ export type QueryResolvers<ContextType = Context, ParentType extends ResolversPa
   usgsSite?: Resolver<Maybe<ResolversTypes['UsgsSite']>, ParentType, ContextType, RequireFields<QueryUsgsSiteArgs, never>>;
   usgsSites?: Resolver<Array<ResolversTypes['UsgsSite']>, ParentType, ContextType>;
   appVersion?: Resolver<ResolversTypes['AppVersion'], ParentType, ContextType>;
+  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'userId'>>;
 };
 
 export type RainDetailResolvers<ContextType = Context, ParentType extends ResolversParentTypes['RainDetail'] = ResolversParentTypes['RainDetail']> = {
   timestamp?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   mmPerHour?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type SalinityResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Salinity'] = ResolversParentTypes['Salinity']> = {
   summary?: Resolver<Maybe<ResolversTypes['SalinitySummary']>, ParentType, ContextType>;
   detail?: Resolver<Maybe<Array<ResolversTypes['SalinityDetail']>>, ParentType, ContextType, RequireFields<SalinityDetailArgs, 'start' | 'end'>>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type SalinityDetailResolvers<ContextType = Context, ParentType extends ResolversParentTypes['SalinityDetail'] = ResolversParentTypes['SalinityDetail']> = {
   timestamp?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   salinity?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type SalinitySummaryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['SalinitySummary'] = ResolversParentTypes['SalinitySummary']> = {
   mostRecent?: Resolver<Maybe<ResolversTypes['SalinityDetail']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type SolunarDetailResolvers<ContextType = Context, ParentType extends ResolversParentTypes['SolunarDetail'] = ResolversParentTypes['SolunarDetail']> = {
@@ -836,14 +917,14 @@ export type SolunarDetailResolvers<ContextType = Context, ParentType extends Res
   saltyScore?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   majorPeriods?: Resolver<Array<ResolversTypes['SolunarPeriod']>, ParentType, ContextType>;
   minorPeriods?: Resolver<Array<ResolversTypes['SolunarPeriod']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type SolunarPeriodResolvers<ContextType = Context, ParentType extends ResolversParentTypes['SolunarPeriod'] = ResolversParentTypes['SolunarPeriod']> = {
   start?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   end?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   weight?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type SunDetailResolvers<ContextType = Context, ParentType extends ResolversParentTypes['SunDetail'] = ResolversParentTypes['SunDetail']> = {
@@ -854,43 +935,43 @@ export type SunDetailResolvers<ContextType = Context, ParentType extends Resolve
   dusk?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   nauticalDawn?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   nauticalDusk?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type SupportedVersionResolvers<ContextType = Context, ParentType extends ResolversParentTypes['SupportedVersion'] = ResolversParentTypes['SupportedVersion']> = {
   minimumSupported?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   current?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type TemperatureResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Temperature'] = ResolversParentTypes['Temperature']> = {
   degrees?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   unit?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type TemperatureDetailResolvers<ContextType = Context, ParentType extends ResolversParentTypes['TemperatureDetail'] = ResolversParentTypes['TemperatureDetail']> = {
   timestamp?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   temperature?: Resolver<ResolversTypes['Temperature'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type TemperatureResultResolvers<ContextType = Context, ParentType extends ResolversParentTypes['TemperatureResult'] = ResolversParentTypes['TemperatureResult']> = {
   summary?: Resolver<ResolversTypes['TemperatureSummary'], ParentType, ContextType>;
   detail?: Resolver<Maybe<Array<ResolversTypes['TemperatureDetail']>>, ParentType, ContextType, RequireFields<TemperatureResultDetailArgs, 'start' | 'end'>>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type TemperatureSummaryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['TemperatureSummary'] = ResolversParentTypes['TemperatureSummary']> = {
   mostRecent?: Resolver<Maybe<ResolversTypes['TemperatureDetail']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type TideDetailResolvers<ContextType = Context, ParentType extends ResolversParentTypes['TideDetail'] = ResolversParentTypes['TideDetail']> = {
   time?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   height?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   type?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type TidePreditionStationResolvers<ContextType = Context, ParentType extends ResolversParentTypes['TidePreditionStation'] = ResolversParentTypes['TidePreditionStation']> = {
@@ -907,13 +988,38 @@ export type TidePreditionStationResolvers<ContextType = Context, ParentType exte
   salinity?: Resolver<Maybe<ResolversTypes['Salinity']>, ParentType, ContextType>;
   waterHeight?: Resolver<Maybe<Array<ResolversTypes['WaterHeight']>>, ParentType, ContextType, RequireFields<TidePreditionStationWaterHeightArgs, 'start' | 'end'>>;
   locations?: Resolver<Array<ResolversTypes['Location']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type UserResolvers<ContextType = Context, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  picture?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  purchases?: Resolver<Array<ResolversTypes['UserPurchase']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type UserLoggedInResponseResolvers<ContextType = Context, ParentType extends ResolversParentTypes['UserLoggedInResponse'] = ResolversParentTypes['UserLoggedInResponse']> = {
+  user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type UserPurchaseResolvers<ContextType = Context, ParentType extends ResolversParentTypes['UserPurchase'] = ResolversParentTypes['UserPurchase']> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  item?: Resolver<ResolversTypes['PurchasableItem'], ParentType, ContextType>;
+  priceCents?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  platform?: Resolver<ResolversTypes['Platform'], ParentType, ContextType>;
+  isActive?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  purchaseDate?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  endDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type UsgsParamInfoResolvers<ContextType = Context, ParentType extends ResolversParentTypes['UsgsParamInfo'] = ResolversParentTypes['UsgsParamInfo']> = {
   id?: Resolver<ResolversTypes['UsgsParam'], ParentType, ContextType>;
   latestDataDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type UsgsSiteResolvers<ContextType = Context, ParentType extends ResolversParentTypes['UsgsSite'] = ResolversParentTypes['UsgsSite']> = {
@@ -928,19 +1034,19 @@ export type UsgsSiteResolvers<ContextType = Context, ParentType extends Resolver
   availableParams?: Resolver<Array<ResolversTypes['UsgsParam']>, ParentType, ContextType>;
   availableParamsV2?: Resolver<Array<ResolversTypes['UsgsParamInfo']>, ParentType, ContextType>;
   locations?: Resolver<Array<ResolversTypes['Location']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type WaterHeightResolvers<ContextType = Context, ParentType extends ResolversParentTypes['WaterHeight'] = ResolversParentTypes['WaterHeight']> = {
   timestamp?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   height?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type WaterTemperatureResolvers<ContextType = Context, ParentType extends ResolversParentTypes['WaterTemperature'] = ResolversParentTypes['WaterTemperature']> = {
   summary?: Resolver<ResolversTypes['TemperatureSummary'], ParentType, ContextType>;
   detail?: Resolver<Maybe<Array<ResolversTypes['TemperatureDetail']>>, ParentType, ContextType, RequireFields<WaterTemperatureDetailArgs, 'start' | 'end'>>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type WeatherForecastResolvers<ContextType = Context, ParentType extends ResolversParentTypes['WeatherForecast'] = ResolversParentTypes['WeatherForecast']> = {
@@ -955,13 +1061,13 @@ export type WeatherForecastResolvers<ContextType = Context, ParentType extends R
   shortForecast?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   detailedForecast?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   chanceOfPrecipitation?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type WindResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Wind'] = ResolversParentTypes['Wind']> = {
   summary?: Resolver<ResolversTypes['WindSummary'], ParentType, ContextType>;
   detail?: Resolver<Maybe<Array<ResolversTypes['WindDetail']>>, ParentType, ContextType, RequireFields<WindDetailArgs, 'start' | 'end'>>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type WindDetailResolvers<ContextType = Context, ParentType extends ResolversParentTypes['WindDetail'] = ResolversParentTypes['WindDetail']> = {
@@ -969,18 +1075,18 @@ export type WindDetailResolvers<ContextType = Context, ParentType extends Resolv
   speed?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   direction?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   directionDegrees?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type WindDirectionResolvers<ContextType = Context, ParentType extends ResolversParentTypes['WindDirection'] = ResolversParentTypes['WindDirection']> = {
   text?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   degrees?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type WindSummaryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['WindSummary'] = ResolversParentTypes['WindSummary']> = {
   mostRecent?: Resolver<Maybe<ResolversTypes['WindDetail']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type Resolvers<ContextType = Context> = {
@@ -1001,6 +1107,7 @@ export type Resolvers<ContextType = Context> = {
   ModisMap?: ModisMapResolvers<ContextType>;
   ModisMapEntry?: ModisMapEntryResolvers<ContextType>;
   MoonDetail?: MoonDetailResolvers<ContextType>;
+  Mutation?: MutationResolvers<ContextType>;
   NoaaParamInfo?: NoaaParamInfoResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   RainDetail?: RainDetailResolvers<ContextType>;
@@ -1017,6 +1124,9 @@ export type Resolvers<ContextType = Context> = {
   TemperatureSummary?: TemperatureSummaryResolvers<ContextType>;
   TideDetail?: TideDetailResolvers<ContextType>;
   TidePreditionStation?: TidePreditionStationResolvers<ContextType>;
+  User?: UserResolvers<ContextType>;
+  UserLoggedInResponse?: UserLoggedInResponseResolvers<ContextType>;
+  UserPurchase?: UserPurchaseResolvers<ContextType>;
   UsgsParamInfo?: UsgsParamInfoResolvers<ContextType>;
   UsgsSite?: UsgsSiteResolvers<ContextType>;
   WaterHeight?: WaterHeightResolvers<ContextType>;

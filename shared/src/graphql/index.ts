@@ -1,6 +1,9 @@
 import gql from 'graphql-tag';
 import * as Urql from 'urql';
 export type Maybe<T> = T | null;
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -193,6 +196,16 @@ export type MoonDetail = {
   illumination: Scalars['Int'];
 };
 
+export type Mutation = {
+  __typename?: 'Mutation';
+  userLoggedIn: UserLoggedInResponse;
+};
+
+
+export type MutationUserLoggedInArgs = {
+  input: UserLoggedInInput;
+};
+
 export enum NoaaParam {
   Wind = 'Wind',
   WaterLevel = 'WaterLevel',
@@ -208,6 +221,16 @@ export type NoaaParamInfo = {
   latestDataDate?: Maybe<Scalars['String']>;
 };
 
+export enum Platform {
+  Web = 'WEB',
+  Ios = 'IOS',
+  Android = 'ANDROID'
+}
+
+export enum PurchasableItem {
+  PremiumV1 = 'PREMIUM_V1'
+}
+
 export type Query = {
   __typename?: 'Query';
   locations: Array<Location>;
@@ -217,6 +240,7 @@ export type Query = {
   usgsSite?: Maybe<UsgsSite>;
   usgsSites: Array<UsgsSite>;
   appVersion: AppVersion;
+  user?: Maybe<User>;
 };
 
 
@@ -232,6 +256,11 @@ export type QueryTidePreditionStationArgs = {
 
 export type QueryUsgsSiteArgs = {
   siteId?: Maybe<Scalars['ID']>;
+};
+
+
+export type QueryUserArgs = {
+  userId: Scalars['ID'];
 };
 
 export type RainDetail = {
@@ -363,6 +392,39 @@ export type TidePreditionStationWaterHeightArgs = {
   end: Scalars['String'];
 };
 
+export type User = {
+  __typename?: 'User';
+  id: Scalars['ID'];
+  email: Scalars['String'];
+  name: Scalars['String'];
+  picture?: Maybe<Scalars['String']>;
+  purchases: Array<UserPurchase>;
+};
+
+export type UserLoggedInInput = {
+  id: Scalars['String'];
+  email: Scalars['String'];
+  name: Scalars['String'];
+  picture?: Maybe<Scalars['String']>;
+  platform: Platform;
+};
+
+export type UserLoggedInResponse = {
+  __typename?: 'UserLoggedInResponse';
+  user: User;
+};
+
+export type UserPurchase = {
+  __typename?: 'UserPurchase';
+  id: Scalars['ID'];
+  item: PurchasableItem;
+  priceCents: Scalars['Int'];
+  platform: Platform;
+  isActive: Scalars['Boolean'];
+  purchaseDate: Scalars['String'];
+  endDate?: Maybe<Scalars['String']>;
+};
+
 export enum UsgsParam {
   WaterTemp = 'WaterTemp',
   WindSpeed = 'WindSpeed',
@@ -464,7 +526,7 @@ export type WindSummary = {
   mostRecent?: Maybe<WindDetail>;
 };
 
-export type AdminQueryVariables = {};
+export type AdminQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type AdminQuery = (
@@ -486,7 +548,7 @@ export type AdminQuery = (
   )> }
 );
 
-export type AppVersionQueryVariables = {};
+export type AppVersionQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type AppVersionQuery = (
@@ -503,11 +565,11 @@ export type AppVersionQuery = (
   ) }
 );
 
-export type CombinedForecastV2QueryVariables = {
+export type CombinedForecastV2QueryVariables = Exact<{
   locationId: Scalars['ID'];
   startDate: Scalars['String'];
   endDate: Scalars['String'];
-};
+}>;
 
 
 export type CombinedForecastV2Query = (
@@ -564,7 +626,7 @@ export type CombinedForecastV2DetailFragment = (
   )> }
 );
 
-export type CurrentConditionsDataQueryVariables = {
+export type CurrentConditionsDataQueryVariables = Exact<{
   locationId: Scalars['ID'];
   usgsSiteId?: Maybe<Scalars['ID']>;
   includeUsgs: Scalars['Boolean'];
@@ -573,7 +635,7 @@ export type CurrentConditionsDataQueryVariables = {
   includeLocationWind?: Maybe<Scalars['Boolean']>;
   startDate: Scalars['String'];
   endDate: Scalars['String'];
-};
+}>;
 
 
 export type CurrentConditionsDataQuery = (
@@ -710,9 +772,9 @@ export type WindDetailFields2Fragment = (
   & Pick<WindDetail, 'timestamp' | 'speed' | 'direction' | 'directionDegrees'>
 );
 
-export type HourlyForecastQueryVariables = {
+export type HourlyForecastQueryVariables = Exact<{
   locationId: Scalars['ID'];
-};
+}>;
 
 
 export type HourlyForecastQuery = (
@@ -742,7 +804,7 @@ export type HourlyForecastDetailFragment = (
   )> }
 );
 
-export type LocationsQueryVariables = {};
+export type LocationsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type LocationsQuery = (
@@ -786,9 +848,9 @@ export type LocationDetailFragment = (
   )> }
 );
 
-export type ModisMapQueryVariables = {
+export type ModisMapQueryVariables = Exact<{
   locationId: Scalars['ID'];
-};
+}>;
 
 
 export type ModisMapQuery = (
@@ -810,9 +872,9 @@ export type ModisMapQuery = (
   )> }
 );
 
-export type SalinityMapQueryVariables = {
+export type SalinityMapQueryVariables = Exact<{
   locationId: Scalars['ID'];
-};
+}>;
 
 
 export type SalinityMapQuery = (
@@ -823,7 +885,7 @@ export type SalinityMapQuery = (
   )> }
 );
 
-export type TideQueryVariables = {
+export type TideQueryVariables = Exact<{
   locationId: Scalars['ID'];
   tideStationId: Scalars['ID'];
   usgsSiteId?: Maybe<Scalars['ID']>;
@@ -832,7 +894,7 @@ export type TideQueryVariables = {
   includeNoaa: Scalars['Boolean'];
   startDate: Scalars['String'];
   endDate: Scalars['String'];
-};
+}>;
 
 
 export type TideQuery = (
