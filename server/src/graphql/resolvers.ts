@@ -62,7 +62,7 @@ const resolvers: Resolvers & { UsgsParam: Object; NoaaParam: Object } = {
     },
     user: async (_, { userId }, { services }) => {
       // todo security?
-      return (await services.user.getUser(userId)) ?? null;
+      return (await services.user.getUser(userId)) || null;
     },
   },
   Mutation: {
