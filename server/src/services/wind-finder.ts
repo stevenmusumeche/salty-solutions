@@ -2,7 +2,7 @@ import axios from "axios";
 import cheerio from "cheerio";
 import { format, isAfter, parse } from "date-fns";
 import { parseFromTimeZone } from "date-fns-timezone";
-import { batchWrite, client, tableName } from "./db";
+import { batchWrite, client, mainTableName } from "./db";
 import { LocationEntity } from "./location";
 import { celciusToFahrenheit } from "./weather/client";
 
@@ -19,7 +19,7 @@ export async function getData(
   const pk = `windfinder-forecast-${location.windfinder.slug}`;
   const result = await client
     .query({
-      TableName: tableName,
+      TableName: mainTableName,
       KeyConditionExpression: "pk = :key AND sk BETWEEN :start AND :end",
       ExpressionAttributeValues: {
         ":key": pk,

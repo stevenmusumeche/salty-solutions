@@ -215,7 +215,7 @@ async function saveWeatherForecastToDynamo(
   data: WeatherForecast[]
 ) {
   const item = buildWeatherForecastQuery(location, data);
-  await put(item);
+  await put({ item, table: "main" });
 }
 
 function buildWeatherForecastQuery(
@@ -263,12 +263,8 @@ const fetchForecast = async (
 };
 
 const parseForecast = (x: any) => {
-  const {
-    chanceOfPrecipitation,
-    windSpeed,
-    windDirection,
-    temperature,
-  } = extractForecast(x);
+  const { chanceOfPrecipitation, windSpeed, windDirection, temperature } =
+    extractForecast(x);
   return {
     ...x,
     windSpeed,

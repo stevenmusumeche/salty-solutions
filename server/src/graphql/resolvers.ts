@@ -60,6 +60,19 @@ const resolvers: Resolvers & { UsgsParam: Object; NoaaParam: Object } = {
         },
       };
     },
+    user: async (_, { userId }, { services }) => {
+      // todo security?
+      return (await services.user.getUser(userId)) ?? null;
+    },
+  },
+  Mutation: {
+    userLoggedIn: async (_, { input }, { services }) => {
+      // todo security?
+      const user = await services.user.loggedIn(input);
+      return {
+        user,
+      };
+    },
   },
   Location: {
     temperature: async (location) => {

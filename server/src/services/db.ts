@@ -9,7 +9,13 @@ import { DocumentClient } from "aws-sdk/clients/dynamodb";
 type WriteRequest = DocumentClient.WriteRequest;
 type PutItemInputAttributeMap = DocumentClient.PutItemInputAttributeMap;
 
-export const tableName = process.env.DATABASE_TABLE_NAME!;
+export const mainTableName = process.env.DATABASE_TABLE_NAME!;
+export const userTableName = process.env.DATABASE_USER_TABLE_NAME!;
+type Table = "main" | "user";
+const tables: Record<Table, string> = {
+  main: mainTableName,
+  user: userTableName,
+};
 
 export const getCacheVal = async <T>(
   key: string,
@@ -19,7 +25,7 @@ export const getCacheVal = async <T>(
     const cutoff = subMinutes(new Date(), maxAgeMins);
     const result = await client
       .query({
-        TableName: tableName,
+        TableName: mainTableName,
         KeyConditionExpression: "pk = :key AND sk >= :date",
         ExpressionAttributeValues: {
           ":key": key,
@@ -45,7 +51,7 @@ export const getLatestValue = async <T>(
   try {
     const result = await client
       .query({
-        TableName: tableName,
+        TableName: mainTableName,
         KeyConditionExpression: "pk = :key",
         ExpressionAttributeValues: {
           ":key": key,
@@ -71,7 +77,7 @@ export const getLatestValue = async <T>(
 export const setCacheVal = async <T>(key: string, data: T): Promise<T> => {
   await client
     .put({
-      TableName: tableName,
+      TableName: mainTableName,
       Item: {
         pk: key,
         sk: Date.now(),
@@ -85,7 +91,7 @@ export const setCacheVal = async <T>(key: string, data: T): Promise<T> => {
 
 export const batchWrite = async (
   queries: WriteRequest[],
-  table = tableName,
+  table = mainTableName,
   batchSize = 25
 ) => {
   const maxLoops = Math.ceil(queries.length / batchSize) * 3;
@@ -101,7 +107,8 @@ export const batchWrite = async (
       .promise();
 
     const unprocessed: WriteRequest[] =
-      (result.UnprocessedItems ? result.UnprocessedItems[tableName] : []) || [];
+      (result.UnprocessedItems ? result.UnprocessedItems[mainTableName] : []) ||
+      [];
 
     queries.concat(unprocessed);
     curLoop++;
@@ -117,11 +124,25 @@ export const batchWrite = async (
   }
 };
 
-export const put = async (item: PutItemInputAttributeMap) => {
-  const result = await client
+type PutInput = { item: PutItemInputAttributeMap; table: Table };
+export const put = async (input: PutInput) => {
+  return await client
     .put({
-      Item: item.Item,
-      TableName: tableName,
+      Item: input.item.Item,
+      TableName: tables[input.table],
+    })
+    .promise();
+};
+
+interface UpdateInput
+  extends Omit<DocumentClient.UpdateItemInput, "TableName"> {
+  table: Table;
+}
+export const update = async (input: UpdateInput) => {
+  return client
+    .update({
+      TableName: tables[input.table],
+      ...input,
     })
     .promise();
 };
@@ -134,7 +155,7 @@ export const queryTimeSeriesData = async <T>(
 ): Promise<T[]> => {
   const result = await client
     .query({
-      TableName: tableName,
+      TableName: mainTableName,
       KeyConditionExpression: "pk = :key AND sk BETWEEN :start AND :end",
       ExpressionAttributeValues: {
         ":key": pk,
@@ -150,4 +171,50 @@ export const queryTimeSeriesData = async <T>(
     timestamp: new Date(item.sk).toISOString(),
     ...item.data,
   }));
+};
+
+type GetItemByKeyInput =
+  | {
+      table: "main";
+      pk: string;
+      sk?: number;
+    }
+  | {
+      table: "user";
+      pk: string;
+      sk?: string;
+    };
+
+export const getItemByKey = async <T>(
+  input: GetItemByKeyInput
+): Promise<T | undefined> => {
+  if (input.sk) {
+    // if we have both pk and sk, we can use GetItem
+    const resp = await client
+      .get({
+        TableName: tables[input.table],
+        Key: {
+          pk: input.pk,
+          sk: input.sk,
+        },
+      })
+      .promise();
+
+    return resp.Item ? (resp.Item.data as T) : undefined;
+  }
+
+  // otherwise we have to query
+  const result = await client
+    .query({
+      TableName: tables[input.table],
+      KeyConditionExpression: "pk = :pk",
+      ExpressionAttributeValues: {
+        ":pk": input.pk,
+      },
+      Limit: 1,
+    })
+    .promise();
+
+  if (result.Count === 0) return;
+  return result.Items![0].data as T;
 };

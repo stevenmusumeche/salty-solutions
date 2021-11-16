@@ -34,7 +34,7 @@ async function saveMarineForecastToDynamo(
   data: MarineForecast[]
 ) {
   const item = buildMarineForecastQuery(marineZoneId, data);
-  await put(item);
+  await put({ item, table: "main" });
 }
 
 function buildMarineForecastQuery(
@@ -81,7 +81,8 @@ export function parseForecast(
   let retVal: any = { text: forecastText };
   retVal.waterCondition = parseWaterCondition(forecastText);
 
-  const windRegex = /(?<direction>[\w]+) winds(?<qualifier> around| up to| near| rising to| building to)? ((?<speed>[\d]+)|((?<speedStart>[\d]+) to (?<speedEnd>[\d]+))) knots( becoming)?/im;
+  const windRegex =
+    /(?<direction>[\w]+) winds(?<qualifier> around| up to| near| rising to| building to)? ((?<speed>[\d]+)|((?<speedStart>[\d]+) to (?<speedEnd>[\d]+))) knots( becoming)?/im;
   const hurricaneRegex = /hurricane/im;
   const tropicalStormRegex = /tropical storm/im;
   let matches = forecastText.match(windRegex);
@@ -119,8 +120,10 @@ export function parseForecast(
 }
 
 function parseWaterCondition(forecastText: string): string | void {
-  const inshoreRegex = /(Bay|Lake|Nearshore) waters a? ?(?<data>.*?)(\.| decreasing| increasing)/im;
-  const offshoreRegex = /(seas|waves) (?<qualifier>(around)|(less than)|(building to) )?(?<numbers>.*?)(\.|(?<postQualifier>( or less)|( with occasional.*?))\.)/im;
+  const inshoreRegex =
+    /(Bay|Lake|Nearshore) waters a? ?(?<data>.*?)(\.| decreasing| increasing)/im;
+  const offshoreRegex =
+    /(seas|waves) (?<qualifier>(around)|(less than)|(building to) )?(?<numbers>.*?)(\.|(?<postQualifier>( or less)|( with occasional.*?))\.)/im;
   const stormRegex = /(tropical storm)|(hurricane)/im;
   const inshoreMatches = forecastText.match(inshoreRegex);
   const offshoreMatches = forecastText.match(offshoreRegex);
