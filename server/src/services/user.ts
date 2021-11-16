@@ -43,7 +43,7 @@ async function createUser(
           id: user.id,
           email: user.email,
           name: user.name,
-          picture: user.picture ?? undefined,
+          picture: user.picture || undefined,
           purchases: [],
         },
       },
