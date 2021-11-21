@@ -1,6 +1,8 @@
 overwrite: true
 schema: "./server/src/graphql/schema.ts"
-documents: "./client/src/queries/**/*.ts"
+documents: 
+  - "./shared/src/graphql/queries/**/*.ts"
+  - "./shared/src/graphql/mutations/**/*.ts"
 generates:
   shared/src/graphql/index.ts:
     plugins:
