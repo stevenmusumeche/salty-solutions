@@ -60,18 +60,16 @@ const resolvers: Resolvers & { UsgsParam: Object; NoaaParam: Object } = {
         },
       };
     },
-    user: async (_, { userId }, { services }) => {
-      // todo security?
-      return (await services.user.getUser(userId)) || null;
+    viewer: async (_, __, { services, koaCtx }) => {
+      if (!koaCtx.state.userToken) throw new Error("Auth error");
+      return services.user.getUser(koaCtx.state.userToken.sub);
     },
   },
   Mutation: {
-    userLoggedIn: async (_, { input }, { services }) => {
-      // todo security?
-      const user = await services.user.loggedIn(input);
-      return {
-        user,
-      };
+    userLoggedIn: async (_, { input }, { services, koaCtx }) => {
+      if (!koaCtx.state.userToken) throw new Error("Auth error");
+      const user = await services.user.loggedIn(input, koaCtx.state.userToken);
+      return { user };
     },
   },
   Location: {

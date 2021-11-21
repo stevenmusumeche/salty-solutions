@@ -240,7 +240,7 @@ export type Query = {
   usgsSite?: Maybe<UsgsSite>;
   usgsSites: Array<UsgsSite>;
   appVersion: AppVersion;
-  user?: Maybe<User>;
+  viewer?: Maybe<User>;
 };
 
 
@@ -256,11 +256,6 @@ export type QueryTidePreditionStationArgs = {
 
 export type QueryUsgsSiteArgs = {
   siteId?: Maybe<Scalars['ID']>;
-};
-
-
-export type QueryUserArgs = {
-  userId: Scalars['ID'];
 };
 
 export type RainDetail = {
@@ -398,14 +393,11 @@ export type User = {
   email: Scalars['String'];
   name: Scalars['String'];
   picture?: Maybe<Scalars['String']>;
+  createdAt: Scalars['String'];
   purchases: Array<UserPurchase>;
 };
 
 export type UserLoggedInInput = {
-  id: Scalars['String'];
-  email: Scalars['String'];
-  name: Scalars['String'];
-  picture?: Maybe<Scalars['String']>;
   platform: Platform;
 };
 
