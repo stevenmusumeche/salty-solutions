@@ -1,8 +1,5 @@
 import { navigate, RouteComponentProps } from "@reach/router";
-import {
-  useLocationsQuery,
-  useUserLoggedInMutation,
-} from "@stevenmusumeche/salty-solutions-shared/dist/graphql";
+import { useLocationsQuery } from "@stevenmusumeche/salty-solutions-shared/dist/graphql";
 import {
   useTideStationSites,
   useWaterHeightSites,
