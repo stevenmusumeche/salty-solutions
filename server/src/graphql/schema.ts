@@ -9,7 +9,7 @@ export default gql`
     usgsSite(siteId: ID): UsgsSite
     usgsSites: [UsgsSite!]!
     appVersion: AppVersion!
-    user(userId: ID!): User
+    viewer: User
   }
 
   type Mutation {
@@ -21,6 +21,7 @@ export default gql`
     email: String!
     name: String!
     picture: String
+    createdAt: String!
     purchases: [UserPurchase!]!
   }
 
@@ -45,10 +46,6 @@ export default gql`
   }
 
   input UserLoggedInInput {
-    id: String!
-    email: String!
-    name: String!
-    picture: String
     platform: Platform!
   }
 

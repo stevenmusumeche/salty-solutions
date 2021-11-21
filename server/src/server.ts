@@ -22,6 +22,9 @@ import Rollbar from "rollbar";
 // @ts-ignore
 import { FormatErrorWithContextExtension } from "graphql-format-error-context-extension";
 import traceResolvers from "@lifeomic/graphql-resolvers-xray-tracing";
+import jwksClient from "jwks-rsa";
+import jwt from "jsonwebtoken";
+import { UserToken } from "./services/user";
 
 var rollbar = new Rollbar({
   accessToken: process.env.ROLLBAR_KEY,
@@ -33,7 +36,7 @@ const IS_DEV =
   process.env.SERVERLESS_STAGE === "dev" || !!process.env.LOCAL_DEV;
 
 export interface Context {
-  koaCtx: Koa.Context;
+  koaCtx: Koa.Context & { state: { userToken?: UserToken } };
   services: {
     noaa: typeof noaaService;
     location: typeof locationService;
@@ -117,6 +120,33 @@ app.use(async (ctx, next) => {
     rollbar.error(err as any, ctx.request);
   }
 });
+
+const jwks = jwksClient({
+  cache: true,
+  rateLimit: true,
+  jwksRequestsPerMinute: 5,
+  jwksUri: "https://dev-nzoppbnb.us.auth0.com/.well-known/jwks.json",
+});
+
+// verify the JWT and put the user in Koa context
+app.use(async (ctx, next) => {
+  try {
+    const token = (ctx.header.authorization || "").split(" ")[1];
+    if (!token) {
+      await next();
+      return;
+    }
+
+    const signingKey = (await jwks.getSigningKeys())[0];
+    const decodedToken = jwt.verify(token, signingKey.getPublicKey());
+    console.log(decodedToken);
+    ctx.state.userToken = decodedToken;
+  } catch (e) {
+    console.error(e);
+  }
+  await next();
+});
+
 server.applyMiddleware({ app, path: "/api", cors: true });
 
 if (process.env.LOCAL_DEV) {

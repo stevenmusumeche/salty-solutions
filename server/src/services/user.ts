@@ -1,19 +1,50 @@
 import { User, UserLoggedInInput } from "../generated/graphql";
 import { getItemByKey, put } from "./db";
 
-export async function loggedIn(input: UserLoggedInInput): Promise<User> {
-  let existingUser = await getUser(input.id);
+// shape of data from the decoded JWT
+export interface UserToken {
+  given_name: string;
+  family_name: string;
+  nickname: string;
+  name: string;
+  picture: string;
+  updated_at: string;
+  email: string;
+  email_verified: boolean;
+  iss: string;
+  sub: string;
+  aud: string;
+  iat: number;
+  exp: number;
+  nonce: string;
+}
+
+// shape of data in the database
+export interface UserDAO {
+  id: string;
+  email: string;
+  name: string;
+  picture?: string;
+  purchases: [];
+  createdAt: string;
+}
+
+export async function loggedIn(
+  input: UserLoggedInInput,
+  userToken: UserToken
+): Promise<User> {
+  const timestamp = new Date().toISOString();
+  let existingUser = await getUser(userToken.sub);
 
   if (!existingUser) {
-    await createUser(input);
-    existingUser = await getUser(input.id);
+    existingUser = toUserDao(userToken, timestamp);
+    await createUser(existingUser);
     if (!existingUser) {
       throw new Error("Unable to create new user");
     }
   }
 
   // create login record
-  const timestamp = new Date().toISOString();
   await put({
     table: "user",
     item: {
@@ -31,29 +62,35 @@ export async function loggedIn(input: UserLoggedInInput): Promise<User> {
   return existingUser;
 }
 
-async function createUser(
-  user: Pick<User, "id" | "email" | "picture" | "name">
-): Promise<void> {
+function toUserDao(userToken: UserToken, createdAt: string): UserDAO {
+  return {
+    id: userToken.sub,
+    email: userToken.email,
+    name: userToken.name,
+    picture: userToken.picture,
+    createdAt,
+    purchases: [],
+  };
+}
+
+async function createUser(user: UserDAO): Promise<void> {
   put({
     item: {
       Item: {
         pk: getUserPk(user.id),
         sk: getUserSk(user.email),
-        data: {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          picture: user.picture || undefined,
-          purchases: [],
-        },
+        data: user,
       },
     },
     table: "user",
   });
 }
 
-export async function getUser(userId: string): Promise<User | undefined> {
-  return await getItemByKey<User>({ pk: getUserPk(userId), table: "user" });
+export async function getUser(userId: string): Promise<UserDAO | null> {
+  return (
+    (await getItemByKey<UserDAO>({ pk: getUserPk(userId), table: "user" })) ||
+    null
+  );
 }
 
 function getUserPk(userId: string) {

@@ -243,7 +243,7 @@ export type Query = {
   usgsSite?: Maybe<UsgsSite>;
   usgsSites: Array<UsgsSite>;
   appVersion: AppVersion;
-  user?: Maybe<User>;
+  viewer?: Maybe<User>;
 };
 
 
@@ -259,11 +259,6 @@ export type QueryTidePreditionStationArgs = {
 
 export type QueryUsgsSiteArgs = {
   siteId?: Maybe<Scalars['ID']>;
-};
-
-
-export type QueryUserArgs = {
-  userId: Scalars['ID'];
 };
 
 export type RainDetail = {
@@ -401,14 +396,11 @@ export type User = {
   email: Scalars['String'];
   name: Scalars['String'];
   picture?: Maybe<Scalars['String']>;
+  createdAt: Scalars['String'];
   purchases: Array<UserPurchase>;
 };
 
 export type UserLoggedInInput = {
-  id: Scalars['String'];
-  email: Scalars['String'];
-  name: Scalars['String'];
-  picture?: Maybe<Scalars['String']>;
   platform: Platform;
 };
 
@@ -885,7 +877,7 @@ export type QueryResolvers<ContextType = Context, ParentType extends ResolversPa
   usgsSite?: Resolver<Maybe<ResolversTypes['UsgsSite']>, ParentType, ContextType, RequireFields<QueryUsgsSiteArgs, never>>;
   usgsSites?: Resolver<Array<ResolversTypes['UsgsSite']>, ParentType, ContextType>;
   appVersion?: Resolver<ResolversTypes['AppVersion'], ParentType, ContextType>;
-  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'userId'>>;
+  viewer?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
 };
 
 export type RainDetailResolvers<ContextType = Context, ParentType extends ResolversParentTypes['RainDetail'] = ResolversParentTypes['RainDetail']> = {
@@ -996,6 +988,7 @@ export type UserResolvers<ContextType = Context, ParentType extends ResolversPar
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   picture?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   purchases?: Resolver<Array<ResolversTypes['UserPurchase']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
