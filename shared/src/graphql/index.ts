@@ -518,6 +518,22 @@ export type WindSummary = {
   mostRecent?: Maybe<WindDetail>;
 };
 
+export type UserLoggedInMutationVariables = Exact<{
+  platform: Platform;
+}>;
+
+
+export type UserLoggedInMutation = (
+  { __typename?: 'Mutation' }
+  & { userLoggedIn: (
+    { __typename?: 'UserLoggedInResponse' }
+    & { user: (
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'email'>
+    ) }
+  ) }
+);
+
 export type AdminQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1217,6 +1233,20 @@ export const SolunarDetailFieldsFragmentDoc = gql`
   }
 }
     ${SolunarPeriodFieldsFragmentDoc}`;
+export const UserLoggedInDocument = gql`
+    mutation UserLoggedIn($platform: Platform!) {
+  userLoggedIn(input: {platform: $platform}) {
+    user {
+      id
+      email
+    }
+  }
+}
+    `;
+
+export function useUserLoggedInMutation() {
+  return Urql.useMutation<UserLoggedInMutation, UserLoggedInMutationVariables>(UserLoggedInDocument);
+};
 export const AdminDocument = gql`
     query Admin {
   tidePreditionStations {
