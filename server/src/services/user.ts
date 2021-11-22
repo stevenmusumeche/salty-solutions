@@ -36,9 +36,6 @@ export async function create(userToken: UserToken): Promise<UserDAO> {
 
   const newUser = toUserDao(userToken, timestamp);
   await saveUserToDB(newUser);
-  if (!existingUser) {
-    throw new Error("Unable to create new user");
-  }
   return newUser;
 }
 
