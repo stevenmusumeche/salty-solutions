@@ -199,6 +199,8 @@ export type MoonDetail = {
 export type Mutation = {
   __typename?: 'Mutation';
   userLoggedIn: UserLoggedInResponse;
+  /** Create a new user. If user already exists, this is a no-op. */
+  createUser: UpsertUserResponse;
 };
 
 
@@ -387,6 +389,11 @@ export type TidePreditionStationWaterHeightArgs = {
   end: Scalars['String'];
 };
 
+export type UpsertUserResponse = {
+  __typename?: 'UpsertUserResponse';
+  user: User;
+};
+
 export type User = {
   __typename?: 'User';
   id: Scalars['ID'];
@@ -403,7 +410,7 @@ export type UserLoggedInInput = {
 
 export type UserLoggedInResponse = {
   __typename?: 'UserLoggedInResponse';
-  user: User;
+  success: Scalars['Boolean'];
 };
 
 export type UserPurchase = {
@@ -518,6 +525,29 @@ export type WindSummary = {
   mostRecent?: Maybe<WindDetail>;
 };
 
+export type CreateUserMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type CreateUserMutation = (
+  { __typename?: 'Mutation' }
+  & { createUser: (
+    { __typename?: 'UpsertUserResponse' }
+    & { user: (
+      { __typename?: 'User' }
+      & UserFieldsFragment
+    ) }
+  ) }
+);
+
+export type UserFieldsFragment = (
+  { __typename?: 'User' }
+  & Pick<User, 'id' | 'email' | 'name' | 'picture' | 'createdAt'>
+  & { purchases: Array<(
+    { __typename?: 'UserPurchase' }
+    & Pick<UserPurchase, 'id' | 'item' | 'priceCents' | 'platform' | 'isActive' | 'purchaseDate' | 'endDate'>
+  )> }
+);
+
 export type UserLoggedInMutationVariables = Exact<{
   platform: Platform;
 }>;
@@ -527,10 +557,7 @@ export type UserLoggedInMutation = (
   { __typename?: 'Mutation' }
   & { userLoggedIn: (
     { __typename?: 'UserLoggedInResponse' }
-    & { user: (
-      { __typename?: 'User' }
-      & Pick<User, 'id' | 'email'>
-    ) }
+    & Pick<UserLoggedInResponse, 'success'>
   ) }
 );
 
@@ -985,6 +1012,24 @@ export type SolunarPeriodFieldsFragment = (
   & Pick<SolunarPeriod, 'start' | 'end' | 'weight'>
 );
 
+export const UserFieldsFragmentDoc = gql`
+    fragment UserFields on User {
+  id
+  email
+  name
+  picture
+  createdAt
+  purchases {
+    id
+    item
+    priceCents
+    platform
+    isActive
+    purchaseDate
+    endDate
+  }
+}
+    `;
 export const CombinedForecastV2DetailFragmentDoc = gql`
     fragment CombinedForecastV2Detail on CombinedForecastV2 {
   name
@@ -1233,13 +1278,23 @@ export const SolunarDetailFieldsFragmentDoc = gql`
   }
 }
     ${SolunarPeriodFieldsFragmentDoc}`;
+export const CreateUserDocument = gql`
+    mutation CreateUser {
+  createUser {
+    user {
+      ...UserFields
+    }
+  }
+}
+    ${UserFieldsFragmentDoc}`;
+
+export function useCreateUserMutation() {
+  return Urql.useMutation<CreateUserMutation, CreateUserMutationVariables>(CreateUserDocument);
+};
 export const UserLoggedInDocument = gql`
     mutation UserLoggedIn($platform: Platform!) {
   userLoggedIn(input: {platform: $platform}) {
-    user {
-      id
-      email
-    }
+    success
   }
 }
     `;

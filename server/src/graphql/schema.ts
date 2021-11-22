@@ -14,6 +14,12 @@ export default gql`
 
   type Mutation {
     userLoggedIn(input: UserLoggedInInput!): UserLoggedInResponse!
+    "Create a new user. If user already exists, this is a no-op."
+    createUser: CreateUserResponse!
+  }
+
+  type CreateUserResponse {
+    user: User!
   }
 
   type User {
@@ -50,7 +56,7 @@ export default gql`
   }
 
   type UserLoggedInResponse {
-    user: User!
+    success: Boolean!
   }
 
   type AppVersion {

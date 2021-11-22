@@ -29,37 +29,43 @@ export interface UserDAO {
   createdAt: string;
 }
 
+export async function create(userToken: UserToken): Promise<UserDAO> {
+  const timestamp = new Date().toISOString();
+  let existingUser = await getUser(userToken.sub);
+  if (existingUser) return existingUser;
+
+  const newUser = toUserDao(userToken, timestamp);
+  await saveUserToDB(newUser);
+  if (!existingUser) {
+    throw new Error("Unable to create new user");
+  }
+  return newUser;
+}
+
 export async function loggedIn(
   input: UserLoggedInInput,
   userToken: UserToken
-): Promise<User> {
-  const timestamp = new Date().toISOString();
-  let existingUser = await getUser(userToken.sub);
-
-  if (!existingUser) {
-    existingUser = toUserDao(userToken, timestamp);
-    await createUser(existingUser);
-    if (!existingUser) {
-      throw new Error("Unable to create new user");
-    }
-  }
-
-  // create login record
-  await put({
-    table: "user",
-    item: {
-      Item: {
-        pk: getUserLoginPk(existingUser.id),
-        sk: timestamp,
-        data: {
-          timestamp,
-          platform: input.platform,
+): Promise<boolean> {
+  try {
+    const timestamp = new Date().toISOString();
+    await put({
+      table: "user",
+      item: {
+        Item: {
+          pk: getUserLoginPk(userToken.sub),
+          sk: timestamp,
+          data: {
+            timestamp,
+            platform: input.platform,
+          },
         },
       },
-    },
-  });
-
-  return existingUser;
+    });
+    return true;
+  } catch (e) {
+    console.error("Error creating login record", e);
+    return false;
+  }
 }
 
 function toUserDao(userToken: UserToken, createdAt: string): UserDAO {
@@ -73,7 +79,7 @@ function toUserDao(userToken: UserToken, createdAt: string): UserDAO {
   };
 }
 
-async function createUser(user: UserDAO): Promise<void> {
+async function saveUserToDB(user: UserDAO): Promise<void> {
   put({
     item: {
       Item: {

@@ -202,6 +202,8 @@ export type MoonDetail = {
 export type Mutation = {
   __typename?: 'Mutation';
   userLoggedIn: UserLoggedInResponse;
+  /** Create a new user. If user already exists, this is a no-op. */
+  createUser: UpsertUserResponse;
 };
 
 
@@ -390,6 +392,11 @@ export type TidePreditionStationWaterHeightArgs = {
   end: Scalars['String'];
 };
 
+export type UpsertUserResponse = {
+  __typename?: 'UpsertUserResponse';
+  user: User;
+};
+
 export type User = {
   __typename?: 'User';
   id: Scalars['ID'];
@@ -406,7 +413,7 @@ export type UserLoggedInInput = {
 
 export type UserLoggedInResponse = {
   __typename?: 'UserLoggedInResponse';
-  user: User;
+  success: Scalars['Boolean'];
 };
 
 export type UserPurchase = {
@@ -659,6 +666,7 @@ export type ResolversTypes = {
   Mutation: ResolverTypeWrapper<{}>;
   UserLoggedInInput: ResolverTypeWrapper<Partial<UserLoggedInInput>>;
   UserLoggedInResponse: ResolverTypeWrapper<Partial<UserLoggedInResponse>>;
+  UpsertUserResponse: ResolverTypeWrapper<Partial<UpsertUserResponse>>;
   AirPressure: ResolverTypeWrapper<Partial<AirPressure>>;
   CurrentWind: ResolverTypeWrapper<Partial<CurrentWind>>;
 };
@@ -715,6 +723,7 @@ export type ResolversParentTypes = {
   Mutation: {};
   UserLoggedInInput: Partial<UserLoggedInInput>;
   UserLoggedInResponse: Partial<UserLoggedInResponse>;
+  UpsertUserResponse: Partial<UpsertUserResponse>;
   AirPressure: Partial<AirPressure>;
   CurrentWind: Partial<CurrentWind>;
 };
@@ -861,6 +870,7 @@ export type MoonDetailResolvers<ContextType = Context, ParentType extends Resolv
 
 export type MutationResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   userLoggedIn?: Resolver<ResolversTypes['UserLoggedInResponse'], ParentType, ContextType, RequireFields<MutationUserLoggedInArgs, 'input'>>;
+  createUser?: Resolver<ResolversTypes['UpsertUserResponse'], ParentType, ContextType>;
 };
 
 export type NoaaParamInfoResolvers<ContextType = Context, ParentType extends ResolversParentTypes['NoaaParamInfo'] = ResolversParentTypes['NoaaParamInfo']> = {
@@ -983,6 +993,11 @@ export type TidePreditionStationResolvers<ContextType = Context, ParentType exte
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type UpsertUserResponseResolvers<ContextType = Context, ParentType extends ResolversParentTypes['UpsertUserResponse'] = ResolversParentTypes['UpsertUserResponse']> = {
+  user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type UserResolvers<ContextType = Context, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -994,7 +1009,7 @@ export type UserResolvers<ContextType = Context, ParentType extends ResolversPar
 };
 
 export type UserLoggedInResponseResolvers<ContextType = Context, ParentType extends ResolversParentTypes['UserLoggedInResponse'] = ResolversParentTypes['UserLoggedInResponse']> = {
-  user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -1117,6 +1132,7 @@ export type Resolvers<ContextType = Context> = {
   TemperatureSummary?: TemperatureSummaryResolvers<ContextType>;
   TideDetail?: TideDetailResolvers<ContextType>;
   TidePreditionStation?: TidePreditionStationResolvers<ContextType>;
+  UpsertUserResponse?: UpsertUserResponseResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
   UserLoggedInResponse?: UserLoggedInResponseResolvers<ContextType>;
   UserPurchase?: UserPurchaseResolvers<ContextType>;

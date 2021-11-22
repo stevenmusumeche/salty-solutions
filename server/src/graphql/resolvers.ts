@@ -68,7 +68,15 @@ const resolvers: Resolvers & { UsgsParam: Object; NoaaParam: Object } = {
   Mutation: {
     userLoggedIn: async (_, { input }, { services, koaCtx }) => {
       if (!koaCtx.state.userToken) throw new Error("Auth error");
-      const user = await services.user.loggedIn(input, koaCtx.state.userToken);
+      const success = await services.user.loggedIn(
+        input,
+        koaCtx.state.userToken
+      );
+      return { success };
+    },
+    createUser: async (_, __, { services, koaCtx }) => {
+      if (!koaCtx.state.userToken) throw new Error("Auth error");
+      const user = await services.user.create(koaCtx.state.userToken);
       return { user };
     },
   },
