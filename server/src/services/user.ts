@@ -97,13 +97,13 @@ export async function getUser(userId: string): Promise<UserDAO | null> {
 }
 
 function getUserPk(userId: string) {
-  return "user-" + userId;
+  return "user::" + userId;
 }
 
 function getUserSk(email: string) {
-  return "email-" + email;
+  return "email::" + email;
 }
 
 function getUserLoginPk(userId: string) {
-  return "user-login-" + userId;
+  return "user-login::" + userId;
 }
