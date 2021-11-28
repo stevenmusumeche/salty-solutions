@@ -47,6 +47,15 @@ export type Coords = {
   lon: Scalars['Float'];
 };
 
+export type CreateUserInput = {
+  email?: Maybe<Scalars['String']>;
+};
+
+export type CreateUserResponse = {
+  __typename?: 'CreateUserResponse';
+  user: User;
+};
+
 export type CurrentWind = {
   __typename?: 'CurrentWind';
   speed: Scalars['Float'];
@@ -203,12 +212,17 @@ export type Mutation = {
   __typename?: 'Mutation';
   userLoggedIn: UserLoggedInResponse;
   /** Create a new user. If user already exists, this is a no-op. */
-  createUser: UpsertUserResponse;
+  createUser: CreateUserResponse;
 };
 
 
 export type MutationUserLoggedInArgs = {
   input: UserLoggedInInput;
+};
+
+
+export type MutationCreateUserArgs = {
+  input?: Maybe<CreateUserInput>;
 };
 
 export enum NoaaParam {
@@ -390,11 +404,6 @@ export type TidePreditionStationTidesArgs = {
 export type TidePreditionStationWaterHeightArgs = {
   start: Scalars['String'];
   end: Scalars['String'];
-};
-
-export type UpsertUserResponse = {
-  __typename?: 'UpsertUserResponse';
-  user: User;
 };
 
 export type User = {
@@ -666,7 +675,8 @@ export type ResolversTypes = {
   Mutation: ResolverTypeWrapper<{}>;
   UserLoggedInInput: ResolverTypeWrapper<Partial<UserLoggedInInput>>;
   UserLoggedInResponse: ResolverTypeWrapper<Partial<UserLoggedInResponse>>;
-  UpsertUserResponse: ResolverTypeWrapper<Partial<UpsertUserResponse>>;
+  CreateUserInput: ResolverTypeWrapper<Partial<CreateUserInput>>;
+  CreateUserResponse: ResolverTypeWrapper<Partial<CreateUserResponse>>;
   AirPressure: ResolverTypeWrapper<Partial<AirPressure>>;
   CurrentWind: ResolverTypeWrapper<Partial<CurrentWind>>;
 };
@@ -723,7 +733,8 @@ export type ResolversParentTypes = {
   Mutation: {};
   UserLoggedInInput: Partial<UserLoggedInInput>;
   UserLoggedInResponse: Partial<UserLoggedInResponse>;
-  UpsertUserResponse: Partial<UpsertUserResponse>;
+  CreateUserInput: Partial<CreateUserInput>;
+  CreateUserResponse: Partial<CreateUserResponse>;
   AirPressure: Partial<AirPressure>;
   CurrentWind: Partial<CurrentWind>;
 };
@@ -755,6 +766,11 @@ export type CombinedForecastV2Resolvers<ContextType = Context, ParentType extend
 export type CoordsResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Coords'] = ResolversParentTypes['Coords']> = {
   lat?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   lon?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CreateUserResponseResolvers<ContextType = Context, ParentType extends ResolversParentTypes['CreateUserResponse'] = ResolversParentTypes['CreateUserResponse']> = {
+  user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -870,7 +886,7 @@ export type MoonDetailResolvers<ContextType = Context, ParentType extends Resolv
 
 export type MutationResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   userLoggedIn?: Resolver<ResolversTypes['UserLoggedInResponse'], ParentType, ContextType, RequireFields<MutationUserLoggedInArgs, 'input'>>;
-  createUser?: Resolver<ResolversTypes['UpsertUserResponse'], ParentType, ContextType>;
+  createUser?: Resolver<ResolversTypes['CreateUserResponse'], ParentType, ContextType, RequireFields<MutationCreateUserArgs, never>>;
 };
 
 export type NoaaParamInfoResolvers<ContextType = Context, ParentType extends ResolversParentTypes['NoaaParamInfo'] = ResolversParentTypes['NoaaParamInfo']> = {
@@ -993,11 +1009,6 @@ export type TidePreditionStationResolvers<ContextType = Context, ParentType exte
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type UpsertUserResponseResolvers<ContextType = Context, ParentType extends ResolversParentTypes['UpsertUserResponse'] = ResolversParentTypes['UpsertUserResponse']> = {
-  user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
 export type UserResolvers<ContextType = Context, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -1102,6 +1113,7 @@ export type Resolvers<ContextType = Context> = {
   AppVersion?: AppVersionResolvers<ContextType>;
   CombinedForecastV2?: CombinedForecastV2Resolvers<ContextType>;
   Coords?: CoordsResolvers<ContextType>;
+  CreateUserResponse?: CreateUserResponseResolvers<ContextType>;
   CurrentWind?: CurrentWindResolvers<ContextType>;
   DataSources?: DataSourcesResolvers<ContextType>;
   ForecastDescription?: ForecastDescriptionResolvers<ContextType>;
@@ -1132,7 +1144,6 @@ export type Resolvers<ContextType = Context> = {
   TemperatureSummary?: TemperatureSummaryResolvers<ContextType>;
   TideDetail?: TideDetailResolvers<ContextType>;
   TidePreditionStation?: TidePreditionStationResolvers<ContextType>;
-  UpsertUserResponse?: UpsertUserResponseResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
   UserLoggedInResponse?: UserLoggedInResponseResolvers<ContextType>;
   UserPurchase?: UserPurchaseResolvers<ContextType>;

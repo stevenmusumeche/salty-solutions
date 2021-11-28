@@ -15,7 +15,12 @@ export default gql`
   type Mutation {
     userLoggedIn(input: UserLoggedInInput!): UserLoggedInResponse!
     "Create a new user. If user already exists, this is a no-op."
-    createUser: CreateUserResponse!
+    # todo: make this non-nullable after app is updated
+    createUser(input: CreateUserInput): CreateUserResponse!
+  }
+
+  input CreateUserInput {
+    email: String
   }
 
   type CreateUserResponse {

@@ -44,6 +44,15 @@ export type Coords = {
   lon: Scalars['Float'];
 };
 
+export type CreateUserInput = {
+  email?: Maybe<Scalars['String']>;
+};
+
+export type CreateUserResponse = {
+  __typename?: 'CreateUserResponse';
+  user: User;
+};
+
 export type CurrentWind = {
   __typename?: 'CurrentWind';
   speed: Scalars['Float'];
@@ -200,12 +209,17 @@ export type Mutation = {
   __typename?: 'Mutation';
   userLoggedIn: UserLoggedInResponse;
   /** Create a new user. If user already exists, this is a no-op. */
-  createUser: UpsertUserResponse;
+  createUser: CreateUserResponse;
 };
 
 
 export type MutationUserLoggedInArgs = {
   input: UserLoggedInInput;
+};
+
+
+export type MutationCreateUserArgs = {
+  input?: Maybe<CreateUserInput>;
 };
 
 export enum NoaaParam {
@@ -389,11 +403,6 @@ export type TidePreditionStationWaterHeightArgs = {
   end: Scalars['String'];
 };
 
-export type UpsertUserResponse = {
-  __typename?: 'UpsertUserResponse';
-  user: User;
-};
-
 export type User = {
   __typename?: 'User';
   id: Scalars['ID'];
@@ -531,7 +540,7 @@ export type CreateUserMutationVariables = Exact<{ [key: string]: never; }>;
 export type CreateUserMutation = (
   { __typename?: 'Mutation' }
   & { createUser: (
-    { __typename?: 'UpsertUserResponse' }
+    { __typename?: 'CreateUserResponse' }
     & { user: (
       { __typename?: 'User' }
       & UserFieldsFragment

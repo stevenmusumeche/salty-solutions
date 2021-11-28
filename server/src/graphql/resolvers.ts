@@ -74,9 +74,11 @@ const resolvers: Resolvers & { UsgsParam: Object; NoaaParam: Object } = {
       );
       return { success };
     },
-    createUser: async (_, __, { services, koaCtx }) => {
+    createUser: async (_, args, { services, koaCtx }) => {
       if (!koaCtx.state.userToken) throw new Error("Auth error");
-      const user = await services.user.create(koaCtx.state.userToken);
+
+      const email = args.input ? args.input.email : null;
+      const user = await services.user.create(koaCtx.state.userToken, email);
       return { user };
     },
   },

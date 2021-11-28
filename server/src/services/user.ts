@@ -1,4 +1,4 @@
-import { User, UserLoggedInInput } from "../generated/graphql";
+import { Maybe, User, UserLoggedInInput } from "../generated/graphql";
 import { getItemByKey, put } from "./db";
 
 // shape of data from the decoded JWT
@@ -29,12 +29,20 @@ export interface UserDAO {
   createdAt: string;
 }
 
-export async function create(userToken: UserToken): Promise<UserDAO> {
+export async function create(
+  userToken: UserToken,
+  email?: Maybe<string>
+): Promise<UserDAO> {
   const timestamp = new Date().toISOString();
   let existingUser = await getUser(userToken.sub);
   if (existingUser) return existingUser;
 
-  const newUser = toUserDao(userToken, timestamp);
+  let mergedToken: UserToken = userToken;
+  if (email) {
+    mergedToken = { ...mergedToken, email };
+  }
+
+  const newUser = toUserDao(mergedToken, timestamp);
   await saveUserToDB(newUser);
   return newUser;
 }
