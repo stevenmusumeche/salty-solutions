@@ -1,8 +1,8 @@
 import gql from "graphql-tag";
 
 export const CREATE_USER_MUTATION = gql`
-  mutation CreateUser {
-    createUser {
+  mutation CreateUser($email: String!) {
+    createUser(input: { email: $email }) {
       user {
         ...UserFields
       }
