@@ -535,7 +535,7 @@ export type WindSummary = {
 };
 
 export type CreateUserMutationVariables = Exact<{
-  email: Scalars['String'];
+  email?: Maybe<Scalars['String']>;
 }>;
 
 
@@ -1290,7 +1290,7 @@ export const SolunarDetailFieldsFragmentDoc = gql`
 }
     ${SolunarPeriodFieldsFragmentDoc}`;
 export const CreateUserDocument = gql`
-    mutation CreateUser($email: String!) {
+    mutation CreateUser($email: String) {
   createUser(input: {email: $email}) {
     user {
       ...UserFields
