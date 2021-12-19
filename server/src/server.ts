@@ -139,7 +139,6 @@ app.use(async (ctx, next) => {
 
     const signingKey = (await jwks.getSigningKeys())[0];
     const decodedToken = jwt.verify(token, signingKey.getPublicKey());
-    console.log(decodedToken);
     ctx.state.userToken = decodedToken;
   } catch (e) {
     rollbar.warning("Error decoding token", e as any);
