@@ -29,7 +29,7 @@ export default gql`
 
   type User {
     id: ID!
-    email: String!
+    email: String
     name: String!
     picture: String
     createdAt: String!
