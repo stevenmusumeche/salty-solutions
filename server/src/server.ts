@@ -142,6 +142,7 @@ app.use(async (ctx, next) => {
     console.log(decodedToken);
     ctx.state.userToken = decodedToken;
   } catch (e) {
+    rollbar.warning("Error decoding token", e as any);
     console.error(e);
   }
   await next();
