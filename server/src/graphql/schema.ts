@@ -17,6 +17,17 @@ export default gql`
     "Create a new user. If user already exists, this is a no-op."
     # todo: make this non-nullable after app is updated
     createUser(input: CreateUserInput): CreateUserResponse!
+    completePurchase(input: CompletePurchaseInput!): CompletePurchaseResponse!
+  }
+
+  input CompletePurchaseInput {
+    platform: Platform!
+    receipt: String!
+    priceCents: Int!
+  }
+
+  type CompletePurchaseResponse {
+    isComplete: Boolean!
   }
 
   input CreateUserInput {
@@ -34,6 +45,8 @@ export default gql`
     picture: String
     createdAt: String!
     purchases: [UserPurchase!]!
+      @deprecated(reason: "use entitledToPremium instead")
+    entitledToPremium: Boolean!
   }
 
   type UserPurchase {

@@ -41,6 +41,17 @@ export type CombinedForecastV2 = {
   rain: Array<RainDetail>;
 };
 
+export type CompletePurchaseInput = {
+  platform: Platform;
+  receipt: Scalars['String'];
+  priceCents: Scalars['Int'];
+};
+
+export type CompletePurchaseResponse = {
+  __typename?: 'CompletePurchaseResponse';
+  isComplete: Scalars['Boolean'];
+};
+
 export type Coords = {
   __typename?: 'Coords';
   lat: Scalars['Float'];
@@ -213,6 +224,7 @@ export type Mutation = {
   userLoggedIn: UserLoggedInResponse;
   /** Create a new user. If user already exists, this is a no-op. */
   createUser: CreateUserResponse;
+  completePurchase: CompletePurchaseResponse;
 };
 
 
@@ -223,6 +235,11 @@ export type MutationUserLoggedInArgs = {
 
 export type MutationCreateUserArgs = {
   input?: Maybe<CreateUserInput>;
+};
+
+
+export type MutationCompletePurchaseArgs = {
+  input: CompletePurchaseInput;
 };
 
 export enum NoaaParam {
@@ -409,11 +426,13 @@ export type TidePreditionStationWaterHeightArgs = {
 export type User = {
   __typename?: 'User';
   id: Scalars['ID'];
-  email: Scalars['String'];
+  email?: Maybe<Scalars['String']>;
   name: Scalars['String'];
   picture?: Maybe<Scalars['String']>;
   createdAt: Scalars['String'];
+  /** @deprecated use entitledToPremium instead */
   purchases: Array<UserPurchase>;
+  entitledToPremium: Scalars['Boolean'];
 };
 
 export type UserLoggedInInput = {
@@ -677,6 +696,8 @@ export type ResolversTypes = {
   UserLoggedInResponse: ResolverTypeWrapper<Partial<UserLoggedInResponse>>;
   CreateUserInput: ResolverTypeWrapper<Partial<CreateUserInput>>;
   CreateUserResponse: ResolverTypeWrapper<Partial<CreateUserResponse>>;
+  CompletePurchaseInput: ResolverTypeWrapper<Partial<CompletePurchaseInput>>;
+  CompletePurchaseResponse: ResolverTypeWrapper<Partial<CompletePurchaseResponse>>;
   AirPressure: ResolverTypeWrapper<Partial<AirPressure>>;
   CurrentWind: ResolverTypeWrapper<Partial<CurrentWind>>;
 };
@@ -735,6 +756,8 @@ export type ResolversParentTypes = {
   UserLoggedInResponse: Partial<UserLoggedInResponse>;
   CreateUserInput: Partial<CreateUserInput>;
   CreateUserResponse: Partial<CreateUserResponse>;
+  CompletePurchaseInput: Partial<CompletePurchaseInput>;
+  CompletePurchaseResponse: Partial<CompletePurchaseResponse>;
   AirPressure: Partial<AirPressure>;
   CurrentWind: Partial<CurrentWind>;
 };
@@ -760,6 +783,11 @@ export type CombinedForecastV2Resolvers<ContextType = Context, ParentType extend
   day?: Resolver<ResolversTypes['ForecastDescription'], ParentType, ContextType>;
   night?: Resolver<ResolversTypes['ForecastDescription'], ParentType, ContextType>;
   rain?: Resolver<Array<ResolversTypes['RainDetail']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CompletePurchaseResponseResolvers<ContextType = Context, ParentType extends ResolversParentTypes['CompletePurchaseResponse'] = ResolversParentTypes['CompletePurchaseResponse']> = {
+  isComplete?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -887,6 +915,7 @@ export type MoonDetailResolvers<ContextType = Context, ParentType extends Resolv
 export type MutationResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   userLoggedIn?: Resolver<ResolversTypes['UserLoggedInResponse'], ParentType, ContextType, RequireFields<MutationUserLoggedInArgs, 'input'>>;
   createUser?: Resolver<ResolversTypes['CreateUserResponse'], ParentType, ContextType, RequireFields<MutationCreateUserArgs, never>>;
+  completePurchase?: Resolver<ResolversTypes['CompletePurchaseResponse'], ParentType, ContextType, RequireFields<MutationCompletePurchaseArgs, 'input'>>;
 };
 
 export type NoaaParamInfoResolvers<ContextType = Context, ParentType extends ResolversParentTypes['NoaaParamInfo'] = ResolversParentTypes['NoaaParamInfo']> = {
@@ -1011,11 +1040,12 @@ export type TidePreditionStationResolvers<ContextType = Context, ParentType exte
 
 export type UserResolvers<ContextType = Context, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   picture?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   purchases?: Resolver<Array<ResolversTypes['UserPurchase']>, ParentType, ContextType>;
+  entitledToPremium?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -1112,6 +1142,7 @@ export type Resolvers<ContextType = Context> = {
   AirPressure?: AirPressureResolvers<ContextType>;
   AppVersion?: AppVersionResolvers<ContextType>;
   CombinedForecastV2?: CombinedForecastV2Resolvers<ContextType>;
+  CompletePurchaseResponse?: CompletePurchaseResponseResolvers<ContextType>;
   Coords?: CoordsResolvers<ContextType>;
   CreateUserResponse?: CreateUserResponseResolvers<ContextType>;
   CurrentWind?: CurrentWindResolvers<ContextType>;
