@@ -134,7 +134,7 @@ export const put = async (input: PutInput) => {
     .promise();
 };
 
-interface UpdateInput
+export interface UpdateInput
   extends Omit<DocumentClient.UpdateItemInput, "TableName"> {
   table: Table;
 }
@@ -177,44 +177,46 @@ type GetItemByKeyInput =
   | {
       table: "main";
       pk: string;
-      sk?: number;
+      sk: number;
     }
   | {
       table: "user";
       pk: string;
-      sk?: string;
+      sk: string;
     };
 
 export const getItemByKey = async <T>(
   input: GetItemByKeyInput
 ): Promise<T | undefined> => {
-  if (input.sk) {
-    // if we have both pk and sk, we can use GetItem
-    const resp = await client
-      .get({
-        TableName: tables[input.table],
-        Key: {
-          pk: input.pk,
-          sk: input.sk,
-        },
-      })
-      .promise();
-
-    return resp.Item ? (resp.Item.data as T) : undefined;
-  }
-
-  // otherwise we have to query
-  const result = await client
-    .query({
+  // if we have both pk and sk, we can use GetItem
+  const resp = await client
+    .get({
       TableName: tables[input.table],
-      KeyConditionExpression: "pk = :pk",
-      ExpressionAttributeValues: {
-        ":pk": input.pk,
+      Key: {
+        pk: input.pk,
+        sk: input.sk,
       },
-      Limit: 1,
     })
     .promise();
 
-  if (result.Count === 0) return;
-  return result.Items![0].data as T;
+  return resp.Item ? (resp.Item.data as T) : undefined;
 };
+
+// interface QueryInput extends Omit<DocumentClient.QueryInput, "TableName"> {
+//   table: Table;
+//   pk: string;
+// }
+
+// export const queryByPk = async <T>(input: QueryInput): Promise<T[]> => {
+//   const result = await client
+//     .query({
+//       TableName: tables[input.table],
+//       KeyConditionExpression: "pk = :pk",
+//       ExpressionAttributeValues: {
+//         ":pk": input.pk,
+//       },
+//     })
+//     .promise();
+
+//   return (result.Items ?? []) as T[];
+// };

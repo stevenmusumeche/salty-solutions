@@ -14,13 +14,12 @@ import * as nowcastService from "./services/nowcast";
 import * as modisService from "./services/modis";
 import * as saveOurLakeService from "./services/saveourlake";
 import * as userService from "./services/user";
+import * as purchaseService from "./services/purchase";
 import latestUsgsLoader from "./loaders/latest-usgs";
 import latestNoaaLoader from "./loaders/latest-noaa";
 import typeDefs from "./graphql/schema";
 import resolvers from "./graphql/resolvers";
 import Rollbar from "rollbar";
-// @ts-ignore
-import { FormatErrorWithContextExtension } from "graphql-format-error-context-extension";
 import traceResolvers from "@lifeomic/graphql-resolvers-xray-tracing";
 import jwksClient from "jwks-rsa";
 import jwt from "jsonwebtoken";
@@ -49,6 +48,7 @@ export interface Context {
     modis: typeof modisService;
     saveOurLake: typeof saveOurLakeService;
     user: typeof userService;
+    purchase: typeof purchaseService;
   };
   loaders: {
     latestUsgs: typeof latestUsgsLoader;
@@ -99,6 +99,7 @@ const server = new ApolloServer({
         modis: modisService,
         saveOurLake: saveOurLakeService,
         user: userService,
+        purchase: purchaseService,
       },
       loaders: {
         latestUsgs: latestUsgsLoader,
@@ -107,7 +108,6 @@ const server = new ApolloServer({
       pass: {},
     };
   },
-  extensions: [() => new FormatErrorWithContextExtension(formatError)],
   playground: IS_DEV,
   introspection: IS_DEV,
 });

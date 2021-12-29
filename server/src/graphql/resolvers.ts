@@ -1,4 +1,4 @@
-import { NoaaParam, Resolvers, UsgsParam } from "../generated/graphql";
+import { NoaaParam, Resolvers, UsgsParam, User } from "../generated/graphql";
 import { ApolloError } from "apollo-server-koa";
 import { notUndefined } from "../services/utils";
 import { NoaaProduct, NoaaStationType } from "../services/noaa/source";
@@ -79,7 +79,20 @@ const resolvers: Resolvers & { UsgsParam: Object; NoaaParam: Object } = {
 
       const email = args.input ? args.input.email : null;
       const user = await services.user.create(koaCtx.state.userToken, email);
-      return { user };
+      return { user: user as User };
+    },
+    completePurchase: async (_, args, { services, koaCtx }) => {
+      if (!koaCtx.state.userToken) throw new Error("Auth error");
+
+      const { platform, receipt, priceCents } = args.input;
+      const isComplete = await services.purchase.completePurchase(
+        koaCtx.state.userToken,
+        platform,
+        receipt,
+        priceCents
+      );
+
+      return { isComplete };
     },
   },
   Location: {
@@ -423,6 +436,18 @@ const resolvers: Resolvers & { UsgsParam: Object; NoaaParam: Object } = {
       }
 
       throw new Error("No parent");
+    },
+  },
+  User: {
+    /**
+     * @deprecated
+     */
+    purchases: async () => {
+      return [];
+    },
+    entitledToPremium: async (parentUser, args, { services }) => {
+      if (!parentUser.id) return false;
+      return services.user.isEntitledToPremium(parentUser.id);
     },
   },
 };
