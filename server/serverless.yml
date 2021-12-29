@@ -56,6 +56,9 @@ provider:
     DATABASE_TABLE_NAME: ${cf:ss-database-${self:provider.stage}.MainTableName}
     DATABASE_USER_TABLE_NAME: ${cf:ss-database-${self:provider.stage}.UserTableName}
     AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
+    APPLE_IAP_SHARED_SECRET: ${env:APPLE_IAP_SHARED_SECRET}
+    APPLE_STORE_SERVER_PRIVATE_KEY_ID: ${env:APPLE_STORE_SERVER_PRIVATE_KEY_ID}
+    APPLE_STORE_SERVER_PRIVATE_KEY: ${env:APPLE_STORE_SERVER_PRIVATE_KEY}
 
 functions:
   graphql:

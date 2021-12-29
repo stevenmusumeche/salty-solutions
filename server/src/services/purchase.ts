@@ -14,6 +14,8 @@ const APPLE_STOREKIT_SANDBOX_DOMAIN = `https://api.storekit-sandbox.itunes.apple
 // todo
 const APPLE_STOREKIT_PRODUCTION_DOMAIN = `https://api.storekit.itunes.apple.com`;
 const APPLE_SUBSCRIPTION_GROUP = "20879881";
+const APPLE_APP_STORE_CONNECT_ISSUER_ID =
+  "157f3bdf-1ecb-4cdf-9881-0e43bf2111c5";
 
 export type PurchasableItem = "PREMIUM_V1" | "PREMIUM_V0";
 
@@ -228,16 +230,11 @@ function buildAppleStoreAuthToken(): string {
       "Missing environment variable APPLE_STORE_SERVER_PRIVATE_KEY_ID"
     );
   }
-  if (!process.env.APPLE_APP_STORE_CONNECT_ISSUER_ID) {
-    throw new Error(
-      "Missing environment variable APPLE_APP_STORE_CONNECT_ISSUER_ID"
-    );
-  }
 
   const now = Date.now() / 1000;
   const jwtPayload = {
     // Your issuer ID from the Keys page in App Store Connect
-    iss: process.env.APPLE_APP_STORE_CONNECT_ISSUER_ID,
+    iss: APPLE_APP_STORE_CONNECT_ISSUER_ID,
     iat: now,
     // expires in 30 minutes
     exp: now + 60 * 30,
