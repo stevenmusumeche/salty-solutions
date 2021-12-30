@@ -201,22 +201,3 @@ export const getItemByKey = async <T>(
 
   return resp.Item ? (resp.Item.data as T) : undefined;
 };
-
-// interface QueryInput extends Omit<DocumentClient.QueryInput, "TableName"> {
-//   table: Table;
-//   pk: string;
-// }
-
-// export const queryByPk = async <T>(input: QueryInput): Promise<T[]> => {
-//   const result = await client
-//     .query({
-//       TableName: tables[input.table],
-//       KeyConditionExpression: "pk = :pk",
-//       ExpressionAttributeValues: {
-//         ":pk": input.pk,
-//       },
-//     })
-//     .promise();
-
-//   return (result.Items ?? []) as T[];
-// };
