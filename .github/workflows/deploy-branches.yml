@@ -14,6 +14,9 @@ jobs:
       STAGE: dev
       AWS_DEFAULT_REGION: "us-east-1"
       NPM_GITHUB_PACKAGE_TOKEN: ${{ secrets.NPM_GITHUB_PACKAGE_TOKEN }}
+      APPLE_IAP_SHARED_SECRET: ${{ secrets.APPLE_IAP_SHARED_SECRET }}
+      APPLE_STORE_SERVER_PRIVATE_KEY_ID: ${{ secrets.APPLE_STORE_SERVER_PRIVATE_KEY_ID }}
+      APPLE_STORE_SERVER_PRIVATE_KEY: ${{ secrets.APPLE_STORE_SERVER_PRIVATE_KEY }}
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
