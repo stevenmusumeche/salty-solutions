@@ -173,7 +173,9 @@ async function validateAppleReceipt(
 
     return {
       isValid: resp.data.status === 0,
-      transactionId: currentReceipt?.original_transaction_id,
+      transactionId: currentReceipt
+        ? currentReceipt.original_transaction_id
+        : undefined,
     };
   } catch (e) {
     console.error(e);
