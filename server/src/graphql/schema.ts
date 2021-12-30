@@ -28,6 +28,7 @@ export default gql`
 
   type CompletePurchaseResponse {
     isComplete: Boolean!
+    user: User
   }
 
   input CreateUserInput {

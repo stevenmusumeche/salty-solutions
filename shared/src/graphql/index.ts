@@ -47,6 +47,7 @@ export type CompletePurchaseInput = {
 export type CompletePurchaseResponse = {
   __typename?: 'CompletePurchaseResponse';
   isComplete: Scalars['Boolean'];
+  user?: Maybe<User>;
 };
 
 export type Coords = {
