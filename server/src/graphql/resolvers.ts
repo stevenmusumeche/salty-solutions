@@ -450,6 +450,12 @@ const resolvers: Resolvers & { UsgsParam: Object; NoaaParam: Object } = {
       return services.user.isEntitledToPremium(parentUser.id);
     },
   },
+  CompletePurchaseResponse: {
+    user: async (parent, args, { services, koaCtx }) => {
+      if (!koaCtx.state.userToken) throw new Error("Auth error");
+      return services.user.getUser(koaCtx.state.userToken.sub);
+    },
+  },
 };
 
 export default resolvers;

@@ -50,6 +50,7 @@ export type CompletePurchaseInput = {
 export type CompletePurchaseResponse = {
   __typename?: 'CompletePurchaseResponse';
   isComplete: Scalars['Boolean'];
+  user?: Maybe<User>;
 };
 
 export type Coords = {
@@ -788,6 +789,7 @@ export type CombinedForecastV2Resolvers<ContextType = Context, ParentType extend
 
 export type CompletePurchaseResponseResolvers<ContextType = Context, ParentType extends ResolversParentTypes['CompletePurchaseResponse'] = ResolversParentTypes['CompletePurchaseResponse']> = {
   isComplete?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
