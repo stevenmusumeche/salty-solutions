@@ -51,7 +51,7 @@ const getPurchases = async (userId: string): Promise<UserPurchaseDAO[]> => {
     sk: SK.userPurchases(),
   });
 
-  return items ?? [];
+  return items || [];
 };
 
 /**
