@@ -17,7 +17,8 @@
     "dev:server": "TZ=UTC LOCAL_DEV=true nodemon --watch 'server/src/**/*' -e ts,tsx --exec ts-node ./server/src/server.ts",
     "dev:client": "yarn --cwd ./client start",
     "dev:client:prod_api": "REACT_APP_API_URL=https://o2hlpsp9ac.execute-api.us-east-1.amazonaws.com/prod/api yarn --cwd ./client start",
-    "deploy:server": "cd server && ./node_modules/.bin/sls deploy --stage prod"
+    "deploy:server": "cd server && ./node_modules/.bin/sls deploy --stage prod",
+    "ts-node": "ts-node"
   },
   "dependencies": {
     "@types/jest": "^24.0.18",
