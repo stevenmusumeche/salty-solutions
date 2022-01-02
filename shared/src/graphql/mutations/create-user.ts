@@ -15,14 +15,5 @@ export const CREATE_USER_MUTATION = gql`
     name
     picture
     createdAt
-    purchases {
-      id
-      item
-      priceCents
-      platform
-      isActive
-      purchaseDate
-      endDate
-    }
   }
 `;

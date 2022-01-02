@@ -38,6 +38,18 @@ export type CombinedForecastV2 = {
   rain: Array<RainDetail>;
 };
 
+export type CompletePurchaseInput = {
+  platform: Platform;
+  receipt: Scalars['String'];
+  priceCents: Scalars['Int'];
+};
+
+export type CompletePurchaseResponse = {
+  __typename?: 'CompletePurchaseResponse';
+  isComplete: Scalars['Boolean'];
+  user?: Maybe<User>;
+};
+
 export type Coords = {
   __typename?: 'Coords';
   lat: Scalars['Float'];
@@ -210,6 +222,7 @@ export type Mutation = {
   userLoggedIn: UserLoggedInResponse;
   /** Create a new user. If user already exists, this is a no-op. */
   createUser: CreateUserResponse;
+  completePurchase: CompletePurchaseResponse;
 };
 
 
@@ -220,6 +233,11 @@ export type MutationUserLoggedInArgs = {
 
 export type MutationCreateUserArgs = {
   input?: Maybe<CreateUserInput>;
+};
+
+
+export type MutationCompletePurchaseArgs = {
+  input: CompletePurchaseInput;
 };
 
 export enum NoaaParam {
@@ -406,11 +424,13 @@ export type TidePreditionStationWaterHeightArgs = {
 export type User = {
   __typename?: 'User';
   id: Scalars['ID'];
-  email: Scalars['String'];
+  email?: Maybe<Scalars['String']>;
   name: Scalars['String'];
   picture?: Maybe<Scalars['String']>;
   createdAt: Scalars['String'];
+  /** @deprecated use entitledToPremium instead */
   purchases: Array<UserPurchase>;
+  entitledToPremium: Scalars['Boolean'];
 };
 
 export type UserLoggedInInput = {
@@ -553,10 +573,6 @@ export type CreateUserMutation = (
 export type UserFieldsFragment = (
   { __typename?: 'User' }
   & Pick<User, 'id' | 'email' | 'name' | 'picture' | 'createdAt'>
-  & { purchases: Array<(
-    { __typename?: 'UserPurchase' }
-    & Pick<UserPurchase, 'id' | 'item' | 'priceCents' | 'platform' | 'isActive' | 'purchaseDate' | 'endDate'>
-  )> }
 );
 
 export type UserLoggedInMutationVariables = Exact<{
@@ -1030,15 +1046,6 @@ export const UserFieldsFragmentDoc = gql`
   name
   picture
   createdAt
-  purchases {
-    id
-    item
-    priceCents
-    platform
-    isActive
-    purchaseDate
-    endDate
-  }
 }
     `;
 export const CombinedForecastV2DetailFragmentDoc = gql`
