@@ -2827,10 +2827,10 @@
   dependencies:
     "@sinonjs/commons" "^1.7.0"
 
-"@stevenmusumeche/salty-solutions-shared@^1.2.0":
-  version "1.2.0"
-  resolved "https://npm.pkg.github.com/download/@stevenmusumeche/salty-solutions-shared/1.2.0/61eaff6afa28a4ad628dcc996bdaf53e3e9d5d199c59be5b8650d474b7cdef99#6a60f5a8bcd6a30a3d1e42edaadf91f0ed20c60c"
-  integrity sha512-NJZx62qo4L82H61U+IEwibOXKhtym958BEv1oz5KSvB7zWo6kA45JlUCHdwIhpV4frrJqO7uX7BVhKKpR/y7OA==
+"@stevenmusumeche/salty-solutions-shared@^1.4.0":
+  version "1.4.0"
+  resolved "https://npm.pkg.github.com/download/@stevenmusumeche/salty-solutions-shared/1.4.0/a98626bfd6c5a3578f67c24b127099718a4edec3196350f92d9b8c528e9324be#e8457e910824c7b5e258a2f6d3a605f0cc090489"
+  integrity sha512-mAft93z/hBIMCJQB3MNNwU0/e9IiwuffLX77Xw3v0bTwSEIxUJ8hbINYjy7Iqz92IrtTE/fSdhQzEL6AJJQpeA==
 
 "@stevenmusumeche/solunar@^1.0.4":
   version "1.0.4"

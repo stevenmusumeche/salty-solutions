@@ -81,6 +81,22 @@ export type DataSources = {
   weatherRadarSiteId: Scalars['String'];
 };
 
+export type FeatureFlag = {
+  __typename?: 'FeatureFlag';
+  id: Scalars['ID'];
+  type: FeatureFlagType;
+  value: Scalars['Boolean'];
+};
+
+export type FeatureFlagsResponse = {
+  __typename?: 'FeatureFlagsResponse';
+  flags: Array<FeatureFlag>;
+};
+
+export enum FeatureFlagType {
+  Boolean = 'Boolean'
+}
+
 export type ForecastDescription = {
   __typename?: 'ForecastDescription';
   short?: Maybe<Scalars['String']>;
@@ -275,6 +291,7 @@ export type Query = {
   usgsSites: Array<UsgsSite>;
   appVersion: AppVersion;
   viewer?: Maybe<User>;
+  featureFlags: FeatureFlagsResponse;
 };
 
 
@@ -290,6 +307,11 @@ export type QueryTidePreditionStationArgs = {
 
 export type QueryUsgsSiteArgs = {
   siteId?: Maybe<Scalars['ID']>;
+};
+
+
+export type QueryFeatureFlagsArgs = {
+  platform: Platform;
 };
 
 export type RainDetail = {
@@ -834,6 +856,27 @@ export type WindDetailFields2Fragment = (
   & Pick<WindDetail, 'timestamp' | 'speed' | 'direction' | 'directionDegrees'>
 );
 
+export type FeatureFlagsQueryVariables = Exact<{
+  platform: Platform;
+}>;
+
+
+export type FeatureFlagsQuery = (
+  { __typename?: 'Query' }
+  & { featureFlags: (
+    { __typename?: 'FeatureFlagsResponse' }
+    & { flags: Array<(
+      { __typename?: 'FeatureFlag' }
+      & FeatureFlagFieldsFragment
+    )> }
+  ) }
+);
+
+export type FeatureFlagFieldsFragment = (
+  { __typename?: 'FeatureFlag' }
+  & Pick<FeatureFlag, 'id' | 'type' | 'value'>
+);
+
 export type HourlyForecastQueryVariables = Exact<{
   locationId: Scalars['ID'];
 }>;
@@ -1180,6 +1223,13 @@ export const TidePredictionStationDetailFieldsFragmentDoc = gql`
     ${WindDetailFields2FragmentDoc}
 ${TemperatureDetailFieldsFragmentDoc}
 ${WaterTemperatureDetailFieldsFragmentDoc}`;
+export const FeatureFlagFieldsFragmentDoc = gql`
+    fragment FeatureFlagFields on FeatureFlag {
+  id
+  type
+  value
+}
+    `;
 export const HourlyForecastDetailFragmentDoc = gql`
     fragment HourlyForecastDetail on WeatherForecast {
   startTime
@@ -1423,6 +1473,19 @@ ${TidePredictionStationDetailFieldsFragmentDoc}`;
 
 export function useCurrentConditionsDataQuery(options: Omit<Urql.UseQueryArgs<CurrentConditionsDataQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<CurrentConditionsDataQuery>({ query: CurrentConditionsDataDocument, ...options });
+};
+export const FeatureFlagsDocument = gql`
+    query FeatureFlags($platform: Platform!) {
+  featureFlags(platform: $platform) {
+    flags {
+      ...FeatureFlagFields
+    }
+  }
+}
+    ${FeatureFlagFieldsFragmentDoc}`;
+
+export function useFeatureFlagsQuery(options: Omit<Urql.UseQueryArgs<FeatureFlagsQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<FeatureFlagsQuery>({ query: FeatureFlagsDocument, ...options });
 };
 export const HourlyForecastDocument = gql`
     query HourlyForecast($locationId: ID!) {
