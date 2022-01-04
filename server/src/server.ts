@@ -15,6 +15,7 @@ import * as modisService from "./services/modis";
 import * as saveOurLakeService from "./services/saveourlake";
 import * as userService from "./services/user";
 import * as purchaseService from "./services/purchase";
+import * as featureFlagService from "./services/feature-flag";
 import latestUsgsLoader from "./loaders/latest-usgs";
 import latestNoaaLoader from "./loaders/latest-noaa";
 import typeDefs from "./graphql/schema";
@@ -49,6 +50,7 @@ export interface Context {
     saveOurLake: typeof saveOurLakeService;
     user: typeof userService;
     purchase: typeof purchaseService;
+    featureFlags: typeof featureFlagService;
   };
   loaders: {
     latestUsgs: typeof latestUsgsLoader;
@@ -100,6 +102,7 @@ const server = new ApolloServer({
         saveOurLake: saveOurLakeService,
         user: userService,
         purchase: purchaseService,
+        featureFlags: featureFlagService,
       },
       loaders: {
         latestUsgs: latestUsgsLoader,
