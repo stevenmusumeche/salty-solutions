@@ -13,6 +13,8 @@ import { useState } from "react";
 import "intersection-observer";
 import { Auth0Provider } from "@auth0/auth0-react";
 import EmbedCurrentConditions from "./components/embeds/EmbedCurrentConditions";
+import { Platform } from "@stevenmusumeche/salty-solutions-shared/dist/graphql";
+import { FeatureFlagProvider } from "@stevenmusumeche/salty-solutions-shared";
 
 export const INITIAL_LOCATION = "calcasieu-lake";
 
@@ -41,14 +43,16 @@ const Root = () => {
     >
       <MediaQueryProvider>
         <UrqlProvider value={client}>
-          <Router>
-            <About path="/about" />
-            <Admin path="/admin" />
-            <Privacy path="/privacy" />
-            <EmbedCurrentConditions path="/embed/now" />
-            <App path="/:locationSlug" />
-            <Home path="/" />
-          </Router>
+          <FeatureFlagProvider platform={Platform.Web}>
+            <Router>
+              <About path="/about" />
+              <Admin path="/admin" />
+              <Privacy path="/privacy" />
+              <EmbedCurrentConditions path="/embed/now" />
+              <App path="/:locationSlug" />
+              <Home path="/" />
+            </Router>
+          </FeatureFlagProvider>
         </UrqlProvider>
       </MediaQueryProvider>
     </Auth0Provider>

@@ -22,6 +22,7 @@ import Shell from "./components/Shell";
 import Tides from "./components/tide/Tides";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useRemoveLoader } from "./hooks/useRemoveLoader";
+import { useFeatureFlagContext } from "@stevenmusumeche/salty-solutions-shared";
 
 export interface Action {
   type: string;
@@ -68,6 +69,7 @@ const sectionReducer = (state: State, action: Action) => {
 const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
   locationSlug,
 }) => {
+  const { state: flagState } = useFeatureFlagContext();
   const { isLoading: isAuth0Loading } = useAuth0();
   const [sections, dispatch] = useReducer(sectionReducer, initialState);
   const [locations] = useLocationsQuery();
@@ -95,7 +97,7 @@ const App: React.FC<RouteComponentProps<{ locationSlug: string }>> = ({
   const waterHeightSites = useWaterHeightSites(selectedLocation);
   const tideStations = useTideStationSites(selectedLocation);
 
-  if (locations.fetching || isAuth0Loading) {
+  if (locations.fetching || isAuth0Loading || flagState.status === "loading") {
     return null;
   }
 
