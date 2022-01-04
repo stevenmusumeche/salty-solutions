@@ -10,6 +10,7 @@ export default gql`
     usgsSites: [UsgsSite!]!
     appVersion: AppVersion!
     viewer: User
+    featureFlags(platform: Platform!): FeatureFlagsResponse!
   }
 
   type Mutation {
@@ -18,6 +19,20 @@ export default gql`
     # todo: make this non-nullable after app is updated
     createUser(input: CreateUserInput): CreateUserResponse!
     completePurchase(input: CompletePurchaseInput!): CompletePurchaseResponse!
+  }
+
+  type FeatureFlagsResponse {
+    flags: [FeatureFlag!]!
+  }
+
+  type FeatureFlag {
+    id: ID!
+    type: FeatureFlagType!
+    value: Boolean!
+  }
+
+  enum FeatureFlagType {
+    Boolean
   }
 
   input CompletePurchaseInput {

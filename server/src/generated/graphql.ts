@@ -84,6 +84,22 @@ export type DataSources = {
   weatherRadarSiteId: Scalars['String'];
 };
 
+export type FeatureFlag = {
+  __typename?: 'FeatureFlag';
+  id: Scalars['ID'];
+  type: FeatureFlagType;
+  value: Scalars['Boolean'];
+};
+
+export type FeatureFlagsResponse = {
+  __typename?: 'FeatureFlagsResponse';
+  flags: Array<FeatureFlag>;
+};
+
+export enum FeatureFlagType {
+  Boolean = 'Boolean'
+}
+
 export type ForecastDescription = {
   __typename?: 'ForecastDescription';
   short?: Maybe<Scalars['String']>;
@@ -278,6 +294,7 @@ export type Query = {
   usgsSites: Array<UsgsSite>;
   appVersion: AppVersion;
   viewer?: Maybe<User>;
+  featureFlags: FeatureFlagsResponse;
 };
 
 
@@ -293,6 +310,11 @@ export type QueryTidePreditionStationArgs = {
 
 export type QueryUsgsSiteArgs = {
   siteId?: Maybe<Scalars['ID']>;
+};
+
+
+export type QueryFeatureFlagsArgs = {
+  platform: Platform;
 };
 
 export type RainDetail = {
@@ -692,6 +714,9 @@ export type ResolversTypes = {
   UserPurchase: ResolverTypeWrapper<Partial<UserPurchase>>;
   PurchasableItem: ResolverTypeWrapper<Partial<PurchasableItem>>;
   Platform: ResolverTypeWrapper<Partial<Platform>>;
+  FeatureFlagsResponse: ResolverTypeWrapper<Partial<FeatureFlagsResponse>>;
+  FeatureFlag: ResolverTypeWrapper<Partial<FeatureFlag>>;
+  FeatureFlagType: ResolverTypeWrapper<Partial<FeatureFlagType>>;
   Mutation: ResolverTypeWrapper<{}>;
   UserLoggedInInput: ResolverTypeWrapper<Partial<UserLoggedInInput>>;
   UserLoggedInResponse: ResolverTypeWrapper<Partial<UserLoggedInResponse>>;
@@ -752,6 +777,8 @@ export type ResolversParentTypes = {
   SupportedVersion: Partial<SupportedVersion>;
   User: Partial<User>;
   UserPurchase: Partial<UserPurchase>;
+  FeatureFlagsResponse: Partial<FeatureFlagsResponse>;
+  FeatureFlag: Partial<FeatureFlag>;
   Mutation: {};
   UserLoggedInInput: Partial<UserLoggedInInput>;
   UserLoggedInResponse: Partial<UserLoggedInResponse>;
@@ -817,6 +844,18 @@ export type DataSourcesResolvers<ContextType = Context, ParentType extends Resol
   usgsSiteId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   weatherStationId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   weatherRadarSiteId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type FeatureFlagResolvers<ContextType = Context, ParentType extends ResolversParentTypes['FeatureFlag'] = ResolversParentTypes['FeatureFlag']> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  type?: Resolver<ResolversTypes['FeatureFlagType'], ParentType, ContextType>;
+  value?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type FeatureFlagsResponseResolvers<ContextType = Context, ParentType extends ResolversParentTypes['FeatureFlagsResponse'] = ResolversParentTypes['FeatureFlagsResponse']> = {
+  flags?: Resolver<Array<ResolversTypes['FeatureFlag']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -935,6 +974,7 @@ export type QueryResolvers<ContextType = Context, ParentType extends ResolversPa
   usgsSites?: Resolver<Array<ResolversTypes['UsgsSite']>, ParentType, ContextType>;
   appVersion?: Resolver<ResolversTypes['AppVersion'], ParentType, ContextType>;
   viewer?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  featureFlags?: Resolver<ResolversTypes['FeatureFlagsResponse'], ParentType, ContextType, RequireFields<QueryFeatureFlagsArgs, 'platform'>>;
 };
 
 export type RainDetailResolvers<ContextType = Context, ParentType extends ResolversParentTypes['RainDetail'] = ResolversParentTypes['RainDetail']> = {
@@ -1149,6 +1189,8 @@ export type Resolvers<ContextType = Context> = {
   CreateUserResponse?: CreateUserResponseResolvers<ContextType>;
   CurrentWind?: CurrentWindResolvers<ContextType>;
   DataSources?: DataSourcesResolvers<ContextType>;
+  FeatureFlag?: FeatureFlagResolvers<ContextType>;
+  FeatureFlagsResponse?: FeatureFlagsResponseResolvers<ContextType>;
   ForecastDescription?: ForecastDescriptionResolvers<ContextType>;
   ForecastWaveDetail?: ForecastWaveDetailResolvers<ContextType>;
   ForecastWindDetailV2?: ForecastWindDetailV2Resolvers<ContextType>;

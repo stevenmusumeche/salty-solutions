@@ -64,6 +64,11 @@ const resolvers: Resolvers & { UsgsParam: Object; NoaaParam: Object } = {
       if (!koaCtx.state.userToken) throw new Error("Auth error");
       return services.user.getUser(koaCtx.state.userToken.sub);
     },
+    featureFlags: async (_, { platform }, { services }) => {
+      return {
+        flags: await services.featureFlags.getAllFlags(platform),
+      };
+    },
   },
   Mutation: {
     userLoggedIn: async (_, { input }, { services, koaCtx }) => {

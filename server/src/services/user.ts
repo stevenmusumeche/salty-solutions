@@ -173,6 +173,7 @@ export async function isEntitledToPremium(userId: string): Promise<boolean> {
  */
 export const PK = {
   user: (userId: string) => `user::${userId}`,
+  appConfig: () => "app-config",
 };
 
 /**
@@ -182,4 +183,5 @@ export const SK = {
   userDetails: () => "user-details",
   userLogin: (timestamp: Date) => `user-login::${timestamp.toISOString()}`,
   userPurchases: () => "purchases",
+  featureFlags: () => "feature-flags",
 };
