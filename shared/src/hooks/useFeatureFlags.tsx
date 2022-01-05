@@ -60,8 +60,11 @@ export function useFeatureFlags(
 
     if (result.fetching && initialFetchComplete.current === false) {
       setState({ status: "loading" });
-    } else if (result.error && initialFetchComplete.current === false) {
+    } else if (result.error && !initialFetchComplete.current) {
+      // error on initial call
       setState({ status: "error", error: result.error.message });
+    } else if (result.error && initialFetchComplete.current) {
+      // error on subsequent call: do nothing (keep using stale flag data)
     } else if (result.data) {
       initialFetchComplete.current = true;
       setState({
