@@ -153,9 +153,9 @@ function toUserDao(
 ): UserDAO {
   return {
     id: userId,
-    email: userInput.email ?? undefined,
+    email: userInput.email || undefined,
     name: userInput.name,
-    picture: userInput.picture ?? undefined,
+    picture: userInput.picture || undefined,
     createdAt,
   };
 }
