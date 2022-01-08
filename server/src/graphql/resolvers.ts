@@ -86,6 +86,12 @@ const resolvers: Resolvers & { UsgsParam: Object; NoaaParam: Object } = {
       const user = await services.user.create(koaCtx.state.userToken, email);
       return { user: user as User };
     },
+    upsertUser: async (_, args, { services, koaCtx }) => {
+      if (!koaCtx.state.userToken) throw new Error("Auth error");
+      const { input } = args;
+      const user = await services.user.upsert(koaCtx.state.userToken, input);
+      return { user: user as User };
+    },
     completePurchase: async (_, args, { services, koaCtx }) => {
       if (!koaCtx.state.userToken) throw new Error("Auth error");
 

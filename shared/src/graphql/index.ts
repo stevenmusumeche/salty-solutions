@@ -236,8 +236,14 @@ export type MoonDetail = {
 export type Mutation = {
   __typename?: 'Mutation';
   userLoggedIn: UserLoggedInResponse;
-  /** Create a new user. If user already exists, this is a no-op. */
+  /**
+   * Create a new user. If user already exists, this is a no-op.
+   * @deprecated Use upsert user
+   */
   createUser: CreateUserResponse;
+  /** Create or update a user */
+  upsertUser: UpsertUserResponse;
+  /** Record an IAP purchase */
   completePurchase: CompletePurchaseResponse;
 };
 
@@ -249,6 +255,11 @@ export type MutationUserLoggedInArgs = {
 
 export type MutationCreateUserArgs = {
   input?: Maybe<CreateUserInput>;
+};
+
+
+export type MutationUpsertUserArgs = {
+  input: UpsertUserInput;
 };
 
 
@@ -443,6 +454,17 @@ export type TidePreditionStationWaterHeightArgs = {
   end: Scalars['String'];
 };
 
+export type UpsertUserInput = {
+  email?: Maybe<Scalars['String']>;
+  name: Scalars['String'];
+  picture?: Maybe<Scalars['String']>;
+};
+
+export type UpsertUserResponse = {
+  __typename?: 'UpsertUserResponse';
+  user: User;
+};
+
 export type User = {
   __typename?: 'User';
   id: Scalars['ID'];
@@ -576,15 +598,15 @@ export type WindSummary = {
   mostRecent?: Maybe<WindDetail>;
 };
 
-export type CreateUserMutationVariables = Exact<{
-  email?: Maybe<Scalars['String']>;
+export type UpsertUserMutationVariables = Exact<{
+  input: UpsertUserInput;
 }>;
 
 
-export type CreateUserMutation = (
+export type UpsertUserMutation = (
   { __typename?: 'Mutation' }
-  & { createUser: (
-    { __typename?: 'CreateUserResponse' }
+  & { upsertUser: (
+    { __typename?: 'UpsertUserResponse' }
     & { user: (
       { __typename?: 'User' }
       & UserFieldsFragment
@@ -594,7 +616,7 @@ export type CreateUserMutation = (
 
 export type UserFieldsFragment = (
   { __typename?: 'User' }
-  & Pick<User, 'id' | 'email' | 'name' | 'picture' | 'createdAt'>
+  & Pick<User, 'id' | 'email' | 'name' | 'picture' | 'createdAt' | 'entitledToPremium'>
 );
 
 export type UserLoggedInMutationVariables = Exact<{
@@ -1089,6 +1111,7 @@ export const UserFieldsFragmentDoc = gql`
   name
   picture
   createdAt
+  entitledToPremium
 }
     `;
 export const CombinedForecastV2DetailFragmentDoc = gql`
@@ -1346,9 +1369,9 @@ export const SolunarDetailFieldsFragmentDoc = gql`
   }
 }
     ${SolunarPeriodFieldsFragmentDoc}`;
-export const CreateUserDocument = gql`
-    mutation CreateUser($email: String) {
-  createUser(input: {email: $email}) {
+export const UpsertUserDocument = gql`
+    mutation UpsertUser($input: UpsertUserInput!) {
+  upsertUser(input: $input) {
     user {
       ...UserFields
     }
@@ -1356,8 +1379,8 @@ export const CreateUserDocument = gql`
 }
     ${UserFieldsFragmentDoc}`;
 
-export function useCreateUserMutation() {
-  return Urql.useMutation<CreateUserMutation, CreateUserMutationVariables>(CreateUserDocument);
+export function useUpsertUserMutation() {
+  return Urql.useMutation<UpsertUserMutation, UpsertUserMutationVariables>(UpsertUserDocument);
 };
 export const UserLoggedInDocument = gql`
     mutation UserLoggedIn($platform: Platform!) {

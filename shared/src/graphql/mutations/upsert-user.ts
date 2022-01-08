@@ -1,8 +1,8 @@
 import gql from "graphql-tag";
 
-export const CREATE_USER_MUTATION = gql`
-  mutation CreateUser($email: String) {
-    createUser(input: { email: $email }) {
+export const UPSERT_USER_MUTATION = gql`
+  mutation UpsertUser($input: UpsertUserInput!) {
+    upsertUser(input: $input) {
       user {
         ...UserFields
       }
@@ -15,5 +15,6 @@ export const CREATE_USER_MUTATION = gql`
     name
     picture
     createdAt
+    entitledToPremium
   }
 `;

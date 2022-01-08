@@ -15,9 +15,15 @@ export default gql`
 
   type Mutation {
     userLoggedIn(input: UserLoggedInInput!): UserLoggedInResponse!
+
     "Create a new user. If user already exists, this is a no-op."
-    # todo: make this non-nullable after app is updated
     createUser(input: CreateUserInput): CreateUserResponse!
+      @deprecated(reason: "Use upsert user")
+
+    "Create or update a user"
+    upsertUser(input: UpsertUserInput!): UpsertUserResponse!
+
+    "Record an IAP purchase"
     completePurchase(input: CompletePurchaseInput!): CompletePurchaseResponse!
   }
 
@@ -50,7 +56,17 @@ export default gql`
     email: String
   }
 
+  input UpsertUserInput {
+    email: String
+    name: String!
+    picture: String
+  }
+
   type CreateUserResponse {
+    user: User!
+  }
+
+  type UpsertUserResponse {
     user: User!
   }
 

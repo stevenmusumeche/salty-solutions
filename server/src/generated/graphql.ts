@@ -239,8 +239,14 @@ export type MoonDetail = {
 export type Mutation = {
   __typename?: 'Mutation';
   userLoggedIn: UserLoggedInResponse;
-  /** Create a new user. If user already exists, this is a no-op. */
+  /**
+   * Create a new user. If user already exists, this is a no-op.
+   * @deprecated Use upsert user
+   */
   createUser: CreateUserResponse;
+  /** Create or update a user */
+  upsertUser: UpsertUserResponse;
+  /** Record an IAP purchase */
   completePurchase: CompletePurchaseResponse;
 };
 
@@ -252,6 +258,11 @@ export type MutationUserLoggedInArgs = {
 
 export type MutationCreateUserArgs = {
   input?: Maybe<CreateUserInput>;
+};
+
+
+export type MutationUpsertUserArgs = {
+  input: UpsertUserInput;
 };
 
 
@@ -444,6 +455,17 @@ export type TidePreditionStationTidesArgs = {
 export type TidePreditionStationWaterHeightArgs = {
   start: Scalars['String'];
   end: Scalars['String'];
+};
+
+export type UpsertUserInput = {
+  email?: Maybe<Scalars['String']>;
+  name: Scalars['String'];
+  picture?: Maybe<Scalars['String']>;
+};
+
+export type UpsertUserResponse = {
+  __typename?: 'UpsertUserResponse';
+  user: User;
 };
 
 export type User = {
@@ -722,6 +744,8 @@ export type ResolversTypes = {
   UserLoggedInResponse: ResolverTypeWrapper<Partial<UserLoggedInResponse>>;
   CreateUserInput: ResolverTypeWrapper<Partial<CreateUserInput>>;
   CreateUserResponse: ResolverTypeWrapper<Partial<CreateUserResponse>>;
+  UpsertUserInput: ResolverTypeWrapper<Partial<UpsertUserInput>>;
+  UpsertUserResponse: ResolverTypeWrapper<Partial<UpsertUserResponse>>;
   CompletePurchaseInput: ResolverTypeWrapper<Partial<CompletePurchaseInput>>;
   CompletePurchaseResponse: ResolverTypeWrapper<Partial<CompletePurchaseResponse>>;
   AirPressure: ResolverTypeWrapper<Partial<AirPressure>>;
@@ -784,6 +808,8 @@ export type ResolversParentTypes = {
   UserLoggedInResponse: Partial<UserLoggedInResponse>;
   CreateUserInput: Partial<CreateUserInput>;
   CreateUserResponse: Partial<CreateUserResponse>;
+  UpsertUserInput: Partial<UpsertUserInput>;
+  UpsertUserResponse: Partial<UpsertUserResponse>;
   CompletePurchaseInput: Partial<CompletePurchaseInput>;
   CompletePurchaseResponse: Partial<CompletePurchaseResponse>;
   AirPressure: Partial<AirPressure>;
@@ -956,6 +982,7 @@ export type MoonDetailResolvers<ContextType = Context, ParentType extends Resolv
 export type MutationResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   userLoggedIn?: Resolver<ResolversTypes['UserLoggedInResponse'], ParentType, ContextType, RequireFields<MutationUserLoggedInArgs, 'input'>>;
   createUser?: Resolver<ResolversTypes['CreateUserResponse'], ParentType, ContextType, RequireFields<MutationCreateUserArgs, never>>;
+  upsertUser?: Resolver<ResolversTypes['UpsertUserResponse'], ParentType, ContextType, RequireFields<MutationUpsertUserArgs, 'input'>>;
   completePurchase?: Resolver<ResolversTypes['CompletePurchaseResponse'], ParentType, ContextType, RequireFields<MutationCompletePurchaseArgs, 'input'>>;
 };
 
@@ -1077,6 +1104,11 @@ export type TidePreditionStationResolvers<ContextType = Context, ParentType exte
   salinity?: Resolver<Maybe<ResolversTypes['Salinity']>, ParentType, ContextType>;
   waterHeight?: Resolver<Maybe<Array<ResolversTypes['WaterHeight']>>, ParentType, ContextType, RequireFields<TidePreditionStationWaterHeightArgs, 'start' | 'end'>>;
   locations?: Resolver<Array<ResolversTypes['Location']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type UpsertUserResponseResolvers<ContextType = Context, ParentType extends ResolversParentTypes['UpsertUserResponse'] = ResolversParentTypes['UpsertUserResponse']> = {
+  user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -1219,6 +1251,7 @@ export type Resolvers<ContextType = Context> = {
   TemperatureSummary?: TemperatureSummaryResolvers<ContextType>;
   TideDetail?: TideDetailResolvers<ContextType>;
   TidePreditionStation?: TidePreditionStationResolvers<ContextType>;
+  UpsertUserResponse?: UpsertUserResponseResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
   UserLoggedInResponse?: UserLoggedInResponseResolvers<ContextType>;
   UserPurchase?: UserPurchaseResolvers<ContextType>;

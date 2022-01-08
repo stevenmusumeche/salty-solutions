@@ -1,5 +1,10 @@
-import { Maybe, Platform, UserLoggedInInput } from "../generated/graphql";
-import { getItemByKey, put } from "./db";
+import {
+  Maybe,
+  Platform,
+  UpsertUserInput,
+  UserLoggedInInput,
+} from "../generated/graphql";
+import { getItemByKey, put, update, UpdateInput } from "./db";
 import { getPurchase, isAppleSubscriptionActive } from "./purchase";
 import { differenceInMinutes } from "date-fns";
 
@@ -27,12 +32,68 @@ export interface UserToken {
 // shape of data in the database
 export interface UserDAO {
   id: string;
-  email: string;
+  email?: string;
   name: string;
   picture?: string;
   createdAt: string;
+  updatedAt?: string;
 }
 
+export async function upsert(
+  userToken: UserToken,
+  input: UpsertUserInput
+): Promise<UserDAO> {
+  const timestamp = new Date().toISOString();
+  let existingUser = await getUser(userToken.sub);
+  if (existingUser) {
+    if (shouldUpdate(existingUser, input)) {
+      const updatedUser: UserDAO = {
+        ...existingUser,
+        name: input.name,
+        email: input.email ?? undefined,
+        picture: input.picture ?? undefined,
+        updatedAt: new Date().toISOString(),
+      };
+
+      const params: UpdateInput = {
+        table: "user",
+        Key: {
+          pk: PK.user(userToken.sub),
+          sk: SK.userDetails(),
+        },
+        UpdateExpression: "set #attrName = :user",
+        ExpressionAttributeNames: {
+          "#attrName": "data",
+        },
+        ExpressionAttributeValues: {
+          ":user": updatedUser,
+        },
+        ReturnValues: "UPDATED_NEW",
+      };
+
+      await update(params);
+
+      return updatedUser;
+    }
+    return existingUser;
+  }
+
+  const newUser = toUserDao(input, userToken.sub, timestamp);
+  await saveUserToDB(newUser);
+  return newUser;
+}
+
+function shouldUpdate(existing: UserDAO, userInput: UpsertUserInput) {
+  return (
+    existing.email !== userInput.email ||
+    existing.name !== userInput.name ||
+    existing.picture !== userInput.picture
+  );
+}
+
+/**
+ * @deprecated
+ */
 export async function create(
   userToken: UserToken,
   email?: Maybe<string>
@@ -46,7 +107,15 @@ export async function create(
     mergedToken = { ...mergedToken, email };
   }
 
-  const newUser = toUserDao(mergedToken, timestamp);
+  const newUser = toUserDao(
+    {
+      email: mergedToken.email,
+      name: mergedToken.name,
+      picture: mergedToken.picture,
+    },
+    mergedToken.sub,
+    timestamp
+  );
   await saveUserToDB(newUser);
   return newUser;
 }
@@ -77,12 +146,16 @@ export async function loggedIn(
   }
 }
 
-function toUserDao(userToken: UserToken, createdAt: string): UserDAO {
+function toUserDao(
+  userInput: Omit<UpsertUserInput, "platform">,
+  userId: string,
+  createdAt: string
+): UserDAO {
   return {
-    id: userToken.sub,
-    email: userToken.email,
-    name: userToken.name,
-    picture: userToken.picture,
+    id: userId,
+    email: userInput.email ?? undefined,
+    name: userInput.name,
+    picture: userInput.picture ?? undefined,
     createdAt,
   };
 }
