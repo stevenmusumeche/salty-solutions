@@ -50,8 +50,8 @@ export async function upsert(
       const updatedUser: UserDAO = {
         ...existingUser,
         name: input.name,
-        email: input.email ?? undefined,
-        picture: input.picture ?? undefined,
+        email: input.email || undefined,
+        picture: input.picture || undefined,
         updatedAt: new Date().toISOString(),
       };
 
