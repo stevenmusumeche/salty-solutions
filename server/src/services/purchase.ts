@@ -163,13 +163,12 @@ async function validateAppleReceipt(
       resp = await _validateAppleReceipt(APPLE_ITUNES_SANDBOX_URL, receipt);
     }
 
-    // get entry for current time period
-    const currentReceipt = resp.data.receipt.in_app.find((receipt: any) => {
-      return isWithinInterval(new Date(), {
-        start: new Date(Number(receipt.purchase_date_ms)),
-        end: new Date(Number(receipt.expires_date_ms)),
-      });
-    });
+    // get most recent receipt
+    const sortedReceipts = resp.data.receipt.in_app.sort(
+      (a: any, b: any) =>
+        Number(b.purchase_date_ms) - Number(a.purchase_date_ms)
+    );
+    const currentReceipt = sortedReceipts[0];
 
     return {
       isValid: resp.data.status === 0,

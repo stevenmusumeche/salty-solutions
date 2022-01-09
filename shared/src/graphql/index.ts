@@ -598,6 +598,28 @@ export type WindSummary = {
   mostRecent?: Maybe<WindDetail>;
 };
 
+export type CompletePurchaseMutationVariables = Exact<{
+  input: CompletePurchaseInput;
+}>;
+
+
+export type CompletePurchaseMutation = (
+  { __typename?: 'Mutation' }
+  & { completePurchase: (
+    { __typename?: 'CompletePurchaseResponse' }
+    & Pick<CompletePurchaseResponse, 'isComplete'>
+    & { user?: Maybe<(
+      { __typename?: 'User' }
+      & UserFieldsFragment
+    )> }
+  ) }
+);
+
+export type UserFieldsFragment = (
+  { __typename?: 'User' }
+  & Pick<User, 'id' | 'email' | 'name' | 'picture' | 'createdAt' | 'entitledToPremium'>
+);
+
 export type UpsertUserMutationVariables = Exact<{
   input: UpsertUserInput;
 }>;
@@ -612,11 +634,6 @@ export type UpsertUserMutation = (
       & UserFieldsFragment
     ) }
   ) }
-);
-
-export type UserFieldsFragment = (
-  { __typename?: 'User' }
-  & Pick<User, 'id' | 'email' | 'name' | 'picture' | 'createdAt' | 'entitledToPremium'>
 );
 
 export type UserLoggedInMutationVariables = Exact<{
@@ -1369,6 +1386,20 @@ export const SolunarDetailFieldsFragmentDoc = gql`
   }
 }
     ${SolunarPeriodFieldsFragmentDoc}`;
+export const CompletePurchaseDocument = gql`
+    mutation CompletePurchase($input: CompletePurchaseInput!) {
+  completePurchase(input: $input) {
+    isComplete
+    user {
+      ...UserFields
+    }
+  }
+}
+    ${UserFieldsFragmentDoc}`;
+
+export function useCompletePurchaseMutation() {
+  return Urql.useMutation<CompletePurchaseMutation, CompletePurchaseMutationVariables>(CompletePurchaseDocument);
+};
 export const UpsertUserDocument = gql`
     mutation UpsertUser($input: UpsertUserInput!) {
   upsertUser(input: $input) {
