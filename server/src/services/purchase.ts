@@ -31,7 +31,6 @@ interface BasePurchaseDAO {
 interface ApplePurchaseDAO extends BasePurchaseDAO {
   platform: Platform.Ios;
   iosTransactionId: string;
-  iosReceipt: string;
 }
 
 interface AndroidPurchaseDAO extends BasePurchaseDAO {
@@ -110,7 +109,6 @@ export const completePurchase = async (
       item: "PREMIUM_V1",
       platform,
       iosTransactionId: transactionId,
-      iosReceipt: receipt,
       isActive: true,
       lastValidatedDate: now,
       purchaseDate: now,
