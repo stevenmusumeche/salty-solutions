@@ -103,44 +103,44 @@ export const completePurchase = async (
     throw new Error("Unable to find transaction for time period.");
   }
 
-  try {
-    const now = new Date().toISOString();
-    const purchase: UserPurchaseDAO = {
-      id: v4(),
-      item: "PREMIUM_V1",
-      platform,
-      iosTransactionId: transactionId,
-      iosReceipt: receipt,
-      isActive: true,
-      lastValidatedDate: now,
-      purchaseDate: now,
-      priceCents,
-    };
+  // try {
+  const now = new Date().toISOString();
+  const purchase: UserPurchaseDAO = {
+    id: v4(),
+    item: "PREMIUM_V1",
+    platform,
+    iosTransactionId: transactionId,
+    iosReceipt: receipt,
+    isActive: true,
+    lastValidatedDate: now,
+    purchaseDate: now,
+    priceCents,
+  };
 
-    const params: UpdateInput = {
-      table: "user",
-      Key: {
-        pk: PK.user(userToken.sub),
-        sk: SK.userPurchases(),
-      },
-      UpdateExpression:
-        "set #attrName = list_append(if_not_exists(#attrName, :empty_list), :purchase)",
-      ExpressionAttributeNames: {
-        "#attrName": "data",
-      },
-      ExpressionAttributeValues: {
-        ":purchase": [purchase],
-        ":empty_list": [],
-      },
-      ReturnValues: "UPDATED_NEW",
-    };
+  const params: UpdateInput = {
+    table: "user",
+    Key: {
+      pk: PK.user(userToken.sub),
+      sk: SK.userPurchases(),
+    },
+    UpdateExpression:
+      "set #attrName = list_append(if_not_exists(#attrName, :empty_list), :purchase)",
+    ExpressionAttributeNames: {
+      "#attrName": "data",
+    },
+    ExpressionAttributeValues: {
+      ":purchase": [purchase],
+      ":empty_list": [],
+    },
+    ReturnValues: "UPDATED_NEW",
+  };
 
-    await update(params);
-    return true;
-  } catch (e) {
-    console.error("Error completing purchase", e);
-    return false;
-  }
+  await update(params);
+  return true;
+  // } catch (e) {
+  //   console.error("Error completing purchase", e);
+  //   return false;
+  // }
 };
 
 /**
