@@ -8,6 +8,7 @@ jobs:
     name: "Deploy other branch of backend"
     runs-on: ubuntu-latest
     env:
+      NODE_OPTIONS: "--max_old_space_size=4096"
       ROLLBAR_KEY: ${{ secrets.ROLLBAR_KEY }}
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_SERVERLESS }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY_SERVERLESS }}
@@ -31,5 +32,5 @@ jobs:
         run: |
           echo import certificate from secrets and regenerate the file
           echo $ANDROID_SERVICE_ACCOUNT_BASE64 | base64 -d > androidkey.json
-      - run: ./node_modules/.bin/sls deploy --stage ${{ env.STAGE }}
+      - run: ./node_modules/.bin/sls deploy --stage ${{ env.STAGE }} --max_old_space_size=4096
         working-directory: ./server
