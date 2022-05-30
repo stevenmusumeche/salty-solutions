@@ -31,6 +31,6 @@ jobs:
         working-directory: ./server
         run: |
           echo import certificate from secrets and regenerate the file
-          echo $ANDROID_SERVICE_ACCOUNT_BASE64 | base64 -d > androidkey.json
+          echo $ANDROID_SERVICE_ACCOUNT_BASE64 | base64 -d > ./androidkey.json
       - run: ./node_modules/.bin/sls deploy --stage ${{ env.STAGE }} 
         working-directory: ./server
