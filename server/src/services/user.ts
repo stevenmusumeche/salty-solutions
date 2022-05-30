@@ -5,7 +5,11 @@ import {
   UserLoggedInInput,
 } from "../generated/graphql";
 import { getItemByKey, put, update, UpdateInput } from "./db";
-import { getPurchase, isAppleSubscriptionActive } from "./purchase";
+import {
+  getPurchase,
+  isAppleSubscriptionActive,
+  isAndroidSubscriptionActive,
+} from "./purchase";
 import { differenceInMinutes } from "date-fns";
 
 // number of minutes since the last validation that must pass before another validation is performed
@@ -198,7 +202,8 @@ export async function isEntitledToPremium(userId: string): Promise<boolean> {
 
     // if last validated date is recent, return database value
     if (minsSinceLastValidation < PREMIUM_VALIDATION_THRESHOLD_MINUTES) {
-      return purchase.isActive;
+      // todo: enable this. it's disabled to verify on every load during testing.
+      // return purchase.isActive;
     }
 
     // if last validated date is old, verify with third party, update database and return true/false
@@ -206,8 +211,7 @@ export async function isEntitledToPremium(userId: string): Promise<boolean> {
     if (purchase.platform === Platform.Ios) {
       isActive = await isAppleSubscriptionActive(purchase);
     } else if (purchase.platform === Platform.Android) {
-      // todo: android
-      isActive = false;
+      isActive = await isAndroidSubscriptionActive(purchase);
     }
 
     const updatedPurchases = allPurchases.map((purchase) => {

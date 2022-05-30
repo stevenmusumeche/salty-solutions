@@ -9,3 +9,4 @@ jspm_packages
 .webpack
 
 .env
+androidkey.json
