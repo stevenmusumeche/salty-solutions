@@ -25,7 +25,10 @@ jobs:
       - run: yarn install
       - run: yarn cf:update-db && yarn cf:update-queue
         working-directory: ./server
-      - run: echo ${{ secrets.ANDROID_SERVICE_ACCOUNT_JSON }} > androidkey.json
+      - name: Write android service account key from base64 secret
         working-directory: ./server
+        run: |
+          echo import certificate from secrets and regenerate the file
+          echo $ANDROID_SERVICE_ACCOUNT_BASE64 | base64 -d > androidkey.json
       - run: ./node_modules/.bin/sls deploy --stage ${{ env.STAGE }}
         working-directory: ./server
