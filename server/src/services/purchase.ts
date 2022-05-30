@@ -2,9 +2,11 @@ import { Platform, UserPurchase } from "../generated/graphql";
 import { PK, SK, UserToken } from "./user";
 import axios from "axios";
 import { v4 } from "uuid";
-import { isWithinInterval } from "date-fns";
-import { update, UpdateInput, userTableName, getItemByKey } from "./db";
+import { update, UpdateInput, getItemByKey } from "./db";
 import jwt from "jsonwebtoken";
+import { google } from "googleapis";
+import { join } from "path";
+import { isAfter } from "date-fns";
 
 const APPLE_ITUNES_SANDBOX_URL =
   "https://sandbox.itunes.apple.com/verifyReceipt";
@@ -16,6 +18,11 @@ const APPLE_STOREKIT_PRODUCTION_DOMAIN = `https://api.storekit.itunes.apple.com`
 const APPLE_SUBSCRIPTION_GROUP = "20879881";
 const APPLE_APP_STORE_CONNECT_ISSUER_ID =
   "157f3bdf-1ecb-4cdf-9881-0e43bf2111c5";
+
+const googleAuth = new google.auth.GoogleAuth({
+  keyFile: join(__dirname, "../", "../", "androidkey.json"),
+  scopes: ["https://www.googleapis.com/auth/androidpublisher"],
+});
 
 export type PurchasableItem = "PREMIUM_V1" | "PREMIUM_V0";
 
@@ -31,10 +38,13 @@ interface BasePurchaseDAO {
 interface ApplePurchaseDAO extends BasePurchaseDAO {
   platform: Platform.Ios;
   iosTransactionId: string;
+  iosReceipt: string;
 }
 
 interface AndroidPurchaseDAO extends BasePurchaseDAO {
   platform: Platform.Android;
+  androidOrderId: string;
+  androidReceipt: string;
 }
 
 // shape of data in the database
@@ -89,32 +99,53 @@ export const completePurchase = async (
   receipt: string,
   priceCents: number
 ): Promise<boolean> => {
-  if (platform !== Platform.Ios) {
-    return false;
-  }
+  const now = new Date().toISOString();
+  let purchase: UserPurchaseDAO;
 
-  const { isValid, transactionId } = await validateAppleReceipt(receipt);
+  if (platform === Platform.Ios) {
+    const { isValid, transactionId: iosTransactionId } =
+      await validateAppleReceipt(receipt);
 
-  if (!isValid) {
-    throw new Error("Invalid receipt.");
-  }
-  if (!transactionId) {
-    throw new Error("Unable to find transaction for time period.");
-  }
+    if (!isValid) {
+      return false;
+    }
 
-  try {
-    const now = new Date().toISOString();
-    const purchase: UserPurchaseDAO = {
+    purchase = {
       id: v4(),
       item: "PREMIUM_V1",
       platform,
-      iosTransactionId: transactionId,
+      iosTransactionId: iosTransactionId as string,
+      iosReceipt: receipt,
       isActive: true,
       lastValidatedDate: now,
       purchaseDate: now,
       priceCents,
     };
+  } else if (platform === Platform.Android) {
+    const { isValid, orderId: androidOrderId } = await validateAndroidReceipt(
+      receipt
+    );
 
+    if (!isValid) {
+      return false;
+    }
+
+    purchase = {
+      id: v4(),
+      item: "PREMIUM_V1",
+      platform,
+      androidOrderId: androidOrderId as string,
+      androidReceipt: receipt,
+      isActive: true,
+      lastValidatedDate: now,
+      purchaseDate: now,
+      priceCents,
+    };
+  } else {
+    return false;
+  }
+
+  try {
     const params: UpdateInput = {
       table: "user",
       Key: {
@@ -146,7 +177,10 @@ export const completePurchase = async (
  */
 async function validateAppleReceipt(
   receipt: string
-): Promise<{ isValid: boolean; transactionId?: string }> {
+): Promise<
+  | { isValid: true; transactionId: string }
+  | { isValid: false; transactionId: undefined }
+> {
   try {
     /**
      * Verify your receipt first with the production URL; then verify with the sandbox URL if you receive
@@ -176,7 +210,7 @@ async function validateAppleReceipt(
     };
   } catch (e) {
     console.error(e);
-    return { isValid: false, transactionId: "" };
+    return { isValid: false, transactionId: undefined };
   }
 }
 
@@ -191,7 +225,7 @@ async function _validateAppleReceipt(url: string, receipt: string) {
 /**
  * Call Apple Storekit API to determine the subscription status
  */
-export async function isAppleSubscriptionActive(purchase: UserPurchaseDAO) {
+export async function isAppleSubscriptionActive(purchase: ApplePurchaseDAO) {
   if (purchase.platform !== Platform.Ios) return false;
 
   const jwt = buildAppleStoreAuthToken();
@@ -247,4 +281,70 @@ function buildAppleStoreAuthToken(): string {
     algorithm: "ES256",
     keyid: process.env.APPLE_STORE_SERVER_PRIVATE_KEY_ID,
   });
+}
+
+async function validateAndroidReceipt(
+  purchaseToken: string
+): Promise<
+  { isValid: true; orderId: string } | { isValid: false; orderId: undefined }
+> {
+  try {
+    const authClient = await googleAuth.getClient();
+    const androidPublisher = google.androidpublisher("v3");
+    const res = await androidPublisher.purchases.subscriptions.get({
+      auth: authClient,
+      packageName: "com.musumeche.salty.solutions",
+      subscriptionId: "premium.monthly.v1",
+      token: purchaseToken,
+    });
+
+    if (res.data.kind !== "androidpublisher#subscriptionPurchase") {
+      throw new Error("Invalid kind " + res.data.purchaseType);
+    }
+    if (!res.data.orderId) {
+      throw new Error("Missing orderId");
+    }
+    if (res.data.cancelReason !== undefined) {
+      throw new Error("Already canceled");
+    }
+    if (res.data.paymentState === undefined) {
+      throw new Error("Invalid payment state");
+    }
+
+    return {
+      isValid: true,
+      orderId: res.data.orderId,
+    };
+  } catch (e) {
+    console.error(e);
+    return { isValid: false, orderId: undefined };
+  }
+}
+
+export async function isAndroidSubscriptionActive(
+  purchase: AndroidPurchaseDAO
+) {
+  if (purchase.platform !== Platform.Android) return false;
+
+  try {
+    const authClient = await googleAuth.getClient();
+    const androidPublisher = google.androidpublisher("v3");
+    const res = await androidPublisher.purchases.subscriptions.get({
+      auth: authClient,
+      packageName: "com.musumeche.salty.solutions",
+      subscriptionId: "premium.monthly.v1",
+      token: purchase.androidReceipt,
+    });
+
+    if (!res.data.expiryTimeMillis) {
+      return false;
+    }
+
+    const endTime = new Date(Number(res.data.expiryTimeMillis));
+
+    return isAfter(endTime, new Date());
+  } catch (e) {
+    console.error(e);
+    return false;
+  }
 }

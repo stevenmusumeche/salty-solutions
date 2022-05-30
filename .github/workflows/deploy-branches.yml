@@ -25,5 +25,7 @@ jobs:
       - run: yarn install
       - run: yarn cf:update-db && yarn cf:update-queue
         working-directory: ./server
+      - run: echo ${{ secrets.ANDROID_SERVICE_ACCOUNT_JSON }} > androidkey.json
+        working-directory: ./server
       - run: ./node_modules/.bin/sls deploy --stage ${{ env.STAGE }}
         working-directory: ./server
