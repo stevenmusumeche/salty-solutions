@@ -19,10 +19,12 @@ const APPLE_SUBSCRIPTION_GROUP = "20879881";
 const APPLE_APP_STORE_CONNECT_ISSUER_ID =
   "157f3bdf-1ecb-4cdf-9881-0e43bf2111c5";
 
-const googleAuth = new google.auth.GoogleAuth({
-  keyFile: join(__dirname, "../", "../", "androidkey.json"),
-  scopes: ["https://www.googleapis.com/auth/androidpublisher"],
-});
+const googleAuthClient = new google.auth.JWT(
+  process.env.GOOGLE_CLIENT_EMAIL,
+  undefined,
+  process.env.GOOGLE_CLIENT_PRIVATE_KEY,
+  ["https://www.googleapis.com/auth/androidpublisher"]
+);
 
 export type PurchasableItem = "PREMIUM_V1" | "PREMIUM_V0";
 
@@ -288,11 +290,12 @@ async function validateAndroidReceipt(
 ): Promise<
   { isValid: true; orderId: string } | { isValid: false; orderId: undefined }
 > {
+  await googleAuthClient.authorize();
+
   try {
-    const authClient = await googleAuth.getClient();
     const androidPublisher = google.androidpublisher("v3");
     const res = await androidPublisher.purchases.subscriptions.get({
-      auth: authClient,
+      auth: googleAuthClient,
       packageName: "com.musumeche.salty.solutions",
       subscriptionId: "premium.monthly.v1",
       token: purchaseToken,
@@ -327,10 +330,10 @@ export async function isAndroidSubscriptionActive(
   if (purchase.platform !== Platform.Android) return false;
 
   try {
-    const authClient = await googleAuth.getClient();
+    await googleAuthClient.authorize();
     const androidPublisher = google.androidpublisher("v3");
     const res = await androidPublisher.purchases.subscriptions.get({
-      auth: authClient,
+      auth: googleAuthClient,
       packageName: "com.musumeche.salty.solutions",
       subscriptionId: "premium.monthly.v1",
       token: purchase.androidReceipt,

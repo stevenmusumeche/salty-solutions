@@ -18,6 +18,8 @@ jobs:
       APPLE_IAP_SHARED_SECRET: ${{ secrets.APPLE_IAP_SHARED_SECRET }}
       APPLE_STORE_SERVER_PRIVATE_KEY_ID: ${{ secrets.APPLE_STORE_SERVER_PRIVATE_KEY_ID }}
       APPLE_STORE_SERVER_PRIVATE_KEY: ${{ secrets.APPLE_STORE_SERVER_PRIVATE_KEY }}
+      GOOGLE_CLIENT_EMAIL: ${{ secrets.GOOGLE_CLIENT_EMAIL }}
+      GOOGLE_CLIENT_PRIVATE_KEY: ${{ secrets.GOOGLE_CLIENT_PRIVATE_KEY }}
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
@@ -26,9 +28,5 @@ jobs:
       - run: yarn install
       - run: yarn cf:update-db && yarn cf:update-queue
         working-directory: ./server
-      - name: Write android service account key from base64 secret
-        working-directory: ./server
-        run: |
-          echo $ANDROID_SERVICE_ACCOUNT_BASE64 | base64 -d > ./androidkey.json
       - run: ./node_modules/.bin/sls deploy --stage ${{ env.STAGE }}
         working-directory: ./server
