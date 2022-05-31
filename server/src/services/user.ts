@@ -202,8 +202,7 @@ export async function isEntitledToPremium(userId: string): Promise<boolean> {
 
     // if last validated date is recent, return database value
     if (minsSinceLastValidation < PREMIUM_VALIDATION_THRESHOLD_MINUTES) {
-      // todo: enable this. it's disabled to verify on every load during testing.
-      // return purchase.isActive;
+      return purchase.isActive;
     }
 
     // if last validated date is old, verify with third party, update database and return true/false
