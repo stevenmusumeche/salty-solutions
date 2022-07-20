@@ -142,6 +142,13 @@ const Privacy: React.FC<RouteComponentProps> = () => {
               aware that your child has provided us with personal information,
               please contact me so that I will be able to do necessary actions.
             </p>
+            <h2 className="text-2xl mb-4">Requesting Data Deletion</h2>
+            <p className="mb-4">
+              If you would like all data related to your account deleted, please
+              contact me at steven@musumeche.com. Make sure to include your full
+              name and email address associated with your Salty Solutions
+              account.
+            </p>
             <h2 className="text-2xl mb-4">Changes to This Privacy Policy</h2>
             <p className="mb-4">
               I may update our Privacy Policy from time to time. Thus, you are
