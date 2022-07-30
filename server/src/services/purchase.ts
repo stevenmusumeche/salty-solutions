@@ -13,7 +13,6 @@ const APPLE_ITUNES_SANDBOX_URL =
 const APPLE_ITUNES_PRODUCTION_URL =
   "https://buy.itunes.apple.com/verifyReceipt";
 const APPLE_STOREKIT_SANDBOX_DOMAIN = `https://api.storekit-sandbox.itunes.apple.com`;
-// todo
 const APPLE_STOREKIT_PRODUCTION_DOMAIN = `https://api.storekit.itunes.apple.com`;
 const APPLE_SUBSCRIPTION_GROUP = "20879881";
 const APPLE_APP_STORE_CONNECT_ISSUER_ID =
@@ -231,9 +230,8 @@ export async function isAppleSubscriptionActive(purchase: ApplePurchaseDAO) {
   if (purchase.platform !== Platform.Ios) return false;
 
   const jwt = buildAppleStoreAuthToken();
-  // todo: use production URL
   const resp = await axios.get(
-    `${APPLE_STOREKIT_SANDBOX_DOMAIN}/inApps/v1/subscriptions/${purchase.iosTransactionId}`,
+    `${APPLE_STOREKIT_PRODUCTION_DOMAIN}/inApps/v1/subscriptions/${purchase.iosTransactionId}`,
     { headers: { authorization: `Bearer ${jwt}` } }
   );
 
