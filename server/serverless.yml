@@ -46,6 +46,7 @@ provider:
         - ${cf:ss-queue-${self:provider.stage}.WeatherForecastPreloaderQueueArn}
         - ${cf:ss-queue-${self:provider.stage}.WeatherForecastHourlyPreloaderQueueArn}
         - ${cf:ss-queue-${self:provider.stage}.MarineForecastPreloaderQueueArn}
+        - ${cf:ss-queue-${self:provider.stage}.PurchaseCompletedQueueArn}
     - Effect: Allow
       Action:
         - s3:*
@@ -61,6 +62,7 @@ provider:
     APPLE_STORE_SERVER_PRIVATE_KEY: ${env:APPLE_STORE_SERVER_PRIVATE_KEY}
     GOOGLE_CLIENT_EMAIL: ${env:GOOGLE_CLIENT_EMAIL}
     GOOGLE_CLIENT_PRIVATE_KEY: ${env:GOOGLE_CLIENT_PRIVATE_KEY}
+    PURCHASE_COMPLETED_QUEUE_URL: ${cf:ss-queue-${self:provider.stage}.PurchaseCompletedQueueUrl}
 
 functions:
   graphql:
@@ -244,6 +246,14 @@ functions:
       - sqs:
           batchSize: 1
           arn: ${cf:ss-queue-${self:provider.stage}.MarineForecastPreloaderQueueArn}
+
+  purchase-completed:
+    handler: src/preloaders/consumers.purchaseCompleted
+    timeout: 120
+    events:
+      - sqs:
+          batchSize: 1
+          arn: ${cf:ss-queue-${self:provider.stage}.PurchaseCompletedQueueArn}
 
 custom:
   serverless-offline:

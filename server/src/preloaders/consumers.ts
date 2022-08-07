@@ -12,6 +12,10 @@ import {
   storeWeatherForecast,
   storeHourlyWeatherForecast,
 } from "../services/weather/source";
+import {
+  PurchaseCompletedEvent,
+  sendPurchaseEmail,
+} from "../services/purchase";
 
 export const tide: SQSHandler = async (event, ctx, cb) => {
   for (const record of event.Records) {
@@ -110,5 +114,14 @@ export const marineForecast: SQSHandler = async (event, ctx, cb) => {
       "Finished preloading marine forecast for",
       payload.marineZoneId
     );
+  }
+};
+
+export const purchaseCompleted: SQSHandler = async (event, ctx, cb) => {
+  for (const record of event.Records) {
+    const payload: PurchaseCompletedEvent = JSON.parse(record.body);
+    console.log("Processing purchase completed for", payload.userId);
+    await sendPurchaseEmail(payload);
+    console.log("Finished processing purchase completed for", payload.userId);
   }
 };
