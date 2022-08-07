@@ -133,6 +133,18 @@ Resources:
             - DeadLetterQueue
             - Arn
         maxReceiveCount: 3
+  PurchaseCompletedQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Join ["", ["purchase-completed-", Ref: StageParam]]
+      VisibilityTimeout: 120
+      MessageRetentionPeriod: 43200 # 12 hours
+      RedrivePolicy:
+        deadLetterTargetArn:
+          Fn::GetAtt:
+            - DeadLetterQueue
+            - Arn
+        maxReceiveCount: 3
 
 Outputs:
   ForecastPreloaderQueueUrl:
@@ -217,3 +229,11 @@ Outputs:
     Value: !GetAtt MarineForecastPreloaderQueue.Arn
     Export:
       Name: !Join ["-", [MarineForecastPreloaderQueueArn, Ref: StageParam]]
+  PurchaseCompletedQueueUrl:
+    Value: !Ref PurchaseCompletedQueue
+    Export:
+      Name: !Join ["-", [PurchaseCompletedQueueUrl, Ref: StageParam]]
+  PurchaseCompletedQueueArn:
+    Value: !GetAtt PurchaseCompletedQueue.Arn
+    Export:
+      Name: !Join ["-", [PurchaseCompletedQueueArn, Ref: StageParam]]

@@ -2,20 +2,20 @@ import { SQS } from "aws-sdk";
 
 const sqs = new SQS();
 
-export const sendMessage = (
+export const sendMessage = <T = Object>(
   queueUrl: string,
   producerName: string,
-  body: Object
+  body: T
 ) => {
   const params: SQS.Types.SendMessageRequest = {
     QueueUrl: queueUrl,
     MessageAttributes: {
       producer: {
         DataType: "String",
-        StringValue: producerName
-      }
+        StringValue: producerName,
+      },
     },
-    MessageBody: JSON.stringify(body)
+    MessageBody: JSON.stringify(body),
   };
 
   return sqs.sendMessage(params).promise();
@@ -34,11 +34,11 @@ export const sendMessageBatch = (
         MessageAttributes: {
           producer: {
             DataType: "String",
-            StringValue: producerName
-          }
+            StringValue: producerName,
+          },
         },
-        MessageBody: JSON.stringify(body)
-      }))
+        MessageBody: JSON.stringify(body),
+      })),
     })
     .promise();
 };

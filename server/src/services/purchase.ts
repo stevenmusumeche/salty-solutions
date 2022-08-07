@@ -7,6 +7,7 @@ import jwt from "jsonwebtoken";
 import { google } from "googleapis";
 import { join } from "path";
 import { isAfter } from "date-fns";
+import { sendMessage } from "./queue";
 
 const APPLE_ITUNES_SANDBOX_URL =
   "https://sandbox.itunes.apple.com/verifyReceipt";
@@ -50,6 +51,11 @@ interface AndroidPurchaseDAO extends BasePurchaseDAO {
 
 // shape of data in the database
 export type UserPurchaseDAO = AndroidPurchaseDAO | ApplePurchaseDAO;
+
+export interface PurchaseCompletedEvent {
+  userId: string;
+  timestamp: string;
+}
 
 /**
  * Get all purchases for a user
@@ -108,6 +114,7 @@ export const completePurchase = async (
       await validateAppleReceipt(receipt);
 
     if (!isValid) {
+      console.log("Invalid iOS transaction", userToken.sub, receipt);
       return false;
     }
 
@@ -128,6 +135,7 @@ export const completePurchase = async (
     );
 
     if (!isValid) {
+      console.log("Invalid Android transaction", userToken.sub, receipt);
       return false;
     }
 
@@ -166,11 +174,24 @@ export const completePurchase = async (
     };
 
     await update(params);
-    return true;
+    console.log("Purchase completed for ", userToken.sub);
   } catch (e) {
     console.error("Error completing purchase", e);
     return false;
   }
+
+  // send SQS event
+  try {
+    await sendMessage<PurchaseCompletedEvent>(
+      process.env.PURCHASE_COMPLETED_QUEUE_URL!,
+      "purchase-completed",
+      { userId: userToken.sub, timestamp: new Date().toISOString() }
+    );
+  } catch (e) {
+    console.error("Error sending SQS completed purchase message");
+  }
+
+  return true;
 };
 
 /**
@@ -348,4 +369,9 @@ export async function isAndroidSubscriptionActive(
     console.error(e);
     return false;
   }
+}
+
+export async function sendPurchaseEmail(payload: PurchaseCompletedEvent) {
+  // todo
+  console.log("Sending purchase completed email for ", payload.userId);
 }
