@@ -25,6 +25,9 @@ export default gql`
 
     "Record an IAP purchase"
     completePurchase(input: CompletePurchaseInput!): CompletePurchaseResponse!
+
+    "Send message"
+    sendFeedback(input: SendFeedbackInput!): SendFeedbackResponse!
   }
 
   type FeatureFlagsResponse {
@@ -419,5 +422,15 @@ export default gql`
     timestamp: String!
     # millibars
     pressure: Float!
+  }
+
+  input SendFeedbackInput {
+    fromName: String!
+    fromEmail: String!
+    message: String!
+  }
+
+  type SendFeedbackResponse {
+    success: Boolean!
   }
 `;

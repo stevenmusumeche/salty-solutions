@@ -245,6 +245,8 @@ export type Mutation = {
   upsertUser: UpsertUserResponse;
   /** Record an IAP purchase */
   completePurchase: CompletePurchaseResponse;
+  /** Send message */
+  sendFeedback: SendFeedbackResponse;
 };
 
 
@@ -265,6 +267,11 @@ export type MutationUpsertUserArgs = {
 
 export type MutationCompletePurchaseArgs = {
   input: CompletePurchaseInput;
+};
+
+
+export type MutationSendFeedbackArgs = {
+  input: SendFeedbackInput;
 };
 
 export enum NoaaParam {
@@ -354,6 +361,17 @@ export type SalinitySummary = {
   __typename?: 'SalinitySummary';
   /** parts per thousand */
   mostRecent?: Maybe<SalinityDetail>;
+};
+
+export type SendFeedbackInput = {
+  fromName: Scalars['String'];
+  fromEmail: Scalars['String'];
+  message: Scalars['String'];
+};
+
+export type SendFeedbackResponse = {
+  __typename?: 'SendFeedbackResponse';
+  success: Scalars['Boolean'];
 };
 
 export type SolunarDetail = {
@@ -618,6 +636,19 @@ export type CompletePurchaseMutation = (
 export type UserFieldsFragment = (
   { __typename?: 'User' }
   & Pick<User, 'id' | 'email' | 'name' | 'picture' | 'createdAt' | 'entitledToPremium'>
+);
+
+export type SendFeedbackMutationVariables = Exact<{
+  input: SendFeedbackInput;
+}>;
+
+
+export type SendFeedbackMutation = (
+  { __typename?: 'Mutation' }
+  & { sendFeedback: (
+    { __typename?: 'SendFeedbackResponse' }
+    & Pick<SendFeedbackResponse, 'success'>
+  ) }
 );
 
 export type UpsertUserMutationVariables = Exact<{
@@ -1399,6 +1430,17 @@ export const CompletePurchaseDocument = gql`
 
 export function useCompletePurchaseMutation() {
   return Urql.useMutation<CompletePurchaseMutation, CompletePurchaseMutationVariables>(CompletePurchaseDocument);
+};
+export const SendFeedbackDocument = gql`
+    mutation SendFeedback($input: SendFeedbackInput!) {
+  sendFeedback(input: $input) {
+    success
+  }
+}
+    `;
+
+export function useSendFeedbackMutation() {
+  return Urql.useMutation<SendFeedbackMutation, SendFeedbackMutationVariables>(SendFeedbackDocument);
 };
 export const UpsertUserDocument = gql`
     mutation UpsertUser($input: UpsertUserInput!) {

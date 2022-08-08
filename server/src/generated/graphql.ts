@@ -248,6 +248,8 @@ export type Mutation = {
   upsertUser: UpsertUserResponse;
   /** Record an IAP purchase */
   completePurchase: CompletePurchaseResponse;
+  /** Send message */
+  sendFeedback: SendFeedbackResponse;
 };
 
 
@@ -268,6 +270,11 @@ export type MutationUpsertUserArgs = {
 
 export type MutationCompletePurchaseArgs = {
   input: CompletePurchaseInput;
+};
+
+
+export type MutationSendFeedbackArgs = {
+  input: SendFeedbackInput;
 };
 
 export enum NoaaParam {
@@ -357,6 +364,17 @@ export type SalinitySummary = {
   __typename?: 'SalinitySummary';
   /** parts per thousand */
   mostRecent?: Maybe<SalinityDetail>;
+};
+
+export type SendFeedbackInput = {
+  fromName: Scalars['String'];
+  fromEmail: Scalars['String'];
+  message: Scalars['String'];
+};
+
+export type SendFeedbackResponse = {
+  __typename?: 'SendFeedbackResponse';
+  success: Scalars['Boolean'];
 };
 
 export type SolunarDetail = {
@@ -748,6 +766,8 @@ export type ResolversTypes = {
   UpsertUserResponse: ResolverTypeWrapper<Partial<UpsertUserResponse>>;
   CompletePurchaseInput: ResolverTypeWrapper<Partial<CompletePurchaseInput>>;
   CompletePurchaseResponse: ResolverTypeWrapper<Partial<CompletePurchaseResponse>>;
+  SendFeedbackInput: ResolverTypeWrapper<Partial<SendFeedbackInput>>;
+  SendFeedbackResponse: ResolverTypeWrapper<Partial<SendFeedbackResponse>>;
   AirPressure: ResolverTypeWrapper<Partial<AirPressure>>;
   CurrentWind: ResolverTypeWrapper<Partial<CurrentWind>>;
 };
@@ -812,6 +832,8 @@ export type ResolversParentTypes = {
   UpsertUserResponse: Partial<UpsertUserResponse>;
   CompletePurchaseInput: Partial<CompletePurchaseInput>;
   CompletePurchaseResponse: Partial<CompletePurchaseResponse>;
+  SendFeedbackInput: Partial<SendFeedbackInput>;
+  SendFeedbackResponse: Partial<SendFeedbackResponse>;
   AirPressure: Partial<AirPressure>;
   CurrentWind: Partial<CurrentWind>;
 };
@@ -984,6 +1006,7 @@ export type MutationResolvers<ContextType = Context, ParentType extends Resolver
   createUser?: Resolver<ResolversTypes['CreateUserResponse'], ParentType, ContextType, RequireFields<MutationCreateUserArgs, never>>;
   upsertUser?: Resolver<ResolversTypes['UpsertUserResponse'], ParentType, ContextType, RequireFields<MutationUpsertUserArgs, 'input'>>;
   completePurchase?: Resolver<ResolversTypes['CompletePurchaseResponse'], ParentType, ContextType, RequireFields<MutationCompletePurchaseArgs, 'input'>>;
+  sendFeedback?: Resolver<ResolversTypes['SendFeedbackResponse'], ParentType, ContextType, RequireFields<MutationSendFeedbackArgs, 'input'>>;
 };
 
 export type NoaaParamInfoResolvers<ContextType = Context, ParentType extends ResolversParentTypes['NoaaParamInfo'] = ResolversParentTypes['NoaaParamInfo']> = {
@@ -1024,6 +1047,11 @@ export type SalinityDetailResolvers<ContextType = Context, ParentType extends Re
 
 export type SalinitySummaryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['SalinitySummary'] = ResolversParentTypes['SalinitySummary']> = {
   mostRecent?: Resolver<Maybe<ResolversTypes['SalinityDetail']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type SendFeedbackResponseResolvers<ContextType = Context, ParentType extends ResolversParentTypes['SendFeedbackResponse'] = ResolversParentTypes['SendFeedbackResponse']> = {
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -1241,6 +1269,7 @@ export type Resolvers<ContextType = Context> = {
   Salinity?: SalinityResolvers<ContextType>;
   SalinityDetail?: SalinityDetailResolvers<ContextType>;
   SalinitySummary?: SalinitySummaryResolvers<ContextType>;
+  SendFeedbackResponse?: SendFeedbackResponseResolvers<ContextType>;
   SolunarDetail?: SolunarDetailResolvers<ContextType>;
   SolunarPeriod?: SolunarPeriodResolvers<ContextType>;
   SunDetail?: SunDetailResolvers<ContextType>;

@@ -105,6 +105,11 @@ const resolvers: Resolvers & { UsgsParam: Object; NoaaParam: Object } = {
 
       return { isComplete };
     },
+    sendFeedback: async (_, args, { services, koaCtx }) => {
+      // todo: implement this
+      console.log("Send feedback stub", args.input);
+      return { success: false };
+    },
   },
   Location: {
     temperature: async (location) => {
