@@ -369,6 +369,7 @@ export type SalinitySummary = {
 export type SendFeedbackInput = {
   fromName: Scalars['String'];
   fromEmail: Scalars['String'];
+  subject: Scalars['String'];
   message: Scalars['String'];
 };
 

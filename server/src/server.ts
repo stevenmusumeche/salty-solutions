@@ -16,6 +16,7 @@ import * as saveOurLakeService from "./services/saveourlake";
 import * as userService from "./services/user";
 import * as purchaseService from "./services/purchase";
 import * as featureFlagService from "./services/feature-flag";
+import * as emailService from "./services/email";
 import latestUsgsLoader from "./loaders/latest-usgs";
 import latestNoaaLoader from "./loaders/latest-noaa";
 import typeDefs from "./graphql/schema";
@@ -51,6 +52,7 @@ export interface Context {
     user: typeof userService;
     purchase: typeof purchaseService;
     featureFlags: typeof featureFlagService;
+    email: typeof emailService;
   };
   loaders: {
     latestUsgs: typeof latestUsgsLoader;
@@ -103,6 +105,7 @@ const server = new ApolloServer({
         user: userService,
         purchase: purchaseService,
         featureFlags: featureFlagService,
+        email: emailService,
       },
       loaders: {
         latestUsgs: latestUsgsLoader,

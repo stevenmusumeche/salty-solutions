@@ -427,6 +427,7 @@ export default gql`
   input SendFeedbackInput {
     fromName: String!
     fromEmail: String!
+    subject: String!
     message: String!
   }
 

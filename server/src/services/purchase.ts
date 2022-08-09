@@ -1,13 +1,13 @@
 import { Platform, UserPurchase } from "../generated/graphql";
-import { PK, SK, UserToken } from "./user";
+import { getUser, PK, SK, UserToken } from "./user";
 import axios from "axios";
 import { v4 } from "uuid";
 import { update, UpdateInput, getItemByKey } from "./db";
 import jwt from "jsonwebtoken";
 import { google } from "googleapis";
-import { join } from "path";
 import { isAfter } from "date-fns";
 import { sendMessage } from "./queue";
+import { sendToAdmin } from "./email";
 
 const APPLE_ITUNES_SANDBOX_URL =
   "https://sandbox.itunes.apple.com/verifyReceipt";
@@ -372,6 +372,13 @@ export async function isAndroidSubscriptionActive(
 }
 
 export async function sendPurchaseEmail(payload: PurchaseCompletedEvent) {
-  // todo
-  console.log("Sending purchase completed email for ", payload.userId);
+  const user = await getUser(payload.userId);
+  if (!user) {
+    throw new Error("Invariant. Unable to load user");
+  }
+  sendToAdmin({
+    subject: "Salty Solutions New IAP",
+    replyTo: "noreply@musumeche.com",
+    body: JSON.stringify(user),
+  });
 }

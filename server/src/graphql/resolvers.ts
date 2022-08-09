@@ -106,9 +106,21 @@ const resolvers: Resolvers & { UsgsParam: Object; NoaaParam: Object } = {
       return { isComplete };
     },
     sendFeedback: async (_, args, { services, koaCtx }) => {
-      // todo: implement this
-      console.log("Send feedback stub", args.input);
-      return { success: false };
+      try {
+        const resp = await services.email.sendToAdmin({
+          replyTo: args.input.fromEmail,
+          subject: `Salty Solutions: ${args.input.subject}`,
+          body: `${args.input.message}
+
+---
+From: ${args.input.fromName} <${args.input.fromEmail}>`,
+        });
+
+        return { success: true };
+      } catch (e) {
+        console.error("Error sending email", e);
+        return { success: false };
+      }
     },
   },
   Location: {
