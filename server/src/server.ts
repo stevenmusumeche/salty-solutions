@@ -115,7 +115,7 @@ const server = new ApolloServer({
     };
   },
   playground: IS_DEV,
-  introspection: IS_DEV,
+  introspection: true,
 });
 
 const app = new Koa();
