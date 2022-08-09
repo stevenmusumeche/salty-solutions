@@ -377,11 +377,12 @@ export async function sendPurchaseEmail(payload: PurchaseCompletedEvent) {
     throw new Error("Invariant. Unable to load user");
   }
   try {
-    sendToAdmin({
+    await sendToAdmin({
       subject: "Salty Solutions New IAP",
       replyTo: "noreply@musumeche.com",
       body: JSON.stringify(user),
     });
+    console.log("Sent purchase email for", payload.userId);
   } catch (e) {
     console.error("Error sending email", e);
   }
