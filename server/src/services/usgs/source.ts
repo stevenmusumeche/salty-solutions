@@ -409,11 +409,7 @@ export const usgsSites: UsgsSiteEntity[] = [
   {
     id: "293809092361500",
     name: "Vermillion Parish",
-    availableParams: [
-      UsgsParams.GuageHeight,
-      UsgsParams.Salinity,
-      UsgsParams.WaterTemp,
-    ],
+    availableParams: [UsgsParams.Salinity, UsgsParams.WaterTemp],
   },
 ];
 
