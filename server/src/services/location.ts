@@ -581,11 +581,12 @@ const locations: LocationEntity[] = [
     },
     usgsSiteIds: ["073816525", "293229091230800"],
     weatherGov: {
-      apiBase: "https://api.weather.gov/gridpoints/LCH/133,59",
-      stationId: "KPTN",
+      apiBase: "https://api.weather.gov/gridpoints/LIX/25,68",
+      stationId: "KLIX",
     },
     modisArea: "USA6",
     windfinder: { slug: "north_of_eugene-island" },
+    nowcastSubdomain: "0",
   },
 ];
 
