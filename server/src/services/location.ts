@@ -588,6 +588,26 @@ const locations: LocationEntity[] = [
     windfinder: { slug: "north_of_eugene-island" },
     nowcastSubdomain: "0",
   },
+  {
+    id: "pecan-island",
+    name: "Pecan Island/Rockefeller Refuge",
+    state: "LA",
+    tideStationIds: ["8766072", "8766941", "8765969", "8765568"],
+    noaaBuoyIds: [],
+    marineZoneId: "GMZ400",
+    coords: {
+      lat: 29.57842131370967,
+      lon: -92.53231133412288,
+    },
+    usgsSiteIds: ["293809092361500"],
+    weatherGov: {
+      apiBase: "https://api.weather.gov/gridpoints/LCH/85,65",
+      stationId: "KLCH",
+    },
+    modisArea: "USA6",
+    windfinder: { slug: "pecan_island_kaplan" },
+    nowcastSubdomain: "0",
+  },
 ];
 
 // Isle of Pitre, Cat Island, Ship Island, and Back Bay Biloxi, Bay St. Louis.

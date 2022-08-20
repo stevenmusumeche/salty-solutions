@@ -989,6 +989,20 @@ export const noaaStations: NoaaStationEntity[] = [
     availableParams: [NoaaProduct.TidePrediction],
     type: NoaaStationType.Station,
   },
+  {
+    id: "8766941",
+    name: "Joseph Harbor",
+    coords: { lat: 29.636843880070526, lon: -92.76667742883548 },
+    availableParams: [NoaaProduct.TidePrediction],
+    type: NoaaStationType.Station,
+  },
+  {
+    id: "8765969",
+    name: "Freshwater Bayou",
+    coords: { lat: 29.65524241270992, lon: -92.24997854232906 },
+    availableParams: [NoaaProduct.TidePrediction],
+    type: NoaaStationType.Station,
+  },
 ];
 
 export async function storeNoaaData(stationId: string, numHours = 24) {
