@@ -44,7 +44,7 @@ const CombinedForecastV2: FC<Props> = ({ locationId }) => {
   let tideData = forecast.data?.location?.tidePreditionStations[0]?.tides || [];
   let solunarData = forecast.data?.location?.solunar || [];
   let tideStationName =
-    forecast.data?.location?.tidePreditionStations[0].name || "";
+    forecast.data?.location?.tidePreditionStations?.[0]?.name || "";
 
   if (forecast.fetching) {
     return (

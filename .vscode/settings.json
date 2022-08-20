@@ -18,7 +18,8 @@
     "statusBar.foreground": "#15202b",
     "sash.hoverBorder": "#83c5f0",
     "statusBarItem.remoteBackground": "#56b0ea",
-    "statusBarItem.remoteForeground": "#15202b"
+    "statusBarItem.remoteForeground": "#15202b",
+    "commandCenter.border": "#15202b99"
   },
   "peacock.color": "#56b0ea",
   // Custom tags for the parser to use

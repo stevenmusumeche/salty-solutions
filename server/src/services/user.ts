@@ -210,7 +210,7 @@ export async function isEntitledToPremium(userId: string): Promise<boolean> {
     if (purchase.platform === Platform.Ios) {
       isActive = await isAppleSubscriptionActive(purchase);
     } else if (purchase.platform === Platform.Android) {
-      isActive = await isAndroidSubscriptionActive(purchase);
+      isActive = await isAndroidSubscriptionActive(purchase.androidReceipt);
     }
 
     const updatedPurchases = allPurchases.map((purchase) => {

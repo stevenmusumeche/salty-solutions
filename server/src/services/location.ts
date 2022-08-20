@@ -560,6 +560,33 @@ const locations: LocationEntity[] = [
     modisArea: "USA6",
     windfinder: { slug: "texas_state_aquarium" },
   },
+  {
+    id: "lower-atchafalaya",
+    name: "Lower Atchafalaya/Point Au Fer",
+    state: "LA",
+    tideStationIds: [
+      "8764256",
+      "8764314",
+      "8764227",
+      "8764165",
+      "8763843",
+      "8764634",
+      "8764706",
+    ],
+    noaaBuoyIds: [],
+    marineZoneId: "GMZ455",
+    coords: {
+      lat: 29.3989,
+      lon: -91.2937,
+    },
+    usgsSiteIds: ["073816525", "293229091230800"],
+    weatherGov: {
+      apiBase: "https://api.weather.gov/gridpoints/LCH/133,59",
+      stationId: "KPTN",
+    },
+    modisArea: "USA6",
+    windfinder: { slug: "north_of_eugene-island" },
+  },
 ];
 
 // Isle of Pitre, Cat Island, Ship Island, and Back Bay Biloxi, Bay St. Louis.

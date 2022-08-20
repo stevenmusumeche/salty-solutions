@@ -43,7 +43,7 @@ interface ApplePurchaseDAO extends BasePurchaseDAO {
   iosReceipt: string;
 }
 
-interface AndroidPurchaseDAO extends BasePurchaseDAO {
+export interface AndroidPurchaseDAO extends BasePurchaseDAO {
   platform: Platform.Android;
   androidOrderId: string;
   androidReceipt: string;
@@ -343,11 +343,7 @@ async function validateAndroidReceipt(
   }
 }
 
-export async function isAndroidSubscriptionActive(
-  purchase: AndroidPurchaseDAO
-) {
-  if (purchase.platform !== Platform.Android) return false;
-
+export async function isAndroidSubscriptionActive(androidReceipt: string) {
   try {
     await googleAuthClient.authorize();
     const androidPublisher = google.androidpublisher("v3");
@@ -355,7 +351,7 @@ export async function isAndroidSubscriptionActive(
       auth: googleAuthClient,
       packageName: "com.musumeche.salty.solutions",
       subscriptionId: "premium.monthly.v1",
-      token: purchase.androidReceipt,
+      token: androidReceipt,
     });
 
     if (!res.data.expiryTimeMillis) {

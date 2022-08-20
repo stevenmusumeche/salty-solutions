@@ -25,7 +25,6 @@ type WriteRequest = DocumentClient.WriteRequest;
 // https://www.ndbc.noaa.gov/
 
 // tide stations in LA: https://tidesandcurrents.noaa.gov/tide_predictions.html?gid=1400
-// tide station map: https://tidesandcurrents.noaa.gov/map/index.html
 // better map: https://tidesandcurrents.noaa.gov/map/index.html?type=TidePredictions&region=
 
 axiosRetry(axios, { retries: 3, retryDelay: (retryCount) => retryCount * 500 });
@@ -953,6 +952,41 @@ export const noaaStations: NoaaStationEntity[] = [
       NoaaProduct.AirTemperature,
       NoaaProduct.AirPressure,
     ],
+    type: NoaaStationType.Station,
+  },
+  {
+    id: "8764256",
+    name: "Point Au Fer",
+    coords: { lat: 29.3335203644659, lon: -91.3533333 },
+    availableParams: [NoaaProduct.TidePrediction],
+    type: NoaaStationType.Station,
+  },
+  {
+    id: "8764165",
+    name: "Shell Island, Atchafalaya Bay",
+    coords: { lat: 29.47352010705322, lon: -91.30497854232905 },
+    availableParams: [NoaaProduct.TidePrediction],
+    type: NoaaStationType.Station,
+  },
+  {
+    id: "8763843",
+    name: "Four League Bay",
+    coords: { lat: 29.341844396724248, lon: -91.13499999999999 },
+    availableParams: [NoaaProduct.TidePrediction],
+    type: NoaaStationType.Station,
+  },
+  {
+    id: "8764634",
+    name: "Point Chevreuil",
+    coords: { lat: 29.51852936027128, lon: -91.55498927116452 },
+    availableParams: [NoaaProduct.TidePrediction],
+    type: NoaaStationType.Station,
+  },
+  {
+    id: "8764706",
+    name: "Rabbit Island",
+    coords: { lat: 29.42017755999257, lon: -91.59331184232907 },
+    availableParams: [NoaaProduct.TidePrediction],
     type: NoaaStationType.Station,
   },
 ];

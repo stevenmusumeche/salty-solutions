@@ -397,6 +397,15 @@ export const usgsSites: UsgsSiteEntity[] = [
     name: "Clear Lake Second Outflow Channel at Kemah, TX",
     availableParams: [UsgsParams.WindSpeed, UsgsParams.WindDirection],
   },
+  {
+    id: "293229091230800",
+    name: "St. Mary Parish",
+    availableParams: [
+      UsgsParams.GuageHeight,
+      UsgsParams.Salinity,
+      UsgsParams.WaterTemp,
+    ],
+  },
 ];
 
 // go().catch((e) => console.log(e));
