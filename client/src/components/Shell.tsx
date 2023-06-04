@@ -36,6 +36,7 @@ const Shell: React.FC<{ header?: ReactNode }> = ({ children, header }) => (
         </div>
         <div>
           <Link to="/about">About</Link>
+          <Link to="/privacy">Privacy</Link>
         </div>
       </div>
     </footer>
