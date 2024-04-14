@@ -188,12 +188,9 @@ From: ${args.input.fromName} <${args.input.fromEmail}>`,
       return services.modis.getMaps(location, numDays || 1);
     },
     salinityMap: async (location, args, { services }) => {
-      if (location.nowcastSubdomain) {
-        return services.nowcast.getSalinityMap(location);
-      } else if (location.saveOurLake) {
-        return services.saveOurLake.getSalinityMap(location);
+      if (location.nowcast) {
+        return services.nowcast.getSalinityMap(location.nowcast);
       }
-
       return "";
     },
   },

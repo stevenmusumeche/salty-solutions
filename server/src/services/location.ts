@@ -17,8 +17,12 @@ export interface LocationEntity {
     apiBase: string;
     stationId: string;
   };
-  nowcastSubdomain?: string;
-  saveOurLake?: boolean;
+  nowcast?: {
+    // the subdomain to access the page (ma in this URL), https://tidesandcurrents.noaa.gov/ofs/ofs_mapplots.html?ofsregion=ng&subdomain=ma&model_type=salinity_nowcast
+    subdomain: string;
+    // the tag used in the URL to fetch options (gom in this URL), https://cdn.tidesandcurrents.noaa.gov/ofs/ngofs2/wwwgraphics/NGOFS2_gom_all_sa_now_option
+    tag: string;
+  };
   modisArea: string;
   windfinder: {
     slug?: string;
@@ -51,7 +55,7 @@ const locations: LocationEntity[] = [
       apiBase: "https://api.weather.gov/gridpoints/LCH/112,73",
       stationId: "KARA",
     },
-    nowcastSubdomain: "0",
+    nowcast: { subdomain: "0", tag: "gom" },
     modisArea: "USA7",
     windfinder: { slug: "cypremort-point_vermillion-bay" },
   },
@@ -70,7 +74,7 @@ const locations: LocationEntity[] = [
       apiBase: "https://api.weather.gov/gridpoints/LCH/54,83",
       stationId: "KUXL",
     },
-    nowcastSubdomain: "cc",
+    nowcast: { subdomain: "cc", tag: "lc" },
     modisArea: "USA7",
     windfinder: { slug: "calcasieu_pass" },
   },
@@ -96,7 +100,7 @@ const locations: LocationEntity[] = [
       apiBase: "https://api.weather.gov/gridpoints/LIX/47,58",
       stationId: "KHUM",
     },
-    nowcastSubdomain: "0",
+    nowcast: { subdomain: "0", tag: "gom" },
     modisArea: "USA7",
     windfinder: { slug: "tambour_bay" },
   },
@@ -123,7 +127,7 @@ const locations: LocationEntity[] = [
       apiBase: "https://api.weather.gov/gridpoints/LIX/42,65",
       stationId: "KHUM",
     },
-    nowcastSubdomain: "0",
+    nowcast: { subdomain: "0", tag: "gom" },
     modisArea: "USA7",
     windfinder: { slug: "caillou-lake" },
   },
@@ -149,9 +153,7 @@ const locations: LocationEntity[] = [
       apiBase: "https://api.weather.gov/gridpoints/LIX/85,84",
       stationId: "KNBG",
     },
-    // these are no longer being produced
-    saveOurLake: false,
-    nowcastSubdomain: "0",
+    nowcast: { subdomain: "0", tag: "gom" },
     modisArea: "USA7",
     windfinder: { slug: "shell_beach" },
   },
@@ -184,7 +186,7 @@ const locations: LocationEntity[] = [
       apiBase: "https://api.weather.gov/gridpoints/LIX/73,58",
       stationId: "KGAO",
     },
-    nowcastSubdomain: "0",
+    nowcast: { subdomain: "0", tag: "gom" },
     modisArea: "USA7",
     windfinder: { slug: "grand_isle_eastern_tip" },
   },
@@ -227,9 +229,7 @@ const locations: LocationEntity[] = [
       stationId: "KMIS",
     },
     modisArea: "USA7",
-    // these are no longer being produced
-    saveOurLake: false,
-    nowcastSubdomain: "0",
+    nowcast: { subdomain: "0", tag: "gom" },
     windfinder: { slug: "pilottown" },
   },
   {
@@ -269,9 +269,7 @@ const locations: LocationEntity[] = [
       stationId: "KASD",
     },
     modisArea: "USA7",
-    // these are no longer being produced
-    saveOurLake: false,
-    nowcastSubdomain: "0",
+    nowcast: { subdomain: "0", tag: "gom" },
     windfinder: { slug: "lakefront_new_orleans" },
   },
   {
@@ -295,9 +293,7 @@ const locations: LocationEntity[] = [
       stationId: "KASD",
     },
     modisArea: "USA7",
-    // these are no longer being produced
-    saveOurLake: false,
-    nowcastSubdomain: "0",
+    nowcast: { subdomain: "0", tag: "gom" },
     windfinder: { slug: "lake_pontchartrain_rigolets" },
   },
   {
@@ -323,8 +319,7 @@ const locations: LocationEntity[] = [
       stationId: "KGAO",
     },
     modisArea: "USA7",
-    saveOurLake: false,
-    nowcastSubdomain: "0",
+    nowcast: { subdomain: "0", tag: "gom" },
     windfinder: { slug: "little-lake_bay-dosgris" },
   },
   {
@@ -343,8 +338,7 @@ const locations: LocationEntity[] = [
       stationId: "KBPT",
     },
     modisArea: "USA7",
-    saveOurLake: false,
-    nowcastSubdomain: "sn",
+    nowcast: { subdomain: "sn", tag: "sn" },
     windfinder: { slug: "sabine_pass_north" },
   },
   {
@@ -370,7 +364,7 @@ const locations: LocationEntity[] = [
       apiBase: "https://api.weather.gov/gridpoints/LIX/65,52",
       stationId: "KXPY",
     },
-    nowcastSubdomain: "0",
+    nowcast: { subdomain: "0", tag: "gom" },
     modisArea: "USA7",
     windfinder: { slug: "port_fourchon" },
   },
@@ -390,7 +384,7 @@ const locations: LocationEntity[] = [
       apiBase: "https://api.weather.gov/gridpoints/LIX/51,69",
       stationId: "KHUM",
     },
-    nowcastSubdomain: "0",
+    nowcast: { subdomain: "0", tag: "gom" },
     modisArea: "USA7",
     windfinder: { slug: "bayou-petit-caillou-lapeyrouse" },
   },
@@ -410,7 +404,7 @@ const locations: LocationEntity[] = [
       apiBase: "https://api.weather.gov/gridpoints/LIX/64,58",
       stationId: "KGAO",
     },
-    nowcastSubdomain: "0",
+    nowcast: { subdomain: "0", tag: "gom" },
     modisArea: "USA7",
     windfinder: { slug: "port_fourchon" },
   },
@@ -430,7 +424,7 @@ const locations: LocationEntity[] = [
       apiBase: "https://api.weather.gov/gridpoints/LIX/62,64",
       stationId: "KGAO",
     },
-    nowcastSubdomain: "0",
+    nowcast: { subdomain: "0", tag: "gom" },
     modisArea: "USA7",
     windfinder: { slug: "galliano_south_lafourche_airport" },
   },
@@ -451,9 +445,7 @@ const locations: LocationEntity[] = [
       stationId: "KLNQ",
     },
     modisArea: "USA7",
-    // these are no longer being produced
-    saveOurLake: false,
-    nowcastSubdomain: "0",
+    nowcast: { subdomain: "0", tag: "gom" },
     windfinder: { slug: "bay-gardene_point-a-la-hache" },
   },
   {
@@ -481,7 +473,7 @@ const locations: LocationEntity[] = [
     },
     modisArea: "USA7",
     windfinder: { slug: "port_bolivar_crystal_beach" },
-    nowcastSubdomain: "gb",
+    nowcast: { subdomain: "gb", tag: "gb" },
   },
   {
     id: "freeport",
@@ -501,7 +493,7 @@ const locations: LocationEntity[] = [
     },
     modisArea: "USA7",
     windfinder: { slug: "surfside_beach_freeport" },
-    nowcastSubdomain: "gb",
+    nowcast: { subdomain: "gb", tag: "gb" },
   },
   {
     id: "matagorda",
@@ -529,7 +521,7 @@ const locations: LocationEntity[] = [
     },
     modisArea: "USA7",
     windfinder: { slug: "matagorda_little-boggy-creek" },
-    nowcastSubdomain: "ma",
+    nowcast: { subdomain: "ma", tag: "ma" },
   },
   {
     id: "corpus-christi",
@@ -586,7 +578,7 @@ const locations: LocationEntity[] = [
     },
     modisArea: "USA6",
     windfinder: { slug: "north_of_eugene-island" },
-    nowcastSubdomain: "0",
+    nowcast: { subdomain: "0", tag: "gom" },
   },
   {
     id: "pecan-island",
@@ -606,7 +598,7 @@ const locations: LocationEntity[] = [
     },
     modisArea: "USA6",
     windfinder: { slug: "pecan_island_kaplan" },
-    nowcastSubdomain: "0",
+    nowcast: { subdomain: "0", tag: "gom" },
   },
 ];
 
