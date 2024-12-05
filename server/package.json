@@ -13,7 +13,7 @@
     "dataloader": "^2.0.0",
     "googleapis": "^100.0.0",
     "graphql-extensions": "^0.12.2",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "jwks-rsa": "^2.0.5",
     "koa": "^2.12.0",
     "koa-router": "^9.0.1",
