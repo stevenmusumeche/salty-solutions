@@ -63,8 +63,8 @@ export const getMaps = async (
 };
 
 function buildBaseUrl(date: Date, location: LocationEntity, satellite: string) {
-  // format: "http://ge.ssec.wisc.edu/modis-today/images/aqua/true_color/[YEAR]_[MONTH]_[DATE]_[DAY_OF_YEAR]/a1.[YEAR2][DAY_OF_YEAR].USA7.143.250m.jpg";
-  return `http://ge.ssec.wisc.edu/modis-today/images/${satellite}/true_color/${format(
+  // format: "https://ge.ssec.wisc.edu/modis-today/images/aqua/true_color/[YEAR]_[MONTH]_[DATE]_[DAY_OF_YEAR]/a1.[YEAR2][DAY_OF_YEAR].USA7.143.250m.jpg";
+  return `https://ge.ssec.wisc.edu/modis-today/images/${satellite}/true_color/${format(
     date,
     "yyyy"
   )}_${format(date, "MM")}_${format(date, "dd")}_${format(date, "DDD")}/${
