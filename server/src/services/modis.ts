@@ -11,7 +11,7 @@ export const getMaps = async (
   location: LocationEntity,
   numDays: number
 ): Promise<ModisMap[]> => {
-  const cacheKey = `modis2-${location.modisArea}-${numDays}`;
+  const cacheKey = `modis3-${location.modisArea}-${numDays}`;
   const cachedData = await getCacheVal<ModisMap[]>(cacheKey, 60 * 4); // fresh for 4 hours
   if (cachedData) return cachedData;
 
